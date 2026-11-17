@@ -17,9 +17,11 @@
   .shot:not(.shot--card) { position: relative; overflow: hidden; aspect-ratio: auto; height: min(78svh, 40rem); max-height: none; width: 100vw; margin-inline-start: calc(50% - 50vw); background: var(--cx-dusk); }
   .shot:not(.shot--card) > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: var(--fx, 50%) var(--fy, 35%); aspect-ratio: auto; }
   .shot:not(.shot--card)::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to top, rgb(18 9 3 / .88) 0%, rgb(18 9 3 / .55) 32%, transparent 60%); pointer-events: none; }
-  .shot:not(.shot--card) .shot-card { position: absolute; inset: auto 0 0 0; z-index: 1; padding: 0 var(--cx-gut-r) 1.75rem var(--cx-gut); color: #f6ead8; }
+  /* the caption carries its own shade, so the shade grows with it: at larger text sizes and with both languages the
+     caption climbs above the frame's fixed foot shade, and its top lines sat on bare, bright painting */
+  .shot:not(.shot--card) .shot-card { position: absolute; inset: auto 0 0 0; z-index: 1; padding: 4rem var(--cx-gut-r) 1.75rem var(--cx-gut); color: #f6ead8; background: linear-gradient(to bottom, rgb(18 9 3 / 0) 0, rgb(18 9 3 / .58) 3.6rem, rgb(18 9 3 / .58) 100%); }
   .shot:not(.shot--card) .shot-card h2 { color: #f6ead8; text-shadow: 0 1px 12px rgb(0 0 0 / .5); text-wrap: balance; }
-  .shot:not(.shot--card) .shot-card .scene-no { justify-self: start; padding: 0; background: none; color: var(--cx-gold); text-shadow: 0 1px 8px rgb(0 0 0 / .6); backdrop-filter: none; -webkit-backdrop-filter: none; }
+  .shot:not(.shot--card) .shot-card .scene-no { justify-self: start; padding: 0; background: none; color: var(--cx-gold); text-shadow: 0 0 2px rgb(12 6 2 / .9), 0 1px 8px rgb(0 0 0 / .7); backdrop-filter: none; -webkit-backdrop-filter: none; }
   :root[data-read="both"] .shot:not(.shot--card) .shot-card .pair > .alt { color: #e9d9c3; border-left-color: rgb(243 196 126 / .5); margin-bottom: 0; }
   /* the story's own title sits in the lower third too, and uses the full width (no orphaned last word) */
   .cx-film-title, html[lang="hi"] .cx-film-title { max-width: none; }
@@ -27,6 +29,10 @@
 /* on its side, one whole frame fits the screen */
 @media (orientation: landscape) and (max-height: 520px) {
   .shot:not(.shot--card) { height: 100svh; max-height: none; aspect-ratio: auto; }
+  /* the frame is the whole screen, so its caption would sit at the very foot, under the reader dock: it stands clear of it */
+  .shot:not(.shot--card) .shot-card { padding-bottom: calc(44px + 1.2rem + env(safe-area-inset-bottom, 0px)); }
+  /* one bar at a time at the top of a short screen: while the header is down, the verse bar waits behind it */
+  :root.js-fade:not(.is-head-hidden) .mx-bar { visibility: hidden; }
 }
 
 /* ---------- 3. The home title sequence: under two and a half seconds on a phone, with a visible way past it ----------
@@ -230,7 +236,10 @@ details.cx-fgroup > summary::-webkit-details-marker, details.src-fold > summary:
 
 /* ---------- 12. A word's meaning: a short sheet that leaves the sentence in view; words that are easy to tap ---------- */
 @media (max-width: 759px), (orientation: landscape) and (max-height: 520px) {
-  dialog#lens[open] { max-height: 42svh; overflow-y: auto; overscroll-behavior: contain; touch-action: pan-y; }
+  dialog#lens[open] { max-height: 60svh; overflow-y: auto; overscroll-behavior: contain; touch-action: pan-y; }
+  /* "Done" stays at the foot of the sheet while a long meaning scrolls under it */
+  #lens .sheet-foot { position: sticky; bottom: 0; margin: -.4rem 0 -1.1rem; padding: .4rem 0 1.1rem; background: var(--surface); }
+  #lens-title:focus { outline: none; }
   #lens .sheet-in { gap: .75rem; padding: 1rem var(--cx-gut-r, 16px) 1.1rem var(--cx-gut, 16px); }
   .reader-main .term { padding-block: .35em; margin-block: -.35em; }
 }
@@ -402,6 +411,7 @@ details.cx-fgroup > summary::-webkit-details-marker, details.src-fold > summary:
 /* ---------- 30. A kand's episode painting on a phone: the shade reaches up behind the whole caption ----------
    The shot is only ~220px tall on a phone, so the episode line (and a two-line title) sat on bare, often bright, painting. */
 @media (max-width: 759px) {
+  .mx-shot-cap .mx-ep-n { text-shadow: 0 0 2px rgb(12 6 2 / .95), 0 1px 10px rgb(0 0 0 / .8); }
   .mx-shot::after { background: linear-gradient(to top, var(--cx-paper) 0%, rgb(12 7 4 / .84) 18%, rgb(12 7 4 / .74) 52%, rgb(12 7 4 / .4) 74%, transparent 100%); }
   /* a two-line title lifts the episode line to mid-picture: there it sits on the painting's brightest band (Hanuman's glowing bonds, ep. 6) */
 }

@@ -55,12 +55,15 @@
 .wt-sub:empty { display: none; }
 
 /* ---------- Captions ---------- */
-.wt-cap { --wt-lift: 7.6rem; position: absolute; left: 0; right: 0; bottom: calc(env(safe-area-inset-bottom, 0px) + clamp(1.4rem, 5vh, 3.4rem)); z-index: 9002; display: flex; justify-content: center; padding: 0 max(var(--cx-gut-r), 1.25rem) 0 max(var(--cx-gut), 1.25rem); pointer-events: none; transition: translate .5s var(--cx-ease, ease); }
+.wt-cap { --wt-lift: 5rem; position: absolute; left: 0; right: 0; bottom: calc(env(safe-area-inset-bottom, 0px) + clamp(1.4rem, 5vh, 3.4rem)); z-index: 9002; display: flex; justify-content: center; padding: 0 max(var(--cx-gut-r), 1.25rem) 0 max(var(--cx-gut), 1.25rem); pointer-events: none; transition: translate .5s var(--cx-ease, ease); }
 .wt:not(.is-idle) .wt-cap { translate: 0 calc(-1 * var(--wt-lift)); }
 .wt-cap p { position: relative; isolation: isolate; margin: 0; max-width: 32em; font: 400 clamp(1.15rem, .92rem + 1.05vw, 1.95rem)/1.45 var(--cx-text, Georgia, serif); text-align: center; text-wrap: balance; color: #fbf3e6; text-shadow: 0 1px 2px rgb(0 0 0 / .75), 0 0 26px rgb(0 0 0 / .6); transition: opacity .4s ease, translate .4s ease; }
 /* a soft pool of shade under the words, so a bright part of a painting never washes them out (no box, no edge) */
 .wt-cap p::before { content: ""; position: absolute; z-index: -1; inset: -1em -2.4em; border-radius: 50%; background: radial-gradient(closest-side, rgb(6 3 1 / .58), rgb(6 3 1 / .4) 55%, rgb(6 3 1 / 0)); pointer-events: none; }
 .wt-cap p:empty::before { display: none; }
+/* with the controls up the line rises only as far as it must to clear them (it used to climb onto the figure), and its
+   own shade deepens, since it now stands a little higher on the painting */
+.wt:not(.is-idle) .wt-cap p::before { background: radial-gradient(closest-side, rgb(6 3 1 / .76), rgb(6 3 1 / .52) 55%, rgb(6 3 1 / 0)); }
 .wt-cap:lang(hi) p { font-family: "Tiro Devanagari Hindi", Georgia, serif; line-height: 1.65; max-width: 28em; }
 .wt-cap.is-out p { opacity: 0; translate: 0 .35rem; }
 .wt.no-caps .wt-cap { visibility: hidden; }

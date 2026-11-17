@@ -109,12 +109,13 @@ html[lang="hi"] .cx-btn, html[lang="hi"] .ed-btn, html[lang="hi"] .btn { font-fa
 .btn-primary:hover { background: var(--cx-btn-2); }
 
 /* ---------- The bar ---------- */
-.ed-head { background: color-mix(in oklab, var(--cx-paper) 92%, transparent); backdrop-filter: blur(14px) saturate(1.1); -webkit-backdrop-filter: blur(14px) saturate(1.1); }
+/* solid paper: a see-through bar let the lines scrolling under it show through the brand and the menu */
+.ed-head { background: var(--cx-paper); }
 .ed-brand { font: 500 1.6rem/1 var(--cx-title); letter-spacing: -.01em; }
 .ed-nav > a, .ed-nav-btn, .ed-lang, .ed-saved, .ed-menu-btn { font-family: var(--cx-ui); font-size: .98rem; font-weight: 500; }
 html[lang="hi"] .ed-nav > a, html[lang="hi"] .ed-nav-btn, html[lang="hi"] .ed-saved, html[lang="hi"] .ed-menu-btn { font-family: "Mukta", var(--cx-ui); font-size: 1.02rem; }
 .has-hero .ed-head { background: linear-gradient(to bottom, rgb(24 10 2 / .66), rgb(24 10 2 / .5) 55%, rgb(24 10 2 / .12) 92%, rgb(24 10 2 / 0)) border-box no-repeat; backdrop-filter: none; -webkit-backdrop-filter: none; color: var(--cx-cream); border-color: transparent; text-shadow: 0 0 2px rgb(20 8 0 / .8), 0 0 10px rgb(20 8 0 / .55); }
-.has-hero .ed-head.is-solid, .has-hero .ed-head.is-open { background: color-mix(in oklab, var(--cx-paper) 94%, transparent); backdrop-filter: blur(14px) saturate(1.1); -webkit-backdrop-filter: blur(14px) saturate(1.1); color: var(--cx-ink); border-color: var(--cx-line); text-shadow: none; }
+.has-hero .ed-head.is-solid, .has-hero .ed-head.is-open { background: var(--cx-paper); color: var(--cx-ink); border-color: var(--cx-line); text-shadow: none; }
 .ed-mega { background: var(--cx-paper); }
 .ed-mega-pic { aspect-ratio: 2 / 3; border-radius: 2px; }
 .ed-mega-name { font: 500 1.15rem/1.2 var(--cx-title); }
@@ -472,8 +473,8 @@ html[lang="hi"] .cx-film-k { font-family: "Mukta", var(--cx-ui); }
 html[lang="hi"] .cx-film-title { line-height: 1.2; letter-spacing: 0; max-width: 18ch; }
 .cx-film-title .wr { display: inline-block; }
 .cx-film-btns { display: flex; flex-wrap: wrap; justify-content: center; gap: .6rem; margin-top: .4rem; }
-:root:not([data-motion="reduce"]) .cx-film-title .wr { opacity: 0; translate: 0 .3em; filter: blur(3px); animation: cx-word .8s cubic-bezier(.2, .7, .15, 1) both; animation-delay: calc(.5s + var(--i) * 80ms); }
-@keyframes cx-word { to { opacity: 1; translate: 0 0; filter: none; } }
+:root:not([data-motion="reduce"]) .cx-film-title .wr { opacity: 0; translate: 0 .3em; animation: cx-film-word .8s cubic-bezier(.2, .7, .15, 1) both; animation-delay: calc(.5s + var(--i) * 80ms); }
+@keyframes cx-film-word { to { opacity: 1; translate: 0 0; } }
 :root:not([data-motion="reduce"]) .cx-film-k { animation: cx-fade .9s var(--cx-ease) .3s both; }
 :root:not([data-motion="reduce"]) .cx-film-card > .cx-facts, :root:not([data-motion="reduce"]) .cx-film-btns { animation: cx-fade .9s var(--cx-ease) 1.15s both; }
 @media (prefers-reduced-motion: reduce) { .cx-film-title .wr, .cx-film-k, .cx-film-card > .cx-facts, .cx-film-btns, .cx-film-open-pic img { animation: none !important; opacity: 1 !important; translate: none !important; filter: none !important; } }
@@ -484,6 +485,9 @@ html[lang="hi"] .cx-film-title { line-height: 1.2; letter-spacing: 0; max-width:
 .cx-film .story-head { padding-top: clamp(2rem, 1.5rem + 2vw, 3.5rem); gap: 1.1rem; }
 .cx-film .story-intro { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 1.25rem; align-items: center; }
 .cx-film .story-fig { width: clamp(5.5rem, 14vw, 8rem); }
+/* a story whose lead has no portrait yet: no empty column beside the summary */
+.cx-film .story-fig:empty { display: none; }
+.cx-film .story-intro:has(> .story-fig:empty) { grid-template-columns: minmax(0, 1fr); }
 .cx-film .story-sum { margin: 0; font: italic 400 clamp(1.15rem, 1.05rem + .4vw, 1.4rem)/1.5 var(--cx-text); color: var(--cx-ink-2); }
 html[lang="hi"] .cx-film .story-sum { font-style: normal; font-family: "Tiro Devanagari Hindi", var(--cx-text); line-height: 1.7; }
 .cx-film .crumbs { font-family: var(--cx-ui); }
@@ -504,6 +508,9 @@ html[lang="hi"] .cx-film .scene h2, .cx-film .scene h2[lang="hi"] { font-family:
 .cx-film .scene-text { display: grid; gap: 1.1rem; }
 .cx-film .scene p { font-family: var(--cx-text); font-size: clamp(1.14rem, 1.05rem + .35vw, 1.32rem); line-height: 1.72; }
 .cx-film .scene p:lang(hi), html[lang="hi"] .cx-film .scene p { font-family: "Tiro Devanagari Hindi", var(--cx-text); line-height: 1.95; }
+/* a story that opens on a quotation mark: Safari hangs the mark outside the column, which pushed the drop cap off the
+   screen edge and left a gap inside the first word; the mark stays with its letter, inside the column */
+.cx-film .scene:first-child .scene-text > .pair:first-child > p[lang="en"] { hanging-punctuation: none; }
 .cx-film .scene:first-child .scene-text > .pair:first-child > p[lang="en"]::first-letter { float: left; font: 500 3.6em/.82 var(--cx-title); padding: .08em .1em 0 0; color: var(--cx-saffron); }
 /* on wider screens the scene title sits on the painting, like a title card */
 @media (min-width: 760px) {
@@ -562,8 +569,13 @@ html[lang="hi"] .cx-film .scene h2, .cx-film .scene h2[lang="hi"] { font-family:
   .cx-film .reader-grid { grid-template-columns: minmax(0, 1fr); }
   .cx-film .reader-main { grid-column: 1; max-width: 42rem; margin-inline: auto; }
   .cx-film .rail { display: none !important; }
+  /* side by side on a tablet on its side: the two columns keep the page's gutters (they ran edge to edge) */
   :root[data-read="both"] .cx-film .reader-main { max-width: 64rem; }
+  :root[data-read="both"] .cx-film .reader-grid { padding-left: var(--cx-gut); padding-right: var(--cx-gut-r); }
 }
+/* a desktop too narrow for the three columns at this text size or with both languages side by side (site.js measures):
+   the rails would be slivers, so they step out and the reader dock (scenes, Listen, comfort) takes their place */
+:root[data-rails-off] .cx-film .rail { display: none !important; }
 .cx-film .rail { z-index: 1; }
 .cx-film .shot { z-index: 2; }
 /* the next story, as a poster */
@@ -581,7 +593,7 @@ html[lang="hi"] .cx-film .scene h2, .cx-film .scene h2[lang="hi"] { font-family:
 .reader-bar .btn { color: var(--cx-cream); border-radius: 999px; font-family: var(--cx-ui); }
 .reader-bar .btn-primary { background: var(--cx-marigold); color: #1d1007; }
 .progress { background: var(--cx-marigold); }
-@media (min-width: 1200px) { .reader-bar { display: none; } }
+@media (min-width: 1200px) { :root:not([data-rails-off]) .reader-bar { display: none; } }
 
 /* ---------- Pause, today, festivals, saved keep their tools; the frame turns warm ---------- */
 .pause-card h1, .moment h2, .block-head h2, .fest-list strong { font-family: var(--cx-title); }
@@ -719,6 +731,10 @@ html[lang="hi"] .cx-greet { font-family: "Mukta", var(--cx-ui); }
 .reader-bar.is-away { opacity: 0; translate: -50% calc(100% + 1.5rem); pointer-events: none; }
 @media (prefers-reduced-motion: reduce) { .reader-bar { transition: none; } }
 :root[data-motion="reduce"] .reader-bar { transition: none; }
+/* with Save-Data the cinematic layer never starts (cinema.js leaves .cx-cine off): the bars that tuck away while reading
+   (header, reader dock, verse bar, the analytics question) then simply appear and go, without a slide */
+:root:not(.cx-cine) :is(.ed-head, .reader-bar, .mx-bar, .cx-consent) { transition: none; }
+:root:not(.cx-cine) .cx-consent { animation: none; }
 @media (max-width: 1199px) { .is-reader .cx-credits { padding-bottom: calc(5.5rem + env(safe-area-inset-bottom, 0px)); } }
 /* a scene reached from Contents takes focus without drawing a box around the whole page */
 .scene:focus { outline: none; }
@@ -1388,11 +1404,23 @@ html[lang="hi"] .cx-sel-title { line-height: 1.22; letter-spacing: 0; }
    it is painted, on a quiet ornamented title, never an empty frame); then the chaupais and dohas run in large Devanagari,
    the two halves of a chaupai side by side on a wide screen, the dohas set apart in lamp gold. */
 .mx-open .cx-film-card { padding-bottom: clamp(3rem, 8svh, 6rem); }
+/* on these pages the header stands above the opening (it is not laid over it), so the opening is one screen less the
+   header: at a full 100svh its Begin button sat below the fold */
+.is-manas .cx-film-open { min-height: calc(100vh - var(--ed-head-h) - 1px - env(safe-area-inset-top, 0px)); min-height: calc(100svh - var(--ed-head-h) - 1px - env(safe-area-inset-top, 0px)); }
 .mx-open-alt { margin: -.4rem 0 0; font: 400 clamp(1.2rem, 1rem + .8vw, 1.7rem)/1.3 var(--font-hi); color: #f6c98c; text-shadow: var(--cx-halo); }
 html[lang="hi"] .mx-open-alt { font-family: var(--cx-title); }
 .mx-open-line { margin: 0; max-width: 40rem; font: italic 400 clamp(1.05rem, .95rem + .5vw, 1.35rem)/1.5 var(--cx-text); color: #f3e7d7; text-shadow: var(--cx-halo); text-align: center; }
 html[lang="hi"] .mx-open-line { font-style: normal; font-family: "Tiro Devanagari Hindi", var(--cx-text); }
-.mx-bar { position: sticky; top: var(--ed-head-h); z-index: 30; background: color-mix(in oklab, var(--cx-paper) 88%, transparent); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-bottom: 1px solid var(--cx-line); }
+/* A hymn's introduction on a phone: under the opening, not across the deity. With five lines of it in the card, the
+   title was pushed up over the face and the lines ran over the figure; without it the title sits in the lower third,
+   on the painting's dark foot. (The same words, shown once: build.mjs writes them in both places.) */
+.mx-open-below { display: none; }
+@media (max-width: 759px), (orientation: landscape) and (max-height: 520px) {
+  .st-open .mx-open-line { display: none; }
+  .mx-open-below { display: block; margin-top: clamp(1.75rem, 6vw, 2.5rem); }
+  .st-open .cx-open-shade { background: linear-gradient(to top, rgb(18 9 3 / .92) 0, rgb(18 9 3 / .7) 30%, rgb(18 9 3 / 0) 62%), linear-gradient(to bottom, rgb(30 14 4 / .35), transparent 22%); }
+}
+.mx-bar { position: sticky; top: var(--ed-head-h); z-index: 30; background: var(--cx-paper); border-bottom: 1px solid var(--cx-line); }
 .mx-bar-in { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .5rem 1.25rem; min-height: 3.25rem; }
 .mx-bar .crumbs { margin: 0; }
 .mx-tools { display: flex; align-items: center; gap: .6rem; }
@@ -1929,7 +1957,17 @@ html[lang="hi"] .lib-more-k { font: 500 .85rem/1 var(--cx-title); letter-spacing
 /* a phone on its side: a story's (and the hymn's) opening card fits the short screen and its buttons stay clear of the
    reading bar along the bottom */
 @media (orientation: landscape) and (max-height: 520px) {
-  .cx-film-card { gap: .45rem; padding-top: calc(var(--ed-head-h, 3.5rem) + .4rem); padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 4.6rem); }
+  /* the title and facts in a band along the foot, left; the buttons beside them, right: centred, the stack ran from
+     the header to the foot of the short screen and the title lay across the faces */
+  .cx-film-open { place-items: end stretch; }
+  .cx-film-card { box-sizing: border-box; width: 100%; max-width: none; grid-template-columns: minmax(0, 1fr) auto; column-gap: 1.25rem; justify-items: start; align-items: end; text-align: left; gap: .4rem 1.25rem; padding-top: calc(var(--ed-head-h, 3.5rem) + .4rem); padding-bottom: calc(env(safe-area-inset-bottom, 0px) + var(--cx-bar) + .7rem); }
+  .mx-open .cx-film-card { padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 1.1rem); }
+  .cx-film-card > * { grid-column: 1; }
+  .cx-film-card > .cx-film-k { justify-self: start; }
+  .cx-film-card > .cx-film-btns { grid-column: 2; grid-row: 1 / span 4; align-self: end; justify-content: flex-end; flex-wrap: nowrap; margin: 0; }
+  .cx-film-card::before { display: none; }
+  .cx-film-open .cx-open-shade { background: linear-gradient(to top, rgb(18 9 3 / .9) 0, rgb(18 9 3 / .62) 30%, rgb(18 9 3 / 0) 62%), linear-gradient(to bottom, rgb(30 14 4 / .35), transparent 22%); }
+  .cx-film-title, html[lang="hi"] .cx-film-title { max-width: none; text-align: left; }
   .cx-film-title { font-size: clamp(1.6rem, 11svh, 2.6rem); line-height: 1.05; }
   .cx-film-card :is(.mx-open-line, .story-sum) { display: none; }
   .cx-film-card .cx-facts { margin: 0; }
@@ -1955,10 +1993,10 @@ html[lang="hi"] .fest-list li.next.is-today strong::after { content: "  ·  आ�
 /* the long Ramayana roster (more than twenty) on tablets: landscape keeps two rows (twelve a row), portrait three
    (eight a row); the tiles go low and wide, and each name scales to its tile so even "Vishvamitra" stays whole */
 @media (min-width: 900px) and (max-width: 1099px) and (min-height: 521px) {
-  .cx-sel-grid[data-many="true"][data-huge="true"] > li { flex-basis: calc((100% - 11 * clamp(.3rem, .7vw, .6rem)) / 12); }
+  .cx-sel-grid[data-many="true"][data-huge="true"] > li { flex-basis: calc((100% - 12 * clamp(.3rem, .7vw, .6rem)) / 13); }
 }
 @media (min-width: 700px) and (max-width: 899px) and (min-height: 521px) {
-  .cx-sel-grid[data-many="true"][data-huge="true"] > li { flex-basis: calc((100% - 7 * clamp(.3rem, .7vw, .6rem)) / 8); }
+  .cx-sel-grid[data-many="true"][data-huge="true"] > li { flex-basis: calc((100% - 8 * clamp(.3rem, .7vw, .6rem)) / 9); }
 }
 @media (min-width: 700px) and (max-width: 1099px) and (min-height: 521px) {
   .cx-sel-grid[data-huge="true"] .cx-sel-tile { aspect-ratio: 16 / 11; container-type: inline-size; }
@@ -1967,7 +2005,7 @@ html[lang="hi"] .fest-list li.next.is-today strong::after { content: "  ·  आ�
 /* long rosters (more than twelve) on every screen: each name scales to its tile, so "Dhritarashtra" and
    "Bhishma (Devavrata)" stay whole however many share the row */
 .cx-sel-grid[data-many="true"] .cx-sel-tile { container-type: inline-size; }
-.cx-sel-grid[data-many="true"] .cx-sel-tile-n { font-size: min(.74rem, 9.5cqi); letter-spacing: .04em; }
+.cx-sel-grid[data-many="true"] .cx-sel-tile-n { font-size: min(.74rem, 7.6cqi); letter-spacing: .02em; }
 
 /* ---------- The analytics question (consent.js): calm, at the foot of the screen, never over the reader dock ---------- */
 .cx-consent { position: fixed; z-index: 30; left: 50%; translate: -50% 0; bottom: max(calc(.75rem + env(safe-area-inset-bottom, 0px)), calc(var(--cx-dock-clear, 0px) + .5rem)); box-sizing: border-box; width: min(46rem, calc(100vw - var(--cx-gut) - var(--cx-gut-r))); display: grid; grid-template-columns: 1fr auto; gap: .35rem 1.25rem; align-items: center; padding: .9rem 1.1rem; background: var(--cx-dusk); color: var(--cx-cream); border: 1px solid rgb(255 240 220 / .16); border-radius: 6px; box-shadow: 0 14px 40px rgb(0 0 0 / .35); font-family: var(--cx-ui); animation: cx-consent-in .45s var(--cx-ease) both; transition: bottom .3s var(--cx-ease); }
@@ -1993,10 +2031,11 @@ html[lang="hi"] .cx-consent-btn { font-family: "Mukta", var(--cx-ui); }
 :root[data-motion="reduce"] .cx-consent { animation: none; transition: none; }
 /* stories: consent.js measures the reader dock (--cx-dock-clear: its height plus its gap from the bottom) while it is on
    screen, so the bar sits just above it, and lets the bar settle down when the dock tucks away or steps aside */
-@media (max-width: 640px) {
-  /* phones: one slim strip (the question, Details, Allow, Decline) so it never sits across the reading */
-  .cx-consent { display: flex; flex-wrap: wrap; align-items: center; gap: .35rem .6rem; width: calc(100vw - 16px); padding: .4rem .5rem .4rem .7rem; bottom: max(calc(.4rem + env(safe-area-inset-bottom, 0px)), calc(var(--cx-dock-clear, 0px) + .4rem)); }
-  .cx-consent-h { flex: 1 1 9rem; min-width: 0; margin: 0; font-size: .84rem; line-height: 1.25; }
+@media (max-width: 759px), (orientation: landscape) and (max-height: 520px) {
+  /* phones, upright or on their side: one slim strip in a single row (the question, Details, Allow, Decline) so it
+     never sits across the reading; on the narrowest screens the question takes two short lines inside that row */
+  .cx-consent { display: flex; flex-wrap: nowrap; align-items: center; gap: .35rem .5rem; width: min(40rem, calc(100vw - 16px)); padding: .4rem .5rem .4rem .7rem; bottom: max(calc(.4rem + env(safe-area-inset-bottom, 0px)), calc(var(--cx-dock-clear, 0px) + .4rem)); }
+  .cx-consent-h { flex: 1 1 0; min-width: 0; margin: 0; font-size: .84rem; line-height: 1.25; text-wrap: balance; }
   .cx-consent-h[data-short] { font-size: 0; }
   .cx-consent-h[data-short]::after { content: attr(data-short); font-size: .84rem; }
   html[lang="hi"] .cx-consent-h[data-short]::after { font-family: "Mukta", var(--cx-ui); font-size: .88rem; }
@@ -2007,11 +2046,14 @@ html[lang="hi"] .cx-consent-btn { font-family: "Mukta", var(--cx-ui); }
   .cx-consent-btn { min-width: 0; min-height: 40px; padding: 0 .8rem; font-size: .86rem; white-space: nowrap; }
   html[lang="hi"] .cx-consent-btn { padding: 0 .6rem; font-size: .84rem; }
 }
+@media (max-width: 400px) { .cx-consent-btn, html[lang="hi"] .cx-consent-btn { padding: 0 .55rem; } .cx-consent-btns { gap: .3rem; } }
 .cx-consent { transition: translate .3s var(--cx-ease), opacity .25s var(--cx-ease), visibility 0s; }
 .cx-consent.is-tucked { translate: -50% calc(100% + 2rem); opacity: 0; visibility: hidden; transition: translate .3s var(--cx-ease), opacity .25s var(--cx-ease), visibility 0s .3s; }
 /* while the question is on screen, the openings' own buttons and the foot of every page move up out from under it
    (--cx-consent-room: the bar's height and its gap, measured by consent.js) */
-:root[data-consent-ask] .cx-film-open { padding-bottom: var(--cx-consent-room, 0px); }
+/* (the opening keeps that room until the reader is back at it, even after the question is answered: it is above the
+   reading, so giving it back mid-story would move the text; consent.js) */
+:root[data-consent-room] .cx-film-open { box-sizing: border-box; padding-bottom: var(--cx-consent-room, 0px); }
 :root[data-consent-ask] .cx-credits::after { content: ""; display: block; height: var(--cx-consent-room, 0px); }
 /* the footer's "Privacy choices" reads like its neighbouring links */
 .cx-credits-choice { display: inline-flex; align-items: center; min-height: 40px; padding: 0; border: 0; background: none; color: inherit; font: inherit; cursor: pointer; text-decoration: underline; text-decoration-color: rgb(233 217 195 / .4); text-underline-offset: .2em; }

@@ -14,11 +14,14 @@
     mega.hidden = !open; megaBtn.setAttribute('aria-expanded', String(open)); head.classList.toggle('is-open', open);
   };
   if (head) {
-    let lastY = scrollY, ticking = false;
+    // it tucks away on the way down and returns on a deliberate scroll up (64px of travel in one direction), not on the
+    // small upward nudge of a thumb mid-sentence, which used to drop it over the line being read
+    let lastY = scrollY, run = 0, ticking = false;
     const onScroll = () => {
-      const y = scrollY;
+      const y = scrollY, dy = y - lastY;
+      run = dy > 0 === run > 0 ? run + dy : dy;
       head.classList.toggle('is-solid', y > 24);
-      const down = y > lastY + 4, up = y < lastY - 4;
+      const down = run > 8, up = run < -64;
       if (down && y > 420 && !head.classList.contains('is-open') && !head.contains(document.activeElement)) head.classList.add('is-hidden');
       else if (up || y < 120) head.classList.remove('is-hidden');
       mirror();

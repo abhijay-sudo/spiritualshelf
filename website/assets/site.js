@@ -254,7 +254,8 @@
       const { name, value } = e.target;
       const p = store.get('prefs', {});
       const apply = () => { if (value) { root.dataset[name] = value; p[name] = value; } else { delete root.dataset[name]; delete p[name]; } if (name === 'motion') osCalm(); };
-      if (name === 'theme' && document.startViewTransition && !reduced()) document.startViewTransition(apply); else apply();
+      // a new text size re-flows the whole story: the paragraph being read stays where it is on the screen
+      if (name === 'theme' && document.startViewTransition && !reduced()) document.startViewTransition(apply); else if (name === 'size' && window.__keepPlace) window.__keepPlace(apply); else apply();
       store.set('prefs', p); haptic();
     });
   }
@@ -601,12 +602,20 @@
         b.querySelector('b').textContent = d.term; const dv = b.querySelector('.lens-deva'); if (dv) dv.textContent = d.deva; const tr = b.querySelector('.lens-translit'); if (tr) tr.textContent = d.translit;
         const li = b.querySelector('[data-lit]'); if (li) li.textContent = d.literal; b.querySelector('[data-def]').textContent = d.def; if (d.context) { b.querySelector('[data-ctx-k]').textContent = d.ctxLabel; b.querySelector('[data-ctx]').textContent = d.context; } const ci = b.querySelector('cite'); if (ci) ci.textContent = d.source.label;
         sheet.showModal();
-        // the word stays in sight, above the (short) sheet
+        // it opens at its top, on the word itself: the browser focuses the first control ("Done", at the foot) and would
+        // scroll the sheet down to it, hiding the word and its literal meaning
+        const title = $('#lens-title', sheet); if (title) { title.tabIndex = -1; title.focus({ preventScroll: true }); }
+        sheet.scrollTop = 0;
+        // the word stays in sight, above the (short) sheet; the page goes back to where it was when the sheet closes
         if (btn) requestAnimationFrame(() => {
+          sheet.scrollTop = 0;
           const r = btn.getBoundingClientRect(); const room = innerHeight - sheet.getBoundingClientRect().height;
-          const want = Math.max(80, room * .45); if (r.top > room - 24 || r.top < 60) scrollBy({ top: r.top - want, behavior: 'auto' });
+          const want = Math.max(80, room * .45);
+          if (r.top > room - 24 || r.top < 60) { const y = scrollY; scrollBy({ top: r.top - want, behavior: 'instant' }); nudged = { from: y, to: scrollY }; }
         });
     }
+    let nudged = null;
+    sheet?.addEventListener('close', () => { const n = nudged; nudged = null; if (n && Math.abs(scrollY - n.to) < 4) scrollTo({ top: n.from, behavior: 'instant' }); });
     // a downward swipe on the sheet puts it away (only from its top, so the meaning itself can still be scrolled)
     if (sheet) {
       let y0 = null;
@@ -651,17 +660,49 @@
     const scenes = $$('.scene', reader); const total = scenes.length; const slug = reader.dataset.slug;
     /* Reading edition: English, Hindi or both side by side, without leaving the page */
     const readBtns = $$('[data-read]');
+    // The reader's place is the paragraph (or painting) at the top of the screen, and how far into it they are. Anything
+    // that re-flows the story (text size, reading edition, turning the phone) holds that paragraph where it was.
+    // (a paragraph on screen is preferred to a painting: a painting's height is a share of the screen, so "how far into
+    // it" means something else after the change)
+    const EDGE = 80;   // just under the header
+    const firstOn = (list) => {
+      for (const el of list) {
+        if (!el.offsetHeight) continue;
+        const r = el.getBoundingClientRect(); if (r.bottom <= EDGE) continue;
+        if (r.top >= innerHeight) return null;
+        const f = r.top < EDGE ? Math.min(1, (EDGE - r.top) / Math.max(1, r.height)) : 0;
+        return { el, f, at: r.top + f * r.height };
+      }
+      return null;
+    };
+    const paras = $$('.scene-text .pair', reader).filter((el) => !el.closest('.shot')), shots = $$('.shot', reader);
+    const placeNow = () => firstOn(paras) || firstOn(shots);
+    const restore = (pl, at = pl.at) => {
+      if (!pl || !pl.el.isConnected || !pl.el.offsetHeight) return;
+      const r = pl.el.getBoundingClientRect(); const dy = (r.top + pl.f * r.height) - at;
+      if (Math.abs(dy) > 1) scrollBy({ top: dy, behavior: 'instant' });
+    };
+    const keepPlace = (fn) => { const pl = placeNow(); fn(); if (pl) { restore(pl); place = placeNow(); } };
+    window.__keepPlace = keepPlace;
+    // turning the phone (or resizing the window) changes every painting's height: the place noted when the reader last
+    // stopped scrolling is put back. Only a change of width counts, so a browser toolbar sliding away does nothing.
+    let place = null, placeT = 0, lastW = innerWidth;
+    addEventListener('scroll', () => { clearTimeout(placeT); placeT = setTimeout(() => { place = placeNow(); }, 160); }, { passive: true });
+    addEventListener('resize', () => {
+      if (innerWidth === lastW) return; lastW = innerWidth;
+      if (place) restore(place, Math.min(place.at, innerHeight * .4));
+    });
     const setRead = (mode, save) => {
       const btn = readBtns.find((b) => b.dataset.read === mode); if (!btn || btn.disabled) mode = UI.lang;
-      // keep the reader's exact place: hold the current scene, and how far into it they were, steady across the change
-      const y = scrollY; const anchor = save ? scenes[current - 1] : null; const r0 = anchor?.getBoundingClientRect();
-      const f = r0 && r0.top < 0 ? Math.min(1, -r0.top / Math.max(1, r0.height)) : 0;
-      root.dataset.read = mode;
-      readBtns.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.read === mode)));
-      const note = $('[data-draft-note]'); if (note) note.hidden = !((UI.draft || {})[readLang()] || (mode === 'both' && Object.values(UI.draft || {}).some(Boolean)));
-      if (save) { const p = store.get('prefs', {}); p.read = mode; store.set('prefs', p); haptic(); }
-      if (anchor) { const r1 = anchor.getBoundingClientRect(); const dy = (r1.top + f * r1.height) - (r0.top + f * r0.height); if (Math.abs(dy) > 1) scrollBy({ top: dy, behavior: 'instant' }); }
-      else requestAnimationFrame(() => scrollTo(0, y));
+      const y = scrollY;
+      const apply = () => {
+        root.dataset.read = mode;
+        readBtns.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.read === mode)));
+        const note = $('[data-draft-note]'); if (note) note.hidden = !((UI.draft || {})[readLang()] || (mode === 'both' && Object.values(UI.draft || {}).some(Boolean)));
+      };
+      // keep the reader's exact place: the paragraph at the top of the screen stays there across the change
+      if (save) { keepPlace(apply); const p = store.get('prefs', {}); p.read = mode; store.set('prefs', p); haptic(); }
+      else { apply(); requestAnimationFrame(() => scrollTo(0, y)); }
     };
     setRead(store.get('prefs', {}).read || UI.lang, false);
     readBtns.forEach((b) => b.addEventListener('click', () => setRead(b.dataset.read, true)));
@@ -708,22 +749,21 @@
     [tocLinks, beads].forEach((links) => links.forEach((a, i) => a.addEventListener('click', (e) => { a.closest('dialog')?.close(); if (root.dataset.mode === 'leaf') { e.preventDefault(); goTo(i + 1); } focusScene(i + 1); })));
 
     // Leaf mode: one scene at a time
-    const goTo = (n, dir) => {
+    const goTo = (n, dir, still) => {
       n = Math.max(1, Math.min(total, n));
       if (n === current && scenes[n - 1].classList.contains('leaf-on')) return;
       scenes.forEach((s, i) => { s.classList.toggle('leaf-on', i + 1 === n); s.classList.remove('leaf-fwd', 'leaf-back'); });
-      if (dir) scenes[n - 1].classList.add(dir > 0 ? 'leaf-fwd' : 'leaf-back');
+      if (dir) { const s = scenes[n - 1]; s.classList.add(dir > 0 ? 'leaf-fwd' : 'leaf-back'); s.addEventListener('animationend', (e) => { if (e.target === s) s.classList.remove('leaf-fwd', 'leaf-back'); }, { once: true }); }
       setCurrent(n, false);
-      history.replaceState(null, '', '#page-' + n);
-      $('.scenes', reader).scrollIntoView({ behavior: 'auto', block: 'start' });
-      Sound.whisper(); haptic(5);
+      // (not on arrival with page-by-page saved: the story still opens on its own title, also after a reload)
+      if (!still) { history.replaceState(null, '', '#page-' + n); $('.scenes', reader).scrollIntoView({ behavior: 'auto', block: 'start' }); Sound.whisper(); haptic(5); }
       const prev = $('[data-prev]'), next = $('[data-next]');
       if (prev) prev.disabled = n === 1; if (next) next.disabled = n === total;
       const fin = $('[data-finished]'); if (fin) fin.hidden = n !== total;
       if (dir) say(`${fmt(UI.sceneOf, { n, t: total })}: ${$(`#page-${n}-h`)?.textContent || ''}`);
     };
-    const setMode = (m) => {
-      if (m === 'leaf') { root.dataset.mode = 'leaf'; goTo(current); } else { delete root.dataset.mode; scenes.forEach((s) => s.classList.remove('leaf-on', 'leaf-fwd', 'leaf-back')); scenes[current - 1].scrollIntoView({ block: 'start' }); }
+    const setMode = (m, still) => {
+      if (m === 'leaf') { root.dataset.mode = 'leaf'; goTo(current, 0, still); } else { delete root.dataset.mode; scenes.forEach((s) => s.classList.remove('leaf-on', 'leaf-fwd', 'leaf-back')); scenes[current - 1].scrollIntoView({ block: 'start' }); }
       const p = store.get('prefs', {}); if (m === 'leaf') p.mode = 'leaf'; else delete p.mode; store.set('prefs', p);
       $$('button[data-mode]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.mode === (m || 'scroll'))));
     };
@@ -745,7 +785,7 @@
       if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) goTo(current + (dx < 0 ? 1 : -1), dx < 0 ? 1 : -1);
     }, { passive: true });
     const startScene = Math.max(1, Math.min(total, parseInt((location.hash.match(/page-(\d+)/) || [])[1] || '1', 10)));
-    if (store.get('prefs', {}).mode === 'leaf') { current = startScene; setMode('leaf'); } else {
+    if (store.get('prefs', {}).mode === 'leaf') { current = startScene; setMode('leaf', !/page-\d+/.test(location.hash)); } else {
       const hashed = /page-\d+/.test(location.hash);
       setCurrent(startScene, false, hashed); $$('button[data-mode]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.mode === 'scroll')));
       // arriving at #page-N (Continue reading, a language switch, a shared link): make sure the scene is really in view, even
@@ -802,12 +842,21 @@
     const mark = (el) => { if (speakingEl && speakingEl !== el) speakingEl.classList.remove('is-speaking'); speakingEl = el || null; if (el) el.classList.add('is-speaking'); };
     const progress = (v) => dockBar?.style.setProperty('--listen-p', v.toFixed(4));
     const clean = (t) => t.replace(/\s+/g, ' ').replace(/\.{2,}/g, '.').replace(/([.!?।])\s*\./g, '$1').trim();
-    const speakScene = (n) => {
+    const speakScene = (n, here) => {
       if (n > total) { state = 'idle'; mark(null); progress(0); dockBar?.classList.remove('is-listening'); label(UI.listen); return; }
       const s = scenes[n - 1];
       if (root.dataset.mode === 'leaf') goTo(n, 1);
       const L = readLang(); const h = s.querySelector(`h2[lang="${L}"]`);
-      const items = [...(h ? [h] : []), ...visibleParas(s)].filter((el) => el.textContent.trim());
+      let items = [...(h ? [h] : []), ...visibleParas(s)].filter((el) => el.textContent.trim());
+      // Listen starts from what is on the screen (the first paragraph in view), not back at the top of the scene
+      const all = items.length;
+      if (here && root.dataset.mode !== 'leaf') {
+        // (one that begins on the screen, clear of the header; failing that, the one that is part-way off its top)
+        let k = items.findIndex((el) => { const r = el.getBoundingClientRect(); return r.top >= 72 && r.top < innerHeight - 120; });
+        if (k < 0) { k = items.findIndex((el) => el.getBoundingClientRect().bottom > 80); if (k >= 0 && items[k].getBoundingClientRect().top >= innerHeight) k = -1; }
+        if (k > 0) items = items.slice(k);
+      }
+      const skipped = all - items.length;
       if (!items.length) { speakScene(n + 1); return; }
       const v = voice(L);
       items.forEach((el, k) => {
@@ -815,8 +864,11 @@
         parts.forEach((part, i) => {
           const u = new SpeechSynthesisUtterance(part.trim()); u.lang = L === 'hi' ? 'hi-IN' : 'en-IN'; if (v) u.voice = v; u.rate = 0.95;
           if (i === 0) u.onstart = () => {
-            mark(el); progress((n - 1 + k / items.length) / total);
-            if (root.dataset.mode !== 'leaf') el.scrollIntoView({ behavior: reduced() ? 'auto' : 'smooth', block: 'center' });
+            mark(el); progress((n - 1 + (k + skipped) / all) / total);
+            // the page moves only when the paragraph being read is off the screen, or under the header or the dock
+            const r = el.getBoundingClientRect();
+            // (and then only as far as it must: up to show its first line, or on so it sits in the upper third)
+            if (root.dataset.mode !== 'leaf' && (r.top < 72 || r.bottom > innerHeight - 96)) scrollBy({ top: r.top - (r.top < 72 ? 96 : Math.max(96, innerHeight * .3)), behavior: reduced() ? 'instant' : 'smooth' });
           };
           if (k === items.length - 1 && i === parts.length - 1) u.onend = () => { if (state === 'playing') speakScene(n + 1); };
           synth.speak(u);
@@ -828,7 +880,7 @@
       if (state === 'idle') {
         // say so plainly when this device has no voice for the language being read, instead of reading it wrongly or not at all
         const L = readLang(); if (synth.getVoices().length && !voice(L)) { toast.textContent = fmt(UI.listenNoVoice, { lang: L === 'hi' ? UI.voiceHi : UI.voiceEn }); setTimeout(() => { toast.textContent = ''; }, 8000); return; }
-        state = 'playing'; label(UI.pauseListen); synth.cancel(); dockBar?.classList.add('is-listening'); progress((current - 1) / total); speakScene(current);
+        state = 'playing'; label(UI.pauseListen); synth.cancel(); dockBar?.classList.add('is-listening'); progress((current - 1) / total); speakScene(current, true);
       }
       else if (state === 'playing') { state = 'paused'; synth.pause(); label(UI.resume); }
       else { state = 'playing'; synth.resume(); label(UI.pauseListen); }
@@ -877,19 +929,40 @@
       const place = () => { const away = seen.size > 0 || heroOn; dock.classList.toggle('is-away', away); dock.inert = away; };
       const eio = new IntersectionObserver((es) => { es.forEach((en) => (en.isIntersecting ? seen.add(en.target) : seen.delete(en.target))); place(); }, { rootMargin: '0px 0px -20% 0px' });
       ends.forEach((el) => eio.observe(el));
+      // page by page: it also steps aside while Previous / Next are at the foot of the screen, where it would cover them
+      const nav = $('.leaf-nav', reader);
+      if (nav) new IntersectionObserver((es) => { es[es.length - 1].isIntersecting ? seen.add(nav) : seen.delete(nav); place(); }, { rootMargin: '-78% 0px 0px 0px' }).observe(nav);
       if (hero) new IntersectionObserver((es) => { heroOn = es[es.length - 1].intersectionRatio >= .15; place(); }, { threshold: [0, .15, .3, .6, 1] }).observe(hero);
     }
-    // on a phone (or a phone on its side) the dock tucks away while the reader scrolls on into the story, and comes back
-    // the moment they scroll up, in the same rhythm as the header
-    const pocket = matchMedia('(max-width: 759px), (orientation: landscape) and (max-height: 520px)');
+    // A desktop window too narrow for the three columns (large text, or both languages side by side): the rails would be
+    // unreadable slivers, so they step out and the dock takes their place. Measured, since it depends on the text size.
+    const grid = $('.cx-film .reader-grid'), mainCol = grid && $('.reader-main', grid), rails = grid ? $$('.rail', grid) : [];
+    const wide = matchMedia('(min-width: 1200px)');
+    const fitRails = () => {
+      let off = false;
+      if (wide.matches) {
+        const cs = getComputedStyle(grid), rem = parseFloat(getComputedStyle(root).fontSize) || 17;
+        const free = (grid.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight) - mainCol.offsetWidth - 2 * (parseFloat(cs.columnGap) || 0)) / 2;
+        off = free < 9 * rem;
+      }
+      if (off !== root.hasAttribute('data-rails-off')) root.toggleAttribute('data-rails-off', off);
+    };
+    if (grid && mainCol && rails.length) {
+      fitRails();
+      if ('ResizeObserver' in window) { const ro = new ResizeObserver(fitRails); ro.observe(grid); ro.observe(mainCol); } else addEventListener('resize', fitRails);
+    }
+    // below the desktop layout (phones, a phone on its side, tablets) the dock tucks away while the reader scrolls on into
+    // the story, and comes back on a deliberate scroll up (64px of travel, the same rhythm as the header): a small upward
+    // nudge while reading must not bring a bar down over the line being read
+    const pocket = matchMedia('(max-width: 1199px), (orientation: landscape) and (max-height: 520px)');
     if (dock) {
-      let lastY = scrollY, tick = false;
+      let lastY = scrollY, run = 0, tick = false;
       const tuck = () => {
-        tick = false; const y = scrollY;
-        if (!pocket.matches || dock.contains(document.activeElement)) dock.classList.remove('is-tucked');
-        else if (y > lastY + 6) dock.classList.add('is-tucked');
-        else if (y < lastY - 6) dock.classList.remove('is-tucked');
-        if (Math.abs(y - lastY) > 6) lastY = y;
+        tick = false; const y = scrollY, dy = y - lastY; lastY = y;
+        run = dy > 0 === run > 0 ? run + dy : dy;
+        if (!(pocket.matches || root.hasAttribute('data-rails-off')) || dock.contains(document.activeElement)) dock.classList.remove('is-tucked');
+        else if (run > 8) dock.classList.add('is-tucked');
+        else if (run < -64) dock.classList.remove('is-tucked');
       };
       addEventListener('scroll', () => { if (!tick) { tick = true; requestAnimationFrame(tuck); } }, { passive: true });
       dock.addEventListener('focusin', () => dock.classList.remove('is-tucked'));

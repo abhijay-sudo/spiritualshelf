@@ -445,8 +445,9 @@ html[lang="hi"] .next small { text-transform: none; letter-spacing: 0; font-size
 :root[data-mode="leaf"] .scene { display: none; border-top: 0; }
 :root[data-mode="leaf"] .scene.leaf-on { display: grid; min-height: 50vh; }
 :root[data-mode="leaf"] .scene.leaf-on h2 + p:lang(en)::first-letter { float: left; font-size: 3.8em; line-height: .8; padding: .1em .12em 0 0; color: var(--saffron-2); font-weight: 600; }
-@keyframes leaf-fwd { from { opacity: 0; translate: 6% 0; clip-path: inset(0 0 0 6%); } to { opacity: 1; translate: 0; clip-path: inset(0); } }
-@keyframes leaf-back { from { opacity: 0; translate: -6% 0; clip-path: inset(0 6% 0 0); } to { opacity: 1; translate: 0; clip-path: inset(0); } }
+/* (opacity and translate only, and nothing held once it has played: a clip left on the scene cut the full-width painting) */
+@keyframes leaf-fwd { from { opacity: 0; translate: 6% 0; } }
+@keyframes leaf-back { from { opacity: 0; translate: -6% 0; } }
 .leaf-nav { display: none; gap: .5rem; justify-content: space-between; padding-top: 1rem; }
 :root[data-mode="leaf"] .leaf-nav { display: flex; }
 .leaf-nav .btn:disabled { opacity: .4; cursor: default; }
@@ -635,8 +636,8 @@ html[lang="hi"] .ritual h2 { text-transform: none; letter-spacing: 0; font-size:
   :root:not([data-motion="reduce"]) .breath[data-phase] .breath-ring { animation: spin 60s linear infinite; }
   :root:not([data-motion="reduce"]) .breath[data-phase="in"] .breath-core { transform: scale(1); transition: transform 4s cubic-bezier(.45,0,.55,1); }
   :root:not([data-motion="reduce"]) .breath[data-phase="out"] .breath-core { transform: scale(.55); transition: transform 6s cubic-bezier(.45,0,.55,1); }
-  :root[data-mode="leaf"]:not([data-motion="reduce"]) .scene.leaf-fwd { animation: leaf-fwd .4s var(--ease) both; }
-  :root[data-mode="leaf"]:not([data-motion="reduce"]) .scene.leaf-back { animation: leaf-back .4s var(--ease) both; }
+  :root[data-mode="leaf"]:not([data-motion="reduce"]) .scene.leaf-fwd { animation: leaf-fwd .4s var(--ease) backwards; }
+  :root[data-mode="leaf"]:not([data-motion="reduce"]) .scene.leaf-back { animation: leaf-back .4s var(--ease) backwards; }
   :root:not([data-motion="reduce"]) dialog.sheet { transition: opacity .2s ease-out, translate .25s var(--spring), display .25s allow-discrete, overlay .25s allow-discrete; }
   :root:not([data-motion="reduce"]) dialog.sheet:not([open]) { opacity: 0; translate: 0 1.5rem; }
   :root:not([data-motion="reduce"]) dialog.sheet::backdrop { transition: opacity .25s ease, display .25s allow-discrete, overlay .25s allow-discrete; }

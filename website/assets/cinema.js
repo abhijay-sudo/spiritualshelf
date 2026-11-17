@@ -460,6 +460,8 @@
         const el = en.target;
         if (en.isIntersecting || en.boundingClientRect.bottom < 0) el.classList.add('is-seen');
         if (en.isIntersecting) live.add(el); else live.delete(el);
+        // the next scene's painting is fetched while this one is on screen, so a reader never arrives at an empty frame
+        if (en.isIntersecting && !lowData && el.matches('.shot')) { const nx = shots[shots.indexOf(el) + 1]?.querySelector('img[loading="lazy"]'); if (nx) nx.loading = 'eager'; }
         if (!el.matches('.shot')) el.classList.toggle('is-live', en.isIntersecting);
       }
       // at most two paintings drift at once (the first two on screen)
@@ -505,7 +507,7 @@
      Forty-odd warm motes rising slowly behind everything, on the dark pages only. Stops when the tab is hidden, when
      motion is reduced, or when the reader chooses the light theme. */
   // one engine for both: warm motes (theatre) and embers (fire scenes); phones draw at 1x and 30 fps
-  const motes = (cls, [glow, core], n, vy, ok, rk = 1, host = null) => {
+  const motes = (cls, [glow, core], n, vy, ok, rk = 1, host = null, within = null) => {
     const cv = document.createElement('canvas'); cv.className = cls; cv.setAttribute('aria-hidden', 'true');
     const g = cv.getContext('2d');
     if (!g) return null;
@@ -516,10 +518,13 @@
     const size = () => { if (W === innerWidth && (pocket ? Math.abs(H - innerHeight) < 160 : H === innerHeight)) return; W = innerWidth; H = innerHeight; cv.width = W * dpr; cv.height = H * dpr; g.setTransform(dpr, 0, 0, dpr, 0, 0); ms = Array.from({ length: n(W) }, () => make(true)); };
     // the page's own layers rest while the Watch theatre covers the page (watch.js); the theatre's layer is hosted inside it
     const quiet = () => document.hidden || reduced() || !ok() || (!host && root.classList.contains('wt-on'));
+    let clipWas = '';
     const frame = (t) => {
       if (quiet()) { on = false; g.clearRect(0, 0, W, H); return; }
       requestAnimationFrame(frame);
       if (pocket && t - last < 30) return;
+      // embers stay on their burning painting: the layer is clipped to it, so no spark drifts over the words being read
+      if (within) { const b = within(); const c = b ? `inset(${Math.max(0, Math.round(b[0]))}px 0 ${Math.max(0, Math.round(H - b[1]))}px 0)` : clipWas; if (c !== clipWas) { clipWas = c; cv.style.clipPath = c; } }
       const dt = Math.min(.05, (t - last) / 1000 || 0); last = t; g.clearRect(0, 0, W, H);
       for (let i = 0; i < ms.length; i++) {
         const m = ms[i]; m.y -= m.vy * dt; m.ph += m.sp * dt; const x = m.x + Math.sin(m.ph) * m.sway;
@@ -537,7 +542,7 @@
     return { cv, wake };
   };
   // embers over a burning scene: they rise while it is on screen, and fade out (CSS) for a moment after it has gone
-  const ember = !lowData && shots.some((el) => el.dataset.fx === 'embers') && motes('th-embers th-fire', ['255,110,30', '255,196,110'], (w) => (w < 760 ? 24 : Math.min(60, Math.round(w / 24))), [18, 40], () => fireOn() || (fireAt && performance.now() - fireAt < 900), 1.6);
+  const ember = !lowData && shots.some((el) => el.dataset.fx === 'embers') && motes('th-embers th-fire', ['255,110,30', '255,196,110'], (w) => (w < 760 ? 24 : Math.min(60, Math.round(w / 24))), [18, 40], () => fireOn() || (fireAt && performance.now() - fireAt < 900), 1.6, null, () => { let t = Infinity, b = -Infinity; for (const el of live) if (el.dataset.fx === 'embers') { const r = el.getBoundingClientRect(); t = Math.min(t, r.top); b = Math.max(b, r.bottom); } return b > t ? [t, b] : null; });
   if (ember) { fire = () => { ember.cv.classList.toggle('is-on', fireOn()); ember.wake(); }; fire(); }
   // the same embers for the Watch theatre (watch.js): drawn inside it, while ok() says a fire scene is on screen
   window.SpritualFx = { embers: (host, ok) => (lowData ? null : motes('th-embers wt-embers', ['255,110,30', '255,196,110'], (w) => (w < 760 ? 24 : Math.min(60, Math.round(w / 24))), [18, 40], ok, 1.6, host)) };

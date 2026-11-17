@@ -128,17 +128,37 @@
   };
   // keep clear of the story's reader dock: its height and its gap from the bottom, while it is on screen
   var dock = d.querySelector('.reader-bar'), watching = false;
+  // The question steps out of the way of the reading. On a page that is read (a story, a hymn, a kand of the Manas)
+  // scrolling on down tucks it away, at every width, and it comes back only where nothing is being read: at the top of
+  // the page or at its foot. It is never tucked from under a finger or focus, nor when the reader asked for it
+  // ("Privacy choices"). On every other page it stays where it is until it is answered.
+  var reading = !!d.querySelector('[data-reader], [data-manas]');
+  var away = false, lastY = 0, run = 0, footOn = false;
+  var foot = d.querySelector('.cx-credits');
+  var atTop = function () { return (window.scrollY || 0) < innerHeight * .5; };
   var clear = function () {
     if (!bar || bar.hidden) return;
     var on = dock && !dock.classList.contains('is-away') && !dock.classList.contains('is-tucked') && dock.offsetHeight > 0;
     var px = on ? dock.offsetHeight + (parseFloat(getComputedStyle(dock).bottom) || 0) : 0;
     bar.style.setProperty('--cx-dock-clear', px + 'px');
-    // while the reader scrolls down the page the dock tucks away, and the question goes with it (never from under a finger or focus)
-    var tuck = !!dock && dock.classList.contains('is-tucked') && !bar.contains(d.activeElement) && !bar.hasAttribute('data-reopened');
+    var tuck = away && !bar.contains(d.activeElement) && !bar.hasAttribute('data-reopened');
     bar.classList.toggle('is-tucked', tuck); bar.inert = tuck || bar.classList.contains('is-aside');
-    // the room the bar takes at the foot of the screen, which the openings and the footer keep free (cinema.css)
-    // (kept while the bar steps aside: changing it would shift the page above the reader and jolt the scroll)
-    root.style.setProperty('--cx-consent-room', Math.ceil(bar.offsetHeight + (parseFloat(getComputedStyle(bar).bottom) || 0) + 8) + 'px');
+  };
+  // The room the bar takes at the foot of the screen, which the openings and the footer keep free (cinema.css). It is the
+  // bar's own height and its resting gap only, never the dock's clearance: this value pads the story's opening, which is
+  // in the page's flow above the reading, so it must not change while someone reads (a change there moves the text).
+  var room = function () {
+    if (!bar || bar.hidden || !bar.offsetHeight) return;
+    var base = innerWidth <= 759 || (innerWidth > innerHeight && innerHeight <= 520) ? 6 : 12;
+    root.style.setProperty('--cx-consent-room', Math.ceil(bar.offsetHeight + base + 8) + 'px'); root.setAttribute('data-consent-room', '');
+  };
+  var scrolled = function () {
+    if (!reading) return;
+    var y = window.scrollY || 0, dy = y - lastY; lastY = y;
+    run = dy > 0 === run > 0 ? run + dy : dy;         // travel in one direction
+    var was = away;
+    if (atTop() || footOn) away = false; else if (run > 24) away = true;
+    if (away !== was) clear();
   };
   // a full-screen stage (the home opening, the character select) keeps its whole screen, composed to fit it: the question
   // waits beside it, not over it, and appears once the reader moves on
@@ -168,8 +188,13 @@
     if (watching) return; watching = true;
     watchStage();
     if (dock && window.MutationObserver) new MutationObserver(clear).observe(dock, { attributes: true, attributeFilter: ['class', 'style'] });
-    addEventListener('resize', clear);
-    if (d.fonts && d.fonts.ready) d.fonts.ready.then(clear);
+    var both = function () { room(); clear(); };
+    addEventListener('resize', both);
+    if (d.fonts && d.fonts.ready) d.fonts.ready.then(both);
+    lastY = window.scrollY || 0; away = reading && !atTop();     // arriving part-way down a page (a kept place): it waits out of the way
+    var tick = false;
+    addEventListener('scroll', function () { if (!tick) { tick = true; requestAnimationFrame(function () { tick = false; scrolled(); }); } }, { passive: true });
+    if (foot && 'IntersectionObserver' in window) new IntersectionObserver(function (es) { footOn = es[es.length - 1].isIntersecting; if (footOn && away) { away = false; clear(); } }).observe(foot);
   };
   var show = function (focus) {
     if (!bar) build();
@@ -178,12 +203,16 @@
     var c = read(); bar.toggleAttribute('data-reopened', !!focus);
     bar.querySelector('[data-consent-yes]').setAttribute('aria-pressed', String(!!c && c.value === 'granted'));
     bar.querySelector('[data-consent-no]').setAttribute('aria-pressed', String(!!c && c.value === 'denied'));
-    clear();
+    room(); clear();
     if (focus) bar.querySelector('h2').focus({ preventScroll: true });
   };
   var hide = function () {
     if (!bar) return;
-    var had = bar.contains(d.activeElement); bar.hidden = true; root.removeAttribute('data-consent-ask'); root.style.removeProperty('--cx-consent-room');
+    var had = bar.contains(d.activeElement); bar.hidden = true; root.removeAttribute('data-consent-ask');
+    // the room it kept in a story's opening is given back only while that opening is on screen: once the reader is past
+    // it, taking it away would shorten the page above them and move the line they are reading
+    var hero = d.querySelector('.cx-film-open, .mx-open');
+    if (!hero || hero.getBoundingClientRect().bottom > 0) { root.style.removeProperty('--cx-consent-room'); root.removeAttribute('data-consent-room'); }
     // a reopened question returns focus to the button that opened it, also when the answer was clicked (Safari does not
     // focus a clicked button, so the focus would otherwise fall back to the page)
     if (had || (opener && (!d.activeElement || d.activeElement === d.body))) {

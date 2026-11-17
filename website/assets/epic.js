@@ -18,6 +18,13 @@
     hanuman: ['#ff8a3c', 'Son of the Wind', 'पवनपुत्र'],
     lakshmana: ['#e9b25a', 'Son of Sumitra', 'सौमित्र'],
     ravana: ['#e0492f', 'Ten-Headed Lord of Lanka', 'दशानन · लंकेश'],
+    parashurama: ['#ff7043', 'Bhargava Rama', 'भार्गव राम'],
+    abhimanyu: ['#ffd27a', 'Son of Subhadra', 'सौभद्र'],
+    savitri: ['#ff9a6a', 'Pativrata', 'पतिव्रता'],
+    yama: ['#d05a4a', 'Dharmaraja', 'धर्मराज'],
+    vamana: ['#ffcf6a', 'Trivikrama', 'त्रिविक्रम'],
+    bali: ['#c79bff', 'Mahabali', 'महाबली'],
+    mahishasura: ['#e2553a', 'Lord of the Asuras', 'असुरराज'],
     krishna: ['#6fb6ff', 'Lifter of Govardhana', 'गिरिधर'],
     arjuna: ['#7fd0e8', 'Wielder of the Gandiva', 'गाण्डीवधारी'],
     yudhishthira: ['#f0d28a', 'Dharmaraja', 'धर्मराज'],
@@ -136,12 +143,17 @@
     var a = $('a[href]', li), L = a && LEADS[slugOf(a.getAttribute('href'))];
     if (L) { li.classList.add('ep-star'); li.style.setProperty('--ep-a', L[0]); }
   });
+  // the four legends (their pages carry their own entrance, legend.js) stand a step brighter in every line-up, the home select included
+  $$('.cast-tiles > li, .cast-rows > li, .cx-cast-row > li, .cx-sel-grid > li').forEach(function (li) {
+    var a = $('a[href]', li); if (a && /^(rama|ravana|hanuman|parashurama)$/.test(slugOf(a.getAttribute('href')))) li.classList.add('ep-legend');
+  });
   var castRow = $('.cx-cast-row');
   if (castRow) { castRow.classList.add('ep-float'); $$(':scope > li', castRow).forEach(function (li, k) { li.style.setProperty('--ep-n', k % 5); }); }
   var wm = $('.cx-credits-name'); if (wm) wm.classList.add('ep-shine');
 
   /* ---------- 2. Arrivals: what the cinema layer left still comes in once, when it is reached, then stays put ---------- */
-  if (reduced() || !('IntersectionObserver' in window)) return;
+  // (none of it with Save-Data either: nothing waits faint, everything is simply there)
+  if (reduced() || lowData || !('IntersectionObserver' in window)) return;
   var SETS = [
     // plain pages, the dossier, festival rows, today's blocks, the credits, the home feature cards, empty states
     ['', '.cx-plain-in > h1, .cx-plain-text > *, .cx-plain-in > .cx-btn, .dossier-in > *, .cx-credits-line, .cx-credits-sub, .cx-credits-list > *, .cx-credits-in > .cx-credits-btns, .cx-manas-card > *, .block-head, .empty, .moment, main > .wrap > .note, .mx-src, .cx-stotra-sa, .legend, .kept, .story-intro, .mx-ep-n, .mx-ep-t, .mx-sum'],
@@ -167,7 +179,9 @@
       el.addEventListener('animationend', function (e) { if (e.target === el) settle(el); });
       setTimeout(function () { settle(el); }, 2800);
     });
-  }, { rootMargin: '0px 0px 22% 0px', threshold: 0 });
+  // (they start well before they are reached, half a screen below the fold, so a flick down the page lands on text
+  // at full strength instead of text still coming up from faint)
+  }, { rootMargin: '0px 0px 50% 0px', threshold: 0 });
   all.forEach(function (el) { io.observe(el); });
   // printing, or the reader switching motion off part-way: everything is simply there
   addEventListener('beforeprint', function () { all.forEach(settle); });
