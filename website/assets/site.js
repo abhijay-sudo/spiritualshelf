@@ -681,7 +681,7 @@
   if (reader) {
     const scenes = $$('.scene', reader); const total = scenes.length; const slug = reader.dataset.slug;
     /* Reading edition: English, Hindi or both side by side, without leaving the page */
-    const readBtns = $$('[data-read]');
+    const readBtns = $$('button[data-read]');   // (not <html> or boot.js's own script tag, which carry data-read too)
     // The reader's place is the paragraph (or painting) at the top of the screen, and how far into it they are. Anything
     // that re-flows the story (text size, reading edition, turning the phone) holds that paragraph where it was.
     // (a paragraph on screen is preferred to a painting: a painting's height is a share of the screen, so "how far into
@@ -714,8 +714,40 @@
       if (innerWidth === lastW) return; lastW = innerWidth;
       if (place) restore(place, Math.min(place.at, innerHeight * .4));
     });
-    const setRead = (mode, save) => {
+    // A story page carries its own language only. The other edition lives at its own address: "side by side" fetches
+    // that page once and sets each of its headings and paragraphs beside ours; a failed fetch says so plainly.
+    const O = UI.lang === 'en' ? 'hi' : 'en'; let otherP = null, otherIn = false;
+    const loadOther = () => otherP || (otherP = (async () => {
+      const a = $('[data-read-other]'); if (!a) throw new Error('no other edition');
+      const res = await fetch(a.getAttribute('href').split('#')[0]); if (!res.ok) throw new Error(String(res.status));
+      const theirs = $$('[data-reader] .scene', new DOMParser().parseFromString(await res.text(), 'text/html'));
+      if (!theirs.length) throw new Error('not the story');   // offline: the service worker answered with its own page
+      const gap = (lang) => { const g = document.createElement('span'); g.className = 'pair-gap'; g.lang = lang; return g; };
+      const put = (pair, el) => {
+        if (!el) { pair.append(gap(O)); return; }
+        const c = document.importNode(el, true); c.removeAttribute('id'); c.classList.add('alt');
+        $$('.term', c).forEach((b) => b.replaceWith(b.textContent));
+        pair.append(c);
+      };
+      scenes.forEach((sc, i) => {
+        const t = theirs[i]; if (!t) return;
+        const head = $('.shot-card .pair', sc); if (head) put(head, $(`.shot-card .pair > h2[lang="${O}"]`, t));
+        const box = $('.scene-text', sc); const mine = $$('.pair', box); const th = $$(`.scene-text .pair > p[lang="${O}"]`, t);
+        for (let k = 0; k < Math.max(mine.length, th.length); k++) {
+          let pair = mine[k]; if (!pair) { pair = document.createElement('div'); pair.className = 'pair'; pair.append(gap(UI.lang)); box.append(pair); }
+          put(pair, th[k]);
+        }
+      });
+      otherIn = true;
+    })().catch((e) => { otherP = null; throw e; }));
+    const readMsg = (txt) => { const m = $('[data-read-msg]'); if (m) { m.textContent = txt; m.hidden = !txt; } };
+    const setRead = (mode, save, late) => {
       const btn = readBtns.find((b) => b.dataset.read === mode); if (!btn || btn.disabled) mode = UI.lang;
+      if (mode === 'both' && !otherIn) {
+        btn.setAttribute('aria-busy', 'true');
+        loadOther().then(() => { btn.setAttribute('aria-busy', 'false'); readMsg(''); setRead('both', save, true); }, () => { btn.setAttribute('aria-busy', 'false'); if (save) readMsg(UI.readOffline); });
+        if (save) return; mode = UI.lang;
+      }
       const y = scrollY;
       const apply = () => {
         root.dataset.read = mode;
@@ -723,8 +755,9 @@
         const note = $('[data-draft-note]'); if (note) note.hidden = !((UI.draft || {})[readLang()] || (mode === 'both' && Object.values(UI.draft || {}).some(Boolean)));
       };
       // keep the reader's exact place: the paragraph at the top of the screen stays there across the change
-      if (save) { keepPlace(apply); const p = store.get('prefs', {}); p.read = mode; store.set('prefs', p); haptic(); }
-      else { apply(); requestAnimationFrame(() => scrollTo(0, y)); }
+      if (save || late) keepPlace(apply);
+      if (save) { const p = store.get('prefs', {}); p.read = mode; store.set('prefs', p); haptic(); }
+      else if (!late) { apply(); requestAnimationFrame(() => scrollTo(0, y)); }
     };
     setRead(store.get('prefs', {}).read || UI.lang, false);
     readBtns.forEach((b) => b.addEventListener('click', () => setRead(b.dataset.read, true)));
@@ -1050,7 +1083,7 @@
         ctx.fillStyle = '#b08227'; ctx.font = `600 ${Math.round(W * 0.02)}px "Plus Jakarta Sans", system-ui, sans-serif`; ctx.textAlign = 'right'; ctx.fillText('spritual.co.in', W - pad, H - pad - 56); ctx.textAlign = 'left';
         try { dl.href = canvas.toDataURL('image/png'); } catch {}
       };
-      $$('[data-verse-open]').forEach((b) => b.addEventListener('click', () => { verse.showModal(); draw(); haptic(); }));
+      $$('[data-verse-open]').forEach((b) => b.addEventListener('click', () => { verse.showModal(); draw(); haptic(); if (!otherIn) loadOther().then(draw, () => {}); }));
       $$('[data-verse-format]', verse).forEach((b) => b.addEventListener('click', () => { format = b.dataset.verseFormat; $$('[data-verse-format]', verse).forEach((x) => x.setAttribute('aria-pressed', String(x === b))); draw(); }));
       $('[data-verse-copy]', verse)?.addEventListener('click', async () => { try { const blob = await new Promise((r) => canvas.toBlob(r, 'image/png')); await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]); toast.textContent = UI.verseCopied; Sound.bell(988, 0.1); } catch { toast.textContent = UI.listenNA || ''; } setTimeout(() => { toast.textContent = ''; }, 3000); });
     }

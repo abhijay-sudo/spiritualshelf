@@ -253,6 +253,25 @@ html[lang="hi"] .cast-study .dossier-in { font-family: "Tiro Devanagari Hindi", 
 .cast-stories .wrap { container-type: inline-size; }
 @container (min-width: 74.25rem) { .cast-stories .grid:is([data-n="5"], [data-n="9"]) { max-width: calc(75% - .25 * clamp(.8rem, .5rem + 1vw, 1.4rem)); } }
 .cast-with { padding-bottom: clamp(4rem, 2rem + 6vw, 7rem); }
+/* in words: their stories by name, what else they are called, and where each point of the page is found */
+.cast-notes { padding-bottom: clamp(2.5rem, 1.5rem + 4vw, 5rem); }
+.cast-notes-in { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 26rem), 1fr)); gap: 2.5rem clamp(2rem, 5vw, 5rem); align-items: start; }
+.cast-notes-in > div { display: grid; gap: 1rem; min-width: 0; }
+.cast-notes :is(.cast-aka, .cast-src-lead) { margin: 0; font: 400 1rem/1.6 var(--cx-ui); color: var(--cx-ink-2); }
+html[lang="hi"] .cast-notes :is(.cast-aka, .cast-src-lead, summary) { font-family: "Mukta", var(--cx-ui); font-size: 1.06rem; line-height: 1.75; }
+.cast-aka b { color: var(--cx-ink); font-weight: 600; }
+.cast-in-list, .cast-src-list { margin: 0; padding: 0; list-style: none; display: grid; gap: 0; border-top: 1px solid var(--cx-line); font: 400 1.02rem/1.6 var(--cx-text); color: var(--cx-ink-2); }
+html[lang="hi"] .cast-in-list { font-family: "Tiro Devanagari Hindi", var(--cx-text); line-height: 1.8; }
+.cast-in-list li, .cast-src-list li { padding: .8rem 0; border-bottom: 1px solid var(--cx-line); overflow-wrap: anywhere; }
+.cast-in-list a { display: block; color: var(--cx-ink); font-weight: 600; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .22em; text-decoration-color: var(--cx-line-2); }
+.cast-in-list a:hover, .cast-src-list a:hover { text-decoration-color: currentColor; }
+.cast-src-list { counter-reset: src; font-size: .96rem; }
+.cast-src-claim { display: block; color: var(--cx-ink); }
+.cast-src-list cite { display: block; font-style: normal; font-family: var(--cx-ui); font-size: .9rem; color: var(--cx-ink-3); }
+.cast-src-list a { color: inherit; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .2em; text-decoration-color: var(--cx-line-2); }
+.cast-notes :is(a, summary):focus-visible { outline: 2px solid color-mix(in srgb, var(--ep-a) 70%, var(--cx-ink)); outline-offset: 2px; }
+.cast-src-more summary { display: inline-flex; align-items: center; min-height: 44px; cursor: pointer; color: var(--cx-ink); font-weight: 600; }
+.cast-src-more[open] summary { margin-bottom: .5rem; }
 .cast-chips { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: .75rem 1rem; }
 .cast-chip { display: inline-flex; align-items: center; gap: .7rem; min-height: 56px; padding: .25rem 1.1rem .25rem .3rem; border-radius: 2rem; text-decoration: none; color: var(--cx-ink); box-shadow: inset 0 0 0 1px var(--cx-line); background: color-mix(in srgb, var(--cx-paper-2) 70%, transparent); transition: box-shadow .3s, background-color .3s; }
 .cast-chip:hover, .cast-chip:focus-visible { box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ep-a) 70%, transparent); background: color-mix(in srgb, var(--ep-a) 8%, var(--cx-paper-2)); }

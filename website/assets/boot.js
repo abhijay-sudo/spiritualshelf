@@ -13,13 +13,10 @@
     if (p.motion) d.dataset.motion = p.motion;
     calm = p.motion === 'reduce';
   } catch (e) { p = {}; }
-  // A story's reading edition (English, Hindi or both; site.js keeps the reader's choice) is set before the first paint,
-  // as site.js would set it, so the edition not being read is never laid out (nor its typefaces fetched) and a link to a
-  // scene lands where it will stay. data-read on this script: 2 when the story has both editions, 1 when only this one.
-  if (me && me.hasAttribute('data-read')) {
-    var rd = p && p.read;
-    d.dataset.read = (rd === 'en' || rd === 'hi' || rd === 'both') && (rd === d.lang || me.getAttribute('data-read') === '2') ? rd : d.lang;
-  }
+  // A story page carries its own language only (the other edition is its own page; site.js fetches it when the reader
+  // has chosen side by side), so the reading edition before the first paint is always the page's language, whatever
+  // was chosen on another page. data-read on this script marks a story page.
+  if (me && me.hasAttribute('data-read')) d.dataset.read = d.lang;
   // the device's own "reduce motion" setting counts exactly like the site's switch, for every rule that asks
   var mq = matchMedia('(prefers-reduced-motion: reduce)');
   if (mq.matches) d.dataset.motion = 'reduce';
