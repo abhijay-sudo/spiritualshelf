@@ -12,7 +12,7 @@ Before quoting or summarising this site:
 
 ## Start here
 
-- [All stories](https://spritual.co.in/library/): Search 28 illustrated retellings from the Ramayana, Mahabharata and Puranas by name, feeling, collection or reading time, in English and Hindi.
+- [All stories](https://spritual.co.in/library/): Search 29 illustrated retellings from the Ramayana, Mahabharata and Puranas by name, feeling, collection or reading time, in English and Hindi.
 - [People of the stories](https://spritual.co.in/characters/): 74 people of the Ramayana, Mahabharata and Puranas, from Rama, Sita and Hanuman to Karna, Draupadi and Bhishma, each linked to their stories.
 - [Festivals and their stories](https://spritual.co.in/festivals/): Dates for Diwali, Holi, Maha Shivaratri, Navratri, Janmashtami and more to November 2027 (New Delhi, Drik Panchang), each with a story to read.
 - [About Spritual](https://spritual.co.in/about/): Spritual is a free reading site of illustrated stories from the Ramayana, the Mahabharata and the Puranas, in English and Hindi, with no accounts or ads.
@@ -57,6 +57,7 @@ Before quoting or summarising this site:
 ### Shiva (Valmiki Ramayana)
 
 - [The river in Shiva's hair](https://spritual.co.in/collections/shiva/books/valmiki-ramayana/arcs/bala-kanda/stories/shiva-river/): King Bhagiratha's penance brings the river Ganga down from heaven; Shiva catches her in his matted hair. Ganga Avataran, from the Valmiki Ramayana.
+- [The fire with no end](https://spritual.co.in/collections/shiva/books/shiva-purana/arcs/vidyeshvara-samhita/stories/shiva-pillar-of-fire/): Brahma and Vishnu go to war over who is lord. A pillar of fire rises between them. One seeks its foot, one its top. One comes back with a lie.
 - [One arrow for three cities](https://spritual.co.in/collections/shiva/books/shiva-purana/arcs/rudra-samhita/stories/shiva-three-cities/): Three cities of gold, silver and iron can fall only to a single arrow, in the one hour they meet. Shiva takes aim from a chariot made of the worlds.
 
 ### Devi (Devi Mahatmya)

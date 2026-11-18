@@ -5,10 +5,19 @@
 <id>https://spritual.co.in/feed.xml</id>
 <link rel="self" type="application/atom+xml" href="https://spritual.co.in/feed.xml"/>
 <link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/"/>
-<updated>2026-11-18T08:41:53Z</updated>
+<updated>2026-11-18T09:31:26Z</updated>
 <author><name>Spritual</name><uri>https://spritual.co.in/about/</uri></author>
 <icon>https://spritual.co.in/favicon.ico</icon>
 <logo>https://spritual.co.in/assets/icons/icon-512.png</logo>
+<entry>
+<title>The fire with no end</title>
+<id>https://spritual.co.in/collections/shiva/books/shiva-purana/arcs/vidyeshvara-samhita/stories/shiva-pillar-of-fire/</id>
+<link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/collections/shiva/books/shiva-purana/arcs/vidyeshvara-samhita/stories/shiva-pillar-of-fire/"/>
+<link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/collections/shiva/books/shiva-purana/arcs/vidyeshvara-samhita/stories/shiva-pillar-of-fire/"/>
+<updated>2026-11-18T09:31:26Z</updated>
+<category term="shiva"/>
+<summary>Brahma and Vishnu go to war over who is lord. A pillar of fire rises between them. One seeks its foot, one its top. One comes back with a lie.</summary>
+</entry>
 <entry>
 <title>The rope two fingers short</title>
 <id>https://spritual.co.in/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-butter-and-rope/</id>
