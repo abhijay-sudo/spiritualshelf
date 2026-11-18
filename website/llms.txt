@@ -12,8 +12,8 @@ Before quoting or summarising this site:
 
 ## Start here
 
-- [All stories](https://spritual.co.in/library/): Search 35 illustrated retellings from the Ramayana, Mahabharata and Puranas by name, feeling, collection or reading time, in English and Hindi.
-- [People of the stories](https://spritual.co.in/characters/): 83 people of the Ramayana, Mahabharata and Puranas, from Rama, Sita and Hanuman to Karna, Draupadi and Bhishma, each linked to their stories.
+- [All stories](https://spritual.co.in/library/): Search 36 illustrated retellings from the Ramayana, Mahabharata and Puranas by name, feeling, collection or reading time, in English and Hindi.
+- [People of the stories](https://spritual.co.in/characters/): 84 people of the Ramayana, Mahabharata and Puranas, from Rama, Sita and Hanuman to Karna, Draupadi and Bhishma, each linked to their stories.
 - [Festivals and their stories](https://spritual.co.in/festivals/): Dates for Diwali, Holi, Maha Shivaratri, Navratri, Janmashtami and more to November 2027 (New Delhi, Drik Panchang), each with a story to read.
 - [Questions the stories answer](https://spritual.co.in/questions/): 23 questions answered from the stories themselves, each with the scene it comes from: Samudra Manthan, Ganesha’s elephant head, Krishna and Sudama, Lanka Dahan.
 - [Glossary](https://spritual.co.in/glossary/): 28 words the stories use, each with a plain meaning: dharma, avatar, itihasa, purana, kanda, parva, tapasya, sharanagati and more, in English and Hindi.
@@ -43,6 +43,7 @@ Before quoting or summarising this site:
 - [Fourteen years, two sandals](https://spritual.co.in/collections/ramayana/books/valmiki-ramayana/arcs/ayodhya-kanda/stories/ramayana-promises-and-partings/): Rama is sent to the forest on the eve of his crowning; Sita and Lakshmana follow, Guha keeps watch, and Bharata takes Rama's sandals back to the throne.
 - [The deer, the vulture, the elder](https://spritual.co.in/collections/ramayana/books/valmiki-ramayana/arcs/aranya-kanda/stories/ramayana-loss-and-hospitality/): The golden deer, Ravana carrying Sita away, Jatayu's last fight and Shabari's welcome: the Aranya Kanda of the Valmiki Ramayana, illustrated.
 - [The leap begins here](https://spritual.co.in/collections/ramayana/books/valmiki-ramayana/arcs/kishkindha-kanda/stories/ramayana-trust-and-alliance/): Hanuman meets Rama and Lakshmana by Pampa, Rama and Sugriva swear friendship before fire, Vali falls, and Jambavan reminds Hanuman of his strength.
+- [Hanuman reaches for the sun](https://spritual.co.in/collections/ramayana/books/valmiki-ramayana/arcs/kishkindha-kanda/stories/hanuman-reaches-for-the-sun/): Newborn Hanuman takes the rising sun for a fruit and leaps; Indra's thunderbolt strikes him down. Years later Jambavan reminds him who he is. From Valmiki.
 - [Across the sea, a ring](https://spritual.co.in/collections/ramayana/books/valmiki-ramayana/arcs/sundara-kanda/stories/ramayana-crossing-and-recognition/): Hanuman leaps the ocean, escapes Surasa, enters Lanka and finds Sita in the Ashoka grove, giving her Rama's ring. From Valmiki's Sundara Kanda.
 - [The day Lanka burned](https://spritual.co.in/collections/ramayana/books/valmiki-ramayana/arcs/sundara-kanda/stories/ramayana-lanka-ablaze/): Hanuman wrecks Ravana's grove, lets Indrajit bind him, sets Lanka on fire with his tail and brings Sita's jewel to Rama. Lanka Dahan, from the Ramayana.
 - [The bridge across the sea](https://spritual.co.in/collections/ramayana/books/valmiki-ramayana/arcs/yuddha-kanda/stories/ramayana-the-bridge/): Vibhishana seeks refuge, Rama lies three nights on kusha grass by the sea, and Nala builds the bridge to Lanka in five days. The Ramayana’s Ram Setu story.
