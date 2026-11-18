@@ -5,16 +5,43 @@
 <id>https://spritual.co.in/hi/feed.xml</id>
 <link rel="self" type="application/atom+xml" href="https://spritual.co.in/hi/feed.xml"/>
 <link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/"/>
-<updated>2026-11-18T09:31:26Z</updated>
+<updated>2026-11-18T12:55:15Z</updated>
 <author><name>Spritual</name><uri>https://spritual.co.in/hi/about/</uri></author>
 <icon>https://spritual.co.in/favicon.ico</icon>
 <logo>https://spritual.co.in/assets/icons/icon-512.png</logo>
+<entry>
+<title>द्वार पर डटा बालक</title>
+<id>https://spritual.co.in/hi/collections/ganesha/books/shiva-purana/arcs/rudra-samhita/stories/ganesha-elephant-head/</id>
+<link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/collections/ganesha/books/shiva-purana/arcs/rudra-samhita/stories/ganesha-elephant-head/"/>
+<link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/collections/ganesha/books/shiva-purana/arcs/rudra-samhita/stories/ganesha-elephant-head/"/>
+<updated>2026-11-18T12:55:15Z</updated>
+<category term="ganesha"/>
+<summary>पार्वती अपने रचे बालक को द्वार पर पहरे के लिए खड़ा करती हैं। वह शिव को भी भीतर नहीं जाने देता, और सारा स्वर्ग उससे युद्ध करने उतर आता है।</summary>
+</entry>
+<entry>
+<title>पर्वत बना मथानी</title>
+<id>https://spritual.co.in/hi/collections/krishna/books/bhagavata-purana/arcs/skandha-8/stories/vishnu-churning-the-ocean/</id>
+<link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/collections/krishna/books/bhagavata-purana/arcs/skandha-8/stories/vishnu-churning-the-ocean/"/>
+<link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/collections/krishna/books/bhagavata-purana/arcs/skandha-8/stories/vishnu-churning-the-ocean/"/>
+<updated>2026-11-18T12:55:04Z</updated>
+<category term="krishna"/>
+<summary>अमृत के लिए देवता और असुर मिलकर सागर मथते हैं। पहले विष निकलता है, फिर रत्न और एक देवी, और अंत में अमृत-कलश, जो केवल एक पक्ष के लिए उँडेला जाता है।</summary>
+</entry>
+<entry>
+<title>जिस रात द्वार खुले</title>
+<id>https://spritual.co.in/hi/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-born-in-prison/</id>
+<link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-born-in-prison/"/>
+<link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-born-in-prison/"/>
+<updated>2026-11-18T12:54:54Z</updated>
+<category term="krishna"/>
+<summary>आकाशवाणी कहती है: बहन की आठवीं संतान कंस का काल बनेगी। उस संतान के जन्म की रात लोहे के द्वार अपने-आप खुल जाते हैं।</summary>
+</entry>
 <entry>
 <title>आग का अनंत स्तंभ</title>
 <id>https://spritual.co.in/hi/collections/shiva/books/shiva-purana/arcs/vidyeshvara-samhita/stories/shiva-pillar-of-fire/</id>
 <link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/collections/shiva/books/shiva-purana/arcs/vidyeshvara-samhita/stories/shiva-pillar-of-fire/"/>
 <link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/collections/shiva/books/shiva-purana/arcs/vidyeshvara-samhita/stories/shiva-pillar-of-fire/"/>
-<updated>2026-11-18T09:31:26Z</updated>
+<updated>2026-11-18T09:37:58Z</updated>
 <category term="shiva"/>
 <summary>ब्रह्मा और विष्णु में ठन गई कि प्रभु कौन है। बीच में अग्नि का स्तंभ उठ खड़ा हुआ। एक उसकी जड़ खोजने गए, एक शिखर। एक झूठ लेकर लौटे।</summary>
 </entry>

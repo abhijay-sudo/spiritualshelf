@@ -5,16 +5,43 @@
 <id>https://spritual.co.in/feed.xml</id>
 <link rel="self" type="application/atom+xml" href="https://spritual.co.in/feed.xml"/>
 <link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/"/>
-<updated>2026-11-18T09:31:26Z</updated>
+<updated>2026-11-18T12:55:15Z</updated>
 <author><name>Spritual</name><uri>https://spritual.co.in/about/</uri></author>
 <icon>https://spritual.co.in/favicon.ico</icon>
 <logo>https://spritual.co.in/assets/icons/icon-512.png</logo>
+<entry>
+<title>The boy who kept the door</title>
+<id>https://spritual.co.in/collections/ganesha/books/shiva-purana/arcs/rudra-samhita/stories/ganesha-elephant-head/</id>
+<link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/collections/ganesha/books/shiva-purana/arcs/rudra-samhita/stories/ganesha-elephant-head/"/>
+<link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/collections/ganesha/books/shiva-purana/arcs/rudra-samhita/stories/ganesha-elephant-head/"/>
+<updated>2026-11-18T12:55:15Z</updated>
+<category term="ganesha"/>
+<summary>Parvati sets a boy of her own at her door. He will not let even Shiva pass, and all of heaven goes to war against him.</summary>
+</entry>
+<entry>
+<title>A mountain for a churning rod</title>
+<id>https://spritual.co.in/collections/krishna/books/bhagavata-purana/arcs/skandha-8/stories/vishnu-churning-the-ocean/</id>
+<link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/collections/krishna/books/bhagavata-purana/arcs/skandha-8/stories/vishnu-churning-the-ocean/"/>
+<link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/collections/krishna/books/bhagavata-purana/arcs/skandha-8/stories/vishnu-churning-the-ocean/"/>
+<updated>2026-11-18T12:55:04Z</updated>
+<category term="krishna"/>
+<summary>Gods and asuras churn the ocean for nectar. Poison rises first, then treasures and a goddess, and last a pot of nectar that is poured for one side alone.</summary>
+</entry>
+<entry>
+<title>The night the doors opened</title>
+<id>https://spritual.co.in/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-born-in-prison/</id>
+<link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-born-in-prison/"/>
+<link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-born-in-prison/"/>
+<updated>2026-11-18T12:54:54Z</updated>
+<category term="krishna"/>
+<summary>A bodiless voice names Kamsa's killer: his sister's eighth child. On the night that child is born, iron doors open by themselves.</summary>
+</entry>
 <entry>
 <title>The fire with no end</title>
 <id>https://spritual.co.in/collections/shiva/books/shiva-purana/arcs/vidyeshvara-samhita/stories/shiva-pillar-of-fire/</id>
 <link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/collections/shiva/books/shiva-purana/arcs/vidyeshvara-samhita/stories/shiva-pillar-of-fire/"/>
 <link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/collections/shiva/books/shiva-purana/arcs/vidyeshvara-samhita/stories/shiva-pillar-of-fire/"/>
-<updated>2026-11-18T09:31:26Z</updated>
+<updated>2026-11-18T09:37:58Z</updated>
 <category term="shiva"/>
 <summary>Brahma and Vishnu go to war over who is lord. A pillar of fire rises between them. One seeks its foot, one its top. One comes back with a lie.</summary>
 </entry>
