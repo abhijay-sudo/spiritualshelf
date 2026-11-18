@@ -68,487 +68,514 @@
           "value": "no-cache"
         }
       ]
+    },
+    {
+      "source": "/feed.xml",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/atom+xml; charset=utf-8"
+        }
+      ]
+    },
+    {
+      "source": "/hi/feed.xml",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/atom+xml; charset=utf-8"
+        }
+      ]
+    },
+    {
+      "source": "/llms.txt",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "text/plain; charset=utf-8"
+        }
+      ]
     }
   ],
   "redirects": [
     {
       "source": "/books/read/what-makes-a-person-admirable{/}?",
-      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/bala-kanda/stories/ramayana-beginnings/?from=what-makes-a-person-admirable",
+      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/bala-kanda/stories/ramayana-beginnings/",
       "statusCode": 301
     },
     {
       "source": "/story/what-makes-a-person-admirable{/}?",
-      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/bala-kanda/stories/ramayana-beginnings/?from=what-makes-a-person-admirable",
+      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/bala-kanda/stories/ramayana-beginnings/",
       "statusCode": 301
     },
     {
       "source": "/read/what-makes-a-person-admirable{/}?",
-      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/bala-kanda/stories/ramayana-beginnings/?from=what-makes-a-person-admirable",
+      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/bala-kanda/stories/ramayana-beginnings/",
       "statusCode": 301
     },
     {
       "source": "/hi/books/read/what-makes-a-person-admirable{/}?",
-      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/bala-kanda/stories/ramayana-beginnings/?from=what-makes-a-person-admirable",
+      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/bala-kanda/stories/ramayana-beginnings/",
       "statusCode": 301
     },
     {
       "source": "/hi/story/what-makes-a-person-admirable{/}?",
-      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/bala-kanda/stories/ramayana-beginnings/?from=what-makes-a-person-admirable",
+      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/bala-kanda/stories/ramayana-beginnings/",
       "statusCode": 301
     },
     {
       "source": "/hi/read/what-makes-a-person-admirable{/}?",
-      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/bala-kanda/stories/ramayana-beginnings/?from=what-makes-a-person-admirable",
+      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/bala-kanda/stories/ramayana-beginnings/",
       "statusCode": 301
     },
     {
       "source": "/books/read/sita-earth{/}?",
-      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/bala-kanda/stories/ramayana-beginnings/?from=sita-earth",
+      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/bala-kanda/stories/ramayana-beginnings/",
       "statusCode": 301
     },
     {
       "source": "/story/sita-earth{/}?",
-      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/bala-kanda/stories/ramayana-beginnings/?from=sita-earth",
+      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/bala-kanda/stories/ramayana-beginnings/",
       "statusCode": 301
     },
     {
       "source": "/read/sita-earth{/}?",
-      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/bala-kanda/stories/ramayana-beginnings/?from=sita-earth",
+      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/bala-kanda/stories/ramayana-beginnings/",
       "statusCode": 301
     },
     {
       "source": "/hi/books/read/sita-earth{/}?",
-      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/bala-kanda/stories/ramayana-beginnings/?from=sita-earth",
+      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/bala-kanda/stories/ramayana-beginnings/",
       "statusCode": 301
     },
     {
       "source": "/hi/story/sita-earth{/}?",
-      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/bala-kanda/stories/ramayana-beginnings/?from=sita-earth",
+      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/bala-kanda/stories/ramayana-beginnings/",
       "statusCode": 301
     },
     {
       "source": "/hi/read/sita-earth{/}?",
-      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/bala-kanda/stories/ramayana-beginnings/?from=sita-earth",
+      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/bala-kanda/stories/ramayana-beginnings/",
       "statusCode": 301
     },
     {
       "source": "/books/read/knowing-how-to-stop{/}?",
-      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/bala-kanda/stories/ramayana-beginnings/?from=knowing-how-to-stop",
+      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/bala-kanda/stories/ramayana-beginnings/",
       "statusCode": 301
     },
     {
       "source": "/story/knowing-how-to-stop{/}?",
-      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/bala-kanda/stories/ramayana-beginnings/?from=knowing-how-to-stop",
+      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/bala-kanda/stories/ramayana-beginnings/",
       "statusCode": 301
     },
     {
       "source": "/read/knowing-how-to-stop{/}?",
-      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/bala-kanda/stories/ramayana-beginnings/?from=knowing-how-to-stop",
+      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/bala-kanda/stories/ramayana-beginnings/",
       "statusCode": 301
     },
     {
       "source": "/hi/books/read/knowing-how-to-stop{/}?",
-      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/bala-kanda/stories/ramayana-beginnings/?from=knowing-how-to-stop",
+      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/bala-kanda/stories/ramayana-beginnings/",
       "statusCode": 301
     },
     {
       "source": "/hi/story/knowing-how-to-stop{/}?",
-      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/bala-kanda/stories/ramayana-beginnings/?from=knowing-how-to-stop",
+      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/bala-kanda/stories/ramayana-beginnings/",
       "statusCode": 301
     },
     {
       "source": "/hi/read/knowing-how-to-stop{/}?",
-      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/bala-kanda/stories/ramayana-beginnings/?from=knowing-how-to-stop",
+      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/bala-kanda/stories/ramayana-beginnings/",
       "statusCode": 301
     },
     {
       "source": "/books/read/the-bow-at-mithila{/}?",
-      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/bala-kanda/stories/ramayana-beginnings/?from=the-bow-at-mithila",
+      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/bala-kanda/stories/ramayana-beginnings/",
       "statusCode": 301
     },
     {
       "source": "/story/the-bow-at-mithila{/}?",
-      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/bala-kanda/stories/ramayana-beginnings/?from=the-bow-at-mithila",
+      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/bala-kanda/stories/ramayana-beginnings/",
       "statusCode": 301
     },
     {
       "source": "/read/the-bow-at-mithila{/}?",
-      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/bala-kanda/stories/ramayana-beginnings/?from=the-bow-at-mithila",
+      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/bala-kanda/stories/ramayana-beginnings/",
       "statusCode": 301
     },
     {
       "source": "/hi/books/read/the-bow-at-mithila{/}?",
-      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/bala-kanda/stories/ramayana-beginnings/?from=the-bow-at-mithila",
+      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/bala-kanda/stories/ramayana-beginnings/",
       "statusCode": 301
     },
     {
       "source": "/hi/story/the-bow-at-mithila{/}?",
-      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/bala-kanda/stories/ramayana-beginnings/?from=the-bow-at-mithila",
+      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/bala-kanda/stories/ramayana-beginnings/",
       "statusCode": 301
     },
     {
       "source": "/hi/read/the-bow-at-mithila{/}?",
-      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/bala-kanda/stories/ramayana-beginnings/?from=the-bow-at-mithila",
+      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/bala-kanda/stories/ramayana-beginnings/",
       "statusCode": 301
     },
     {
       "source": "/books/read/rama-bow{/}?",
-      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/bala-kanda/stories/ramayana-beginnings/?from=rama-bow",
+      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/bala-kanda/stories/ramayana-beginnings/",
       "statusCode": 301
     },
     {
       "source": "/story/rama-bow{/}?",
-      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/bala-kanda/stories/ramayana-beginnings/?from=rama-bow",
+      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/bala-kanda/stories/ramayana-beginnings/",
       "statusCode": 301
     },
     {
       "source": "/read/rama-bow{/}?",
-      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/bala-kanda/stories/ramayana-beginnings/?from=rama-bow",
+      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/bala-kanda/stories/ramayana-beginnings/",
       "statusCode": 301
     },
     {
       "source": "/hi/books/read/rama-bow{/}?",
-      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/bala-kanda/stories/ramayana-beginnings/?from=rama-bow",
+      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/bala-kanda/stories/ramayana-beginnings/",
       "statusCode": 301
     },
     {
       "source": "/hi/story/rama-bow{/}?",
-      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/bala-kanda/stories/ramayana-beginnings/?from=rama-bow",
+      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/bala-kanda/stories/ramayana-beginnings/",
       "statusCode": 301
     },
     {
       "source": "/hi/read/rama-bow{/}?",
-      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/bala-kanda/stories/ramayana-beginnings/?from=rama-bow",
+      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/bala-kanda/stories/ramayana-beginnings/",
       "statusCode": 301
     },
     {
       "source": "/books/read/a-friend-beside-the-ganga{/}?",
-      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/ayodhya-kanda/stories/ramayana-promises-and-partings/?from=a-friend-beside-the-ganga",
+      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/ayodhya-kanda/stories/ramayana-promises-and-partings/",
       "statusCode": 301
     },
     {
       "source": "/story/a-friend-beside-the-ganga{/}?",
-      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/ayodhya-kanda/stories/ramayana-promises-and-partings/?from=a-friend-beside-the-ganga",
+      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/ayodhya-kanda/stories/ramayana-promises-and-partings/",
       "statusCode": 301
     },
     {
       "source": "/read/a-friend-beside-the-ganga{/}?",
-      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/ayodhya-kanda/stories/ramayana-promises-and-partings/?from=a-friend-beside-the-ganga",
+      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/ayodhya-kanda/stories/ramayana-promises-and-partings/",
       "statusCode": 301
     },
     {
       "source": "/hi/books/read/a-friend-beside-the-ganga{/}?",
-      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/ayodhya-kanda/stories/ramayana-promises-and-partings/?from=a-friend-beside-the-ganga",
+      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/ayodhya-kanda/stories/ramayana-promises-and-partings/",
       "statusCode": 301
     },
     {
       "source": "/hi/story/a-friend-beside-the-ganga{/}?",
-      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/ayodhya-kanda/stories/ramayana-promises-and-partings/?from=a-friend-beside-the-ganga",
+      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/ayodhya-kanda/stories/ramayana-promises-and-partings/",
       "statusCode": 301
     },
     {
       "source": "/hi/read/a-friend-beside-the-ganga{/}?",
-      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/ayodhya-kanda/stories/ramayana-promises-and-partings/?from=a-friend-beside-the-ganga",
+      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/ayodhya-kanda/stories/ramayana-promises-and-partings/",
       "statusCode": 301
     },
     {
       "source": "/books/read/bharata-and-the-sandals{/}?",
-      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/ayodhya-kanda/stories/ramayana-promises-and-partings/?from=bharata-and-the-sandals",
+      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/ayodhya-kanda/stories/ramayana-promises-and-partings/",
       "statusCode": 301
     },
     {
       "source": "/story/bharata-and-the-sandals{/}?",
-      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/ayodhya-kanda/stories/ramayana-promises-and-partings/?from=bharata-and-the-sandals",
+      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/ayodhya-kanda/stories/ramayana-promises-and-partings/",
       "statusCode": 301
     },
     {
       "source": "/read/bharata-and-the-sandals{/}?",
-      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/ayodhya-kanda/stories/ramayana-promises-and-partings/?from=bharata-and-the-sandals",
+      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/ayodhya-kanda/stories/ramayana-promises-and-partings/",
       "statusCode": 301
     },
     {
       "source": "/hi/books/read/bharata-and-the-sandals{/}?",
-      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/ayodhya-kanda/stories/ramayana-promises-and-partings/?from=bharata-and-the-sandals",
+      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/ayodhya-kanda/stories/ramayana-promises-and-partings/",
       "statusCode": 301
     },
     {
       "source": "/hi/story/bharata-and-the-sandals{/}?",
-      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/ayodhya-kanda/stories/ramayana-promises-and-partings/?from=bharata-and-the-sandals",
+      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/ayodhya-kanda/stories/ramayana-promises-and-partings/",
       "statusCode": 301
     },
     {
       "source": "/hi/read/bharata-and-the-sandals{/}?",
-      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/ayodhya-kanda/stories/ramayana-promises-and-partings/?from=bharata-and-the-sandals",
+      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/ayodhya-kanda/stories/ramayana-promises-and-partings/",
       "statusCode": 301
     },
     {
       "source": "/books/read/shabaris-welcome{/}?",
-      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/aranya-kanda/stories/ramayana-loss-and-hospitality/?from=shabaris-welcome",
+      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/aranya-kanda/stories/ramayana-loss-and-hospitality/",
       "statusCode": 301
     },
     {
       "source": "/story/shabaris-welcome{/}?",
-      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/aranya-kanda/stories/ramayana-loss-and-hospitality/?from=shabaris-welcome",
+      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/aranya-kanda/stories/ramayana-loss-and-hospitality/",
       "statusCode": 301
     },
     {
       "source": "/read/shabaris-welcome{/}?",
-      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/aranya-kanda/stories/ramayana-loss-and-hospitality/?from=shabaris-welcome",
+      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/aranya-kanda/stories/ramayana-loss-and-hospitality/",
       "statusCode": 301
     },
     {
       "source": "/hi/books/read/shabaris-welcome{/}?",
-      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/aranya-kanda/stories/ramayana-loss-and-hospitality/?from=shabaris-welcome",
+      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/aranya-kanda/stories/ramayana-loss-and-hospitality/",
       "statusCode": 301
     },
     {
       "source": "/hi/story/shabaris-welcome{/}?",
-      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/aranya-kanda/stories/ramayana-loss-and-hospitality/?from=shabaris-welcome",
+      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/aranya-kanda/stories/ramayana-loss-and-hospitality/",
       "statusCode": 301
     },
     {
       "source": "/hi/read/shabaris-welcome{/}?",
-      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/aranya-kanda/stories/ramayana-loss-and-hospitality/?from=shabaris-welcome",
+      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/aranya-kanda/stories/ramayana-loss-and-hospitality/",
       "statusCode": 301
     },
     {
       "source": "/books/read/hanumans-first-conversation{/}?",
-      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/kishkindha-kanda/stories/ramayana-trust-and-alliance/?from=hanumans-first-conversation",
+      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/kishkindha-kanda/stories/ramayana-trust-and-alliance/",
       "statusCode": 301
     },
     {
       "source": "/story/hanumans-first-conversation{/}?",
-      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/kishkindha-kanda/stories/ramayana-trust-and-alliance/?from=hanumans-first-conversation",
+      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/kishkindha-kanda/stories/ramayana-trust-and-alliance/",
       "statusCode": 301
     },
     {
       "source": "/read/hanumans-first-conversation{/}?",
-      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/kishkindha-kanda/stories/ramayana-trust-and-alliance/?from=hanumans-first-conversation",
+      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/kishkindha-kanda/stories/ramayana-trust-and-alliance/",
       "statusCode": 301
     },
     {
       "source": "/hi/books/read/hanumans-first-conversation{/}?",
-      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/kishkindha-kanda/stories/ramayana-trust-and-alliance/?from=hanumans-first-conversation",
+      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/kishkindha-kanda/stories/ramayana-trust-and-alliance/",
       "statusCode": 301
     },
     {
       "source": "/hi/story/hanumans-first-conversation{/}?",
-      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/kishkindha-kanda/stories/ramayana-trust-and-alliance/?from=hanumans-first-conversation",
+      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/kishkindha-kanda/stories/ramayana-trust-and-alliance/",
       "statusCode": 301
     },
     {
       "source": "/hi/read/hanumans-first-conversation{/}?",
-      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/kishkindha-kanda/stories/ramayana-trust-and-alliance/?from=hanumans-first-conversation",
+      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/kishkindha-kanda/stories/ramayana-trust-and-alliance/",
       "statusCode": 301
     },
     {
       "source": "/books/read/hanuman-leap{/}?",
-      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/kishkindha-kanda/stories/ramayana-trust-and-alliance/?from=hanuman-leap",
+      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/kishkindha-kanda/stories/ramayana-trust-and-alliance/",
       "statusCode": 301
     },
     {
       "source": "/story/hanuman-leap{/}?",
-      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/kishkindha-kanda/stories/ramayana-trust-and-alliance/?from=hanuman-leap",
+      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/kishkindha-kanda/stories/ramayana-trust-and-alliance/",
       "statusCode": 301
     },
     {
       "source": "/read/hanuman-leap{/}?",
-      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/kishkindha-kanda/stories/ramayana-trust-and-alliance/?from=hanuman-leap",
+      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/kishkindha-kanda/stories/ramayana-trust-and-alliance/",
       "statusCode": 301
     },
     {
       "source": "/hi/books/read/hanuman-leap{/}?",
-      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/kishkindha-kanda/stories/ramayana-trust-and-alliance/?from=hanuman-leap",
+      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/kishkindha-kanda/stories/ramayana-trust-and-alliance/",
       "statusCode": 301
     },
     {
       "source": "/hi/story/hanuman-leap{/}?",
-      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/kishkindha-kanda/stories/ramayana-trust-and-alliance/?from=hanuman-leap",
+      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/kishkindha-kanda/stories/ramayana-trust-and-alliance/",
       "statusCode": 301
     },
     {
       "source": "/hi/read/hanuman-leap{/}?",
-      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/kishkindha-kanda/stories/ramayana-trust-and-alliance/?from=hanuman-leap",
+      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/kishkindha-kanda/stories/ramayana-trust-and-alliance/",
       "statusCode": 301
     },
     {
       "source": "/books/read/across-the-ocean{/}?",
-      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/sundara-kanda/stories/ramayana-crossing-and-recognition/?from=across-the-ocean",
+      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/sundara-kanda/stories/ramayana-crossing-and-recognition/",
       "statusCode": 301
     },
     {
       "source": "/story/across-the-ocean{/}?",
-      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/sundara-kanda/stories/ramayana-crossing-and-recognition/?from=across-the-ocean",
+      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/sundara-kanda/stories/ramayana-crossing-and-recognition/",
       "statusCode": 301
     },
     {
       "source": "/read/across-the-ocean{/}?",
-      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/sundara-kanda/stories/ramayana-crossing-and-recognition/?from=across-the-ocean",
+      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/sundara-kanda/stories/ramayana-crossing-and-recognition/",
       "statusCode": 301
     },
     {
       "source": "/hi/books/read/across-the-ocean{/}?",
-      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/sundara-kanda/stories/ramayana-crossing-and-recognition/?from=across-the-ocean",
+      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/sundara-kanda/stories/ramayana-crossing-and-recognition/",
       "statusCode": 301
     },
     {
       "source": "/hi/story/across-the-ocean{/}?",
-      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/sundara-kanda/stories/ramayana-crossing-and-recognition/?from=across-the-ocean",
+      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/sundara-kanda/stories/ramayana-crossing-and-recognition/",
       "statusCode": 301
     },
     {
       "source": "/hi/read/across-the-ocean{/}?",
-      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/sundara-kanda/stories/ramayana-crossing-and-recognition/?from=across-the-ocean",
+      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/sundara-kanda/stories/ramayana-crossing-and-recognition/",
       "statusCode": 301
     },
     {
       "source": "/books/read/a-ring-brings-hope{/}?",
-      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/sundara-kanda/stories/ramayana-crossing-and-recognition/?from=a-ring-brings-hope",
+      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/sundara-kanda/stories/ramayana-crossing-and-recognition/",
       "statusCode": 301
     },
     {
       "source": "/story/a-ring-brings-hope{/}?",
-      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/sundara-kanda/stories/ramayana-crossing-and-recognition/?from=a-ring-brings-hope",
+      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/sundara-kanda/stories/ramayana-crossing-and-recognition/",
       "statusCode": 301
     },
     {
       "source": "/read/a-ring-brings-hope{/}?",
-      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/sundara-kanda/stories/ramayana-crossing-and-recognition/?from=a-ring-brings-hope",
+      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/sundara-kanda/stories/ramayana-crossing-and-recognition/",
       "statusCode": 301
     },
     {
       "source": "/hi/books/read/a-ring-brings-hope{/}?",
-      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/sundara-kanda/stories/ramayana-crossing-and-recognition/?from=a-ring-brings-hope",
+      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/sundara-kanda/stories/ramayana-crossing-and-recognition/",
       "statusCode": 301
     },
     {
       "source": "/hi/story/a-ring-brings-hope{/}?",
-      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/sundara-kanda/stories/ramayana-crossing-and-recognition/?from=a-ring-brings-hope",
+      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/sundara-kanda/stories/ramayana-crossing-and-recognition/",
       "statusCode": 301
     },
     {
       "source": "/hi/read/a-ring-brings-hope{/}?",
-      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/sundara-kanda/stories/ramayana-crossing-and-recognition/?from=a-ring-brings-hope",
+      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/sundara-kanda/stories/ramayana-crossing-and-recognition/",
       "statusCode": 301
     },
     {
       "source": "/books/read/returning-responsibility{/}?",
-      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/yuddha-kanda/stories/ramayana-home-and-responsibility/?from=returning-responsibility",
+      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/yuddha-kanda/stories/ramayana-home-and-responsibility/",
       "statusCode": 301
     },
     {
       "source": "/story/returning-responsibility{/}?",
-      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/yuddha-kanda/stories/ramayana-home-and-responsibility/?from=returning-responsibility",
+      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/yuddha-kanda/stories/ramayana-home-and-responsibility/",
       "statusCode": 301
     },
     {
       "source": "/read/returning-responsibility{/}?",
-      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/yuddha-kanda/stories/ramayana-home-and-responsibility/?from=returning-responsibility",
+      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/yuddha-kanda/stories/ramayana-home-and-responsibility/",
       "statusCode": 301
     },
     {
       "source": "/hi/books/read/returning-responsibility{/}?",
-      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/yuddha-kanda/stories/ramayana-home-and-responsibility/?from=returning-responsibility",
+      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/yuddha-kanda/stories/ramayana-home-and-responsibility/",
       "statusCode": 301
     },
     {
       "source": "/hi/story/returning-responsibility{/}?",
-      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/yuddha-kanda/stories/ramayana-home-and-responsibility/?from=returning-responsibility",
+      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/yuddha-kanda/stories/ramayana-home-and-responsibility/",
       "statusCode": 301
     },
     {
       "source": "/hi/read/returning-responsibility{/}?",
-      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/yuddha-kanda/stories/ramayana-home-and-responsibility/?from=returning-responsibility",
+      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/yuddha-kanda/stories/ramayana-home-and-responsibility/",
       "statusCode": 301
     },
     {
       "source": "/books/read/krishna-mountain{/}?",
-      "destination": "/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-mountain/?from=krishna-mountain",
+      "destination": "/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-mountain/",
       "statusCode": 301
     },
     {
       "source": "/story/krishna-mountain{/}?",
-      "destination": "/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-mountain/?from=krishna-mountain",
+      "destination": "/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-mountain/",
       "statusCode": 301
     },
     {
       "source": "/read/krishna-mountain{/}?",
-      "destination": "/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-mountain/?from=krishna-mountain",
+      "destination": "/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-mountain/",
       "statusCode": 301
     },
     {
       "source": "/hi/books/read/krishna-mountain{/}?",
-      "destination": "/hi/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-mountain/?from=krishna-mountain",
+      "destination": "/hi/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-mountain/",
       "statusCode": 301
     },
     {
       "source": "/hi/story/krishna-mountain{/}?",
-      "destination": "/hi/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-mountain/?from=krishna-mountain",
+      "destination": "/hi/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-mountain/",
       "statusCode": 301
     },
     {
       "source": "/hi/read/krishna-mountain{/}?",
-      "destination": "/hi/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-mountain/?from=krishna-mountain",
+      "destination": "/hi/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-mountain/",
       "statusCode": 301
     },
     {
       "source": "/books/read/shiva-river{/}?",
-      "destination": "/collections/shiva/books/valmiki-ramayana/arcs/bala-kanda/stories/shiva-river/?from=shiva-river",
+      "destination": "/collections/shiva/books/valmiki-ramayana/arcs/bala-kanda/stories/shiva-river/",
       "statusCode": 301
     },
     {
       "source": "/story/shiva-river{/}?",
-      "destination": "/collections/shiva/books/valmiki-ramayana/arcs/bala-kanda/stories/shiva-river/?from=shiva-river",
+      "destination": "/collections/shiva/books/valmiki-ramayana/arcs/bala-kanda/stories/shiva-river/",
       "statusCode": 301
     },
     {
       "source": "/read/shiva-river{/}?",
-      "destination": "/collections/shiva/books/valmiki-ramayana/arcs/bala-kanda/stories/shiva-river/?from=shiva-river",
+      "destination": "/collections/shiva/books/valmiki-ramayana/arcs/bala-kanda/stories/shiva-river/",
       "statusCode": 301
     },
     {
       "source": "/hi/books/read/shiva-river{/}?",
-      "destination": "/hi/collections/shiva/books/valmiki-ramayana/arcs/bala-kanda/stories/shiva-river/?from=shiva-river",
+      "destination": "/hi/collections/shiva/books/valmiki-ramayana/arcs/bala-kanda/stories/shiva-river/",
       "statusCode": 301
     },
     {
       "source": "/hi/story/shiva-river{/}?",
-      "destination": "/hi/collections/shiva/books/valmiki-ramayana/arcs/bala-kanda/stories/shiva-river/?from=shiva-river",
+      "destination": "/hi/collections/shiva/books/valmiki-ramayana/arcs/bala-kanda/stories/shiva-river/",
       "statusCode": 301
     },
     {
       "source": "/hi/read/shiva-river{/}?",
-      "destination": "/hi/collections/shiva/books/valmiki-ramayana/arcs/bala-kanda/stories/shiva-river/?from=shiva-river",
+      "destination": "/hi/collections/shiva/books/valmiki-ramayana/arcs/bala-kanda/stories/shiva-river/",
       "statusCode": 301
     },
     {
       "source": "/books/read/dhruva-star{/}?",
-      "destination": "/collections/krishna/books/bhagavata-purana/arcs/skandha-4/stories/dhruva-star/?from=dhruva-star",
+      "destination": "/collections/krishna/books/bhagavata-purana/arcs/skandha-4/stories/dhruva-star/",
       "statusCode": 301
     },
     {
       "source": "/story/dhruva-star{/}?",
-      "destination": "/collections/krishna/books/bhagavata-purana/arcs/skandha-4/stories/dhruva-star/?from=dhruva-star",
+      "destination": "/collections/krishna/books/bhagavata-purana/arcs/skandha-4/stories/dhruva-star/",
       "statusCode": 301
     },
     {
       "source": "/read/dhruva-star{/}?",
-      "destination": "/collections/krishna/books/bhagavata-purana/arcs/skandha-4/stories/dhruva-star/?from=dhruva-star",
+      "destination": "/collections/krishna/books/bhagavata-purana/arcs/skandha-4/stories/dhruva-star/",
       "statusCode": 301
     },
     {
       "source": "/hi/books/read/dhruva-star{/}?",
-      "destination": "/hi/collections/krishna/books/bhagavata-purana/arcs/skandha-4/stories/dhruva-star/?from=dhruva-star",
+      "destination": "/hi/collections/krishna/books/bhagavata-purana/arcs/skandha-4/stories/dhruva-star/",
       "statusCode": 301
     },
     {
       "source": "/hi/story/dhruva-star{/}?",
-      "destination": "/hi/collections/krishna/books/bhagavata-purana/arcs/skandha-4/stories/dhruva-star/?from=dhruva-star",
+      "destination": "/hi/collections/krishna/books/bhagavata-purana/arcs/skandha-4/stories/dhruva-star/",
       "statusCode": 301
     },
     {
       "source": "/hi/read/dhruva-star{/}?",
-      "destination": "/hi/collections/krishna/books/bhagavata-purana/arcs/skandha-4/stories/dhruva-star/?from=dhruva-star",
+      "destination": "/hi/collections/krishna/books/bhagavata-purana/arcs/skandha-4/stories/dhruva-star/",
       "statusCode": 301
     },
     {
@@ -984,192 +1011,232 @@
     {
       "source": "/books{/}?",
       "destination": "/library/",
-      "statusCode": 302
+      "statusCode": 308
     },
     {
       "source": "/books/:shelf{/}?",
       "destination": "/library/",
-      "statusCode": 302
+      "statusCode": 308
     },
     {
       "source": "/library/sources{/}?",
       "destination": "/library/",
-      "statusCode": 302
+      "statusCode": 308
     },
     {
       "source": "/library/stories{/}?",
       "destination": "/library/",
-      "statusCode": 302
+      "statusCode": 308
     },
     {
       "source": "/library/ramayana{/}?",
       "destination": "/collections/ramayana/",
-      "statusCode": 302
+      "statusCode": 308
     },
     {
       "source": "/library/ramayana/:arc{/}?",
       "destination": "/collections/ramayana/",
-      "statusCode": 302
+      "statusCode": 308
     },
     {
       "source": "/library/krishna{/}?",
       "destination": "/collections/krishna/",
-      "statusCode": 302
+      "statusCode": 308
     },
     {
       "source": "/library/krishna/:arc{/}?",
       "destination": "/collections/krishna/",
-      "statusCode": 302
+      "statusCode": 308
     },
     {
       "source": "/library/shiva{/}?",
       "destination": "/collections/shiva/",
-      "statusCode": 302
+      "statusCode": 308
     },
     {
       "source": "/library/shiva/:arc{/}?",
       "destination": "/collections/shiva/",
-      "statusCode": 302
+      "statusCode": 308
     },
     {
       "source": "/library/devi{/}?",
       "destination": "/collections/devi/",
-      "statusCode": 302
+      "statusCode": 308
     },
     {
       "source": "/library/devi/:arc{/}?",
       "destination": "/collections/devi/",
-      "statusCode": 302
+      "statusCode": 308
     },
     {
       "source": "/library/ganesha{/}?",
       "destination": "/collections/ganesha/",
-      "statusCode": 302
+      "statusCode": 308
     },
     {
       "source": "/library/ganesha/:arc{/}?",
       "destination": "/collections/ganesha/",
-      "statusCode": 302
+      "statusCode": 308
     },
     {
       "source": "/library/mahabharata{/}?",
       "destination": "/collections/mahabharata/",
-      "statusCode": 302
+      "statusCode": 308
     },
     {
       "source": "/library/mahabharata/:arc{/}?",
       "destination": "/collections/mahabharata/",
-      "statusCode": 302
+      "statusCode": 308
     },
     {
       "source": "/collections/:c/books/:b{/}?",
       "destination": "/collections/:c/",
-      "statusCode": 302
+      "statusCode": 308
     },
     {
       "source": "/collections/:c/books/:b/arcs/:a{/}?",
       "destination": "/collections/:c/",
-      "statusCode": 302
+      "statusCode": 308
+    },
+    {
+      "source": "/journeys{/}?",
+      "destination": "/library/",
+      "statusCode": 308
+    },
+    {
+      "source": "/journeys/ramayana{/}?",
+      "destination": "/collections/ramayana/",
+      "statusCode": 308
+    },
+    {
+      "source": "/journeys/hanuman{/}?",
+      "destination": "/characters/hanuman/",
+      "statusCode": 308
+    },
+    {
+      "source": "/journeys/:any{/}?",
+      "destination": "/library/",
+      "statusCode": 308
     },
     {
       "source": "/characters/medhas{/}?",
       "destination": "/characters/",
-      "statusCode": 302
+      "statusCode": 308
     },
     {
       "source": "/hi/books{/}?",
       "destination": "/hi/library/",
-      "statusCode": 302
+      "statusCode": 308
     },
     {
       "source": "/hi/books/:shelf{/}?",
       "destination": "/hi/library/",
-      "statusCode": 302
+      "statusCode": 308
     },
     {
       "source": "/hi/library/sources{/}?",
       "destination": "/hi/library/",
-      "statusCode": 302
+      "statusCode": 308
     },
     {
       "source": "/hi/library/stories{/}?",
       "destination": "/hi/library/",
-      "statusCode": 302
+      "statusCode": 308
     },
     {
       "source": "/hi/library/ramayana{/}?",
       "destination": "/hi/collections/ramayana/",
-      "statusCode": 302
+      "statusCode": 308
     },
     {
       "source": "/hi/library/ramayana/:arc{/}?",
       "destination": "/hi/collections/ramayana/",
-      "statusCode": 302
+      "statusCode": 308
     },
     {
       "source": "/hi/library/krishna{/}?",
       "destination": "/hi/collections/krishna/",
-      "statusCode": 302
+      "statusCode": 308
     },
     {
       "source": "/hi/library/krishna/:arc{/}?",
       "destination": "/hi/collections/krishna/",
-      "statusCode": 302
+      "statusCode": 308
     },
     {
       "source": "/hi/library/shiva{/}?",
       "destination": "/hi/collections/shiva/",
-      "statusCode": 302
+      "statusCode": 308
     },
     {
       "source": "/hi/library/shiva/:arc{/}?",
       "destination": "/hi/collections/shiva/",
-      "statusCode": 302
+      "statusCode": 308
     },
     {
       "source": "/hi/library/devi{/}?",
       "destination": "/hi/collections/devi/",
-      "statusCode": 302
+      "statusCode": 308
     },
     {
       "source": "/hi/library/devi/:arc{/}?",
       "destination": "/hi/collections/devi/",
-      "statusCode": 302
+      "statusCode": 308
     },
     {
       "source": "/hi/library/ganesha{/}?",
       "destination": "/hi/collections/ganesha/",
-      "statusCode": 302
+      "statusCode": 308
     },
     {
       "source": "/hi/library/ganesha/:arc{/}?",
       "destination": "/hi/collections/ganesha/",
-      "statusCode": 302
+      "statusCode": 308
     },
     {
       "source": "/hi/library/mahabharata{/}?",
       "destination": "/hi/collections/mahabharata/",
-      "statusCode": 302
+      "statusCode": 308
     },
     {
       "source": "/hi/library/mahabharata/:arc{/}?",
       "destination": "/hi/collections/mahabharata/",
-      "statusCode": 302
+      "statusCode": 308
     },
     {
       "source": "/hi/collections/:c/books/:b{/}?",
       "destination": "/hi/collections/:c/",
-      "statusCode": 302
+      "statusCode": 308
     },
     {
       "source": "/hi/collections/:c/books/:b/arcs/:a{/}?",
       "destination": "/hi/collections/:c/",
-      "statusCode": 302
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/journeys{/}?",
+      "destination": "/hi/library/",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/journeys/ramayana{/}?",
+      "destination": "/hi/collections/ramayana/",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/journeys/hanuman{/}?",
+      "destination": "/hi/characters/hanuman/",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/journeys/:any{/}?",
+      "destination": "/hi/library/",
+      "statusCode": 308
     },
     {
       "source": "/hi/characters/medhas{/}?",
       "destination": "/hi/characters/",
-      "statusCode": 302
+      "statusCode": 308
     },
     {
       "source": "/:path((?!\\.well-known(?:/|$))(?:[^/]+/)*[^/.]+)",
