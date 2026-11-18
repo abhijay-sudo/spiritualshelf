@@ -5,10 +5,19 @@
 <id>https://spritual.co.in/hi/feed.xml</id>
 <link rel="self" type="application/atom+xml" href="https://spritual.co.in/hi/feed.xml"/>
 <link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/"/>
-<updated>2026-11-18T14:00:52Z</updated>
+<updated>2026-11-18T15:25:50Z</updated>
 <author><name>Spritual</name><uri>https://spritual.co.in/hi/about/</uri></author>
 <icon>https://spritual.co.in/favicon.ico</icon>
 <logo>https://spritual.co.in/assets/icons/icon-512.png</logo>
+<entry>
+<title>होलिका की गोद में</title>
+<id>https://spritual.co.in/hi/collections/krishna/books/later-tradition/arcs/holi/stories/prahlada-and-holika/</id>
+<link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/collections/krishna/books/later-tradition/arcs/holi/stories/prahlada-and-holika/"/>
+<link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/collections/krishna/books/later-tradition/arcs/holi/stories/prahlada-and-holika/"/>
+<updated>2026-11-18T15:25:50Z</updated>
+<category term="krishna"/>
+<summary>भागवत में आग भी बालक का कुछ नहीं बिगाड़ पाती। होली का अलाव उस बुआ को याद करता है जो उसे गोद में लेकर लपटों में बैठी थी।</summary>
+</entry>
 <entry>
 <title>चार मुट्ठी चिउड़ा</title>
 <id>https://spritual.co.in/hi/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-and-sudama/</id>
