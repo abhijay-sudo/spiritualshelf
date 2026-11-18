@@ -192,8 +192,12 @@
       // (on short screens the same name sits in the counter's line instead: both copies are kept in step)
       if (d.world) $$('[data-sel-world]', sel).forEach((el) => { const w = el.firstElementChild; const was = w.textContent; w.textContent = d.world; el.classList.toggle('is-foe', 'foe' in d); if (was !== d.world && !reduced()) { el.classList.remove('is-new'); void el.offsetWidth; el.classList.add('is-new'); } });
       out.n.textContent = String(inGrp().indexOf(i) + 1).padStart(2, '0'); out.coll.textContent = d.coll; out.sum.textContent = d.sum;
-      // the name lands letter by letter
-      out.title.textContent = ''; (typeof Intl !== 'undefined' && Intl.Segmenter ? [...new Intl.Segmenter(root.lang || undefined, { granularity: 'grapheme' }).segment(d.title)].map((x) => x.segment) : [d.title]).forEach((ch, k) => { const sp = document.createElement('span'); sp.className = 'cx-sel-ch'; sp.style.setProperty('--k', k); sp.textContent = ch; out.title.append(sp); });
+      // the name lands letter by letter; each word is one piece, so a name is never broken inside a word, and it is
+      // set at the size its widest word allows (--nw: that word's width in em, measured from the title face)
+      out.title.textContent = ''; if (d.nw) out.title.style.setProperty('--nw', d.nw);
+      { let k = 0; d.title.split(' ').forEach((word, wi) => { if (wi) out.title.append(' '); const w = document.createElement('span'); w.className = 'cx-sel-w';
+        (typeof Intl !== 'undefined' && Intl.Segmenter ? [...new Intl.Segmenter(root.lang || undefined, { granularity: 'grapheme' }).segment(word)].map((x) => x.segment) : [word]).forEach((ch) => { const sp = document.createElement('span'); sp.className = 'cx-sel-ch'; sp.style.setProperty('--k', k++); sp.textContent = ch; w.append(sp); });
+        out.title.append(w); }); }
       out.title.setAttribute('aria-label', d.title);
       if (out.chips) out.chips.innerHTML = d.chips || '';   // built by the site's own generator (escaped there)
       out.go.href = t.href; out.go.setAttribute('aria-label', d.meet || d.title); if (out.goT) out.goT.textContent = d.meet || d.title;
@@ -201,12 +205,12 @@
       // a character with a cut-out portrait steps in front of their world; one painted inside a scene is found by the
       // camera instead: the world itself pushes in on them, and the words move to the other side
       const scene = d.mode === 'scene';
-      sel.classList.toggle('is-scene', scene); sel.classList.toggle('is-left', d.side === 'left');
+      sel.classList.toggle('is-scene', scene); sel.classList.toggle('is-left', d.side === 'left'); sel.classList.toggle('is-calm', scene && d.calm === '1');
       if (!scene && d.hero) { out.hero.srcset = d.heroset; out.hero.src = d.hero; heroUrl(d.hero); }
       // the painting: the roster's small copy at once (it is already loaded), the full one as soon as it has decoded
       // the new world comes in over the old one behind a blade of light; the old one leaves when it is covered
       const my = ++token; const next = layers[1 - front]; const prev = layers[front]; const thumb = $('img', t);
-      next.removeAttribute('srcset'); next.removeAttribute('sizes'); { const face = d.ffx && narrow.matches; next.style.setProperty('--fx', `${face ? d.ffx : d.fx}%`); next.style.setProperty('--fy', `${face ? d.ffy : d.fy}%`); } next.style.setProperty('--z', d.z || 1); next.src = thumb.currentSrc || thumb.src;
+      next.removeAttribute('srcset'); next.removeAttribute('sizes'); { const face = d.ffx && narrow.matches; next.style.setProperty('--fx', `${face ? d.ffx : d.fx}%`); next.style.setProperty('--fy', `${face ? d.ffy : d.fy}%`); } next.style.setProperty('--z', d.z || 1); next.style.setProperty('--say', d.ay ? d.ay + '%' : ''); next.src = thumb.currentSrc || thumb.src;
       layers.forEach((x) => x.classList.remove('is-out', 'is-in'));
       prev.classList.remove('is-on'); prev.classList.add('is-out'); next.classList.add('is-on');
       if (!reduced()) { void next.offsetWidth; next.classList.add('is-in'); }

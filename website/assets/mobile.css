@@ -120,8 +120,11 @@
   .cx-sel-tile-bg, .cx-sel-tile-face { bottom: 32px; }
   .cx-sel-tile-face img { width: 84%; top: 4%; }
   .cx-sel-tile::after { background: linear-gradient(to top, rgb(5 3 2 / .96) 0 32px, transparent 60%); }
-  .cx-sel-tile-n, html[lang="hi"] .cx-sel-tile-n, .cx-sel-grid[data-huge="true"] .cx-sel-tile-n { left: 6px; right: 14px; bottom: 0; height: 32px; display: flex; align-items: center; justify-content: center; text-align: center; font: 600 13px/1.1 var(--cx-ui); letter-spacing: 0; text-transform: none; white-space: normal; overflow: hidden; text-overflow: clip; overflow-wrap: anywhere; }
+  .cx-sel-tile-n, html[lang="hi"] .cx-sel-tile-n, .cx-sel-grid[data-huge="true"] .cx-sel-tile-n { left: 6px; right: 14px; bottom: 0; height: 32px; display: flex; align-items: center; justify-content: center; text-align: center; font: 600 13px/1.1 var(--cx-ui); letter-spacing: 0; text-transform: none; white-space: nowrap; overflow: hidden; text-overflow: clip; overflow-wrap: normal; }
   html[lang="hi"] .cx-sel-tile-n { font-family: "Mukta", var(--cx-ui); font-size: 14px; }
+  /* a name is never broken inside a word: a long one (Parashurama, Hiranyakashipu) is set a little smaller, on one line
+     (--nl is how many letters it has; the label is 80px of a 96px tile) */
+  html:not([lang="hi"]) .cx-sel-grid .cx-sel-tile-n { left: 5px; right: 11px; font-size: min(13px, calc(80px / (var(--nl, 8) * .58))); }
   .cx-sel-tile.is-on { translate: 0 -.45rem; scale: 1.04; }
   .cx-sel-auto { width: 44px; height: 44px; }
 
@@ -129,7 +132,9 @@
   .cx-sel-sum { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden; font-size: .94rem; line-height: 1.45; max-width: 36rem; }
   .cx-sel-btns { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: .5rem; width: 100%; max-width: 30rem; }
   .cx-sel-btns .cx-btn { min-width: 0; min-height: 44px; padding-inline: .7rem; justify-content: center; font-size: .94rem; }
-  .cx-sel-btns .cx-btn > span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  /* a long name takes a second line in its button (at a space, never inside the name) instead of being cut short with
+     an ellipsis; two lines fit the button's own height, so it is the same size for every person */
+  .cx-sel-btns .cx-btn > span { min-width: 0; line-height: 1.15; text-wrap: balance; overflow-wrap: normal; word-break: keep-all; }
   .cx-sel-story { display: inline-flex; }
 }
 /* a phone with the height for it shows the whole description (up to four lines); a short one keeps two */
@@ -148,6 +153,7 @@
   .cx-sel-h::before, .cx-sel-h::after { width: 1rem; }
   html[lang="hi"] .cx-sel-h { letter-spacing: .04em; }
   .cx-sel-btns .cx-btn { padding-inline: .5rem; font-size: .875rem; }
+  .cx-sel-go .ic { display: none; }   /* the longest names need the arrow's room here; the gold button says enough */
 }
 /* a phone on its side: the worlds and the strip share the bottom row; the words and both buttons on the left */
 @media (orientation: landscape) and (max-height: 520px) {
@@ -160,9 +166,10 @@
   .cx-sel-tile-face img { width: 62%; top: 0; }
   .cx-sel-tile::after { background: linear-gradient(to top, rgb(5 3 2 / .96) 0 24px, transparent 70%); }
   .cx-sel-tile-n, html[lang="hi"] .cx-sel-tile-n, .cx-sel-grid[data-huge="true"] .cx-sel-tile-n { height: 24px; white-space: nowrap; }
+  html:not([lang="hi"]) .cx-sel-grid .cx-sel-tile-n { font-size: min(13px, calc(76px / (var(--nl, 8) * .58))); }
   .cx-sel-stage { max-width: 58%; gap: .3rem; }
   .cx-sel-count { font-size: .8rem; } .cx-sel-count b { font-size: 1.15rem; line-height: 1; }
-  .cx-sel-title { font-size: clamp(1.7rem, 1rem + 2.4vw, 2.2rem); line-height: 1.05; }
+  .cx-sel-title { --sel-ts: clamp(1.7rem, 1rem + 2.4vw, 2.2rem); line-height: 1.05; }
   .cx-sel-sum { -webkit-line-clamp: 1; line-clamp: 1; font-size: .875rem; }
   .cx-sel-btns { max-width: 24rem; }
 }
@@ -253,23 +260,7 @@ details.cx-fgroup > summary::-webkit-details-marker, details.src-fold > summary:
   .cx-manas-card::before, .cx-now-body::before { content: ""; position: absolute; z-index: -1; inset: -1.5rem 0 0; pointer-events: none; background: linear-gradient(to top, rgb(12 6 2 / .82) 0, rgb(12 6 2 / .66) 50%, rgb(12 6 2 / .55) 82%, rgb(12 6 2 / .2) 100%); }
 }
 
-/* ---------- 15. A character's page: the name in the first screen, over the foot of the portrait ---------- */
-@media (max-width: 759px) {
-  .cast-hero { padding-top: calc(var(--ed-head-h) + .75rem); }
-  .cast-hero-in { gap: 0; }
-  .cast-hero-pic .art, .cast-hero-pic .fig { height: min(52svh, 32rem); }
-  .cast-hero-txt { position: relative; z-index: 1; margin-top: -4rem; padding-top: 2rem; }
-  .cast-hero-txt::before { content: ""; position: absolute; z-index: -1; inset: -1rem -2rem auto; height: 12rem; pointer-events: none; background: radial-gradient(ellipse 70% 55% at 35% 55%, rgb(18 12 8 / .78), rgb(18 12 8 / 0) 100%); }
-  .cast-hero .cast-name { text-shadow: 0 2px 18px rgb(10 6 3 / .7); }
-  .cast-hero-txt .crumbs { margin-bottom: .25rem; }
-}
-@media (orientation: landscape) and (max-height: 520px) {
-  .cast-hero { padding-top: calc(var(--ed-head-h) + .5rem); padding-bottom: 1.5rem; }
-  .cast-hero-in { grid-template-columns: minmax(0, .8fr) minmax(0, 1fr); align-items: center; gap: 1.5rem; }
-  .cast-hero-pic .art, .cast-hero-pic .fig { height: calc(100svh - var(--ed-head-h) - 2rem); }
-  .cast-hero-txt { margin-top: 0; padding-top: 0; }
-  .cast-hero-txt::before { display: none; }
-}
+/* ---------- 15. A character's page: cast.css ---------- */
 
 /* ---------- 20. The menu on a phone: dark, its head always in reach, rows a finger tall ---------- */
 @media (max-width: 759px), (orientation: landscape) and (max-height: 520px) {
@@ -394,7 +385,7 @@ details.cx-fgroup > summary::-webkit-details-marker, details.src-fold > summary:
   :root.cx-cine:not([data-motion="reduce"]) .shot.is-seen .shot-card::after { animation: cx-tc-rule .6s cubic-bezier(.65, 0, .35, 1) .36s both; }
 
   :root.cx-cine:not([data-motion="reduce"]) :is(.shot--card.is-live .shot-card, .mx-opener.is-live)::before { animation: cx-flicker 6s ease-in-out infinite; }
-  :root.cx-cine:not([data-motion="reduce"]) .cast-hero-pic.is-live > .art { animation: cx-breathe 10s ease-in-out infinite alternate; }
+  :root.cx-cine:not([data-motion="reduce"]) .cast-hero-pic.is-live > .cast-cut { animation: cx-breathe 10s ease-in-out infinite alternate; }
 
   @supports (animation-timeline: scroll()) {
     :root.cx-cine:not([data-motion="reduce"]) .cx-film-open-pic { animation: cx-hero-fall linear both; animation-timeline: scroll(root); animation-range: 0 100svh; }
@@ -402,8 +393,8 @@ details.cx-fgroup > summary::-webkit-details-marker, details.src-fold > summary:
   /* where the portrait scrolls with the page (not held beside the text): it falls back a little as it leaves */
   @supports (animation-timeline: view()) {
     @media (max-width: 859px) {
-      :root.cx-cine:not([data-motion="reduce"]) .cast-hero-pic > :is(.art, .fig, .sc-crop) { animation: cx-portrait-fall linear both; animation-timeline: view(); animation-range: exit 0% exit 100%; }
-      :root.cx-cine:not([data-motion="reduce"]) .cast-hero-pic.is-live > .art { animation: cx-breathe 10s ease-in-out infinite alternate, cx-portrait-fall linear both; animation-timeline: auto, view(); animation-range: normal, exit 0% exit 100%; }
+      :root.cx-cine:not([data-motion="reduce"]) .cast-hero-pic > :is(.cast-cut, .art, .fig, .sc-crop) { animation: cx-portrait-fall linear both; animation-timeline: view(); animation-range: exit 0% exit 100%; }
+      :root.cx-cine:not([data-motion="reduce"]) .cast-hero-pic.is-live > .cast-cut { animation: cx-breathe 10s ease-in-out infinite alternate, cx-portrait-fall linear both; animation-timeline: auto, view(); animation-range: normal, exit 0% exit 100%; }
     }
   }
 }

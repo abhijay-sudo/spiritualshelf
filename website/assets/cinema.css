@@ -37,7 +37,7 @@
     --cx-saffron: #f0a456; --cx-saffron-2: #ffbb73; --cx-btn: #eb9a49; --cx-btn-2: #f5ad62; --cx-on-btn: #1d1007;
     --cx-dusk: #120c08; --cx-dusk-2: #2a1b11;
     --cx-line: rgb(243 231 215 / .14); --cx-line-2: rgb(243 231 215 / .28);
-    --ed-sun-soft: #4a2c14; --accent-gold-tint: #4a3517;
+    --ed-sun-soft: #4a2c14; --accent-gold-tint: #4a3517; --accent-vermilion: var(--cx-btn); --accent-vermilion-2: var(--cx-btn-2);
     color-scheme: dark;
   }
 }
@@ -47,7 +47,7 @@
   --cx-saffron: #f0a456; --cx-saffron-2: #ffbb73; --cx-btn: #eb9a49; --cx-btn-2: #f5ad62; --cx-on-btn: #1d1007;
   --cx-dusk: #120c08; --cx-dusk-2: #2a1b11;
   --cx-line: rgb(243 231 215 / .14); --cx-line-2: rgb(243 231 215 / .28);
-  --ed-sun-soft: #4a2c14; --accent-gold-tint: #4a3517;
+  --ed-sun-soft: #4a2c14; --accent-gold-tint: #4a3517; --accent-vermilion: var(--cx-btn); --accent-vermilion-2: var(--cx-btn-2);
   color-scheme: dark;
 }
 
@@ -991,27 +991,9 @@ html[lang="hi"] .cast-row-l { font-family: "Mukta", var(--cx-ui); font-size: .98
 .cast-row:hover .cast-row-n, .cast-row:focus-visible .cast-row-n { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .15em; }
 .cast-row:hover .cast-row-pic { box-shadow: inset 0 0 0 1px rgb(246 201 140 / .8); }
 
-.cast-hero { position: relative; padding-top: calc(var(--ed-head-h) + clamp(1.5rem, 1rem + 3vw, 4rem)); padding-bottom: clamp(2.5rem, 1.5rem + 4vw, 5rem); overflow: hidden;
-  background: radial-gradient(ellipse 46% 60% at 24% 46%, rgb(240 164 86 / .26), rgb(120 62 22 / .1) 55%, transparent 75%), var(--cx-paper); }
-.cast-hero-in { display: grid; gap: clamp(1.5rem, 1rem + 3vw, 4rem); align-items: start; }
-@media (min-width: 860px) { .cast-hero-in { grid-template-columns: minmax(0, .8fr) minmax(0, 1fr); } .cast-hero-pic { position: sticky; top: calc(var(--ed-head-h) + 1.5rem); } }
-.cast-hero-pic { display: grid; place-items: center; }
-.cast-hero-pic .art, .cast-hero-pic .fig { width: auto; max-width: 100%; height: clamp(18rem, 62svh, 38rem); object-fit: contain; padding: 0; background: none; filter: drop-shadow(0 30px 34px rgb(0 0 0 / .55)); }
-.cast-hero-pic .fig { height: clamp(14rem, 46svh, 26rem); }
-.cast-hero-txt { display: grid; gap: .6rem; align-content: start; max-width: 40rem; }
-.cast-hero-txt .crumbs { margin-bottom: .75rem; }
-.cast-name { margin: 0; font: 500 clamp(3rem, 1.6rem + 6vw, 6.5rem)/.95 var(--cx-title); letter-spacing: -.025em; color: var(--cx-ink); }
-html[lang="hi"] .cast-name { line-height: 1.2; letter-spacing: 0; }
-.cast-echo { margin: 0; font: 400 clamp(1.4rem, 1.1rem + 1vw, 2rem)/1.3 var(--font-hi); color: var(--cx-saffron); }
-html[lang="hi"] .cast-echo { font-family: var(--cx-title); }
-.cast-line { margin: .4rem 0 .8rem; font: 400 clamp(1.1rem, 1rem + .5vw, 1.35rem)/1.55 var(--cx-read, var(--ed-read)); color: var(--cx-ink-2); max-width: 34rem; }
-.cast-hero .dossier { border-top-color: var(--cx-line-2); }
-.cast-hero .dossier-in { font-size: 1rem; }
+/* (a person's own page, the stage, is styled in cast.css) */
 .cast-stories { padding-block: clamp(2.5rem, 1.5rem + 4vw, 5rem) clamp(4rem, 2rem + 6vw, 7rem); }
-:root:not([data-motion="reduce"]) .cast-hero-pic { animation: cx-fade 1.2s var(--cx-ease) both; }
-@media (prefers-reduced-motion: reduce) { .cast-tiles > li, .cast-hero-pic { animation: none !important; } .cast-tile, .cast-tile-pic .art { transition: none; } }
-/* the portraits are painted to the knee or shin: let the cut edge fall away into the dark instead of ending on a line */
-.cast-hero-pic .art { -webkit-mask-image: linear-gradient(to bottom, #000 80%, transparent 99%); mask-image: linear-gradient(to bottom, #000 80%, transparent 99%); }
+@media (prefers-reduced-motion: reduce) { .cast-tiles > li { animation: none !important; } .cast-tile, .cast-tile-pic .art { transition: none; } }
 
 /* ---------- Theatre: story posters ----------
    Wherever stories are listed (library, a collection, today, a person's page, saved) each one is a poster: the painting
@@ -1281,7 +1263,7 @@ html[lang="hi"] .cx-sel-name { text-transform: none; letter-spacing: 0; line-hei
 html[lang="hi"] .cx-sel-who { font-family: "Mukta", var(--cx-ui); letter-spacing: .02em; text-transform: none; font-size: 1rem; }
 .cx-sel-coll { margin: 0; font: 500 .82rem/1.3 var(--cx-ui); letter-spacing: .2em; text-transform: uppercase; color: color-mix(in oklab, var(--sel-glow) 55%, #fff); }
 html[lang="hi"] .cx-sel-coll { font-family: "Mukta", var(--cx-ui); letter-spacing: .03em; text-transform: none; font-size: 1.05rem; }
-.cx-sel-title { margin: 0; font: 500 clamp(2.1rem, 1rem + 4.3vw, 5.25rem)/1 var(--cx-title); letter-spacing: -.02em; text-wrap: balance; color: #fffaf0; text-shadow: 0 2px 30px rgb(5 3 2 / .8), 0 0 60px color-mix(in oklab, var(--sel-glow) 30%, transparent); }
+.cx-sel-title { margin: 0; --sel-ts: clamp(2.1rem, 1rem + 4.3vw, 5.25rem); font: 500 clamp(2.1rem, 1rem + 4.3vw, 5.25rem)/1 var(--cx-title); letter-spacing: -.02em; text-wrap: balance; color: #fffaf0; text-shadow: 0 2px 30px rgb(5 3 2 / .8), 0 0 60px color-mix(in oklab, var(--sel-glow) 30%, transparent); }
 html[lang="hi"] .cx-sel-title { line-height: 1.22; letter-spacing: 0; }
 .cx-sel-sum { margin: 0; max-width: 38rem; font: 400 clamp(1rem, .92rem + .35vw, 1.2rem)/1.5 var(--cx-text); color: #eadbc6; text-shadow: 0 1px 12px rgb(5 3 2 / .9); display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
 .cx-sel-facts { color: #d9c6ad; }
@@ -1353,7 +1335,7 @@ html[lang="hi"] .cx-sel-title { line-height: 1.22; letter-spacing: 0; }
   .cx-sel-shade { background: linear-gradient(to top, var(--sel-base) 0%, color-mix(in oklab, var(--sel-base) 88%, transparent) 30%, transparent 60%), linear-gradient(to bottom, rgb(5 3 2 / .82) 0%, transparent 18%); }
   .cx-sel-info { max-width: 100%; }
   .cx-sel-info::before { content: ""; position: absolute; z-index: -1; inset: -4.5rem -100vw -12rem; pointer-events: none; background: linear-gradient(to bottom, transparent 0, color-mix(in oklab, var(--sel-base) 82%, transparent) 4.5rem, color-mix(in oklab, var(--sel-base) 90%, transparent) 100%); }
-  .cx-sel-title { font-size: clamp(1.9rem, 1rem + 5.6vw, 2.7rem); }
+  .cx-sel-title { --sel-ts: clamp(1.9rem, 1rem + 5.6vw, 2.7rem); }
   .cx-sel-sum { -webkit-line-clamp: 2; font-size: .98rem; }
   .cx-sel-name { top: 0; right: var(--cx-gut-r); max-width: 92vw; font-size: clamp(3rem, 1rem + 12vw, 5rem); }
   .cx-sel-hero { right: -2%; width: 68vw; height: 100%; bottom: 0; place-items: start center; padding-top: 6%; box-sizing: border-box; }
@@ -1376,7 +1358,7 @@ html[lang="hi"] .cx-sel-title { line-height: 1.22; letter-spacing: 0; }
   .cx-sel-count i, .cx-sel-facts, .cx-sel-who { display: none; }
   .cx-sel-info { grid-template-columns: auto minmax(0, 1fr); column-gap: .6rem; align-items: baseline; }
   .cx-sel-info > :not(.cx-sel-count, .cx-sel-coll) { grid-column: 1 / -1; }
-  .cx-sel-count b { font-size: 1.5rem; line-height: 1; } .cx-sel-title { font-size: clamp(1.6rem, 1rem + 2.6vw, 2.4rem); }
+  .cx-sel-count b { font-size: 1.5rem; line-height: 1; } .cx-sel-title { --sel-ts: clamp(1.6rem, 1rem + 2.6vw, 2.4rem); }
   .cx-sel-hero { width: 30vw; right: 6vw; }
   .cx-sel-name { font-size: 4rem; }
   .cx-sel-stage { gap: .4rem; padding-bottom: .5rem; } .cx-sel-roster { padding-block: .3rem .5rem; }
@@ -1524,11 +1506,12 @@ html[lang="hi"] .mx-src { font-family: "Mukta", var(--cx-ui); font-size: 1.05rem
 @keyframes sel-ring { 0% { opacity: .95; scale: .25; } 100% { opacity: 0; scale: 1.6; } }
 .cx-select > .cx-sel-name { position: absolute; z-index: 0; top: calc(var(--ed-head-h) + clamp(2.6rem, 6svh, 4.2rem)); right: max(var(--cx-gut-r), 3vw); font-size: min(clamp(5rem, 1rem + 13vw, 17rem), calc(70vw / (var(--nl, 4) * .9))); line-height: 1; letter-spacing: .02em; }
 .cx-select > .cx-sel-name:lang(hi) { font-family: "Tiro Devanagari Hindi", var(--font-hi); font-weight: 400; letter-spacing: 0; }
-.cx-sel-title { font-size: clamp(3rem, 1.4rem + 6vw, 7.5rem); line-height: .95; letter-spacing: -.02em; }
+.cx-sel-title { --sel-ts: clamp(3rem, 1.4rem + 6vw, 7.5rem); line-height: .95; letter-spacing: -.02em; }
 .cx-sel-ch { display: inline-block; white-space: pre; }
+.cx-sel-w { display: inline-block; white-space: nowrap; }
 /* each letter keeps the name's own line height; :lang(hi) { line-height: 1.75 } in site.css otherwise reached the letters,
    so after the first swap a Hindi name stood ~30px taller than on arrival and the counter above it jumped */
-:lang(hi) .cx-sel-ch { line-height: inherit; }
+:lang(hi) :is(.cx-sel-ch, .cx-sel-w) { line-height: inherit; }
 :root:not([data-motion="reduce"]) .cx-select.is-swap .cx-sel-ch { animation: sel-slam .6s cubic-bezier(.2, .9, .3, 1.25) both; animation-delay: calc(.1s + var(--k) * 45ms); }
 @keyframes sel-slam { 0% { opacity: 0; translate: 0 -.5em; scale: 1.4; filter: blur(6px); } 60% { opacity: 1; filter: blur(0); } 100% { opacity: 1; translate: 0 0; scale: 1; } }
 .cx-select :is(.cx-sel-title) { animation: none !important; clip-path: none !important; }
@@ -1543,7 +1526,9 @@ html[lang="hi"] .cx-sel-chips a { font-family: "Mukta", var(--cx-ui); font-size:
 .cx-sel-btns { position: relative; z-index: 2; display: flex; flex-wrap: wrap; gap: .7rem; margin: 0; }
 .cx-sel-story { color: #fdf6ea; border-color: color-mix(in oklab, var(--sel-glow) 60%, transparent); }
 .cx-sel-tile-n { left: .4rem; right: .3rem; bottom: .3rem; font: 600 .66rem/1.1 "Cinzel", var(--cx-title); letter-spacing: .04em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-html[lang="hi"] .cx-sel-tile-n { font-family: "Mukta", var(--cx-ui); font-size: .78rem; letter-spacing: 0; }
+/* (Devanagari stands taller than its line: the marks above the headline, the reph of शुक्राचार्य or the matra of हिरण्यकशिपु,
+   were cut off by the label's own box at a line height of 1.1) */
+html[lang="hi"] .cx-sel-tile-n { font-family: "Mukta", var(--cx-ui); font-size: .78rem; letter-spacing: 0; line-height: 1.6; bottom: .15rem; }
 .cx-sel-grid { grid-template-columns: repeat(10, minmax(0, 1fr)); }
 .cx-sel-tile.is-on { translate: 0 -.8rem; scale: 1.08; }
 @media (max-width: 1099px) { .cx-sel-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
@@ -1551,14 +1536,14 @@ html[lang="hi"] .cx-sel-tile-n { font-family: "Mukta", var(--cx-ui); font-size: 
   .cx-select > .cx-sel-hero { right: -4%; width: 72vw; top: calc(var(--ed-head-h) + 2.6rem); bottom: auto; height: calc(100svh - var(--ed-head-h) - var(--sel-roster-h, 9rem) - 2.6rem); }
   .cx-select > .cx-sel-hero img { top: 0; bottom: auto; height: 100%; -webkit-mask-image: linear-gradient(to bottom, #000 48%, transparent 82%); mask-image: linear-gradient(to bottom, #000 48%, transparent 82%); }
   .cx-select > .cx-sel-name { top: calc(var(--ed-head-h) + 2.4rem); font-size: min(30vw, calc(92vw / (var(--nl, 4) * .9))); }
-  .cx-sel-title { font-size: clamp(2.6rem, 1rem + 9vw, 3.6rem); }
+  .cx-sel-title { --sel-ts: clamp(2.6rem, 1rem + 9vw, 3.6rem); }
   .cx-sel-chips { display: none; }
   .cx-sel-tile { aspect-ratio: 1 / 1.15; }
 }
 @media (orientation: landscape) and (max-height: 520px) {
   .cx-select > .cx-sel-hero { width: 28vw; right: 6vw; top: calc(var(--ed-head-h) + .5rem); }
   .cx-select > .cx-sel-name { display: none; }
-  .cx-sel-title { font-size: clamp(2rem, 1rem + 3vw, 2.8rem); }
+  .cx-sel-title { --sel-ts: clamp(2rem, 1rem + 3vw, 2.8rem); }
   .cx-sel-chips { display: none; }
   .cx-sel-grid { grid-template-columns: repeat(10, minmax(0, 1fr)); }
 }
@@ -1635,6 +1620,7 @@ html[lang="hi"] .cx-sel-tile-n { font-family: "Mukta", var(--cx-ui); font-size: 
 .cx-sel-bg img { object-position: var(--fx, 50%) var(--fy, 50%); transform-origin: var(--fx, 50%) var(--fy, 50%); scale: var(--z, 1); --tx: 68%; --ty: 46%;
   translate: clamp(calc((var(--z, 1) - 1) * (var(--fx, 50%) - 100%)), calc(var(--tx) - var(--fx, 50%)), calc((var(--z, 1) - 1) * var(--fx, 50%))) clamp(calc((var(--z, 1) - 1) * (var(--fy, 50%) - 100%)), calc(var(--ty) - var(--fy, 50%)), calc((var(--z, 1) - 1) * var(--fy, 50%))); }
 .cx-select.is-left .cx-sel-bg img { --tx: 32%; }
+@media (min-width: 700px) { .cx-select.is-scene .cx-sel-bg img { --ty: var(--say, 36%); } }
 @keyframes sel-drift { from { transform: translateX(-1.4%); } to { transform: translateX(1.4%); } }
 .cx-select.is-scene .cx-sel-bg img { filter: brightness(1.02) saturate(1.12) contrast(1.04); }
 .cx-select.is-scene > .cx-sel-hero { opacity: 0; visibility: hidden; }
@@ -1652,8 +1638,11 @@ html[lang="hi"] .cx-sel-tile-n { font-family: "Mukta", var(--cx-ui); font-size: 
 .cx-select.is-left > .cx-sel-name { right: auto; left: max(var(--cx-gut), 3vw); text-align: left; }
 .cx-select.is-scene > .cx-sel-name { opacity: .3; }
 /* the cut-out lead: a figure box that shrink-wraps the portrait, so a sheen can cross exactly the figure */
-.cx-select > .cx-sel-hero .cx-sel-fig { position: absolute; left: 0; right: 0; bottom: 0; height: 100%; width: fit-content; margin-inline: auto; display: block; }
-.cx-select > .cx-sel-hero .cx-sel-fig img { position: static; left: auto; translate: none; height: 100%; width: auto; display: block; animation: none !important; }
+.cx-select > .cx-sel-hero .cx-sel-fig { position: absolute; left: 0; right: 0; bottom: 0; height: 100%; width: fit-content; margin-inline: auto; display: block;
+  filter: drop-shadow(0 0 22px color-mix(in oklab, var(--sel-glow) 50%, transparent)) drop-shadow(0 26px 26px rgb(0 0 0 / .6)); }
+/* (the picture fades at its foot through a mask; a shadow drawn by the picture itself was cut off square by that mask,
+   which showed as a grey panel behind a narrow figure such as Dhruva: the shadow belongs to the box round the picture) */
+.cx-select > .cx-sel-hero .cx-sel-fig img { position: static; left: auto; translate: none; height: 100%; width: auto; display: block; animation: none !important; filter: none; }
 .cx-sel-fig::after { content: ""; position: absolute; inset: 0; pointer-events: none; mix-blend-mode: screen; opacity: .55;
   -webkit-mask: var(--hero-url) center / 100% 100% no-repeat; mask: var(--hero-url) center / 100% 100% no-repeat;
   background: linear-gradient(108deg, transparent 42%, rgb(255 246 220 / .75) 50%, transparent 58%) 130% 0 / 320% 100% no-repeat; }
@@ -1667,7 +1656,8 @@ html[lang="hi"] .cx-sel-tile-n { font-family: "Mukta", var(--cx-ui); font-size: 
 /* the roster: two rows of eleven on a wide screen; one sideways-scrolling row on a phone */
 .cx-sel-grid { grid-template-columns: repeat(var(--cols, 11), minmax(0, 1fr)); row-gap: .5rem; padding-top: 1rem; }
 .cx-sel-tile { aspect-ratio: 5 / 4; }
-.cx-sel-tile-bg img { object-position: var(--fx, 50%) var(--fy, 50%); transform-origin: var(--fx, 50%) var(--fy, 50%); scale: var(--z, 1); }
+.cx-sel-tile-bg img { object-position: var(--fx, 50%) var(--fy, 50%); transform-origin: var(--fx, 50%) var(--fy, 50%); scale: var(--z, 1); --tx: 50%; --ty: 46%;
+  translate: clamp(calc((var(--z, 1) - 1) * (var(--fx, 50%) - 100%)), calc(var(--tx) - var(--fx, 50%)), calc((var(--z, 1) - 1) * var(--fx, 50%))) clamp(calc((var(--z, 1) - 1) * (var(--fy, 50%) - 100%)), calc(var(--ty) - var(--fy, 50%)), calc((var(--z, 1) - 1) * var(--fy, 50%))); }
 .cx-sel-tile--scene .cx-sel-tile-bg img { filter: none; }
 .cx-sel-tile-face img { width: 78%; }
 @media (max-width: 1099px) { .cx-sel-grid { grid-template-columns: repeat(8, minmax(0, 1fr)); } .cx-sel-tile { aspect-ratio: 5 / 4; } .cx-sel-tile-face img { width: 60%; } }
@@ -1690,14 +1680,7 @@ html[lang="hi"] .cx-sel-tile-n { font-family: "Mukta", var(--cx-ui); font-size: 
   .cx-sel-bg img { --tx: 50%; --ty: 30%; } .cx-select.is-left .cx-sel-bg img { --tx: 50%; }
   .cx-select.is-scene .cx-sel-shade, .cx-select.is-scene.is-left .cx-sel-shade { background: linear-gradient(to top, var(--sel-base) 0%, color-mix(in oklab, var(--sel-base) 90%, transparent) 34%, transparent 64%), linear-gradient(to bottom, rgb(5 3 2 / .8) 0%, transparent 16%); }
 }
-/* People: a character without a cut-out is shown from their scene */
-.sc-crop { display: block; width: 100%; height: 100%; overflow: hidden; }
-.sc-crop img { display: block; width: 100%; height: 100%; max-width: none; object-fit: cover; object-position: var(--fx) var(--fy); transform-origin: var(--fx) var(--fy); scale: var(--z); }
-.cast-row-pic .sc-crop { border-radius: 50%; }
-.cast-hero-pic--scene { place-items: center; }
-.cast-hero-pic--scene .sc-crop { width: min(100%, 27rem); height: auto; aspect-ratio: 3 / 4; border-radius: 14rem 14rem 8px 8px; box-shadow: 0 0 0 1px rgb(246 201 140 / .5), 0 0 0 8px rgb(20 12 7 / .6), 0 0 0 9px rgb(246 201 140 / .25), 0 40px 70px -30px rgb(0 0 0 / .9); }
-:root:not([data-motion="reduce"]) .cast-hero-pic--scene .sc-crop img { animation: sc-push 18s ease-in-out infinite alternate; }
-@keyframes sc-push { from { transform: scale(1); } to { transform: scale(1.07); } }
+/* People: a person's face in a round frame, from their portrait or the scene they are painted in: cast.css (.face) */
 /* lamps large enough to read on a bright river: a flame, its halo, and a streak of reflection under it */
 .cx-lamp { width: calc(9px * var(--s)); height: calc(12px * var(--s)); border-radius: 50% 50% 45% 45% / 62% 62% 38% 38%; background: radial-gradient(circle at 50% 62%, #fffbe6 0 22%, #ffd36b 46%, #ff9a2e 78%, rgb(255 140 30 / 0) 100%);
   box-shadow: 0 0 calc(10px * var(--s)) calc(3px * var(--s)) rgb(255 214 130 / .95), 0 0 calc(34px * var(--s)) calc(12px * var(--s)) rgb(255 150 40 / .6), 0 0 calc(70px * var(--s)) calc(22px * var(--s)) rgb(255 120 20 / .28); }
@@ -1707,13 +1690,35 @@ html[lang="hi"] .cx-sel-tile-n { font-family: "Mukta", var(--cx-ui); font-size: 
 .cx-lamp { width: calc(15px * var(--s)); height: calc(19px * var(--s)); box-shadow: 0 0 calc(14px * var(--s)) calc(6px * var(--s)) rgb(255 226 150 / .95), 0 0 calc(44px * var(--s)) calc(18px * var(--s)) rgb(255 160 50 / .7), 0 0 calc(90px * var(--s)) calc(34px * var(--s)) rgb(255 130 30 / .34); }
 .cx-lamp::before { width: calc(20px * var(--s)); height: calc(5px * var(--s)); top: 92%; opacity: .8; }
 .cx-lamp::after { width: calc(11px * var(--s)); height: calc(60px * var(--s)); background: linear-gradient(to bottom, rgb(255 206 110 / .9), rgb(255 160 60 / .35) 55%, transparent); }
+/* A person painted in a scene: the words lie on the painting itself. Their line carries a soft shade of its own, so it
+   reads where it crosses a hand or an instrument; and where someone else's face stands on the words' side (is-calm,
+   from the tile), that side is closed further. */
+@media (min-width: 700px) {
+  .cx-select.is-scene .cx-sel-sum { border-radius: 1rem; background: color-mix(in oklab, var(--sel-base) 38%, transparent); box-shadow: 0 0 2.4rem 1.3rem color-mix(in oklab, var(--sel-base) 38%, transparent); }
+  .cx-select.is-scene.is-calm .cx-sel-shade { background:
+    linear-gradient(to right, color-mix(in oklab, var(--sel-base) 97%, transparent) 0%, color-mix(in oklab, var(--sel-base) 92%, transparent) 30%, color-mix(in oklab, var(--sel-base) 60%, transparent) 44%, transparent 60%),
+    linear-gradient(to top, var(--sel-base) 0%, color-mix(in oklab, var(--sel-base) 78%, transparent) 15%, transparent 38%),
+    linear-gradient(to bottom, rgb(5 3 2 / .8) 0%, transparent 18%); }
+  .cx-select.is-scene.is-calm.is-left .cx-sel-shade { background:
+    linear-gradient(to left, color-mix(in oklab, var(--sel-base) 97%, transparent) 0%, color-mix(in oklab, var(--sel-base) 92%, transparent) 30%, color-mix(in oklab, var(--sel-base) 60%, transparent) 44%, transparent 60%),
+    linear-gradient(to top, var(--sel-base) 0%, color-mix(in oklab, var(--sel-base) 78%, transparent) 15%, transparent 38%),
+    linear-gradient(to bottom, rgb(5 3 2 / .8) 0%, transparent 18%); }
+}
+/* Tablets and small laptops: a wide cut-out (Devi and her lion, Krishna and the calf) is held inside the screen instead
+   of running off its right edge, and the words keep to their own half so they do not run over it. */
+@media (min-width: 700px) and (max-width: 1199px) and (min-height: 521px) {
+  .cx-sel-info { max-width: 46vw; }
+  .cx-select > .cx-sel-hero .cx-sel-fig { left: 0; right: calc(.5rem - max(var(--cx-gut-r), 5vw)); width: auto; margin: 0; display: grid; justify-items: center; align-items: end; }
+  .cx-select > .cx-sel-hero .cx-sel-fig img { max-width: 100%; object-fit: contain; object-position: 50% 100%; }
+  .cx-sel-fig::after { display: none; }
+}
 /* the select's character lines are written to be read whole: room for every word, never an ellipsis */
 .cx-sel-sum { -webkit-line-clamp: 3; }
 @media (max-width: 1099px) { .cx-sel-sum { -webkit-line-clamp: 4; } }
 /* short laptop screens: the name scales with the height too, so the counter above it never leaves the screen (Devanagari names stand taller) */
 @media (min-width: 700px) and (max-height: 860px) {
-  .cx-sel-title { font-size: min(clamp(3rem, 1.4rem + 6vw, 7.5rem), 12svh); }
-  html[lang="hi"] .cx-sel-title { font-size: min(clamp(3rem, 1.4rem + 6vw, 7.5rem), 9.5svh); line-height: 1.3; }
+  .cx-sel-title { --sel-ts: min(clamp(3rem, 1.4rem + 6vw, 7.5rem), 12svh); }
+  html[lang="hi"] .cx-sel-title { --sel-ts: min(clamp(3rem, 1.4rem + 6vw, 7.5rem), 9.5svh); line-height: 1.3; }
   .cx-sel-chips a { min-height: 30px; }
 }
 /* a small, short window with the three-row roster: the story chips keep to one row (whole chips only) */
@@ -1853,7 +1858,7 @@ html[lang="hi"] .cx-sel-world { font-family: var(--cx-title); letter-spacing: .0
 @media (min-width: 700px) and (max-height: 860px) {
   .cx-sel-world { margin-bottom: .1rem; font-size: .68rem; }
   html[lang="hi"] .cx-sel-world { font-size: .86rem; }
-  html[lang="hi"] .cx-sel-title { font-size: min(clamp(3rem, 1.4rem + 6vw, 7.5rem), 8.4svh); }
+  html[lang="hi"] .cx-sel-title { --sel-ts: min(clamp(3rem, 1.4rem + 6vw, 7.5rem), 8.4svh); }
 }
 /* the counter line's copy of the world's name: shown only where the screen is short */
 .cx-sel-wk { display: none; }
@@ -1927,8 +1932,6 @@ html[lang="hi"] .st-mean-k { font-family: var(--cx-title); font-size: .9rem; let
 .cx-stotra-sa { margin: -.4rem 0 0; font: 400 clamp(1.1rem, 1rem + .5vw, 1.45rem)/1.5 var(--cx-title); color: #f6d9a8; text-shadow: 0 1px 14px rgb(8 4 2 / .8); }
 .cx-stotra::before { background: linear-gradient(to right, rgb(6 6 14 / .92) 0%, rgb(6 6 14 / .55) 40%, transparent 72%), linear-gradient(to top, rgb(6 6 14 / .85), transparent 50%); }
 @media (max-width: 700px) { .cx-stotra::before { background: linear-gradient(to top, rgb(6 6 14 / .96) 0%, rgb(6 6 14 / .7) 45%, transparent 80%); } }
-.cast-hymn { margin: 1rem 0 0; }
-.cast-hymn .cx-btn { display: inline-flex; gap: .6rem; align-items: center; }
 /* the hymn on the narrowest phones: long Sanskrit compounds break rather than widen the page */
 .st-verses .mx-text, .st-phala .mx-text { grid-template-columns: minmax(0, 1fr); }
 .st-sa .mx-l, .st-sa .mx-tr { overflow-wrap: anywhere; }
@@ -2006,49 +2009,63 @@ html[lang="hi"] .fest-list li.next.is-today strong::after { content: "  ·  आ�
    "Bhishma (Devavrata)" stay whole however many share the row */
 .cx-sel-grid[data-many="true"] .cx-sel-tile { container-type: inline-size; }
 .cx-sel-grid[data-many="true"] .cx-sel-tile-n { font-size: min(.74rem, 7.6cqi); letter-spacing: .02em; }
+/* ... and no smaller than it has to be: a name is set as large as its own length allows in its tile (--nl letters), up to
+   a common size, and never below the size above, so short names are no longer as small as the longest one must be */
+@supports (font-size: 1cqi) {
+  .cx-sel-grid[data-many="true"] .cx-sel-tile-n { font-size: clamp(min(.74rem, 7.6cqi), calc((100cqi - .8rem) / (var(--nl, 8) * .86)), .6rem); }
+  html[lang="hi"] .cx-sel-grid[data-many="true"] .cx-sel-tile-n { font-size: clamp(min(.74rem, 7.6cqi), calc((100cqi - .8rem) / (var(--nl, 5) * 1)), .68rem); }
+}
 
-/* ---------- The analytics question (consent.js): calm, at the foot of the screen, never over the reader dock ---------- */
-.cx-consent { position: fixed; z-index: 30; left: 50%; translate: -50% 0; bottom: max(calc(.75rem + env(safe-area-inset-bottom, 0px)), calc(var(--cx-dock-clear, 0px) + .5rem)); box-sizing: border-box; width: min(46rem, calc(100vw - var(--cx-gut) - var(--cx-gut-r))); display: grid; grid-template-columns: 1fr auto; gap: .35rem 1.25rem; align-items: center; padding: .9rem 1.1rem; background: var(--cx-dusk); color: var(--cx-cream); border: 1px solid rgb(255 240 220 / .16); border-radius: 6px; box-shadow: 0 14px 40px rgb(0 0 0 / .35); font-family: var(--cx-ui); animation: cx-consent-in .45s var(--cx-ease) both; transition: bottom .3s var(--cx-ease); }
+/* ---------- The analytics question (consent.js): calm, never over the reader dock ----------
+   One slim strip along the foot of the screen at every width, in the middle: it lies on no figure, field or button of
+   the page above it, and it is one line tall. */
+.cx-consent { position: fixed; z-index: 30; left: 50%; translate: -50% 0; bottom: max(calc(.75rem + env(safe-area-inset-bottom, 0px)), calc(var(--cx-dock-clear, 0px) + .5rem)); box-sizing: border-box; width: min(46rem, calc(100vw - 2rem));
+  display: flex; flex-wrap: nowrap; align-items: center; gap: .4rem .9rem; padding: .5rem .6rem .5rem 1.15rem; background: var(--cx-dusk); color: var(--cx-cream); border: 1px solid rgb(255 240 220 / .16); border-radius: 6px; box-shadow: 0 14px 40px rgb(0 0 0 / .35); font-family: var(--cx-ui);
+  animation: cx-consent-in .45s var(--cx-ease) both; transition: translate .3s var(--cx-ease), opacity .25s var(--cx-ease), visibility 0s, bottom .3s var(--cx-ease); }
 .cx-consent[hidden] { display: none; }
-.cx-consent-h { grid-column: 1; margin: 0; font: 500 1.02rem/1.3 var(--cx-title); color: var(--cx-gold); letter-spacing: 0; }
+/* one line: the question (its short form names what is asked), Allow and Decline at equal weight, and the way to the
+   details. The sentence that explains it stays in the bar for a screen reader; the privacy page has it in full. */
+.cx-consent-h { flex: 1 1 0; min-width: 0; margin: 0; font: 500 1rem/1.3 var(--cx-title); color: var(--cx-gold); letter-spacing: 0; text-wrap: balance; }
+.cx-consent-h[data-short] { font-size: 0; }
+.cx-consent-h[data-short]::after { content: attr(data-short); font-size: 1rem; }
+html[lang="hi"] .cx-consent-h[data-short]::after { font-family: "Mukta", var(--cx-ui); font-size: 1.02rem; }
 .cx-consent-h:focus { outline: none; }
 .cx-consent-h:focus-visible { outline: 2px solid var(--cx-gold); outline-offset: 3px; }
-.cx-consent-text { grid-column: 1; margin: 0; font-size: .92rem; line-height: 1.45; color: var(--cx-cream-2); }
-html[lang="hi"] .cx-consent-text { font-family: "Mukta", var(--cx-ui); font-size: .95rem; }
-.cx-consent-text a { color: var(--cx-cream); text-decoration: underline; text-underline-offset: .18em; }
-.cx-consent-btns { grid-column: 2; grid-row: 1 / span 2; display: flex; gap: .6rem; }
-/* Allow and Decline weigh the same: one style, one size, side by side */
-.cx-consent-btn { flex: 1 1 0; min-width: 7.5rem; min-height: 44px; padding: 0 1rem; border: 1px solid rgb(255 240 220 / .55); border-radius: 2px; background: transparent; color: var(--cx-cream); font: 500 .98rem/1 var(--cx-ui); cursor: pointer; }
+.cx-consent-text, html[lang="hi"] .cx-consent-text { order: 3; flex: 0 0 auto; margin: 0; font-size: 0; line-height: 1; color: var(--cx-cream-2); }
+.cx-consent-text a { display: inline-block; padding: .8rem .5rem; font-size: .9rem; line-height: 1; color: var(--cx-cream); text-decoration: underline; text-underline-offset: .18em; }
+html[lang="hi"] .cx-consent-text a { font-family: "Mukta", var(--cx-ui); font-size: .95rem; }
+/* (two equal columns, each as wide as the longer of the two words: neither answer is the larger, and neither touches its border) */
+.cx-consent-btns { order: 2; flex: 0 0 auto; display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: .5rem; margin: 0; }
+.cx-consent-btn { min-width: 6.25rem; min-height: 44px; padding: 0 1.1rem; border: 1px solid rgb(255 240 220 / .55); border-radius: 2px; background: transparent; color: var(--cx-cream); font: 500 .98rem/1 var(--cx-ui); white-space: nowrap; cursor: pointer; }
 html[lang="hi"] .cx-consent-btn { font-family: "Mukta", var(--cx-ui); }
 .cx-consent-btn:hover { background: rgb(255 240 220 / .1); border-color: var(--cx-cream); }
 .cx-consent-btn:focus-visible { outline: 2px solid var(--cx-gold); outline-offset: 3px; }
 .cx-consent-btn[aria-pressed="true"] { border-color: var(--cx-gold); }
-/* the home opening and the character select are full-screen stages composed to fit one screen: while either fills the
-   screen the question steps aside, and it comes back as soon as the reader moves on (consent.js) */
+/* a full-screen stage (the opening, the character select) keeps its whole screen: the question waits beside it (consent.js) */
 .cx-consent.is-aside { visibility: hidden; opacity: 0; transition: opacity .25s var(--cx-ease), visibility 0s .25s; }
+/* a page that is read: it tucks away below the screen while the reader goes on down */
+.cx-consent.is-tucked { translate: -50% calc(100% + 2rem); opacity: 0; visibility: hidden; transition: translate .3s var(--cx-ease), opacity .25s var(--cx-ease), visibility 0s .3s; }
 @keyframes cx-consent-in { from { opacity: 0; translate: -50% .75rem; } }
 @media (prefers-reduced-motion: reduce) { .cx-consent { animation: none; transition: none; } }
 :root[data-motion="reduce"] .cx-consent { animation: none; transition: none; }
 /* stories: consent.js measures the reader dock (--cx-dock-clear: its height plus its gap from the bottom) while it is on
    screen, so the bar sits just above it, and lets the bar settle down when the dock tucks away or steps aside */
-@media (max-width: 759px), (orientation: landscape) and (max-height: 520px) {
-  /* phones, upright or on their side: one slim strip in a single row (the question, Details, Allow, Decline) so it
-     never sits across the reading; on the narrowest screens the question takes two short lines inside that row */
-  .cx-consent { display: flex; flex-wrap: nowrap; align-items: center; gap: .35rem .5rem; width: min(40rem, calc(100vw - 16px)); padding: .4rem .5rem .4rem .7rem; bottom: max(calc(.4rem + env(safe-area-inset-bottom, 0px)), calc(var(--cx-dock-clear, 0px) + .4rem)); }
-  .cx-consent-h { flex: 1 1 0; min-width: 0; margin: 0; font-size: .84rem; line-height: 1.25; text-wrap: balance; }
-  .cx-consent-h[data-short] { font-size: 0; }
-  .cx-consent-h[data-short]::after { content: attr(data-short); font-size: .84rem; }
-  html[lang="hi"] .cx-consent-h[data-short]::after { font-family: "Mukta", var(--cx-ui); font-size: .88rem; }
-  .cx-consent-text { order: 3; flex: 0 0 auto; margin: 0; font-size: 0; line-height: 1; }
-  .cx-consent-text a { font-size: .8rem; padding: .7rem .2rem; }
-  html[lang="hi"] .cx-consent-text { font-size: 0; }
-  .cx-consent-btns { order: 2; flex: 0 0 auto; margin: 0; gap: .4rem; }
-  .cx-consent-btn { min-width: 0; min-height: 40px; padding: 0 .8rem; font-size: .86rem; white-space: nowrap; }
-  html[lang="hi"] .cx-consent-btn { padding: 0 .6rem; font-size: .84rem; }
+@media (max-width: 759px), (max-width: 859.98px) and (orientation: portrait), (orientation: landscape) and (max-height: 520px) {
+  /* phones, upright or on their side (and a small tablet held upright): the same strip set smaller, edge to edge; on the
+     narrowest screens the question takes two short lines inside its row */
+  .cx-consent { gap: .35rem .5rem; width: min(40rem, calc(100vw - 16px)); padding: .4rem .5rem .4rem .7rem; bottom: max(calc(.4rem + env(safe-area-inset-bottom, 0px)), calc(var(--cx-dock-clear, 0px) + .4rem)); }
+  .cx-consent-h { font-size: .84rem; line-height: 1.25; }
+  .cx-consent-h[data-short]::after { font-size: .84rem; }
+  html[lang="hi"] .cx-consent-h[data-short]::after { font-size: .88rem; }
+  .cx-consent-text a, html[lang="hi"] .cx-consent-text a { font-size: .8rem; padding: .7rem .2rem; }
+  .cx-consent-btns { gap: .4rem; }
+  .cx-consent-btn { min-width: 0; min-height: 40px; padding: 0 .7rem; font-size: .86rem; }
+  html[lang="hi"] .cx-consent-btn { padding: 0 .55rem; font-size: .84rem; }
 }
-@media (max-width: 400px) { .cx-consent-btn, html[lang="hi"] .cx-consent-btn { padding: 0 .55rem; } .cx-consent-btns { gap: .3rem; } }
-.cx-consent { transition: translate .3s var(--cx-ease), opacity .25s var(--cx-ease), visibility 0s; }
-.cx-consent.is-tucked { translate: -50% calc(100% + 2rem); opacity: 0; visibility: hidden; transition: translate .3s var(--cx-ease), opacity .25s var(--cx-ease), visibility 0s .3s; }
+@media (max-width: 400px) { .cx-consent-btn { padding: 0 .5rem; } html[lang="hi"] .cx-consent-btn { padding: 0 .4rem; } .cx-consent-btns { gap: .3rem; } }
+/* the narrowest phones in Hindi (its two answers are the longer words): the question takes a line of its own above them,
+   one line and two answers rather than four short lines squeezed beside them */
+@media (max-width: 340px) { html[lang="hi"] .cx-consent { flex-wrap: wrap; row-gap: .15rem; padding-top: .45rem; } html[lang="hi"] .cx-consent-h { flex: 1 0 100%; } html[lang="hi"] .cx-consent-text { margin-left: auto; } }
 /* while the question is on screen, the openings' own buttons and the foot of every page move up out from under it
    (--cx-consent-room: the bar's height and its gap, measured by consent.js) */
 /* (the opening keeps that room until the reader is back at it, even after the question is answered: it is above the
@@ -2062,3 +2079,15 @@ html[lang="hi"] .cx-consent-btn { font-family: "Mukta", var(--cx-ui); }
 @media (pointer: coarse) { .cx-credits-choice { min-height: 44px; } }
 .cx-consent-now { margin: 1rem 0 1.5rem; }
 .cx-consent-now p { margin: 0 0 .6rem; }
+
+/* (The dark themes take the site's saffron for word underlines and labels: --accent-vermilion above. The Quiet moment's
+   breathing ring is not touched by that: its "hold" keeps its own terracotta, set in editorial.css.) */
+
+/* ---------- The select: the name in hand is always whole ----------
+   Its size is the screen's own (--sel-ts, set by the rules above for each width) or, for a long name, what its widest
+   word allows in the room the words have (--sel-fit; --nw is that word's width in em, from content/name-widths.json). */
+.cx-select { --sel-fit: min(46rem, 48vw); }
+@media (min-width: 700px) and (max-width: 1199px) { .cx-select { --sel-fit: 46vw; } }
+@media (max-width: 699px) { .cx-select { --sel-fit: calc(100vw - var(--cx-gut) - var(--cx-gut-r)); } }
+@media (orientation: landscape) and (max-height: 520px) { .cx-select { --sel-fit: calc(58vw - var(--cx-gut) - var(--cx-gut-r)); } }
+.cx-select .cx-sel-title { font-size: min(var(--sel-ts, 3rem), calc(var(--sel-fit) / (var(--nw, 3) * 1.05))); text-wrap: balance; overflow-wrap: normal; word-break: keep-all; hyphens: none; }

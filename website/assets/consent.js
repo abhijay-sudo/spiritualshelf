@@ -160,9 +160,10 @@
     if (atTop() || footOn) away = false; else if (run > 24) away = true;
     if (away !== was) clear();
   };
-  // a full-screen stage (the home opening, the character select) keeps its whole screen, composed to fit it: the question
-  // waits beside it, not over it, and appears once the reader moves on
-  var stages = [].slice.call(d.querySelectorAll('.cx-home .cx-open, .cx-select'));
+  // a full-screen stage (the home opening, the character select, a person's own stage) keeps its whole screen, composed
+  // to fit it: the question waits beside it, not over it (on a person's page it would lie on the figure's feet, the study
+  // row or "Begin their story"), and appears once the reader moves on
+  var stages = [].slice.call(d.querySelectorAll('.cx-home .cx-open, .cx-select, .cast-hero'));
   var watchStage = function () {
     if (!stages.length) return;
     var seenSet = [], inside = false;

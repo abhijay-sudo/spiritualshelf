@@ -454,7 +454,7 @@ html[lang="hi"] .next small { text-transform: none; letter-spacing: 0; font-size
 .finished { color: var(--moss); font-weight: 600; }
 
 /* Glossary */
-.term { background: none; border: 0; padding: 0; margin: 0; font: inherit; color: inherit; cursor: help; text-decoration: underline dotted var(--saffron) 2px; text-underline-offset: .22em; border-radius: 3px; }
+.term { background: none; border: 0; padding: 0; margin: 0; font: inherit; color: inherit; cursor: pointer; text-decoration: underline dotted var(--saffron) 2px; text-underline-offset: .22em; border-radius: 3px; }
 .term:hover, .term[aria-expanded="true"] { background: color-mix(in oklab, var(--gold) 45%, transparent); }
 #gloss { position: fixed; margin: 0; inset: auto; width: min(18rem, calc(100vw - 32px)); padding: .9rem 1rem; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); color: var(--ink); box-shadow: var(--shadow); font-size: .95rem; }
 #gloss strong { font-family: var(--font-display); font-weight: 500; font-size: 1.15rem; display: block; margin-bottom: .2rem; color: var(--accent); }
@@ -885,7 +885,7 @@ html[lang="hi"] .rail-kicker { text-transform: none; letter-spacing: .02em; font
 .seg--read button[disabled] { opacity: .45; cursor: not-allowed; }
 .seg--head { display: none; }
 @media (min-width: 900px) { .seg--head { display: inline-flex; padding: 2px; } .seg--head button { min-height: 36px; padding: 0 .75rem; font-size: .85rem; } }
-.verify { font-family: var(--font-mono); font-size: .68rem; letter-spacing: .04em; color: var(--accent-vermilion); vertical-align: middle; cursor: help; }
+.verify { font-family: var(--font-mono); font-size: .68rem; letter-spacing: .04em; color: var(--accent-vermilion); vertical-align: middle; cursor: default; }
 .story-head .story-actions .btn .ic { width: 1.05em; height: 1.05em; }
 /* lens cards */
 .lens-list { list-style: none; margin: 0 0 1.5rem; padding: 0; display: grid; gap: .6rem; }
@@ -899,7 +899,7 @@ html[lang="hi"] .rail-kicker { text-transform: none; letter-spacing: .02em; font
 html[lang="hi"] .lens-k { text-transform: none; letter-spacing: .02em; font-size: .78rem; }
 .lens-src cite { font-style: normal; color: var(--ink-primary); }
 .rail-sources { margin: 0; padding-left: 1.1rem; display: grid; gap: .35rem; font-size: .84rem; color: var(--ink-secondary); }
-.term { background: none; border: 0; padding: 0; margin: 0; font: inherit; color: inherit; cursor: help; text-decoration: underline dotted var(--accent-vermilion) 2px; text-underline-offset: .22em; border-radius: 3px; }
+.term { background: none; border: 0; padding: 0; margin: 0; font: inherit; color: inherit; cursor: pointer; text-decoration: underline dotted var(--accent-vermilion) 2px; text-underline-offset: .22em; border-radius: 3px; }
 .term:hover, .term[aria-expanded="true"], .term.is-lit { background: color-mix(in oklab, var(--accent-gold-tint) 70%, transparent); }
 .term-w { white-space: nowrap; }   /* a term and the punctuation touching it never part at a line end */
 /* bottom sheet for the lens on phones */

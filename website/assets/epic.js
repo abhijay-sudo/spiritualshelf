@@ -1,7 +1,9 @@
 // Spritual epic layer (styles: epic.css). Progressive enhancement only: it reads what the page already says and adds light
-// and motion around it. Three jobs: the leads' own pages (their world, a halo, their name struck in gold, their title),
-// the leads wherever else they stand (a tile, a row, the cast on the home page), and arrivals for everything the cinema
-// layer left still. External and dependency-free, so the site's strict CSP (script-src 'self') allows it.
+// and motion around it. Three jobs: the leads' own pages (sparks, their name letter by letter, the lean toward the hand),
+// the small living touches where the leads stand elsewhere (the cast row drifts, the wordmark catches the light), and
+// arrivals for everything the cinema layer left still. Who is a lead, their light and their title are the page's own
+// (content/cast.json and extras.json, written into the page by src/build.mjs): nothing about a person is kept here.
+// External and dependency-free, so the site's strict CSP (script-src 'self') allows it.
 (function () {
   'use strict';
   var d = document, root = d.documentElement;
@@ -11,76 +13,37 @@
   var $ = function (s, c) { return (c || d).querySelector(s); };
   var $$ = function (s, c) { return Array.prototype.slice.call((c || d).querySelectorAll(s)); };
 
-  // The leads: [their light, a traditional name for them in English, the same in Hindi]
-  var LEADS = {
-    rama: ['#f6b45c', 'Maryada Purushottama', 'मर्यादा पुरुषोत्तम'],
-    sita: ['#f29a7a', 'Daughter of the Earth', 'भूमिजा'],
-    hanuman: ['#ff8a3c', 'Son of the Wind', 'पवनपुत्र'],
-    lakshmana: ['#e9b25a', 'Son of Sumitra', 'सौमित्र'],
-    ravana: ['#e0492f', 'Ten-Headed Lord of Lanka', 'दशानन · लंकेश'],
-    parashurama: ['#ff7043', 'Bhargava Rama', 'भार्गव राम'],
-    abhimanyu: ['#ffd27a', 'Son of Subhadra', 'सौभद्र'],
-    savitri: ['#ff9a6a', 'Pativrata', 'पतिव्रता'],
-    yama: ['#d05a4a', 'Dharmaraja', 'धर्मराज'],
-    vamana: ['#ffcf6a', 'Trivikrama', 'त्रिविक्रम'],
-    bali: ['#c79bff', 'Mahabali', 'महाबली'],
-    mahishasura: ['#e2553a', 'Lord of the Asuras', 'असुरराज'],
-    krishna: ['#6fb6ff', 'Lifter of Govardhana', 'गिरिधर'],
-    arjuna: ['#7fd0e8', 'Wielder of the Gandiva', 'गाण्डीवधारी'],
-    yudhishthira: ['#f0d28a', 'Dharmaraja', 'धर्मराज'],
-    draupadi: ['#ff7a4a', 'Yajnaseni', 'याज्ञसेनी'],
-    karna: ['#ffc94a', 'Son of the Sun', 'सूर्यपुत्र'],
-    bhishma: ['#cfd8e6', 'Devavrata', 'देवव्रत'],
-    shiva: ['#8fb7ff', 'Mahadeva', 'महादेव'],
-    vishnu: ['#6fa8ff', 'Narayana', 'नारायण'],
-    devi: ['#ff5a52', 'Jagadamba', 'जगदम्बा'],
-    ganesha: ['#ff9f4a', 'Remover of Obstacles', 'विघ्नहर्ता']
-  };
-  var slugOf = function (href) { var m = /(?:^|\/)characters\/([a-z-]+)\/?(?:[?#].*)?$/.exec(href || ''); return m ? m[1] : ''; };
+  /* ---------- 1. A lead's own page ----------
+     The page is whole as built (the stage, the name, the title, the story so far: cast.css). main[data-tier] says how
+     much this person carries in the stories ("legend", "lead" or "cast"), and --ep-a is their light. For the leads this
+     adds what only a script can: sparks round them, the name as letters, the lean toward the hand. */
+  var hero = $('.cast-hero'), main = hero && (hero.closest('main') || d.body), tier = main ? main.dataset.tier : '';
+  if (hero && (tier === 'lead' || tier === 'legend')) {
+    var pic = $('.cast-focus', hero), txt = $('.cast-hero-txt', hero);
+    main.classList.add('ep-major');
 
-  /* ---------- 1. A lead's own page ---------- */
-  var hero = $('.cast-hero'), me = slugOf(location.pathname), lead = LEADS[me];
-  if (hero && lead) {
-    var main = hero.closest('main') || d.body, pic = $('.cast-hero-pic', hero), txt = $('.cast-hero-txt', hero);
-    main.classList.add('ep-major'); main.style.setProperty('--ep-a', lead[0]);
-    root.dataset.epic = me;
-
-    // their world: the painting of the first story they appear in, behind them
-    var first = $('.cast-stories .card-art img');
-    if (first && !lowData) {
-      var back = d.createElement('div'); back.className = 'ep-back'; back.setAttribute('aria-hidden', 'true');
-      var bi = d.createElement('img'); bi.alt = ''; bi.decoding = 'async';
-      if (first.getAttribute('srcset')) { bi.srcset = first.getAttribute('srcset'); bi.sizes = '100vw'; }
-      bi.src = first.getAttribute('src');
-      back.appendChild(bi); hero.insertBefore(back, hero.firstChild);
-    }
-
-    // the halo behind them, and sparks rising round them
-    if (pic) {
-      var halo = d.createElement('div'); halo.className = 'ep-halo'; halo.setAttribute('aria-hidden', 'true');
-      halo.innerHTML = '<i class="ep-aura"></i><i class="ep-rays"></i><i class="ep-ring"></i><i class="ep-flash"></i>';
-      pic.insertBefore(halo, pic.firstChild);
-      if (!reduced()) {
-        var motes = d.createElement('div'); motes.className = 'ep-motes'; motes.setAttribute('aria-hidden', 'true');
-        var n = innerWidth < 700 ? 10 : 18, html = '';
-        for (var i = 0; i < n; i++) {
-          var r = function (a, b) { return a + Math.random() * (b - a); };
-          html += '<i style="--x:' + r(4, 96).toFixed(1) + '%;--b:' + r(0, 46).toFixed(1) + '%;--s:' + r(2, 4.5).toFixed(1) + 'px;--t:' + r(6, 13).toFixed(1) + 's;--dl:' + (-r(0, 13)).toFixed(1) + 's;--dx:' + r(-46, 46).toFixed(0) + 'px"></i>';
-        }
-        motes.innerHTML = html; pic.appendChild(motes);
+    // sparks rising round them (not with reduce-motion or Save-Data)
+    if (pic && !reduced() && !lowData) {
+      var motes = d.createElement('div'); motes.className = 'ep-motes'; motes.setAttribute('aria-hidden', 'true');
+      var n = innerWidth < 700 ? 10 : 18, html = '';
+      for (var i = 0; i < n; i++) {
+        var r = function (a, b) { return a + Math.random() * (b - a); };
+        html += '<i style="--x:' + r(4, 96).toFixed(1) + '%;--b:' + r(0, 46).toFixed(1) + '%;--s:' + r(2, 4.5).toFixed(1) + 'px;--t:' + r(6, 13).toFixed(1) + 's;--dl:' + (-r(0, 13)).toFixed(1) + 's;--dx:' + r(-46, 46).toFixed(0) + 'px"></i>';
       }
+      motes.innerHTML = html; pic.appendChild(motes);
     }
 
-    // the name: each letter its own piece of gold (Devanagari is kept whole: its letters join)
-    var name = $('.cast-name', hero);
-    if (name && !name.children.length) {
-      var text = name.textContent.trim(), plain = /^[\x20-\x7eÀ-ɏ]+$/.test(text);
-      name.style.setProperty('--ep-nl', Math.max(4, Array.from(text).length));
-      name.setAttribute('aria-label', text); name.textContent = '';
+    // the name: each letter its own piece of gold (Devanagari is kept whole: its letters join). The letters set exactly
+    // as wide as the whole name was measured (content/name-widths.json), so the name does not move when it is split.
+    var name = $('.cast-name', hero), whole = name && $('.cast-name-t', name);
+    if (whole) {
+      var text = whole.textContent.trim(), plain = /^[\x20-\x7eÀ-ɏ]+$/.test(text);
+      if (!name.hasAttribute('aria-label')) name.setAttribute('aria-label', text);
+      name.removeChild(whole);
       if (plain && !hi) {
         Array.from(text).forEach(function (ch, k) {
           var s = d.createElement('span'); s.setAttribute('aria-hidden', 'true');
-          if (ch === ' ') { s.textContent = ' '; } else { s.className = 'ep-l'; s.textContent = ch; s.style.setProperty('--i', k); }
+          if (ch === ' ') { s.textContent = ' '; } else { s.className = 'ep-l'; s.textContent = ch; s.style.setProperty('--i', k); }
           name.appendChild(s);
         });
       } else {
@@ -88,39 +51,15 @@
       }
     }
 
-    // their title, and how much of the library they walk through (counted from the story cards on this page)
-    if (txt) {
-      var after = $('.cast-echo', txt) || name;
-      var title = d.createElement('p'); title.className = 'ep-title'; title.textContent = hi ? lead[2] : lead[1];
-      if (hi) title.lang = 'hi';
-      if (after && after.parentNode === txt) txt.insertBefore(title, after.nextSibling);
-      var cards = $$('.cast-stories .card'), scenes = 0, mins = 0;
-      cards.forEach(function (c) { scenes += +c.dataset.scenes || 0; mins += +c.dataset.minutes || 0; });
-      var stats = null;
-      if (cards.length) {
-        var rows = [[cards.length, hi ? 'कथाएँ' : (cards.length === 1 ? 'story' : 'stories')], [scenes, hi ? 'दृश्य' : 'scenes'], [mins, hi ? 'मिनट का पाठ' : 'minutes of reading']].filter(function (x) { return x[0] > 0; });
-        stats = d.createElement('ul'); stats.className = 'ep-stats';
-        stats.innerHTML = rows.map(function (x) { return '<li><b data-to="' + x[0] + '">' + x[0] + '</b><span>' + x[1] + '</span></li>'; }).join('');
-        var line = $('.cast-line', txt); if (line) txt.insertBefore(stats, line.nextSibling); else txt.appendChild(stats);
-      }
-      // everything beside the name arrives in order
-      var k = 0; $$(':scope > *', txt).forEach(function (el) { if (el === name) return; el.classList.add('ep-k'); el.style.setProperty('--ep-k', k++); });
-      // the numbers count up once, as they arrive
-      if (stats && !reduced()) {
-        $$('b', stats).forEach(function (b) {
-          var to = +b.dataset.to, t0 = 0; b.textContent = '0';
-          var step = function (t) { if (!t0) t0 = t; var p = Math.min(1, (t - t0) / 1300), e = 1 - Math.pow(1 - p, 3); b.textContent = Math.round(to * e); if (p < 1) requestAnimationFrame(step); };
-          setTimeout(function () { requestAnimationFrame(step); }, 1500);
-        });
-      }
-    }
+    // everything beside the name arrives in order
+    if (txt) { var k = 0; $$(':scope > *', txt).forEach(function (el) { if (el === name) return; el.classList.add('ep-k'); el.style.setProperty('--ep-k', k++); }); }
 
-    hero.classList.add('ep-hero', 'ep-on'); hero.style.setProperty('--ep-a', lead[0]);
+    hero.classList.add('ep-hero', 'ep-on');
 
-    // the lead, the light and their world sit at three depths and lean with the hand (mouse only); at rest when out of sight
+    // a painted figure and the world behind it sit at two depths and lean with the hand (mouse only); at rest when out of sight
     var seen = true;
     if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { seen = es[0].isIntersecting; hero.classList.toggle('ep-off', !seen); }).observe(hero);
-    if (!reduced() && matchMedia('(hover: hover) and (pointer: fine)').matches) {
+    if (!reduced() && $('.cast-figure', hero) && matchMedia('(hover: hover) and (pointer: fine)').matches) {
       var tx = 0, ty = 0, cx = 0, cy = 0, raf = 0;
       var tick = function () {
         cx += (tx - cx) * .07; cy += (ty - cy) * .07;
@@ -138,15 +77,8 @@
     }
   }
 
-  /* ---------- 1b. The leads, wherever else they stand ---------- */
-  $$('.cast-tiles > li, .cast-rows > li, .cx-cast-row > li').forEach(function (li) {
-    var a = $('a[href]', li), L = a && LEADS[slugOf(a.getAttribute('href'))];
-    if (L) { li.classList.add('ep-star'); li.style.setProperty('--ep-a', L[0]); }
-  });
-  // the four legends (their pages carry their own entrance, legend.js) stand a step brighter in every line-up, the home select included
-  $$('.cast-tiles > li, .cast-rows > li, .cx-cast-row > li, .cx-sel-grid > li').forEach(function (li) {
-    var a = $('a[href]', li); if (a && /^(rama|ravana|hanuman|parashurama)$/.test(slugOf(a.getAttribute('href')))) li.classList.add('ep-legend');
-  });
+  /* ---------- 1b. The leads, wherever else they stand ----------
+     The build marks them in every line-up (.ep-star with their light; .ep-legend for the four): epic.css lights them. */
   var castRow = $('.cx-cast-row');
   if (castRow) { castRow.classList.add('ep-float'); $$(':scope > li', castRow).forEach(function (li, k) { li.style.setProperty('--ep-n', k % 5); }); }
   var wm = $('.cx-credits-name'); if (wm) wm.classList.add('ep-shine');
@@ -155,8 +87,9 @@
   // (none of it with Save-Data either: nothing waits faint, everything is simply there)
   if (reduced() || lowData || !('IntersectionObserver' in window)) return;
   var SETS = [
-    // plain pages, the dossier, festival rows, today's blocks, the credits, the home feature cards, empty states
-    ['', '.cx-plain-in > h1, .cx-plain-text > *, .cx-plain-in > .cx-btn, .dossier-in > *, .cx-credits-line, .cx-credits-sub, .cx-credits-list > *, .cx-credits-in > .cx-credits-btns, .cx-manas-card > *, .block-head, .empty, .moment, main > .wrap > .note, .mx-src, .cx-stotra-sa, .legend, .kept, .story-intro, .mx-ep-n, .mx-ep-t, .mx-sum'],
+    // plain pages, festival rows, today's blocks, the credits, the home feature cards, empty states
+    // (not the study dossier: it is closed until a reader opens it, and what a reader opens is simply there)
+    ['', '.cx-plain-in > h1, .cx-plain-text > *, .cx-plain-in > .cx-btn, .cx-credits-line, .cx-credits-sub, .cx-credits-list > *, .cx-credits-in > .cx-credits-btns, .cx-manas-card > *, .block-head, .empty, .moment, main > .wrap > .note, .mx-src, .cx-stotra-sa, .legend, .kept, .story-intro, .mx-ep-n, .mx-ep-t, .mx-sum'],
     ['ep-rv--side', '.fest-list > li, .fest-item'],
     ['ep-rv--grow', '.cx-credits-name, .pause-card, .mx-shot, .cx-finale-card > *'],
     // reading text never slides: it only comes up to full strength as it is reached
