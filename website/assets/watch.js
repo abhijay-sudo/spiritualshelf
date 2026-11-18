@@ -9,7 +9,7 @@ const IC = {
 prev: svg('<path class="ic-fill" d="M17.5 6.2v11.6a.8.8 0 0 1-1.2.7L8 12.7a.8.8 0 0 1 0-1.4l8.3-5.8a.8.8 0 0 1 1.2.7Z"/><path d="M6.5 6v12"/>'),
 next: svg('<path class="ic-fill" d="M6.5 6.2v11.6a.8.8 0 0 0 1.2.7l8.3-5.8a.8.8 0 0 0 0-1.4L7.7 5.5a.8.8 0 0 0-1.2.7Z"/><path d="M17.5 6v12"/>'),
 x: svg('<path d="M6 6l12 12M18 6 6 18"/>'),
-snd: svg('<path class="ic-fill" d="M4 9.5v5h3.5l5 4v-13l-5 4H4Z"/><path class="wt-on-ic" d="M16 9.5a3.5 3.5 0 0 1 0 5M18.5 7a7 7 0 0 1 0 10"/><path class="wt-off-ic" d="M16.5 9.5l5 5M21.5 9.5l-5 5"/>'),
+snd: '<svg class="ic wt-diya" viewBox="0 0 48 48" aria-hidden="true"><path class="fl" d="M24 4c4.2 6.2 6.6 9.8 6.6 13.9a6.6 6.6 0 0 1-13.2 0C17.4 13.8 19.8 10.2 24 4Z"/><path d="M24 28v-4.5"/><path class="bw" d="M4 27c5.2 1.6 12 2.3 20 2.3S38.8 28.6 44 27c-1.2 8.3-8.6 14-20 14S5.2 35.3 4 27Z"/></svg>',
 cc: svg('<rect x="3" y="5.5" width="18" height="13" rx="2.5"/><path d="M10.5 10.2a2.3 2.3 0 1 0 0 3.6M17 10.2a2.3 2.3 0 1 0 0 3.6"/>'),
 };
 const SIZES = '(min-aspect-ratio: 21/9) 177.78vh, (min-aspect-ratio: 16/9) 100vw, 177.78vh';
@@ -87,8 +87,37 @@ const stopClock = () => { clearTimeout(timer); timer = 0; fn = null; };
 const MOVES = [[1.03, 0, 0, 1.16, 0, 0], [1.15, -1, 0, 1.15, 1, 0], [1.2, 0, 0, 1.05, 0, 0], [1.13, 0, .8, 1.16, 0, -.8], [1.05, .7, .5, 1.17, -.5, -.4]];
 const fxOf = (sc) => (matchMedia('(max-aspect-ratio: 3/4)').matches ? (matchMedia('(min-width: 700px)').matches ? sc.tx ?? sc.px : sc.px) : null) ?? sc.x ?? 50;
 const tf = (s, x, y, fx, fy) => { const b = (u, f) => (u >= 0 ? f : 100 - f) * (s - 1) * .85 * u; return `translate3d(${b(x, fx).toFixed(2)}%, ${b(y, fy).toFixed(2)}%, 0) scale(${s.toFixed(3)})`; };
-const camera = (ly, k) => {
+const upright = () => matchMedia('(max-aspect-ratio: 3/4)').matches;
+const posOf = (x) => { const v = Math.min(1, (innerWidth / innerHeight) * (9 / 16)); return v >= 1 ? x : Math.min(100, Math.max(0, (x / 100 - v / 2) / (1 - v) * 100)); };
+const framesOf = (sc, k) => {
+if (!k || sc.p || !sc.k || reduced()) return null;
+if (sc._u === upright() && sc._w === innerWidth && sc._f) return sc._f;
+const K = sc.k, m = K[0], rest = K.slice(1);
+sc._u = upright(); sc._w = innerWidth;
+sc._f = sc._u ? [[posOf(m[0]), m[1], 1, 1.05], ...rest.slice(0, 2).map((q) => [posOf(q[0]), q[1], 1, 1.05]), [posOf(m[0]), m[1], 1.08, 1.02]]
+: [[m[0], m[1], 1.012, 1.035], [m[0], m[1], 1.03, 1.06], ...rest.slice(0, 1).map((q) => [q[0], q[1], 1.03, 1.06]), [m[0], m[1], 1.05, 1.012]];
+return sc._f;
+};
+let fi = 0, played = 0, playT0 = 0, frameAt = 0;
+const elapsed = () => played + (playing ? performance.now() - playT0 : 0);
+const living = (ly, sc, x, y, push) => {
+const L = window.SpritualLiving;
+if (!L || !sc.d || !L.ok() || matchMedia('(min-aspect-ratio: 21/9)').matches) { if (L && ly === layers[cur]) L.detach(); return; }
+L.attach(ly.cam, ly.img, sc.d, { x, y, cx: x / 100, cy: y / 100 }, push); if (!playing) L.pause();
+};
+const camera = (ly, k, f = 0) => {
 ly.anim?.cancel(); ly.anim = null;
+const F = framesOf(SC[k], k);
+if (F) {
+const [x, y, s0, s1] = F[f % F.length];
+ly.el.style.setProperty('--fx', (upright() ? x : 50) + '%'); ly.el.style.setProperty('--fy', y + '%');
+ly.cam.style.transformOrigin = `${upright() ? 50 : x}% ${y}%`;
+const a = ly.cam.animate([{ transform: `scale(${s0})` }, { transform: `scale(${s1})` }], { duration: 15000, easing: 'cubic-bezier(.3, 0, .55, 1)', fill: 'forwards' });
+if (!playing) a.pause(); ly.anim = a; frameAt = elapsed();
+living(ly, SC[k], x, y, s1 > s0 ? 1 : -1);
+return;
+}
+window.SpritualLiving?.detach(); ly.cam.style.transformOrigin = '';
 const sc = SC[k]; const fx = fxOf(sc), fy = sc.y ?? 45;
 ly.cam.style.transform = sc.p && reduced() ? 'scale(1.3)' : '';
 if (reduced()) return;
@@ -122,9 +151,21 @@ await Promise.race([ly.img.decode().catch(() => {}), wait(3500)]);
 if (my !== token) return;
 if (wide) ly.fill.src = ly.img.currentSrc || ly.img.src;
 ly.el.style.zIndex = ++z; ly.el.classList.add('is-on'); cur ^= 1;
-camera(ly, k);
+fi = 0; camera(ly, k);
 setTimeout(() => { if (layers[cur] === ly) { old.el.classList.remove('is-on'); old.anim?.cancel(); old.anim = null; } }, reduced() ? 950 : 1000);
 fireNow = !!sc.f; embers();
+};
+const reframe = () => {
+const sc = SC[scene], F = framesOf(sc, scene), ly = layers[cur ^ 1], old = layers[cur], my = token;
+if (!F || F.length < 2 || !open || ended || ly.el.classList.contains('is-on')) return;
+fi = fi + 1 < F.length ? fi + 1 : 1; frameAt = elapsed();
+ly.el.classList.remove('is-plate'); setImg(ly.img, sc);
+Promise.race([ly.img.decode().catch(() => {}), wait(1500)]).then(() => {
+if (my !== token || !open || ended) return;
+ly.el.style.zIndex = ++z; ly.el.classList.add('is-on'); cur ^= 1; camera(ly, scene, fi);
+if (ctx.sound.on()) ctx.sound.swell?.();
+setTimeout(() => { if (layers[cur] === ly) { old.el.classList.remove('is-on'); old.anim?.cancel(); old.anim = null; } }, 1000);
+});
 };
 const embers = () => {
 if (fireNow && !fire && window.SpritualFx) fire = SpritualFx.embers($('.wt-stage', dlg), () => open && fireNow);
@@ -176,6 +217,8 @@ const run = (i) => {
 const st = SC[scene].steps[i];
 if (!st) return go(scene + 1);
 idx = i; spoken = false; const titled = titleEl.classList.contains('is-in') && !reduced();
+if (st.k === 'cap' && scene) { const held = elapsed() - frameAt; if (held >= 8000 || (held >= 4000 && held + st.ms > 12000)) reframe(); }
+if (st.k === 'title' && scene && ctx.sound.on()) ctx.sound.bell?.(528, .07);
 setTitle(st.k === 'cap' ? null : st); setCap(st.k === 'cap' ? st.text : '', titled ? 500 : 0);
 const n = SC[scene].steps.length; if (scene) fillTo(i / n, (i + 1) / n, st.ms);
 const nextStep = () => run(i + 1);
@@ -202,21 +245,21 @@ preload(k < N ? SC[k + 1] : data.next);
 run(0);
 };
 const end = () => {
-ended = true; stopClock(); setCap(''); setTitle(null); fireNow = false; embers();
+ended = true; stopClock(); setCap(''); setTitle(null); fireNow = false; embers(); window.SpritualLiving?.detach(); if (ctx.sound.on()) ctx.sound.bell?.(440, .1);
 segs.forEach((s) => { $('i', s).style.cssText = 'transform:scaleX(1)'; s.removeAttribute('aria-current'); });
 const img = $('img', endEl); if (data.next && img.dataset.i !== data.next.i) setImg(img, data.next);
 endEl.hidden = false; dlg.classList.add('is-ended'); dlg.classList.remove('is-idle');
 requestAnimationFrame(() => q('[data-a="read"]').focus({ preventScroll: true }));
 };
 const play = () => {
-if (playing) return; playing = true; paintPlay();
+if (playing) return; playing = true; playT0 = performance.now(); paintPlay();
 if (ended) return go(0);
-layers.forEach((l) => l.anim?.play());
+layers.forEach((l) => l.anim?.play()); window.SpritualLiving?.play();
 if (spoken || !fn) run(idx); else { thaw(); if (scene) fillTo(fillB, (idx + 1) / SC[scene].steps.length, left); }
 };
 const pause = () => {
-if (!playing) return; playing = false; paintPlay();
-freeze(); fillHold(); layers.forEach((l) => l.anim?.pause());
+if (!playing) return; played += performance.now() - playT0; playing = false; paintPlay();
+freeze(); fillHold(); layers.forEach((l) => l.anim?.pause()); window.SpritualLiving?.pause();
 if (spoken) { sayTok++; ctx.hush(); stopClock(); }
 };
 const toggle = () => { (playing ? pause : play)(); flash.className = 'wt-flash'; void flash.offsetWidth; flash.innerHTML = (playing ? UI.icPlay : UI.icPause) || ''; flash.className = 'wt-flash is-on'; };
@@ -246,7 +289,7 @@ else if (a === 'prev') go(scene > 1 ? scene - 1 : scene);
 else if (a === 'next') go(scene + 1);
 else if (a === 'sound') sound();
 else if (a === 'caps') caps();
-else if (a === 'replay') { reached = 0; playing = true; paintPlay(); go(0); }
+else if (a === 'replay') { reached = 0; playing = true; playT0 = performance.now(); paintPlay(); go(0); }
 else if (a === 'read') close(false, ended ? 1 : scene || 1);   // after the whole film, the reading starts at the beginning
 });
 d.addEventListener('keydown', (e) => {
@@ -278,7 +321,7 @@ addEventListener('pageshow', (e) => { if (e.persisted && open && location.hash !
 d.addEventListener('visibilitychange', () => { if (!open) return; if (d.hidden && playing) { autoPaused = true; pause(); } else if (!d.hidden && autoPaused) { autoPaused = false; play(); } });
 addEventListener('pagehide', () => { if (open) ctx.hush(); });
 const close = (fromPop, at = scene > 1 ? scene : 0) => {
-if (!open) return; open = false; token++; sayTok++; stopClock(); ctx.hush(); playing = false; clearTimeout(idleT);
+if (!open) return; open = false; token++; sayTok++; stopClock(); ctx.hush(); playing = false; clearTimeout(idleT); window.SpritualLiving?.detach();
 fireNow = false; embers(); ctx.sound.duck(1);
 if (!fromPop && pushed) history.back();
 else if (!fromPop && location.hash === '#watch') history.replaceState(history.state, '', location.pathname + location.search);
@@ -295,9 +338,11 @@ return {
 open(opener) {
 if (open) return; open = true; back = opener || d.activeElement; try { keyNav = !!opener?.matches(':focus-visible'); } catch {} reached = 0; ended = false; endEl.hidden = true; dlg.classList.remove('is-ended', 'is-idle', 'is-closing');
 if (location.hash !== '#watch') { history.pushState(history.state, '', '#watch'); pushed = true; }
-playing = true; paintPlay(); paintOpts(); ctx.sound.duck(.35); if (ctx.sound.on()) ctx.sound.set(true);
+if (UI.livingJs && !window.SpritualLiving && !lowData && !reduced() && (navigator.deviceMemory || 4) >= 4 && !d.querySelector('script[data-lv]')) { const s = d.createElement('script'); s.src = UI.livingJs; s.async = true; s.dataset.lv = ''; d.head.append(s); }
+const door = !ctx.store.get('door', 0) && window.SpritualDoor;
+playing = !door; playT0 = performance.now(); played = 0; paintPlay(); paintOpts(); ctx.sound.duck(.35); if (!door && ctx.sound.on()) ctx.sound.set(true);
 segs.forEach((s) => { $('i', s).style.cssText = 'transform:scaleX(0)'; });
-const shown = () => { root.classList.add('wt-on'); poke(); go(0); };
+const shown = () => { root.classList.add('wt-on'); poke(); go(0); if (door) { const ask = () => { if (!open) return; if (!dlg.open) return requestAnimationFrame(ask); door({ title, kicker, F: UI.f || {}, onChoice: (c) => { ctx.store.set('door', 1); ctx.sound.set(c === 'sound'); if (c === 'sound') ctx.sound.bell?.(660, .16); paintOpts(); } }).then(() => { if (open) { paintOpts(); play(); } }); }; ask(); } };
 const focus = () => (keyNav ? playBtn : dlg).focus({ preventScroll: true });
 const hr = hero?.getBoundingClientRect();
 if (opener && hero && d.startViewTransition && !reduced() && hr && hr.bottom > innerHeight * .4) {

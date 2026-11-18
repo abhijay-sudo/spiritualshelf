@@ -1,4 +1,4 @@
-// Spritual cinema layer: letterbox bars that open and close with the scroll, the prologue reel, the film-strip rails,
+// Spritual cinema layer: letterbox bars that open and close with the scroll, the film-strip rails,
 // the sound invitation and the poster that opens into its story. Progressive enhancement only.
 (() => {
   const $ = (s, r = document) => r.querySelector(s);
@@ -35,16 +35,6 @@
     }
   }
 
-  /* ---------- Prologue: one painting per stretch of scroll; each pushes in slowly, then dissolves into the next ---------- */
-  const reel = $('[data-reel]');
-  // the later paintings wait in data-src/data-srcset so the opening screen loads first; each is fetched as the reel nears it
-  const hydrate = (img) => {
-    if (!img || !img.dataset.srcset) return;
-    img.srcset = img.dataset.srcset; img.src = img.dataset.src;
-    img.removeAttribute('data-srcset'); img.removeAttribute('data-src');
-  };
-  const laterImgs = reel ? $$('img[data-later]', reel) : [];
-  if (reel && reduced()) laterImgs.forEach(hydrate);   // stacked, not pinned: the browser's own lazy loading takes over
   let vtImg = null;   // the picture that opens into the next page (a poster, or the story select's stage)
   /* ---------- The opening's scenery leans with the pointer (rays, mist, birds and lamps at different depths) ---------- */
   const openEl = $('.cx-home .cx-open'); const lean = { x: 0, y: 0 };

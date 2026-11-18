@@ -50,6 +50,15 @@
 .wt-h { margin-top: .8rem !important; max-width: 17ch; font: 500 clamp(1.9rem, 1.05rem + 3.4vw, 3.8rem)/1.12 var(--cx-title, Georgia, serif); color: #fbf1e2; text-wrap: balance; text-shadow: 0 2px 30px rgb(0 0 0 / .6); letter-spacing: -.01em; }
 .wt-h:lang(hi) { line-height: 1.38; max-width: 15em; letter-spacing: 0; }
 .wt-title.is-open .wt-h { font-size: clamp(2.4rem, 1.2rem + 5vw, 5.6rem); max-width: 14ch; }
+/* a scene's title on a wide screen stands low and to the left, in a dark gathered at the foot of the frame, as on the story
+   page: never across a face in the middle of the painting (the film's own title keeps the centre, over its dimmed opening) */
+@media (min-width: 700px) and (min-aspect-ratio: 1/1) {
+  .wt-title:not(.is-open) { place-content: end start; justify-items: start; text-align: left; padding: 4rem 42vw clamp(5.5rem, 13svh, 8rem) clamp(40px, 6.5vw, 120px); }
+  .wt-title:not(.is-open) .wt-k { justify-content: flex-start; }
+  .wt-title:not(.is-open) .wt-k::before { display: none; }
+  .wt-title:not(.is-open) .wt-h { max-width: 18ch; }
+  .wt:has(.wt-title:not(.is-open)) .wt-dim { background: linear-gradient(to top, rgb(8 4 2 / .82) 0, rgb(8 4 2 / .6) 26%, rgb(8 4 2 / 0) 58%); -webkit-mask-image: linear-gradient(to right, #000 0, #000 36%, rgb(0 0 0 / .2) 72%); mask-image: linear-gradient(to right, #000 0, #000 36%, rgb(0 0 0 / .2) 72%); }
+}
 .wt-title.is-open .wt-h:lang(hi) { max-width: 12em; }
 .wt-sub { margin-top: 1rem !important; font: italic 400 1.1rem/1.4 var(--cx-text, Georgia, serif); color: #e9d9c3; text-shadow: 0 1px 12px rgb(0 0 0 / .6); }
 .wt-sub:empty { display: none; }
@@ -75,6 +84,7 @@
 .wt.is-idle .wt-ui * { pointer-events: none !important; }
 .wt-top { position: absolute; top: 0; left: 0; right: 0; display: flex; align-items: center; gap: .75rem; padding: max(.5rem, env(safe-area-inset-top, 0px)) max(var(--cx-gut-r), 1rem) 1.6rem max(var(--cx-gut), 1rem); background: linear-gradient(to bottom, rgb(6 3 1 / .6), rgb(6 3 1 / 0)); }
 .wt-name { flex: 1; min-width: 0; margin: 0; font: 500 1rem/1.25 var(--cx-title, Georgia, serif); color: #f6ead8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.wt-name:lang(hi) { line-height: 1.7; }   /* room for the matras above and below the line, which the one-line clip was shaving */
 .wt-note { margin: 0; max-width: 50%; font: .85rem/1.3 var(--cx-ui, Georgia, serif); color: #f3c47e; text-align: right; }
 .wt-bot { position: absolute; left: 0; right: 0; bottom: 0; padding: 2.2rem max(var(--cx-gut-r), 1rem) max(.4rem, env(safe-area-inset-bottom, 0px)) max(var(--cx-gut), 1rem); background: linear-gradient(to top, rgb(6 3 1 / .72), rgb(6 3 1 / 0)); }
 .wt-prog { display: flex; gap: 4px; margin-bottom: -8px; }
@@ -113,8 +123,12 @@
 .wt-play { width: 56px; height: 56px; background: rgb(255 246 232 / .14); border: 1px solid rgb(255 240 220 / .38); }
 .wt-play .ic { width: 26px; height: 26px; }
 .wt-b[aria-pressed="false"] { opacity: .62; }
-.wt-snd .wt-off-ic, .wt-snd[aria-pressed="false"] .wt-on-ic { display: none; }
-.wt-snd[aria-pressed="false"] .wt-off-ic { display: inline; }
+/* the sound control is the lamp: lit, the film has sound and narration; snuffed, silence */
+.wt-diya { overflow: visible; }
+.wt-diya .bw { fill: rgb(246 236 218 / .14); }
+.wt-diya .fl { fill: #ffd98a; stroke: none; opacity: 0; transform-box: fill-box; transform-origin: 50% 100%; scale: .4; transition: opacity .5s, scale .7s cubic-bezier(.2, .9, .3, 1.2); filter: drop-shadow(0 0 4px rgb(255 190 90 / .9)); }
+.wt-snd[aria-pressed="true"] .wt-diya .fl { opacity: 1; scale: 1; }
+.wt-snd[aria-pressed="true"] .wt-diya .bw { fill: rgb(233 201 140 / .34); }
 .wt :focus-visible { outline: 2px solid #f3c47e; outline-offset: 2px; }
 .wt-flash { position: absolute; left: 50%; top: 50%; z-index: 9004; display: grid; place-items: center; width: 84px; height: 84px; margin: -42px 0 0 -42px; border-radius: 50%; background: rgb(10 5 2 / .5); color: #fff6e8; opacity: 0; pointer-events: none; }
 .wt-flash .ic { width: 34px; height: 34px; }
@@ -131,14 +145,15 @@
 :root:not([data-motion="reduce"]) .wt-end-pic img { animation: wt-push 40s linear both; }
 @keyframes wt-push { from { scale: 1.02; } to { scale: 1.14; } }
 .wt-end-pic::after { content: ""; position: absolute; inset: 0; background: radial-gradient(ellipse 80% 70% at 50% 50%, rgb(7 4 3 / .2), rgb(7 4 3 / .85)); }
-.wt-end-in { position: relative; display: grid; justify-items: center; gap: .9rem; width: min(100%, 40rem); }
-.wt-end-t { margin: 0; font: 500 clamp(2rem, 1.2rem + 3.6vw, 4.2rem)/1.1 var(--cx-title, Georgia, serif); color: #fbf1e2; text-wrap: balance; text-shadow: 0 2px 30px rgb(0 0 0 / .6); }
+/* (on a short screen, or at large text, the end card scrolls inside itself rather than losing its top and foot) */
+.wt-end-in { position: relative; display: grid; justify-items: center; gap: .9rem; width: min(100%, 40rem); max-height: 100%; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none; }
+.wt-end-t { margin: 0; font: 500 clamp(min(2rem, 9.5vw), 1.2rem + 3.6vw, 4.2rem)/1.1 var(--cx-title, Georgia, serif); color: #fbf1e2; text-wrap: balance; text-shadow: 0 2px 30px rgb(0 0 0 / .6); }
 .wt-end-t:lang(hi) { line-height: 1.35; }
 .wt-end-row { display: flex; flex-wrap: wrap; justify-content: center; gap: .6rem; margin-top: .3rem; }
 .wt-next { display: grid; grid-template-columns: 1fr auto; align-items: center; column-gap: 1rem; width: min(100%, 26rem); margin-top: 1.4rem; padding-top: 1.1rem; border-top: 1px solid rgb(255 240 220 / .24); color: #f6ead8; text-align: left; text-decoration: none; }
 .wt-next small { font: 500 .74rem/1.3 var(--cx-ui, Georgia, serif); letter-spacing: .2em; text-transform: uppercase; color: #f3c47e; }
 .wt-next small:lang(hi), :lang(hi) > .wt-next small { font-family: "Mukta", sans-serif; font-size: .9rem; letter-spacing: .02em; text-transform: none; }
-.wt-next strong { grid-column: 1; text-wrap: balance; font: 500 clamp(1.25rem, 1rem + 1.3vw, 1.9rem)/1.2 var(--cx-title, Georgia, serif); }
+.wt-next strong { grid-column: 1; text-wrap: balance; font: 500 clamp(min(1.25rem, 6.5vw), 1rem + 1.3vw, 1.9rem)/1.2 var(--cx-title, Georgia, serif); }
 .wt-next-go { grid-column: 2; grid-row: 1 / span 2; display: grid; place-items: center; width: 48px; height: 48px; border: 1px solid rgb(255 240 220 / .45); border-radius: 50%; transition: background-color .2s; }
 .wt-next-go .ic .ic-fill { fill: currentColor; }
 .wt-next:hover .wt-next-go { background: rgb(255 240 220 / .14); }

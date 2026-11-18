@@ -1,0 +1,233 @@
+/* Spritual: the Unbroken Shot (film.js). A story page read as one continuous film: the painting stays pinned behind the
+   words, the camera travels across it with the reading, the words sit low in the frame, and each painting dissolves into
+   the next. Everything here hangs off .fm on <html> (set by boot.js before the first paint, when motion and data allow)
+   and .fm-live (set by film.js once the stage is built). Without them the page is the stacked reading page. */
+.fm { --fm-ink: #f6ecda; --fm-gold: #e9c98c; --fm-night: #0b0706; --fm-b: calc(7svh + env(safe-area-inset-bottom, 0px)); --fm-x: 22px; --fm-xr: 34px; --fm-w: 34rem; --fm-pin: 60svh; --fm-pin-t: 50svh; --t: 18 10 7; }
+.fm:has(.reader-bar.is-listening) { --fm-b: calc(7svh + 4.5rem + env(safe-area-inset-bottom, 0px)); }
+
+/* ---------- The stage: two layers at most, moved by transform and crossed by opacity ---------- */
+.fm-stage, .fm-rail, .fm-about, .fm-only, .fm-sp { display: none; }
+.fm .fm-sp { display: block; position: absolute; left: 0; top: 0; width: 1px; height: 1px; pointer-events: none; }
+.fm .fm-long > .fm-sp { display: none; }
+.fm .fm-stage { display: block; position: fixed; left: 0; top: 0; width: 100%; height: 100vh; height: 100lvh; z-index: 0; overflow: hidden; background: var(--fm-night); contain: strict; pointer-events: none; }
+.fm-stage.is-off { visibility: hidden; }
+.fm-ly { position: absolute; inset: 0; opacity: 0; }
+.fm-ly.on { opacity: 1; }
+.fm-ly.fade { transition: opacity .9s cubic-bezier(.4, 0, .3, 1); }
+.fm-cam { position: absolute; left: 0; top: 0; transform-origin: 0 0; will-change: transform; transition: transform 1.3s cubic-bezier(.45, 0, .15, 1); }
+.fm-cam img, .fm-cam canvas { position: absolute; inset: 0; display: block; width: 100%; height: 100%; max-width: none; }
+/* the picture's own dark, risen only as high as the words on screen need, and lifted between paragraphs: never a box */
+.fm-scrim { position: absolute; inset: 0; z-index: 4; opacity: 0; transition: opacity .7s cubic-bezier(.3, 0, .2, 1); will-change: opacity;
+  background: linear-gradient(to top, rgb(var(--t) / .96) 0, rgb(var(--t) / .93) calc(var(--th, 30vh) * .55), rgb(var(--t) / .86) var(--th, 30vh), rgb(var(--t) / .5) calc(var(--th, 30vh) + 9vh), rgb(var(--t) / 0) calc(var(--th, 30vh) + 24vh)); }
+.fm-stage.lit .fm-scrim { opacity: 1; }
+.fm-vig { position: absolute; inset: 0; z-index: 3; background: linear-gradient(to bottom, rgb(8 4 2 / .5) 0, rgb(8 4 2 / 0) 15%), linear-gradient(to top, rgb(8 4 2 / .42) 0, rgb(8 4 2 / 0) 26%); }
+
+/* ---------- The page over the stage ---------- */
+.fm .cx-film-open { z-index: 1; }
+.fm .cx-film-open-pic { height: 100vh; height: 100lvh; bottom: auto !important; top: 0 !important; animation: none !important; }
+.fm-live .cx-film-open { background: none; }
+.fm-live .cx-film-open-pic, .fm-live .cx-film-open .cx-bar, .fm-live .cx-film-card::before { visibility: hidden; }
+/* the title's dark travels with the title, and thins out at its foot so no edge crosses the painting as it leaves */
+.fm .cx-film-open:not(.mx-open) .cx-open-shade { background: linear-gradient(to top, rgb(14 8 4 / 0) 0, rgb(14 8 4 / .9) 10%, rgb(14 8 4 / .9) 32%, rgb(14 8 4 / .55) 47%, rgb(14 8 4 / 0) 66%), linear-gradient(to bottom, rgb(14 8 4 / .5), transparent 16%); }
+.fm .reader-grid { display: block; position: relative; z-index: 1; max-width: none; padding: 0; background: var(--fm-night); }
+.fm-live .reader-grid { background: none; }
+.fm .reader-main { max-width: none; padding: 0; }
+.fm .reader.cx-film { padding-bottom: 0; }
+.fm .rail--reel, .fm .rail--lens, .fm .leaf-nav, .fm .reader-bar:not(.is-listening), .fm [data-finished] { display: none !important; }
+.fm .progress { opacity: .7; }
+
+/* a beat: its words rise unseen to the lower third, hold there while the page scrolls (position: sticky), then go */
+.fm .fm-beat { display: block; position: relative; padding: 0; margin: var(--mt, 14svh) 0 0; height: auto; min-height: 0; background: none; overflow: visible; z-index: auto; pointer-events: none; }
+.fm .fm-t { position: sticky !important; inset: auto auto var(--fm-b) auto !important; display: block; box-sizing: border-box; width: 100%; max-width: calc(var(--fm-w) + var(--fm-x) + var(--fm-xr)); margin: 0 !important; padding: 0 var(--fm-xr) 0 var(--fm-x) !important; background: none; color: var(--fm-ink); text-shadow: 0 1px 2px rgb(0 0 0 / .85), 0 0 20px rgb(0 0 0 / .6); text-align: left; text-wrap: pretty; }
+.fm-live .fm-t { opacity: 0; transition: opacity .24s linear; }
+/* words that have gone stay where they stood while they fade, and are out at once when their hold ends: never seen rising */
+.fm-live .fm-beat.gone > .fm-t { transition: none; }
+/* A touch screen is read a flick at a time: the page comes to rest only where a paragraph's words are in place, and stops
+   at every paragraph, so a flick never passes one over (each stands a full screen from the next, further than any thumb
+   drags). With a mouse or trackpad the page scrolls freely and the keys step through the paragraphs (film.js). */
+@media (pointer: coarse) {
+  .fm { --fm-pin: 114svh; --fm-pin-t: 114svh; }
+  html.fm-snap { scroll-snap-type: y mandatory; }
+  .fm-snap :is(.fm-sp, .fm-long, .cx-film-open, .story-end) { scroll-snap-align: start; }
+  .fm-snap :is(.fm-sp, .fm-long) { scroll-snap-stop: always; }
+}
+.fm-sv { position: absolute; left: 0; top: 0; width: 0; height: 100vh; height: 100svh; visibility: hidden; }
+/* the opening's own title, buttons and shade thin out as it is scrolled (film.js, --cf), so they never rest cut by the screen's top */
+.fm-live .cx-film-open :is(.cx-film-card, .cx-open-shade) { opacity: var(--cf, 1); }
+.fm-live .cx-film-open.fm-out .cx-film-card { visibility: hidden; }
+.fm-live .fm-beat.on > .fm-t, .fm-live .fm-t.on { opacity: 1; pointer-events: auto; transition: opacity .8s cubic-bezier(.2, .6, .2, 1) .16s; }
+.fm .fm-beat::before { content: ""; display: block; position: static; inset: auto; width: auto; height: var(--fm-pin); background: none; opacity: 1; }
+/* words too long to hold in the lower third are not pinned: they pass up through the frame over a deeper dark */
+.fm .fm-beat.fm-long::before { height: 0; }
+.fm .fm-long > .fm-t { position: static !important; }
+
+.fm .scenes { padding: 0 0 6svh; }
+.fm .scene { display: block; padding: 0; }
+.fm .scene-text { display: block; opacity: 1 !important; animation: none !important; transform: none !important; translate: none !important; }
+.fm .scene-text p.fm-t { font-size: clamp(1.06rem, 1rem + .5vw, 1.32rem); line-height: 1.52; }
+.fm .scene-text p.fm-t:lang(hi), html[lang="hi"] .fm .scene-text p.fm-t { line-height: 1.8; }
+.fm .scene-text p.fm-t::first-letter { float: none !important; font: inherit !important; color: inherit !important; padding: 0 !important; }
+.fm .shot.fm-beat { --fm-pin: var(--fm-pin-t); aspect-ratio: auto; }
+.fm .shot > img { display: none; }
+.fm .shot-card.fm-t { display: grid; gap: .55rem; justify-items: start !important; text-align: left !important; background: none !important; border: 0 !important; outline: 0 !important; box-shadow: none !important; }
+.fm .shot-card.fm-t > * { opacity: 1 !important; animation: none !important; justify-self: start !important; justify-items: start !important; text-align: left !important; }
+.fm .shot-card .scene-no { margin: 0; padding: 0 !important; background: none !important; backdrop-filter: none; -webkit-backdrop-filter: none; border: 0; border-radius: 0; font: 400 .74rem/1.2 var(--cx-ui, inherit); letter-spacing: .26em; text-transform: uppercase; color: var(--fm-gold); text-shadow: 0 1px 2px rgb(0 0 0 / .9); }
+html[lang="hi"] .fm .shot-card .scene-no, .fm[lang="hi"] .shot-card .scene-no { letter-spacing: .06em; font-size: .9rem; }
+.fm .shot-card .scene-no::after { content: ""; display: block; width: 44px; height: 1px; margin-top: .8rem; background: var(--fm-gold); opacity: .8; }
+.fm .shot-card :is(h2, .pair, .scene-no) { text-align: left; justify-self: start; }
+.fm .shot-card h2 { margin: 0; max-width: none; color: #fff8ee; font-size: clamp(2rem, 1.3rem + 3.4vw, 3.5rem); line-height: 1.1; text-wrap: balance; }
+.fm .shot-card.fm-t::before, .fm .shot-card.fm-t::after { display: none !important; }
+.fm .shot-card::before, .fm .shot-card::after, .fm .shot::after, .fm .shot-card .pair::after, .fm .shot-card h2::after, .fm .shot-card h2::before { display: none; }
+.fm .term { color: inherit; text-decoration-color: rgb(233 201 140 / .75); }
+.fm .term:hover, .fm .term[aria-expanded="true"], .fm .term.is-lit { background: rgb(233 201 140 / .22); }
+.fm .is-speaking:is(p, h2) { background: none; box-shadow: -3px 0 0 0 var(--fm-gold); border-radius: 0; }
+
+/* the story's own summary is the first words over the opening painting; the rest of its heading waits behind one control */
+.fm .story-head { display: block; --fm-pin: calc(var(--fm-pin-t) + 20svh); }
+.fm .story-head:not(.is-open) > :not(.story-intro, .visually-hidden, .fm-sp) { display: none; }
+.fm .story-intro.fm-t { display: block; }
+.fm .story-intro .story-fig { display: none; }
+.fm .story-intro .story-sum { margin: 0; color: var(--fm-ink); font-size: clamp(1.14rem, 1.05rem + .6vw, 1.5rem); line-height: 1.5; }
+.fm .fm-about { display: inline-flex; align-items: center; gap: .5rem; min-height: 44px; margin: .5rem 0 0 -2px; padding: 0 2px; background: none; border: 0; color: var(--fm-gold); font: 400 .8rem/1 var(--cx-ui, inherit); letter-spacing: .14em; text-transform: uppercase; cursor: pointer; text-shadow: 0 1px 2px rgb(0 0 0 / .9); }
+html[lang="hi"] .fm .fm-about { letter-spacing: .02em; font-size: .95rem; text-transform: none; }
+.fm .fm-about::after { content: ""; width: .45em; height: .45em; border: solid currentColor; border-width: 0 1px 1px 0; rotate: 45deg; translate: 0 -.15em; transition: rotate .3s, translate .3s; }
+.fm .story-head.is-open .fm-about::after { rotate: 225deg; translate: 0 .12em; }
+/* opened, the heading is a slip of the reading page laid over the film, with everything as it is on paper */
+.fm .story-head.is-open { margin: 16svh auto 0; padding: 1.4rem 1.25rem 1.5rem; width: min(calc(100% - 32px), 38rem); box-sizing: border-box; display: grid; gap: 1rem; background: var(--paper, #fbf8f3); color: var(--ink, #2a1e15); border-radius: 14px; box-shadow: 0 24px 70px rgb(0 0 0 / .5); pointer-events: auto; }
+.fm .story-head.is-open .story-intro.fm-t { position: static !important; opacity: 1; padding: 0 !important; max-width: none; text-shadow: none; color: inherit; pointer-events: auto; }
+.fm .story-head.is-open .story-sum { color: inherit; }
+.fm .story-head.is-open .fm-about { color: var(--saffron-2, #a54d0d); text-shadow: none; }
+.fm .story-head.is-open .fm-only { display: inline-flex; }
+
+.fm .cx-the-end { margin: 0; padding: 0; color: var(--fm-ink); text-align: center; max-width: none; }
+/* "The end": the last painting holds for a full screen under the lit lamp before the afterword comes up */
+.fm .fm-end.fm-beat { --fm-pin: 112svh; }
+.fm .fm-end.fm-beat::after { content: ""; display: block; height: 10svh; width: auto; margin: 0; background: none; }
+.fm .fm-end .fm-t { max-width: none; padding: 0 var(--fm-x) !important; text-align: center; }
+.fm .fm-end-lamp { display: block; width: 104px; height: 104px; margin: 0 auto .6rem; }
+/* the afterword stays in the dark of the last painting (its tint, --t, set by film.js): the night palette, laid over the
+   end of the film with no edge, so the room's lights do not come up on a paper sheet */
+.fm .story-end { position: relative; z-index: 2; padding: 3rem max(16px, calc(50% - 357px)) 5rem; background: var(--paper, #fbf8f3); }
+.fm-live .story-end {
+  --bg-canvas: rgb(var(--t)); --bg-elevated: #1c1815; --bg-surface: #1a1613; --bg-deep: #241e1a; --bg-deep-2: #2f2722;
+  --ink-primary: #f2ece1; --ink-secondary: #beb4a5; --ink-muted: #a59a8b; --ink-on-deep: #f2ece1; --ink-on-accent: #12100e;
+  --accent-vermilion: #eb9a49; --accent-vermilion-2: #f5ad62; --accent-gold: #d4a84f; --accent-gold-tint: #3a3020; --accent-moss: #8fb394; --accent-rose: #d4826f;
+  --border-hairline: rgb(242 236 225 / .16);
+  --paper: rgb(var(--t)); --surface: #1a1613; --paper-2: #1c1815; --ink: #f2ece1; --muted: #a59a8b; --line: rgb(242 236 225 / .16);
+  --forest: #241e1a; --forest-2: #2f2722; --on-forest: #f2ece1; --saffron: #eb9a49; --saffron-2: #f5ad62; --on-saffron: #12100e;
+  --gold: #3a3020; --gold-2: #d4a84f; --moss: #8fb394; --rose: #d4826f; --accent: #f2ece1; --mat: #3a3020; --mat-ink: #d9c99a;
+  --cx-paper: rgb(var(--t)); --cx-paper-2: #231a13; --cx-sand: #33261c; --cx-surface: #211811; --cx-ink: #f3e7d7; --cx-ink-2: #cdb9a3; --cx-ink-3: #a8927d;
+  --cx-saffron: #f0a456; --cx-saffron-2: #ffbb73; --cx-btn: #eb9a49; --cx-btn-2: #f5ad62; --cx-on-btn: #1d1007; --cx-line: rgb(243 231 215 / .14); --cx-line-2: rgb(243 231 215 / .28);
+  --ed-bg: rgb(var(--t)); --ed-surface: #211811; --ed-tint: #231a13; --ed-ink: #f3e7d7; --ed-ink-2: #cdb9a3; --ed-ink-3: #a8927d; --ed-line: rgb(243 231 215 / .14); --ed-line-2: rgb(243 231 215 / .28);
+  --ed-sun: #f0a456; --ed-sun-2: #ffbb73; --ed-sun-ink: #f0a456; --ed-btn: #eb9a49; --ed-btn-2: #f5ad62; --ed-on-btn: #1d1007;
+  --ed-sun-soft: #4a2c14; --shadow: 0 1px 2px rgb(0 0 0 / .3), 0 14px 34px rgb(0 0 0 / .28); --shadow-lg: 0 2px 4px rgb(0 0 0 / .3), 0 28px 60px rgb(0 0 0 / .4);
+  color-scheme: dark; color: var(--ink); background: rgb(var(--t)); padding-top: 0;
+}
+/* the film's dark rises into the afterword over a full screen's third: no sheet, no corner, no line */
+.fm-live .story-end::before { content: ""; position: absolute; left: 0; right: 0; bottom: 100%; height: 34svh; background: linear-gradient(to top, rgb(var(--t)) 0, rgb(var(--t) / .86) 34%, rgb(var(--t) / .4) 72%, rgb(var(--t) / 0)); pointer-events: none; }
+/* the next story stands first, as a painting the width of the page with its title in the painting's own dark */
+.fm-live .story-end .cx-next { order: -1; position: relative; margin: 0 calc(-1 * max(16px, 50vw - 357px)); border-radius: 0; background: none; }
+.fm-live .story-end .cx-next-pic { aspect-ratio: auto; height: min(78svh, 62vw); min-height: 22rem; }
+.fm-live .story-end .cx-next-pic::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to top, rgb(var(--t)) 0, rgb(var(--t) / .82) 22%, rgb(var(--t) / 0) 58%), linear-gradient(to bottom, rgb(var(--t)) 0, rgb(var(--t) / 0) 22%); }
+.fm-live .story-end .cx-next-txt { position: absolute; left: 0; right: 0; bottom: 0; box-sizing: border-box; max-width: 46rem; padding: 0 var(--fm-xr) 1.6rem var(--fm-x); text-shadow: 0 1px 2px rgb(0 0 0 / .8); }
+.fm-live .story-end .cx-next strong { font-size: clamp(1.9rem, 1.3rem + 2.6vw, 3.2rem); }
+.fm-live .story-end :is(.input, textarea) { background: rgb(255 246 232 / .06); color: var(--ink); border-color: var(--line); }
+.fm-live .story-end ::placeholder { color: #a8927d; }
+.fm-live .story-end .done-line { order: -2; margin: 0 0 1.2rem; text-align: center; color: var(--fm-gold); }
+
+/* ---------- The strip at the edge: the lamp (sound), a tick for each scene, and the way back to paper ---------- */
+/* It shows while the page moves or is touched and leaves the painting clear when the page rests (film.js, .is-in); it is
+   always there for the keyboard, and shows itself when anything in it has the focus. */
+.fm-live .fm-rail { display: flex; flex-direction: column; align-items: center; gap: 6px; position: fixed; z-index: 5; right: max(0px, env(safe-area-inset-right, 0px)); top: 40%; translate: 0 -50%; opacity: 0; pointer-events: none; transition: opacity .7s ease; }
+.fm-live .fm-rail:is(.is-in, :focus-within, :hover) { opacity: 1; pointer-events: auto; transition-duration: .35s; }
+.fm-live .fm-rail.is-off { visibility: hidden; }
+.fm-rail ol { display: flex; flex-direction: column; gap: 0; margin: 4px 0; padding: 0; list-style: none; }
+.fm-rail a { display: block; width: 36px; padding: 7px 0; }
+.fm-rail a i { display: block; width: 3px; height: 14px; margin: 0 11px 0 auto; border-radius: 2px; background: rgb(246 236 218 / .3); overflow: hidden; position: relative; box-shadow: 0 0 3px rgb(0 0 0 / .5); }
+.fm-rail a i::after { content: ""; position: absolute; inset: 0; background: var(--fm-gold); transform: scaleY(var(--f, 0)); transform-origin: top; }
+.fm-rail a:hover i, .fm-rail a:focus-visible i { background: rgb(246 236 218 / .6); }
+.fm-rail button { display: grid; place-items: center; width: 48px; height: 48px; margin: 0; padding: 0; background: none; border: 0; border-radius: 50%; color: var(--fm-ink); opacity: .78; cursor: pointer; filter: drop-shadow(0 1px 2px rgb(0 0 0 / .8)); transition: opacity .3s; }
+.fm-rail button:hover, .fm-rail button:focus-visible { opacity: 1; }
+.fm-rail :focus-visible, .fm-door :focus-visible, .fm .fm-about:focus-visible { outline: 2px solid var(--fm-gold); outline-offset: 2px; }
+.fm-rail svg { width: 22px; height: 22px; display: block; }
+.fm-ic { fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+/* the lamp: a clay diya. Unlit it is an outline; lit, the flame stands and breathes. Lit means sound, snuffed means silence. */
+.fm-diya { overflow: visible; }
+.fm-diya .bw { fill: rgb(246 236 218 / .12); stroke: currentColor; stroke-width: 1.5; stroke-linejoin: round; }
+.fm-diya .fl { fill: #ffd98a; opacity: 0; transform-box: fill-box; transform-origin: 50% 100%; scale: .4; transition: opacity .5s, scale .7s cubic-bezier(.2, .9, .3, 1.2); filter: drop-shadow(0 0 5px rgb(255 190 90 / .9)); }
+.fm-diya .wk { stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; }
+[aria-pressed="true"] > .fm-diya .fl, .fm-diya.lit .fl { opacity: 1; scale: 1; }
+[aria-pressed="true"] > .fm-diya .bw, .fm-diya.lit .bw { fill: rgb(233 201 140 / .3); }
+@media (prefers-reduced-motion: no-preference) { [aria-pressed="true"] > .fm-diya .fl, .fm-diya.lit .fl { animation: fm-flame 3.2s ease-in-out infinite; } }
+@keyframes fm-flame { 0%, 100% { transform: scaleY(1) skewX(0); } 35% { transform: scaleY(1.07) skewX(-2deg); } 70% { transform: scaleY(.95) skewX(2deg); } }
+
+/* the painted lamp (the door, and over "The end"): clay and oil in the dark; lit, the flame stands, its halo comes up and
+   breathes once, and the clay takes the light */
+.fm-lampx { overflow: visible; }
+.fm-lampx .lh { opacity: 0; transform-box: fill-box; transform-origin: 50% 50%; transition: opacity .9s ease; }
+.fm-lampx .lf { opacity: 0; transform-box: fill-box; transform-origin: 50% 100%; scale: .3; transition: opacity .45s ease, scale .8s cubic-bezier(.2, .9, .3, 1.15); }
+.fm-lampx :is(.lb, .lo, .ls) { filter: brightness(.62) saturate(.8); transition: filter 1s ease; }
+.fm-lampx.lit .lh { opacity: 1; }
+.fm-lampx.lit .lf { opacity: 1; scale: 1; }
+.fm-lampx.lit :is(.lb, .lo, .ls) { filter: none; }
+@media (prefers-reduced-motion: no-preference) {
+  .fm-lampx.lit .lh { animation: fm-halo 1.3s ease-in-out .15s 1 both; }
+  .fm-lampx.lit .lf { animation: fm-flame 3.2s ease-in-out .8s infinite; }
+}
+@keyframes fm-halo { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.03); } }
+:root[data-motion="reduce"] .fm-lampx :is(.lh, .lf) { animation: none !important; }
+
+/* ---------- The door: one lamp, one choice ---------- */
+.fm-door { position: fixed; inset: 0; width: 100%; height: 100%; max-width: none; max-height: none; margin: 0; padding: 0; border: 0; background: none; color: #f6ecda; overflow: hidden; }
+.fm-door::backdrop { background: none; }
+/* (the veil's opening is drawn by film.js, a frame at a time, through --r: the radius of the clear circle around the flame) */
+.fm-door-veil { position: absolute; inset: 0; background: radial-gradient(circle at 50% var(--fy, 46%), rgb(11 7 6 / 0) 0, rgb(11 7 6 / 0) calc(var(--r, 0) * 1vmax - 20vmax), rgb(11 7 6 / .8) calc(var(--r, 0) * 1vmax - 7vmax), #0b0706 calc(var(--r, 0) * 1vmax)); opacity: 0; transition: opacity .5s ease; }
+.fm-door.is-in .fm-door-veil { opacity: 1; }
+.fm-door-in { position: relative; box-sizing: border-box; height: 100%; display: grid; align-content: center; justify-items: center; gap: 1.1rem; padding: 2rem 24px calc(2rem + env(safe-area-inset-bottom, 0px)); text-align: center; opacity: 0; transition: opacity .5s ease .15s; }
+.fm-door.is-in .fm-door-in { opacity: 1; }
+.fm-door.is-opening .fm-door-in > :not(.fm-lampx, .fm-door-t, .fm-door-k) { opacity: 0; transition: opacity .35s; }
+.fm-door.is-opening .fm-door-in > :is(.fm-door-t, .fm-door-k) { opacity: 0; transition: opacity .6s ease .7s; }
+.fm-door.is-opening:not(.is-lit) .fm-door-in > :is(.fm-door-t, .fm-door-k) { transition-delay: .1s; }
+.fm-door.is-opening .fm-lampx { opacity: 0; transition: opacity .8s ease 1.7s; }
+.fm-door.is-opening:not(.is-lit) .fm-lampx { transition-delay: .5s; }
+.fm-door-k { margin: 0; font: 400 .74rem/1.3 var(--cx-ui, inherit); letter-spacing: .26em; text-transform: uppercase; color: #e9c98c; }
+html[lang="hi"] .fm-door-k { letter-spacing: .06em; font-size: .92rem; }
+.fm-door-t { margin: 0; max-width: 18ch; font: 500 clamp(1.9rem, 1.4rem + 3vw, 3.4rem)/1.12 var(--cx-title, Eczar, Georgia, serif); text-wrap: balance; }
+.fm-door .fm-lampx { width: 148px; height: 148px; margin: .2rem 0 .4rem; }
+.fm-door-t { transition: color 1.2s ease; }
+.fm-door.is-lit .fm-door-t { color: #ffe7bd; }
+.fm-door-btns { display: grid; gap: .7rem; justify-items: center; }
+.fm-door button { min-height: 48px; padding: .7rem 1.5rem; border-radius: 999px; font: 500 1rem/1.2 var(--cx-ui, inherit); cursor: pointer; }
+html[lang="hi"] .fm-door button { font-size: 1.08rem; }
+.fm-door [data-c="sound"] { background: #f1dcb2; color: #1d0f06; border: 1px solid #f1dcb2; }
+.fm-door [data-c="silent"] { background: none; color: #f6ecda; border: 1px solid rgb(246 236 218 / .45); }
+.fm-door :focus-visible { outline: 2px solid #e9c98c; outline-offset: 3px; }
+@media (prefers-reduced-motion: reduce) { .fm-door-veil, .fm-door-in { transition: none !important; } }
+:root[data-motion="reduce"] :is(.fm-door-veil, .fm-door-in) { transition: none !important; }
+
+/* a "Film" switch on the reading page, and "Reading page" in the film's opened heading */
+:root:not(.fm) .fm-alt { display: none; }
+.fm-switch { display: none; }
+.fm-can .fm-switch { display: inline-flex; }
+.fm .fm-switch:not(.fm-only) { display: none; }
+
+@media (min-width: 900px) and (min-aspect-ratio: 1/1) {
+  .fm { --fm-x: clamp(40px, 6.5vw, 120px); --fm-xr: 24px; --fm-w: 36rem; --fm-b: calc(9svh + env(safe-area-inset-bottom, 0px)); }
+  /* a wide screen shows the whole painting: the dark gathers under the words on the left and leaves the rest clear */
+  .fm-scrim { -webkit-mask-image: linear-gradient(to right, #000 0, #000 38%, rgb(0 0 0 / .25) 72%, rgb(0 0 0 / .12) 100%); mask-image: linear-gradient(to right, #000 0, #000 38%, rgb(0 0 0 / .25) 72%, rgb(0 0 0 / .12) 100%); }
+  .fm-live .fm-rail { right: 14px; top: 50%; }
+  .fm .scene-text p.fm-t { font-size: clamp(1.3rem, .9rem + .75vw, 1.7rem); line-height: 1.5; }
+  .fm-door .fm-lampx { width: 190px; height: 190px; }
+  .fm .fm-end-lamp { width: 128px; height: 128px; }
+  .fm .shot-card .scene-no { font-size: .84rem; }
+  .fm .shot-card h2 { font-size: clamp(2.8rem, 1.6rem + 2.6vw, 4.4rem); }
+  .fm .cx-film-open:not(.mx-open) .cx-open-shade { background: linear-gradient(to top, rgb(14 8 4 / 0) 0, rgb(14 8 4 / .85) 12%, rgb(14 8 4 / .7) 30%, rgb(14 8 4 / 0) 56%), linear-gradient(to bottom, rgb(14 8 4 / .45), transparent 16%); -webkit-mask-image: linear-gradient(to right, #000 0, #000 34%, rgb(0 0 0 / .15) 66%); mask-image: linear-gradient(to right, #000 0, #000 34%, rgb(0 0 0 / .15) 66%); }
+  .fm .story-head.is-open { margin-left: var(--fm-x); }
+  .fm .fm-end .fm-t { text-align: center; }
+}
+@media print { .fm-stage, .fm-rail, .fm-door { display: none !important; } }
+
+/* the site's header over the film keeps the film's dark, never a paper bar */
+.fm body.has-hero .ed-head.is-solid:not(.is-open) { background: linear-gradient(to bottom, rgb(11 7 6 / .82), rgb(11 7 6 / .6) 60%, rgb(11 7 6 / 0)); color: #fff6e8; border-color: transparent !important; box-shadow: none; }
+/* (the story's first words take the focus after "Begin the story" so a screen reader goes on from there: they are not a control) */
+.fm .story-intro:focus { outline: 0; }

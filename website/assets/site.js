@@ -923,6 +923,7 @@
             // the page moves only when the paragraph being read is off the screen, or under the header or the dock
             const r = el.getBoundingClientRect();
             // (and then only as far as it must: up to show its first line, or on so it sits in the upper third)
+            if (window.SpritualFilmReveal?.(el)) return;
             if (root.dataset.mode !== 'leaf' && (r.top < 72 || r.bottom > innerHeight - 96)) scrollBy({ top: r.top - (r.top < 72 ? 96 : Math.max(96, innerHeight * .3)), behavior: reduced() ? 'instant' : 'smooth' });
           };
           if (k === items.length - 1 && i === parts.length - 1) u.onend = () => { if (state === 'playing') speakScene(n + 1); };
@@ -944,6 +945,7 @@
     /* Watch: the story as a film. Its script and styles (watch.js, watch.css) are fetched only when it is opened; it borrows
        this page's speech engine, sound, reading-progress store and scenes rather than carrying its own. */
     const wBtns = $$('[data-watch]');
+    const snd = { on: Sound.on, set: (v) => { store.set('sound', v); paintSound(); if (v) Sound.droneStart(); else Sound.droneStop(); }, duck: Sound.duck, swell: Sound.swell, bell: Sound.bell };
     if (UI.watchJs && wBtns.length) {
       let loading = null;
       const load = () => loading || (loading = new Promise((res, rej) => {
@@ -964,7 +966,7 @@
         // no voice for the page's language on this device (once the device has said which voices it has)
         mute: () => !synth || (synth.getVoices().length > 0 && !voice(UI.lang)),
         noVoice: () => fmt(UI.listenNoVoice, { lang: UI.lang === 'hi' ? UI.voiceHi : UI.voiceEn }),
-        sound: { on: Sound.on, set: (v) => { store.set('sound', v); paintSound(); if (v) Sound.droneStart(); else Sound.droneStop(); }, duck: Sound.duck },
+        sound: snd,
         reached: (n) => setCurrent(n, false),
         // closing the film leaves the reader at the scene it reached
         land: (n) => { if (!n) return false; if (root.dataset.mode === 'leaf') goTo(n); else scenes[n - 1].scrollIntoView({ block: 'start', behavior: 'instant' }); focusScene(n); return true; },
@@ -975,6 +977,12 @@
       };
       wBtns.forEach((b) => b.addEventListener('click', () => open(b)));
       if (location.hash === '#watch') open(null);
+    }
+    /* The Unbroken Shot (film.js): the story page as one continuous film, and the door with its lamp. Fetched once the page
+       is idle (at once when boot.js has already laid the page out as a film); the reading page is complete without it. */
+    if (UI.filmJs) {
+      const film = () => { const js = document.createElement('script'); js.src = UI.filmJs; js.async = true; js.onload = () => window.SpritualFilm?.({ UI, store, scenes, sound: snd, current: () => current }); js.onerror = () => root.classList.remove('fm'); document.head.append(js); };
+      if (root.classList.contains('fm')) film(); else (window.requestIdleCallback || setTimeout)(film, { timeout: 2500 });
     }
     // the floating reader dock steps aside once the story has ended, so it never sits over the reflection or the footer links
     // It also stays out of the way while the story's opening is on screen (the opening has its own Begin and Listen).

@@ -1,0 +1,270 @@
+(() => {
+const d = document, root = d.documentElement;
+const $ = (s, r = d) => r.querySelector(s), $$ = (s, r = d) => [...r.querySelectorAll(s)];
+const esc = (v) => String(v ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v)), ss = (t) => t * t * (3 - 2 * t);
+const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+const still = () => root.dataset.motion === 'reduce' || matchMedia('(prefers-reduced-motion: reduce)').matches;
+const DIYA = (cls = '') => `<svg class="fm-diya ${cls}" viewBox="0 0 48 48" aria-hidden="true"><path class="fl" d="M24 4c4.2 6.2 6.6 9.8 6.6 13.9a6.6 6.6 0 0 1-13.2 0C17.4 13.8 19.8 10.2 24 4Z"/><path class="wk" d="M24 28v-4.5"/><path class="bw" d="M4 27c5.2 1.6 12 2.3 20 2.3S38.8 28.6 44 27c-1.2 8.3-8.6 14-20 14S5.2 35.3 4 27Z"/></svg>`;
+const LAMP = (id, cls = '') => `<svg class="fm-lampx ${cls}" viewBox="0 0 120 120" aria-hidden="true"><defs><radialGradient id="${id}h" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#ffd27a" stop-opacity=".55"/><stop offset=".35" stop-color="#ff9a3c" stop-opacity=".2"/><stop offset="1" stop-color="#ff8a2a" stop-opacity="0"/></radialGradient><linearGradient id="${id}c" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b9713f"/><stop offset=".5" stop-color="#8a4a26"/><stop offset="1" stop-color="#4a2412"/></linearGradient><linearGradient id="${id}f" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#ff8a1f"/><stop offset=".55" stop-color="#ffc24a"/><stop offset="1" stop-color="#fff0b8"/></linearGradient><radialGradient id="${id}o" cx="50%" cy="40%" r="60%"><stop offset="0" stop-color="#3a1c0c"/><stop offset="1" stop-color="#1c0d06"/></radialGradient></defs><circle class="lh" cx="60" cy="46" r="58" fill="url(#${id}h)"/><path class="lb" d="M14 74c10 3 26 4.6 46 4.6S96 77 106 74c-3 17-20 29-46 29S17 91 14 74Z" fill="url(#${id}c)"/><ellipse class="lo" cx="60" cy="74.5" rx="45.5" ry="6.4" fill="url(#${id}o)" stroke="#c98652" stroke-width="1.6"/><path class="ls" d="M24 84c8 9 21 13.5 36 13.5" fill="none" stroke="#e0a674" stroke-opacity=".35" stroke-width="1.6" stroke-linecap="round"/><path class="lw" d="M60 75v-8" stroke="#2a160b" stroke-width="2.4" stroke-linecap="round"/><g class="lf"><path d="M60 22c8.4 12.6 13.4 20 13.4 28.6a13.4 13.4 0 0 1-26.8 0C46.6 42 51.6 34.6 60 22Z" fill="url(#${id}f)"/><path d="M60 41c3.6 5.6 5.6 8.8 5.6 12.4a5.6 5.6 0 0 1-11.2 0C54.4 49.8 56.4 46.6 60 41Z" fill="#fff6d6" fill-opacity=".85"/></g></svg>`;
+const PAGE = '<svg viewBox="0 0 24 24" aria-hidden="true" class="fm-ic"><path d="M6.5 3.5h8l3.5 3.5v13.5h-11.5Z"/><path d="M9.5 11h5.5M9.5 14.5h5.5"/></svg>';
+const cssHref = $('script[data-film]')?.dataset.film;
+const css = () => {
+let l = $('link[href*="film.css"]');
+if (!l && cssHref) { l = d.createElement('link'); l.rel = 'stylesheet'; l.href = cssHref; d.head.append(l); }
+return !l || l.sheet ? Promise.resolve() : new Promise((r) => { l.addEventListener('load', r, { once: true }); l.addEventListener('error', r, { once: true }); setTimeout(r, 4000); });
+};
+window.SpritualDoor = ({ title, kicker, F, onChoice }) => css().then(() => new Promise((res) => {
+const dlg = d.createElement('dialog'); dlg.className = 'fm-door'; dlg.lang = root.lang; dlg.setAttribute('aria-label', F.fDoor);
+dlg.innerHTML = `<div class="fm-door-veil" aria-hidden="true"></div><div class="fm-door-in"><p class="fm-door-k">${esc(kicker)}</p><h2 class="fm-door-t">${esc(title)}</h2>${LAMP('fmd')}<div class="fm-door-btns"><button type="button" data-c="sound" autofocus>${esc(F.fLamp)}</button><button type="button" data-c="silent">${esc(F.fSilent)}</button></div></div>`;
+d.body.append(dlg); dlg.showModal();
+requestAnimationFrame(() => requestAnimationFrame(() => dlg.classList.add('is-in')));
+let gone = false;
+const done = (c) => { if (gone) return; gone = true; dlg.close(); dlg.remove(); res(c); };
+dlg.addEventListener('cancel', (e) => { e.preventDefault(); done(null); });
+dlg.addEventListener('click', (e) => {
+const b = e.target.closest('[data-c]'); if (!b || dlg.classList.contains('is-opening')) return;
+const c = b.dataset.c, lamp = $('.fm-lampx', dlg), r = lamp.getBoundingClientRect();
+onChoice?.(c);
+if (c === 'sound') { lamp.classList.add('lit'); dlg.classList.add('is-lit'); }
+const veil = $('.fm-door-veil', dlg); veil.style.setProperty('--fy', ((r.top + r.height * .36) / innerHeight * 100).toFixed(1) + '%');
+if (still()) return done(c);
+dlg.classList.add('is-opening');
+const t0 = performance.now() + (c === 'sound' ? 900 : 350), step = (now) => { const t = clamp((now - t0) / 1700), e = t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; veil.style.setProperty('--r', (e * 175).toFixed(2)); if (t < 1 && !gone) requestAnimationFrame(step); else done(c); };
+requestAnimationFrame(step);
+});
+}));
+window.SpritualFilm = (ctx) => {
+const { UI, store, scenes } = ctx, F = UI.f || {}, N = scenes.length;
+const reader = $('[data-reader]'), hero = $('.cx-film-open'), heroImg = $('.cx-film-open-pic img'), wrap = $('.scenes', reader);
+const head = $('.story-head', reader), intro = head && $('.story-intro', head), endP = $('.cx-the-end', reader), endSec = $('.story-end', reader);
+if (!reader || !hero || !heroImg || !wrap || !head || !intro || !N) return;
+const title = hero.querySelector('h1')?.getAttribute('aria-label') || d.title, kicker = $$('.cx-film-k span', hero).map((s) => s.textContent).join(' · ');
+const prefs = () => store.get('prefs', {});
+let printing = false;
+const can = () => !still() && !root.classList.contains('ep-lite') && root.dataset.mode !== 'leaf' && root.dataset.read !== 'both' && innerHeight >= 480 && !printing;
+const want = () => can() && prefs().film !== 'off';
+let built = false, active = false, live = false, stage, layers, rail, ticks = [], beats = [], aboutBtn, endLamp;
+let vw = 0, VH = 0, cw = 0, ch = 0, B = 0, keys = [], heroKeys = [], cut = [], tints = [], heroH = 0, stageEnd = Infinity, wrapH = 0;
+let cur = -1, raf = 0, lastT = 0, onBeat = null, gone = null, top = 0, busy = false, loading = false, pending = null, first = true, off = false, lastBell = 0;
+let snapEnd = Infinity, lastH = 0, snapOn = false, freeT = 0, railIn = false, awake = false, sleepT = 0, lastY = -1, cardF = -1, heroP = -1;
+const themes = $$('meta[name="theme-color"]'), themeWas = themes.map((m) => m.content);
+const build = () => {
+built = true;
+stage = d.createElement('div'); stage.className = 'fm-stage'; stage.setAttribute('aria-hidden', 'true');
+const ly = '<div class="fm-ly"><div class="fm-cam"><img alt="" decoding="async"></div></div>';
+stage.innerHTML = ly + ly + '<div class="fm-vig"></div><div class="fm-scrim"></div><i class="fm-sv"></i>';
+reader.prepend(stage);
+layers = $$('.fm-ly', stage).map((el) => ({ el, cam: $('.fm-cam', el), img: $('img', el), k: -1, s: '', q: null }));
+const add = (c, t, type, k) => { c.classList.add('fm-beat'); t.classList.add('fm-t'); const sp = d.createElement('i'); sp.className = 'fm-sp'; sp.setAttribute('aria-hidden', 'true'); c.prepend(sp); beats.push({ c, t, sp, type, k, a: 0, b: 0, e: 0, ht: 0, long: false, q: null }); };
+aboutBtn = d.createElement('button'); aboutBtn.type = 'button'; aboutBtn.className = 'fm-about'; aboutBtn.setAttribute('aria-expanded', 'false'); aboutBtn.textContent = F.fAbout || '';
+intro.append(aboutBtn);
+add(head, intro, 'head', 0);
+scenes.forEach((s, i) => {
+const fig = $('.shot', s), sc = $('.shot-card', s), im = fig && $('img', fig);
+if (fig && sc) add(fig, sc, 'title', i + 1);
+if (im?.alt && !$('.fm-alt', fig)) { const a = d.createElement('span'); a.className = 'visually-hidden fm-alt'; a.textContent = im.alt; fig.prepend(a); }
+$$('.scene-text > .pair', s).forEach((p) => { if (p.firstElementChild) add(p, p.firstElementChild, 'p', i + 1); });
+tints[i + 1] = s.dataset.tint || '18 10 7';
+});
+tints[0] = hero.dataset.tint || tints[1];
+if (endP) { const sp = d.createElement('span'); sp.innerHTML = LAMP('fme', 'fm-end-lamp'); while (endP.firstChild && endP.firstChild !== sp) sp.append(endP.firstChild); endP.append(sp); endP.classList.add('fm-end'); endLamp = $('.fm-lampx', sp); add(endP, sp, 'end', N); }
+endSec?.style.setProperty('--t', tints[N]);
+const on = ctx.sound.on(), beads = $$('[data-bead]', reader), lbl = on ? UI.soundDrone : UI.soundOffLong;
+rail = d.createElement('nav'); rail.className = 'fm-rail'; rail.setAttribute('aria-label', F.fScenes || '');
+rail.innerHTML = `<button type="button" class="fm-lamp" data-sound aria-pressed="${on}" title="${esc(lbl)}">${DIYA()}<span class="visually-hidden">${esc(lbl)}</span></button><ol>${scenes.map((s, i) => `<li><a href="#page-${i + 1}" aria-label="${esc(beads[i]?.getAttribute('aria-label') || i + 1)}"><i></i></a></li>`).join('')}</ol><button type="button" data-fm="off" aria-label="${esc(F.fPaper)}" title="${esc(F.fPaper)}">${PAGE}</button>`;
+head.after(rail); ticks = $$('a i', rail);
+const acts = $('.story-actions', head);
+if (acts) for (const [v, t, c] of [['off', F.fPaper, ' fm-only'], ['on', F.fFilm, '']]) { const b = d.createElement('button'); b.type = 'button'; b.className = 'btn btn-quiet fm-switch' + c; b.dataset.fm = v; b.textContent = t || ''; acts.append(b); }
+};
+const measure = () => {
+const vh = innerHeight, sv = $('.fm-sv', stage).offsetHeight || vh;
+vw = stage.clientWidth; VH = stage.clientHeight;
+const s = Math.max(vw / 16, VH / 9); cw = 16 * s; ch = 9 * s;
+layers.forEach((l) => { l.cam.style.width = cw + 'px'; l.cam.style.height = ch + 'px'; });
+const wide = vw / VH > 1.15;
+const res = wide ? (x, y, z) => { const w = cw * z, h = ch * z; return [clamp(vw / 2 + (x / 100 - .5) * cw - x / 100 * w, vw - w, 0), clamp(VH / 2 + (y / 100 - .5) * ch - y / 100 * h, VH - h, 0), z]; }
+: (x, y, z) => { const w = cw * z, h = ch * z; return [clamp(vw * .5 - x / 100 * w, vw - w, 0), clamp(VH * .36 - y / 100 * h, VH - h, 0), z]; };
+const raw = scenes.map((sc) => { let K = []; try { K = JSON.parse(sc.dataset.cam); } catch {} return K.length ? K : [[50, 40, 1]]; });
+keys = raw.map((K) => K.map((q, i) => res(q[0], q[1], wide ? (i ? 1.05 : 1.015) : q[2])));
+const near = raw.map((K) => res(K[0][0], K[0][1], wide ? 1.06 : K[0][2] + .05)), mid = raw.map((K) => res(K[0][0], K[0][1], wide ? 1.035 : K[0][2] + .025));
+const op = getComputedStyle(heroImg).objectPosition.split(' ').map(parseFloat), k0 = [(vw - cw) * (isNaN(op[0]) ? 50 : op[0]) / 100, (VH - ch) * (isNaN(op[1]) ? 50 : op[1]) / 100, 1], z1 = wide ? 1.04 : 1;
+heroKeys = [k0, [clamp(vw * .5 - (vw * .5 - k0[0]) * z1, vw - cw * z1, 0), clamp(VH * .4 - (VH * .4 - k0[1]) * z1, VH - ch * z1, 0), z1]];
+for (let k = 1; k <= N; k++) {
+const K = keys[k - 1], n = K.length - 1, ps = beats.filter((b) => b.k === k && b.type === 'p'), m = ps.length - 2;
+beats.forEach((b) => { if (b.k === k && b.type !== 'p') b.q = b.type === 'end' ? near[k - 1] : K[0]; });
+ps.forEach((b, j) => { b.q = !j ? K[0] : j === ps.length - 1 ? near[k - 1] : n ? K[1 + (m <= n ? j - 1 : Math.floor((j - 1) * n / m))] : mid[k - 1]; });
+}
+beats[0].q = heroKeys[1];
+const open = head.classList.contains('is-open');
+beats.forEach((b) => { b.c.classList.remove('fm-long'); b.ht = b.t.offsetHeight; });
+B = parseFloat(getComputedStyle(beats[1].t).bottom) || vh * .07;
+const hold = Math.round(sv * .18), coarse = matchMedia('(pointer: coarse)').matches;
+beats.forEach((b, i) => {
+b.long = b.ht > sv * .56 || (b.type === 'head' && open); b.c.classList.toggle('fm-long', b.long);
+if (b.type === 'head' && open) { b.c.style.removeProperty('--mt'); return; }
+const prevLong = i && beats[i - 1].long;
+b.c.style.setProperty('--mt', Math.round(b.long ? sv * .3 : !i ? (coarse ? sv + 6 : sv * .42) - B : (b.type === 'title' || b.type === 'end' || prevLong ? sv * .1 : sv * .04 - hold) - b.ht) + 'px');
+});
+const y1 = scrollY, pad = parseFloat(getComputedStyle(root).scrollPaddingTop) || 0;
+beats.forEach((b) => {
+const r = b.c.getBoundingClientRect(), T = r.top + y1;
+if (b.long) { b.a = T + sv * .22; b.e = b.b = T + r.height + sv * .6; b.sp.style.scrollMarginTop = ''; b.c.style.scrollMarginTop = Math.round(vh - sv * .22 - 3 - pad) + 'px'; b.c.style.scrollMarginBottom = Math.round(vh * .7) + 'px'; }
+else { b.c.style.scrollMarginTop = b.c.style.scrollMarginBottom = ''; b.a = T + b.ht + B; b.b = T + r.height + B; b.e = coarse && b.type !== 'end' ? Math.min(b.b - hold, b.a + sv * .3) : b.b - hold; b.sp.style.scrollMarginTop = Math.round(vh - b.ht - B - 3 - pad) + 'px'; }
+});
+const tb = beats.filter((b) => b.type === 'title');
+cut = [sv, ...tb.map((b) => b.a - sv * .07)]; const last = beats[beats.length - 1]; cut.push(last.b + sv * .2);
+tb.forEach((b) => { const sc = scenes[b.k - 1]; sc.style.scrollMarginTop = Math.round(sc.getBoundingClientRect().top + y1 - (b.a - vh + 3) - pad) + 'px'; });
+heroH = hero.offsetHeight;
+stageEnd = endSec ? endSec.getBoundingClientRect().top + y1 : Infinity; const eb = beats[beats.length - 1]; snapEnd = eb.type === 'end' ? eb.a - vh : stageEnd - pad - 2; wrapH = wrap.offsetHeight; lastH = vh;
+layers.forEach((l) => { if (l.k >= 0) pose(l, poseOf(l.k), false); });
+};
+const srcOf = (k) => {
+if (!k) return heroImg.currentSrc || heroImg.src;
+const im = $('.shot > img', scenes[k - 1]); if (!im) return heroImg.currentSrc || heroImg.src;
+const set = (im.getAttribute('srcset') || '').split(',').map((x) => x.trim().split(/\s+/)).filter((x) => x[0]).map(([u, w]) => [u, parseInt(w, 10) || 0]).sort((a, b) => a[1] - b[1]);
+if (!set.length) return im.getAttribute('src');
+const need = cw * Math.min(devicePixelRatio || 1, vw < 900 ? 1 : 1.5) * .93;
+return (set.find((x) => x[1] >= need) || set[set.length - 1])[0];
+};
+const pose = (l, q, move) => {
+if (!q) return;
+const s = `translate3d(${q[0].toFixed(1)}px,${q[1].toFixed(1)}px,0) scale(${q[2].toFixed(4)})`; if (l.s === s) return;
+const far = l.q ? Math.hypot(q[0] - l.q[0], q[1] - l.q[1]) + Math.abs(q[2] - l.q[2]) * cw : 0;
+l.cam.style.transitionDuration = move ? Math.round(clamp(1100 + far * 2.2, 1200, 2600)) + 'ms' : '0s';
+l.cam.style.transform = s; l.s = s; l.q = q;
+};
+const poseOf = (k) => {
+if (!k) return heroP > 0 ? heroKeys[1] : heroKeys[0];
+const Y = scrollY + innerHeight; let q = null;
+for (const b of beats) if (b.k === k) { q = b.q; if (Y <= b.e + 2) break; }
+return q || keys[k - 1]?.[0];
+};
+const pre = (k) => { if (k >= 1 && k <= N) { const im = new Image(); im.src = srcOf(k); } };
+const cutTo = (k) => {
+if (busy || loading) { pending = k; return; }
+if (layers[top].k === k) return;
+const inc = layers[top ^ 1], out = layers[top], src = srcOf(k), was = first;
+loading = true; inc.k = k; if (inc.img.getAttribute('src') !== src) inc.img.src = src;
+const ready = [inc.img.decode ? inc.img.decode().catch(() => {}) : 0, was && !k ? Promise.all(heroImg.getAnimations().map((a) => a.finished)).catch(() => {}) : 0];
+Promise.race([Promise.all(ready), wait(4000)]).then(() => {
+loading = false; if (!active) return;
+pose(inc, poseOf(k), false); inc.el.style.zIndex = 2; out.el.style.zIndex = 1; inc.el.classList.toggle('fade', !was); inc.el.classList.add('on'); top ^= 1;
+const done = () => { out.el.classList.remove('on', 'fade'); out.k = -1; busy = false; if (pending != null) { const p = pending; pending = null; cutTo(p); } };
+if (was) { first = false; live = true; root.classList.add('fm-live'); done(); kick(); }
+else { busy = true; if (ctx.sound.on()) ctx.sound.swell?.(); setTimeout(done, 940); }
+pre(k + 1);
+});
+};
+const at = () => { const Y = scrollY + innerHeight; let k = 0; while (k < N && Y >= cut[k + 1]) k++; return k + Math.min(.9999, clamp((Y - cut[k]) / Math.max(1, cut[k + 1] - cut[k]))); };
+const light = (nb) => {
+if (nb === onBeat) return;
+if (onBeat) { onBeat.c.classList.remove('on'); gone = onBeat; }
+if (nb) { nb.c.classList.remove('gone'); nb.c.classList.add('on'); if (gone === nb) gone = null; }
+onBeat = nb;
+if (!nb) return;
+for (const l of layers) if (l.k === nb.k && nb.k) pose(l, nb.q, true);
+if (nb.type === 'end') endLamp?.classList.add('lit');
+if (nb.type === 'title' && ctx.sound.on() && performance.now() - lastBell > 5000) { lastBell = performance.now(); ctx.sound.bell?.(528, .05); }
+};
+const wake = () => { clearTimeout(sleepT); sleepT = setTimeout(() => { awake = false; railSync(); }, 1700); if (!awake) { awake = true; railSync(); } };
+const railSync = () => { if (!rail) return; const on = awake && live && !off && scrollY > heroH * .55; if (on !== railIn) { railIn = on; rail.classList.toggle('is-in', on); } };
+let litKey = '';
+const draw = (now) => {
+raf = 0; if (!active) return;
+const y = scrollY, Y = y + innerHeight, target = at(), dt = Math.min(64, (now - lastT) || 16); lastT = now;
+cur = cur < 0 || Math.abs(target - cur) > 1.5 ? target : cur + (target - cur) * (1 - Math.exp(-dt / 110));
+if (Math.abs(target - cur) < .0004) cur = target;
+const isOff = y > stageEnd;
+if (isOff !== off) { off = isOff; stage.classList.toggle('is-off', off); rail.classList.toggle('is-off', off); }
+if (!off) cutTo(Math.floor(target));
+const sn = live && y <= snapEnd && now > freeT; if (sn !== snapOn) { snapOn = sn; root.classList.toggle('fm-snap', sn); }
+const cf = Math.round(clamp(1 - y / Math.max(1, heroH * .3)) * 25) / 25;
+if (cf !== cardF) { cardF = cf; hero.style.setProperty('--cf', cf); hero.classList.toggle('fm-out', !cf); }
+if (live) {
+const hp = y > heroH * .35 ? 1 : 0; if (hp !== heroP) { heroP = hp; for (const l of layers) if (!l.k) pose(l, heroKeys[hp], true); }
+let nb = onBeat && Y >= onBeat.a && Y <= onBeat.e ? onBeat : null;
+if (!nb) for (const b of beats) if (Y >= b.a && Y <= b.e) { nb = b; break; }
+light(nb);
+if (gone && (Y >= gone.b - 2 || Y < gone.a)) { if (Y >= gone.b - 2) gone.c.classList.add('gone'); gone = null; }
+const th = nb ? (nb.long ? VH * .8 : nb.ht + B + VH - innerHeight) : 0, key = th ? Math.round(th) + '|' + (nb ? nb.k : 0) : '';
+if (key !== litKey) { litKey = key; if (th) { stage.style.setProperty('--th', Math.round(th) + 'px'); stage.style.setProperty('--t', tints[nb ? nb.k : 0]); } stage.classList.toggle('lit', !!th); }
+if (y !== lastY) { if (lastY >= 0) wake(); lastY = y; } railSync();
+ticks.forEach((t, j) => { const f = clamp(cur - (j + 1)).toFixed(2); if (t._f !== f) { t._f = f; t.style.setProperty('--f', f); } });
+}
+if (cur !== target) raf = requestAnimationFrame(draw);
+};
+const kick = () => { if (!raf && active) raf = requestAnimationFrame(draw); };
+let rt = 0, lastW = 0, ro = null;
+const remeasure = () => { if (!active) return; measure(); kick(); };
+const onResize = () => { clearTimeout(rt); rt = setTimeout(() => { if (!sync() || (innerWidth === lastW && Math.abs(innerHeight - lastH) < 2 && Math.abs(stage.clientHeight - VH) < 2 && Math.abs(wrap.offsetHeight - wrapH) < 3)) return; lastW = innerWidth; remeasure(); }, 160); };
+const sceneNow = () => (cur >= 1 ? Math.floor(cur) : 0);
+const enable = () => {
+if (active) return; const k = built ? ctx.current?.() : 0, deep = scrollY > innerHeight * .6;
+active = true; root.classList.add('fm'); if (!built) build();
+themes.forEach((m) => { m.content = '#0b0706'; });
+css().then(() => {
+if (!active) return;
+measure(); lastW = innerWidth; cur = -1; first = true; top = 0; busy = loading = false; pending = null; onBeat = gone = null; litKey = ''; lastY = cardF = heroP = -1;
+if (k && deep) scenes[k - 1].scrollIntoView({ block: 'start', behavior: 'instant' });
+free(location.hash.slice(1));
+draw(performance.now());
+if (!ro && window.ResizeObserver) { ro = new ResizeObserver(onResize); ro.observe(wrap); }
+});
+};
+const disable = () => {
+if (!active) { root.classList.remove('fm', 'fm-live'); return; } const k = sceneNow();
+active = live = snapOn = false; cancelAnimationFrame(raf); raf = 0; root.classList.remove('fm', 'fm-live', 'fm-snap');
+if (!built) return;
+layers.forEach((l) => { l.el.classList.remove('on', 'fade'); l.k = -1; l.s = ''; l.q = null; }); stage.classList.remove('lit', 'is-off'); rail.classList.remove('is-in', 'is-off'); railIn = awake = off = false; clearTimeout(sleepT);
+beats.forEach((b) => { b.c.classList.remove('on', 'gone', 'fm-long'); b.c.style.removeProperty('--mt'); b.c.style.scrollMarginTop = b.c.style.scrollMarginBottom = b.sp.style.scrollMarginTop = ''; }); scenes.forEach((s) => { s.style.scrollMarginTop = ''; });
+hero.style.removeProperty('--cf'); hero.classList.remove('fm-out');
+head.classList.remove('is-open'); aboutBtn.setAttribute('aria-expanded', 'false'); onBeat = gone = null;
+themes.forEach((m, i) => { m.content = themeWas[i]; });
+if (k) scenes[k - 1].scrollIntoView({ block: 'start', behavior: 'instant' });
+};
+const sync = () => {
+const c = can(); root.classList.toggle('fm-can', c);
+if (want()) enable(); else { disable(); if (c && !built) css().then(() => { if (!built) build(); }); }
+return active;
+};
+const reveal = (b, smooth) => scrollTo({ top: Math.max(0, b.a - innerHeight + 3), behavior: smooth && !still() ? 'smooth' : 'instant' });
+const beatOf = (el) => beats.find((b) => b.t.contains(el));
+window.SpritualFilmReveal = (el) => { const b = active && live && beatOf(el); if (!b) return false; if (b !== onBeat) reveal(b, true); return true; };
+addEventListener('scroll', kick, { passive: true });
+addEventListener('resize', onResize);
+addEventListener('load', remeasure);
+d.fonts?.ready?.then(remeasure);
+new MutationObserver(sync).observe(root, { attributes: true, attributeFilter: ['data-mode', 'data-read', 'data-motion', 'data-size'] });
+addEventListener('beforeprint', () => { printing = true; sync(); }); addEventListener('afterprint', () => { printing = false; sync(); });
+for (const ev of ['touchstart', 'pointermove', 'keydown']) addEventListener(ev, () => { if (active && live) wake(); }, { passive: true });
+d.addEventListener('focusin', (e) => { if (!active || !live || !e.target.closest) return; const b = beatOf(e.target); if (b && b !== onBeat && !(b.type === 'head' && b.long)) reveal(b); });
+let keyAt = 0, keyI = -1;
+d.addEventListener('keydown', (e) => {
+if (!active || !live || e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey || scrollY > stageEnd - innerHeight * .5) return;
+const t = e.target, fwd = e.key === 'PageDown' || e.key === 'ArrowDown' || (e.key === ' ' && !e.shiftKey), back = e.key === 'PageUp' || e.key === 'ArrowUp' || (e.key === ' ' && e.shiftKey);
+if ((!fwd && !back) || d.querySelector('dialog[open], [popover]:popover-open') || (t.closest && t.closest('input, textarea, select, button, a, summary, [contenteditable], [role="button"]'))) return;
+const Y = scrollY + innerHeight, now = performance.now();
+let i = now - keyAt < 900 && keyI >= 0 ? keyI : onBeat ? beats.indexOf(onBeat) : -1;
+if (i < 0) { i = beats.findIndex((b) => b.a > Y); i = fwd ? (i < 0 ? beats.length : i) - 1 : i < 0 ? beats.length : i; }
+const nb = beats[i + (fwd ? 1 : -1)];
+if (!nb) { if (fwd) return; e.preventDefault(); keyI = -1; scrollTo({ top: 0, behavior: still() ? 'instant' : 'smooth' }); return; }
+e.preventDefault(); keyI = beats.indexOf(nb); keyAt = now;
+reveal(nb, true);
+});
+const free = (id) => { let el = null; try { el = id && d.getElementById(decodeURIComponent(id)); } catch {} if (!active || !el || !endSec?.contains(el)) return; freeT = performance.now() + 1500; snapOn = false; root.classList.remove('fm-snap'); setTimeout(kick, 1550); };
+d.addEventListener('click', (e) => { const a = e.target.closest?.('a[href^="#"]'); if (a) free(a.getAttribute('href').slice(1)); }, true);
+addEventListener('hashchange', () => free(location.hash.slice(1)));
+d.addEventListener('click', (e) => {
+const t = e.target.closest?.('[data-fm], .fm-about, .cx-film-btns a[href="#page-1"]'); if (!t) return;
+if (t.dataset.fm) { const p = prefs(); if (t.dataset.fm === 'off') p.film = 'off'; else delete p.film; store.set('prefs', p); sync(); if (!active) $('[data-fm="on"]')?.focus({ preventScroll: true }); return; }
+if (!active) return;
+if (t === aboutBtn) { const o = head.classList.toggle('is-open'); aboutBtn.setAttribute('aria-expanded', String(o)); measure(); if (o) scrollTo({ top: head.getBoundingClientRect().top + scrollY - innerHeight * .12, behavior: 'instant' }); else reveal(beats[0]); kick(); return; }
+e.preventDefault();
+const to = () => { intro.tabIndex = -1; intro.focus({ preventScroll: true }); }, go = () => { reveal(beats[0], true); to(); };
+if (store.get('door', 0) || !live) return go();
+window.SpritualDoor({ title, kicker, F, onChoice: (c) => { store.set('door', 1); ctx.sound.set(c === 'sound'); if (c === 'sound') ctx.sound.bell?.(660, .16); reveal(beats[0]); } }).then((c) => { if (c) to(); });
+});
+sync();
+};
+})();

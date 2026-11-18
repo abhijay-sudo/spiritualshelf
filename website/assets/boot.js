@@ -26,6 +26,16 @@
   });
   if (!calm && !mq.matches) d.classList.add('cx-js');
   try { if ((navigator.connection && navigator.connection.saveData) || matchMedia('(prefers-reduced-data: reduce)').matches) d.classList.add('ep-lite'); } catch (e) {}
+  // The Unbroken Shot (film.js, film.css): a story page is laid out as a film from its first paint, so a reader arriving
+  // in the middle of a story never sees the page change under them. Its styles are fetched here, off the critical path.
+  // Not with reduced motion, Save-Data, page-by-page or side-by-side reading, a very short screen, or once the reader
+  // has chosen the reading page.
+  try {
+    var fc = me && me.dataset.film;
+    if (fc && d.classList.contains('cx-js') && !d.classList.contains('ep-lite') && p.film !== 'off' && p.mode !== 'leaf' && p.read !== 'both' && innerHeight >= 480) {
+      d.classList.add('fm'); var fl = document.createElement('link'); fl.rel = 'stylesheet'; fl.href = fc; document.head.appendChild(fl);
+    }
+  } catch (e) {}
   // Until the analytics question is answered (consent.js: no valid choice, or one older than a year), a painted opening
   // keeps room at its foot for it (cinema.css, --cx-consent-room). The room is reserved here, before the first paint, at
   // the bar's measured height for this screen, language and text size (Chromium and WebKit alike); consent.js, which
@@ -103,7 +113,7 @@
   // canvas under the page is set to the opening's dusk until the page has been revealed, so the dissolve from one dark page
   // into another never passes through the paper colour.
   var dark = me && me.hasAttribute('data-dark');
-  var undark = function () { d.style.backgroundColor = ''; };
+  var undark = function () { d.style.backgroundColor = ''; var s = document.getElementById('pre-dark'); if (s) s.parentNode.removeChild(s); };
   // A painted opening's title card (a story's, a hymn's, a kand of the Manas) waits, unseen, while its title face (Eczar,
   // preloaded) is still on its way at the first paint, and makes its entrance once the face has arrived (at most 1.2 s
   // later; cinema.css .cx-hold). Drawn first in a stand-in face, the title re-wrapped when Eczar landed and the card

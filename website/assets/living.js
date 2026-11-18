@@ -1,0 +1,73 @@
+(() => {
+const root = document.documentElement;
+const VS = 'attribute vec2 p;varying vec2 v;void main(){v=p*.5+.5;v.y=1.-v.y;gl_Position=vec4(p,0.,1.);}';
+const FS = 'precision mediump float;uniform sampler2D A,D;uniform vec2 o,s,m,c;uniform float k;varying vec2 v;void main(){vec2 u=o+v*s,q=u;for(int i=0;i<4;i++){float d=texture2D(D,q).r-.5;q=u-m*d-(u-c)*k*d;}gl_FragColor=texture2D(A,clamp(q,0.,1.));}';
+const AMP = .006;
+let cv, gl, U = {}, texA, texD, host = null, img = null, src = '', dsrc = '', map = null, raf = 0, last = 0, t0 = 0, run = false, dead = false, scale = 1, n = 0, sum = 0, prev = 0, px = 0, py = 0, tx = 0, ty = 0, ready = false, dir = 1;
+const lite = () => root.classList.contains('ep-lite') || !!navigator.connection?.saveData;
+const still = () => root.dataset.motion === 'reduce' || matchMedia('(prefers-reduced-motion: reduce)').matches;
+const ok = () => !dead && !lite() && !still() && (navigator.deviceMemory || 4) >= 4 && (navigator.hardwareConcurrency || 4) >= 4 && !!window.WebGLRenderingContext;
+const kill = () => { dead = true; stop(); cv?.remove(); host = null; };
+const init = () => {
+if (gl || dead) return !dead;
+cv = document.createElement('canvas'); cv.className = 'lv'; cv.setAttribute('aria-hidden', 'true');
+cv.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;opacity:0;transition:opacity .8s ease;pointer-events:none';
+gl = cv.getContext('webgl', { alpha: false, antialias: false, depth: false, stencil: false, powerPreference: 'low-power', preserveDrawingBuffer: false });
+if (!gl) { dead = true; return false; }
+cv.addEventListener('webglcontextlost', (e) => { e.preventDefault(); kill(); });
+const sh = (t, c) => { const x = gl.createShader(t); gl.shaderSource(x, c); gl.compileShader(x); return x; };
+const pr = gl.createProgram(); gl.attachShader(pr, sh(gl.VERTEX_SHADER, VS)); gl.attachShader(pr, sh(gl.FRAGMENT_SHADER, FS)); gl.linkProgram(pr);
+if (!gl.getProgramParameter(pr, gl.LINK_STATUS)) { dead = true; return false; }
+gl.useProgram(pr);
+gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer()); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
+const loc = gl.getAttribLocation(pr, 'p'); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+for (const u of ['A', 'D', 'o', 's', 'm', 'c', 'k']) U[u] = gl.getUniformLocation(pr, u);
+gl.uniform1i(U.A, 0); gl.uniform1i(U.D, 1);
+const tex = (unit) => { const t = gl.createTexture(); gl.activeTexture(gl.TEXTURE0 + unit); gl.bindTexture(gl.TEXTURE_2D, t); for (const [a, b] of [[gl.TEXTURE_MIN_FILTER, gl.LINEAR], [gl.TEXTURE_MAG_FILTER, gl.LINEAR], [gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE], [gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE]]) gl.texParameteri(gl.TEXTURE_2D, a, b); return t; };
+texA = tex(0); texD = tex(1);
+addEventListener('pointermove', (e) => { if (e.pointerType === 'mouse') { tx = e.clientX / innerWidth - .5; ty = e.clientY / innerHeight - .5; } }, { passive: true });
+document.addEventListener('visibilitychange', () => { if (document.hidden) cancelAnimationFrame(raf), raf = 0; else if (run) go(); });
+return true;
+};
+const size = () => {
+if (!host) return;
+const w = host.clientWidth, h = host.clientHeight, d = Math.min(devicePixelRatio || 1, 1.5) * scale, cap = Math.min(1, Math.sqrt(1.3e6 / Math.max(1, w * h * d * d)));
+cv.width = Math.max(2, Math.round(w * d * cap)); cv.height = Math.max(2, Math.round(h * d * cap)); gl.viewport(0, 0, cv.width, cv.height);
+let ox = 0, oy = 0, sx = 1, sy = 1;
+if (map) { const ia = 16 / 9, ca = w / h; if (ca < ia) { sx = ca / ia; ox = (1 - sx) * map.x / 100; } else { sy = ia / ca; oy = (1 - sy) * map.y / 100; } }
+gl.uniform2f(U.o, ox, oy); gl.uniform2f(U.s, sx, sy);
+gl.uniform2f(U.c, map ? Math.min(1, Math.max(0, map.cx ?? .5)) : .5, map ? Math.min(1, Math.max(0, map.cy ?? .4)) : .4);
+};
+const frame = (now) => {
+raf = 0; if (!run || dead || !host) return;
+raf = requestAnimationFrame(frame);
+if (n < 20) { if (prev) { sum += now - prev; n++; } prev = now; if (n === 20) { if (sum / 20 > 24) { if (scale === 1) { scale = .5; n = 0; sum = 0; prev = 0; size(); } else return kill(); } } }
+else if (now - last < 30) return;
+last = now;
+const t = (now - t0) / 1000, env = Math.min(1, t / 2.5), e = env * env * (3 - 2 * env);
+px += (tx - px) * .06; py += (ty - py) * .06;
+gl.uniform2f(U.m, AMP * e * (Math.cos(t * .42) * .8 + px * 1.6), AMP * e * (16 / 9) * (Math.sin(t * .31) * .45 + py * 1.2));
+gl.uniform1f(U.k, dir * .012 * e * Math.min(1, t / 12));
+gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+if (!ready) { ready = true; cv.style.opacity = '1'; }
+};
+const go = () => { if (!raf && run && !dead && !document.hidden) { prev = 0; raf = requestAnimationFrame(frame); } };
+const stop = () => { run = false; cancelAnimationFrame(raf); raf = 0; };
+const detach = () => { stop(); if (cv) { cv.style.transition = 'none'; cv.style.opacity = '0'; cv.remove(); } host = null; ready = false; };
+const attach = (h, el, depth, m, push = 1) => {
+if (!ok() || !init() || !el.naturalWidth) return false;
+detach(); host = h; img = el; map = m || null; dir = push;
+const mine = host, use = () => {
+if (host !== mine || dead) return;
+try {
+if (src !== (el.currentSrc || el.src)) { gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, texA); gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, el); src = el.currentSrc || el.src; }
+} catch { return kill(); }
+cv.style.transition = 'opacity .8s ease'; host.append(cv); size(); t0 = performance.now(); run = true; go();
+};
+if (dsrc === depth) use();
+else { const d = new Image(); d.onload = () => { if (dead) return; try { gl.activeTexture(gl.TEXTURE1); gl.bindTexture(gl.TEXTURE_2D, texD); gl.texImage2D(gl.TEXTURE_2D, 0, gl.LUMINANCE, gl.LUMINANCE, gl.UNSIGNED_BYTE, d); dsrc = depth; } catch { return kill(); } use(); }; d.src = depth; }
+return true;
+};
+addEventListener('resize', () => { if (host && !dead) size(); });
+window.SpritualLiving = { ok, attach, detach, pause: stop, play: () => { if (host && !dead) { run = true; go(); } } };
+})();
