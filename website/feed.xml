@@ -5,7 +5,7 @@
 <id>https://spritual.co.in/feed.xml</id>
 <link rel="self" type="application/atom+xml" href="https://spritual.co.in/feed.xml"/>
 <link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/"/>
-<updated>2026-11-18T15:25:50Z</updated>
+<updated>2026-11-18T15:40:01Z</updated>
 <author><name>Spritual</name><uri>https://spritual.co.in/about/</uri></author>
 <icon>https://spritual.co.in/favicon.ico</icon>
 <logo>https://spritual.co.in/assets/icons/icon-512.png</logo>
@@ -14,7 +14,7 @@
 <id>https://spritual.co.in/collections/krishna/books/later-tradition/arcs/holi/stories/prahlada-and-holika/</id>
 <link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/collections/krishna/books/later-tradition/arcs/holi/stories/prahlada-and-holika/"/>
 <link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/collections/krishna/books/later-tradition/arcs/holi/stories/prahlada-and-holika/"/>
-<updated>2026-11-18T15:25:50Z</updated>
+<updated>2026-11-18T15:40:01Z</updated>
 <category term="krishna"/>
 <summary>In the Bhagavata, fire cannot harm the boy. At Holi, a bonfire remembers the aunt who sat in the flames with him in her lap.</summary>
 </entry>
@@ -62,6 +62,78 @@
 <updated>2026-11-18T13:35:06Z</updated>
 <category term="krishna"/>
 <summary>Gods and asuras churn the ocean for nectar. Poison rises first, then treasures and a goddess, and last a pot of nectar that is poured for one side alone.</summary>
+</entry>
+<entry>
+<title>Ramcharitmanas: Aranya Kand</title>
+<id>https://spritual.co.in/ramcharitmanas/aranya-kand/</id>
+<link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/ramcharitmanas/aranya-kand/"/>
+<link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/ramcharitmanas/aranya-kand/"/>
+<updated>2026-11-18T12:39:26Z</updated>
+<category term="ramcharitmanas"/>
+<summary>Tulsidas's Ramcharitmanas, Aranya Kand: the complete verse text, dohas 1–46, with transliteration, online. Covers the forest, Sita's abduction and Shabari.</summary>
+</entry>
+<entry>
+<title>Ramcharitmanas: Ayodhya Kand</title>
+<id>https://spritual.co.in/ramcharitmanas/ayodhya-kand/</id>
+<link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/ramcharitmanas/ayodhya-kand/"/>
+<link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/ramcharitmanas/ayodhya-kand/"/>
+<updated>2026-11-18T12:39:26Z</updated>
+<category term="ramcharitmanas"/>
+<summary>Tulsidas's Ramcharitmanas, Ayodhya Kand: the complete verse text, dohas 1–326, with transliteration, online. Covers Rama's exile and Bharata's devotion.</summary>
+</entry>
+<entry>
+<title>Ramcharitmanas: Bal Kand</title>
+<id>https://spritual.co.in/ramcharitmanas/bal-kand/</id>
+<link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/ramcharitmanas/bal-kand/"/>
+<link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/ramcharitmanas/bal-kand/"/>
+<updated>2026-11-18T12:39:26Z</updated>
+<category term="ramcharitmanas"/>
+<summary>Tulsidas's Ramcharitmanas, Bal Kand: the complete verse text, dohas 1–361, with transliteration, online. Covers Rama's birth and Shiva's bow.</summary>
+</entry>
+<entry>
+<title>Ramcharitmanas: Kishkindha Kand</title>
+<id>https://spritual.co.in/ramcharitmanas/kishkindha-kand/</id>
+<link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/ramcharitmanas/kishkindha-kand/"/>
+<link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/ramcharitmanas/kishkindha-kand/"/>
+<updated>2026-11-18T12:39:26Z</updated>
+<category term="ramcharitmanas"/>
+<summary>Tulsidas's Ramcharitmanas, Kishkindha Kand: the complete verse text, dohas 1–30, with transliteration, online. Hanuman meets Rama; the alliance with Sugriva.</summary>
+</entry>
+<entry>
+<title>Ramcharitmanas: Lanka Kand</title>
+<id>https://spritual.co.in/ramcharitmanas/lanka-kand/</id>
+<link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/ramcharitmanas/lanka-kand/"/>
+<link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/ramcharitmanas/lanka-kand/"/>
+<updated>2026-11-18T12:39:26Z</updated>
+<category term="ramcharitmanas"/>
+<summary>Tulsidas's Ramcharitmanas, Lanka Kand: the complete verse text, dohas 1–121, with transliteration, online. Covers the bridge, the war and Ravana's end.</summary>
+</entry>
+<entry>
+<title>Ramcharitmanas: Sundar Kand</title>
+<id>https://spritual.co.in/ramcharitmanas/sundar-kand/</id>
+<link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/ramcharitmanas/sundar-kand/"/>
+<link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/ramcharitmanas/sundar-kand/"/>
+<updated>2026-11-18T12:39:26Z</updated>
+<category term="ramcharitmanas"/>
+<summary>The Sundar Kand of Tulsidas's Ramcharitmanas, dohas 1–60, in Devanagari with transliteration and English meaning, in 16 episodes from the leap to the ocean.</summary>
+</entry>
+<entry>
+<title>Ramcharitmanas: Uttar Kand</title>
+<id>https://spritual.co.in/ramcharitmanas/uttar-kand/</id>
+<link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/ramcharitmanas/uttar-kand/"/>
+<link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/ramcharitmanas/uttar-kand/"/>
+<updated>2026-11-18T12:39:26Z</updated>
+<category term="ramcharitmanas"/>
+<summary>Tulsidas's Ramcharitmanas, Uttar Kand: the complete verse text, dohas 1–130, with transliteration, online. Covers the return to Ayodhya and Kakbhushundi.</summary>
+</entry>
+<entry>
+<title>Shiva Tandava Stotram</title>
+<id>https://spritual.co.in/shiva-tandava-stotram/</id>
+<link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/shiva-tandava-stotram/"/>
+<link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/shiva-tandava-stotram/"/>
+<updated>2026-11-18T12:39:26Z</updated>
+<category term="hymn"/>
+<summary>All 17 verses of the Shiva Tandava Stotram in Sanskrit, with transliteration and English meaning, and the Kailasa story with which tradition links it to Ravana.</summary>
 </entry>
 <entry>
 <title>The fire with no end</title>
@@ -278,78 +350,6 @@
 <updated>2026-11-13T08:32:15Z</updated>
 <category term="hymn"/>
 <summary>Tulsidas's Hanuman Chalisa in full: 2 opening dohas, 40 chaupais and the closing doha, with transliteration and an English meaning for every verse.</summary>
-</entry>
-<entry>
-<title>Ramcharitmanas: Aranya Kand</title>
-<id>https://spritual.co.in/ramcharitmanas/aranya-kand/</id>
-<link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/ramcharitmanas/aranya-kand/"/>
-<link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/ramcharitmanas/aranya-kand/"/>
-<updated>2026-11-13T08:32:15Z</updated>
-<category term="ramcharitmanas"/>
-<summary>Tulsidas's Ramcharitmanas, Aranya Kand: the complete verse text, dohas 1–46, with transliteration, online. Covers the forest, Sita's abduction and Shabari.</summary>
-</entry>
-<entry>
-<title>Ramcharitmanas: Ayodhya Kand</title>
-<id>https://spritual.co.in/ramcharitmanas/ayodhya-kand/</id>
-<link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/ramcharitmanas/ayodhya-kand/"/>
-<link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/ramcharitmanas/ayodhya-kand/"/>
-<updated>2026-11-13T08:32:15Z</updated>
-<category term="ramcharitmanas"/>
-<summary>Tulsidas's Ramcharitmanas, Ayodhya Kand: the complete verse text, dohas 1–326, with transliteration, online. Covers Rama's exile and Bharata's devotion.</summary>
-</entry>
-<entry>
-<title>Ramcharitmanas: Bal Kand</title>
-<id>https://spritual.co.in/ramcharitmanas/bal-kand/</id>
-<link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/ramcharitmanas/bal-kand/"/>
-<link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/ramcharitmanas/bal-kand/"/>
-<updated>2026-11-13T08:32:15Z</updated>
-<category term="ramcharitmanas"/>
-<summary>Tulsidas's Ramcharitmanas, Bal Kand: the complete verse text, dohas 1–361, with transliteration, online. Covers Rama's birth and Shiva's bow.</summary>
-</entry>
-<entry>
-<title>Ramcharitmanas: Kishkindha Kand</title>
-<id>https://spritual.co.in/ramcharitmanas/kishkindha-kand/</id>
-<link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/ramcharitmanas/kishkindha-kand/"/>
-<link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/ramcharitmanas/kishkindha-kand/"/>
-<updated>2026-11-13T08:32:15Z</updated>
-<category term="ramcharitmanas"/>
-<summary>Tulsidas's Ramcharitmanas, Kishkindha Kand: the complete verse text, dohas 1–30, with transliteration, online. Hanuman meets Rama; the alliance with Sugriva.</summary>
-</entry>
-<entry>
-<title>Ramcharitmanas: Lanka Kand</title>
-<id>https://spritual.co.in/ramcharitmanas/lanka-kand/</id>
-<link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/ramcharitmanas/lanka-kand/"/>
-<link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/ramcharitmanas/lanka-kand/"/>
-<updated>2026-11-13T08:32:15Z</updated>
-<category term="ramcharitmanas"/>
-<summary>Tulsidas's Ramcharitmanas, Lanka Kand: the complete verse text, dohas 1–121, with transliteration, online. Covers the bridge, the war and Ravana's end.</summary>
-</entry>
-<entry>
-<title>Ramcharitmanas: Sundar Kand</title>
-<id>https://spritual.co.in/ramcharitmanas/sundar-kand/</id>
-<link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/ramcharitmanas/sundar-kand/"/>
-<link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/ramcharitmanas/sundar-kand/"/>
-<updated>2026-11-13T08:32:15Z</updated>
-<category term="ramcharitmanas"/>
-<summary>The Sundar Kand of Tulsidas's Ramcharitmanas, dohas 1–60, in Devanagari with transliteration and English meaning, in 16 episodes from the leap to the ocean.</summary>
-</entry>
-<entry>
-<title>Ramcharitmanas: Uttar Kand</title>
-<id>https://spritual.co.in/ramcharitmanas/uttar-kand/</id>
-<link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/ramcharitmanas/uttar-kand/"/>
-<link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/ramcharitmanas/uttar-kand/"/>
-<updated>2026-11-13T08:32:15Z</updated>
-<category term="ramcharitmanas"/>
-<summary>Tulsidas's Ramcharitmanas, Uttar Kand: the complete verse text, dohas 1–130, with transliteration, online. Covers the return to Ayodhya and Kakbhushundi.</summary>
-</entry>
-<entry>
-<title>Shiva Tandava Stotram</title>
-<id>https://spritual.co.in/shiva-tandava-stotram/</id>
-<link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/shiva-tandava-stotram/"/>
-<link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/shiva-tandava-stotram/"/>
-<updated>2026-11-13T08:32:15Z</updated>
-<category term="hymn"/>
-<summary>All 17 verses of the Shiva Tandava Stotram in Sanskrit, with transliteration and English meaning, and the Kailasa story with which tradition links it to Ravana.</summary>
 </entry>
 <entry>
 <title>The Lion in the Pillar</title>

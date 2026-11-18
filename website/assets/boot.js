@@ -12,7 +12,14 @@
     if (p.theme) d.dataset.theme = p.theme;
     if (p.motion) d.dataset.motion = p.motion;
     calm = p.motion === 'reduce';
-  } catch (e) {}
+  } catch (e) { p = {}; }
+  // A story's reading edition (English, Hindi or both; site.js keeps the reader's choice) is set before the first paint,
+  // as site.js would set it, so the edition not being read is never laid out (nor its typefaces fetched) and a link to a
+  // scene lands where it will stay. data-read on this script: 2 when the story has both editions, 1 when only this one.
+  if (me && me.hasAttribute('data-read')) {
+    var rd = p && p.read;
+    d.dataset.read = (rd === 'en' || rd === 'hi' || rd === 'both') && (rd === d.lang || me.getAttribute('data-read') === '2') ? rd : d.lang;
+  }
   // the device's own "reduce motion" setting counts exactly like the site's switch, for every rule that asks
   var mq = matchMedia('(prefers-reduced-motion: reduce)');
   if (mq.matches) d.dataset.motion = 'reduce';
@@ -22,19 +29,44 @@
   });
   if (!calm && !mq.matches) d.classList.add('cx-js');
   try { if ((navigator.connection && navigator.connection.saveData) || matchMedia('(prefers-reduced-data: reduce)').matches) d.classList.add('ep-lite'); } catch (e) {}
+  // Until the analytics question is answered (consent.js: no valid choice, or one older than a year), a painted opening
+  // keeps room at its foot for it (cinema.css, --cx-consent-room). The room is reserved here, before the first paint, at
+  // the bar's measured height for this screen, language and text size (Chromium and WebKit alike); consent.js, which
+  // builds the bar later, only ever widens it. The opening's card is placed once and never moves up under the reader.
+  try {
+    var cq = null; try { cq = JSON.parse(localStorage.getItem('spritual:consent') || 'null'); } catch (e) {}
+    var cat = cq && Date.parse(cq.date);
+    if (!cq || (cq.value !== 'granted' && cq.value !== 'denied') || !cat || Date.now() - cat > 365 * 864e5) {
+      var cw = innerWidth, ch = innerHeight, hi = d.lang === 'hi', k = d.dataset.size === 'xl' ? 2 : d.dataset.size === 'l' ? 1 : 0;
+      var land = cw > ch && ch <= 520, room = matchMedia('(min-width: 860px) and (min-height: 520.02px)').matches ? [118, 133, 149][k]
+        : land || (cw < 760 && cw >= 600) ? [70, 75, 85][k]
+        : cw >= 760 ? (ch >= cw ? [76, 81, 89] : [83, 91, 104])[k]
+        // a phone held upright: the question takes one, two or three lines beside its answers
+        : [hi ? (cw < 375 ? 92 : 70) : (cw < 360 ? 101 : 70), hi ? (cw <= 340 ? 121 : cw < 360 ? 143 : cw < 390 ? 121 : cw < 430 ? 99 : 76) : (cw < 360 ? 134 : cw < 375 ? 114 : cw < 430 ? 93 : 75), cw < 430 ? (hi ? 162 : 152) : (hi ? 137 : 128)][k];
+      d.style.setProperty('--cx-consent-room', room + 'px'); d.setAttribute('data-consent-room', '');
+    }
+  } catch (e) {}
   // the home opening is composed at 1920x1080; on bigger screens (a 4K monitor at 100%, a television) the composition
   // grows with the screen, by the smaller of its width and height ratios (so a 32:9 screen still fits it in one screen).
   // Only the opening's words and buttons use it (cinema.css, zoom); the rest of the site keeps the reader's text size.
-  var setK = function () { d.style.setProperty('--cx-k', Math.max(1, Math.min(innerWidth / 1920, innerHeight / 1080)).toFixed(4)); };
-  setK(); addEventListener('resize', setK);
+  // (only the home has that opening: elsewhere nothing reads the size on every resize, which forced a whole-page layout)
+  var kAt = '', setK = function () { var k = Math.max(1, Math.min(innerWidth / 1920, innerHeight / 1080)).toFixed(4); if (k !== kAt) { kAt = k; d.style.setProperty('--cx-k', k); } };
+  if (me && me.hasAttribute('data-titles')) { setK(); addEventListener('resize', setK); }
+  // the English home's line under the name is set, until Newsreader arrives, in a width-matched stand-in (fonts.css, a
+  // local face): asked for here, before the first layout, so that layout already uses it and nothing re-wraps after
+  if (me && me.hasAttribute('data-titles') && d.lang !== 'hi' && document.fonts && document.fonts.load) try { document.fonts.load('400 1em "Newsreader Stand-in"').then(null, function () {}); } catch (e) {}
   // the opening titles play once; a reader who has been here before gets the words and buttons at once
   // The home page's title sequence plays at most once a week on this device: a link opened into a new tab (from a chat,
   // a feed or a search) does not replay it. Only the time it last played is kept, here on the device. A tab that has
   // already seen it (the older per-tab flag) counts as seen too. Other pages keep their own first-visit-only entrances.
+  // A reader who arrives from another site (a search, a feed) came for what they were promised and gets the page at once,
+  // as a returning reader does, for the rest of that tab; typing the address, or coming from a page of this site, still
+  // plays the titles (not having been seen, they are not counted as played this week).
   try {
     if (me && me.hasAttribute('data-titles')) {
-      var titlesAt = +localStorage.getItem('spritual:titlesAt') || 0;
+      var titlesAt = +localStorage.getItem('spritual:titlesAt') || 0, ref = document.referrer || '';
       if (sessionStorage.getItem('spritual:titles') || Date.now() - titlesAt < 6048e5) d.classList.add('cx-seen');
+      else if (ref && ref.indexOf(location.origin + '/') !== 0) { d.classList.add('cx-seen'); sessionStorage.setItem('spritual:titles', '1'); }
       else { localStorage.setItem('spritual:titlesAt', String(Date.now())); sessionStorage.setItem('spritual:titles', '1'); }
       localStorage.setItem('spritual:seen', '1');
     }
@@ -75,6 +107,20 @@
   // into another never passes through the paper colour.
   var dark = me && me.hasAttribute('data-dark');
   var undark = function () { d.style.backgroundColor = ''; };
+  // A painted opening's title card (a story's, a hymn's, a kand of the Manas) waits, unseen, while its title face (Eczar,
+  // preloaded) is still on its way at the first paint, and makes its entrance once the face has arrived (at most 1.2 s
+  // later; cinema.css .cx-hold). Drawn first in a stand-in face, the title re-wrapped when Eczar landed and the card
+  // jumped. When the face is already there (a fast line, a second visit) nothing waits.
+  var fs = document.fonts;
+  if (dark && !(me && me.hasAttribute('data-titles')) && fs && fs.load && fs.check && window.requestAnimationFrame) {
+    var face = '500 1em Eczar', glyph = d.lang === 'hi' ? '\u0915' : 'A', held = true;
+    var release = function () { if (held) { held = false; d.classList.remove('cx-hold'); } };
+    try {
+      d.classList.add('cx-hold');
+      fs.load(face, glyph).then(release, release);
+      requestAnimationFrame(function () { try { if (fs.check(face, glyph)) release(); } catch (e) { release(); } setTimeout(release, 1200); });
+    } catch (e) { release(); }
+  }
   if (dark) {
     d.style.backgroundColor = '#160c05';
     if (!('onpagereveal' in window)) addEventListener('load', undark);

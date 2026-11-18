@@ -155,6 +155,9 @@ html[lang="hi"] .cx-welcome-k { letter-spacing: .08em; font-family: "Mukta", var
 html[lang="hi"] .cx-open-line { font-style: normal; font-family: "Tiro Devanagari Hindi", var(--cx-text); line-height: 1.4; }
 .cx-open-sub { margin: .8rem 0 0; max-width: 34rem; font: 400 clamp(.98rem, .92rem + .2vw, 1.1rem)/1.55 var(--cx-ui); color: rgb(255 246 232 / .92); text-shadow: 0 1px 12px rgb(60 22 0 / .7); text-wrap: balance; }
 html[lang="hi"] .cx-open-sub { font-family: "Mukta", var(--cx-ui); }
+/* (until Newsreader arrives, its width-matched stand-in, fonts.css: in Georgia the line took three lines on 390-402 px
+   phones where Newsreader takes two, and the whole title moved when it landed) */
+html:not([lang="hi"]) .cx-open-sub { font-family: "Newsreader", "Newsreader Stand-in", "Mukta", Georgia, serif; }
 .cx-open-foot { display: grid; gap: 1.25rem; align-items: end; padding: 0 var(--cx-gut-r) calc(env(safe-area-inset-bottom, 0px) + clamp(1rem, 3.5svh, 2.75rem)) var(--cx-gut); }
 .cx-open-left { display: flex; flex-wrap: wrap; align-items: center; gap: .75rem 1.5rem; }
 .cx-sound { display: inline-flex; align-items: center; gap: .7rem; min-height: 48px; padding: .4rem 1.1rem .4rem .8rem; border-radius: 999px; border: 1px solid rgb(255 240 220 / .5); background: rgb(30 15 5 / .3); color: var(--cx-cream); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); cursor: pointer; text-align: left; font: 500 .98rem/1.2 var(--cx-ui); transition: background-color .25s, border-color .25s; }
@@ -432,6 +435,10 @@ html[lang="hi"] .is-cx-head .ed-page-head .world-hi { font-family: var(--cx-text
 :root:not([data-motion="reduce"]) .is-cx-head .ed-page-head-in > :nth-child(2) { animation-delay: .15s; }
 :root:not([data-motion="reduce"]) .is-cx-head .ed-page-head-in > :nth-child(3) { animation-delay: .3s; }
 :root:not([data-motion="reduce"]) .is-cx-head .ed-page-media .ed-media { animation: ed-dawn 2.2s cubic-bezier(.2, .7, .15, 1) both; }
+/* a one-word title wider than a small phone (Ramcharitmanas) must not widen the head: the track never grows past the
+   screen, and that title steps down with the screen below ~400 px (रामचरितमानस fits at its own size and keeps it) */
+.is-cx-head .ed-page-head-in { grid-template-columns: minmax(0, 1fr); }
+html:not([lang="hi"]) .mx-home .ed-page-head .ed-h1 { font-size: min(clamp(2.8rem, 1.6rem + 4.6vw, 6rem), 12vw); }
 
 /* library and grids: cards become posters with their programme notes underneath */
 .card { gap: 0; }
@@ -481,6 +488,10 @@ html[lang="hi"] .cx-film-title { line-height: 1.2; letter-spacing: 0; max-width:
 :root:not([data-motion="reduce"]) .cx-film-card > .cx-facts, :root:not([data-motion="reduce"]) .cx-film-btns { animation: cx-fade .9s var(--cx-ease) 1.15s both; }
 @media (prefers-reduced-motion: reduce) { .cx-film-title .wr, .cx-film-k, .cx-film-card > .cx-facts, .cx-film-btns, .cx-film-open-pic img { animation: none !important; opacity: 1 !important; translate: none !important; filter: none !important; } }
 :root[data-motion="reduce"] :is(.cx-film-title .wr, .cx-film-k, .cx-film-card > .cx-facts, .cx-film-btns, .cx-film-open-pic img) { animation: none !important; opacity: 1 !important; translate: none !important; filter: none !important; }
+/* while the title's face is still on its way at the first paint, the card waits unseen and its entrance waits with it
+   (boot.js removes .cx-hold when Eczar has arrived, at most 1.2 s on): the title never jumps from a stand-in face */
+:root.cx-hold .cx-film-card { visibility: hidden; }
+:root.cx-hold .cx-film-card * { animation-play-state: paused !important; }
 
 .cx-film .reader-grid { padding-top: 0; }
 .cx-film .reader-main { max-width: 42rem; }
@@ -1055,7 +1066,10 @@ html[lang="hi"] .cast-row-l { font-family: "Mukta", var(--cx-ui); font-size: .98
 .cx-btn { position: relative; overflow: hidden; }
 .cx-btn::after { content: ""; position: absolute; inset: -20% auto -20% -60%; width: 45%; transform: skewX(-20deg); background: linear-gradient(to right, transparent, rgb(255 255 255 / .38), transparent); opacity: 0; pointer-events: none; }
 :root:not([data-motion="reduce"]) .cx-btn:hover::after { animation: th-sweep .9s var(--cx-ease); }
-@keyframes th-sweep { 0% { left: -60%; opacity: 0; } 20% { opacity: 1; } 100% { left: 130%; opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .cx-btn::after { animation: none !important; } }
+/* (moved by translate, which the compositor plays, not by left: the same path, -60% to 130% of the button, is 422% of the
+   light's own 45% width) */
+@keyframes th-sweep { 0% { translate: 0 0; opacity: 0; } 20% { opacity: 1; } 100% { translate: 422% 0; opacity: 0; } }
 /* pages cut through the dark base (boot.js), the new one settling forward: opacity and scale only, so the compositor plays it */
 @keyframes cx-vt-out { to { opacity: 0; scale: 1.02; } }
 @keyframes cx-vt-in { from { opacity: 0; scale: .985; } }
@@ -1188,6 +1202,10 @@ html[lang="hi"] .cast-row-l { font-family: "Mukta", var(--cx-ui); font-size: .98
 .cx-home .cx-cue, .cx-home .cx-cards { display: none; }
 .cx-home .cx-open-line { max-width: 34ch; display: grid; justify-items: center; gap: .35em; }
 .cx-ol-a { display: block; }
+/* in Hindi the line is two balanced lines on every screen (in Tiro it is wider than its 34ch); held to 14em, the stand-in
+   face of the first paint breaks it in two as well, so the card does not gain a line (and the name above it jump) when
+   Tiro arrives. The two lines themselves are the same as before. */
+html[lang="hi"] .cx-home .cx-ol-a { max-width: 14em; }
 .cx-ol-b { display: block; font: 500 clamp(1.25rem, .95rem + 1.25vw, 2.15rem)/1.25 "Cinzel", var(--cx-title); font-style: normal; letter-spacing: .06em; color: #ffd9a0; text-shadow: 0 0 22px rgb(255 170 80 / .55), var(--cx-halo); }
 html[lang="hi"] .cx-ol-b { font-family: "Tiro Devanagari Hindi", var(--cx-text); letter-spacing: 0; font-size: clamp(1.4rem, 1rem + 1.4vw, 2.3rem); }
 .cx-w { display: inline-block; }
@@ -1973,6 +1991,11 @@ html[lang="hi"] .lib-more-k { font: 500 .85rem/1 var(--cx-title); letter-spacing
   .mx-open .cx-film-open-pic { bottom: 30%; }
   .mx-open .cx-open-shade, .st-open .cx-open-shade { background: linear-gradient(to top, var(--cx-dusk) 0, var(--cx-dusk) 30%, rgb(30 14 4 / .82) 37%, rgb(30 14 4 / .38) 48%, rgb(30 14 4 / 0) 60%), linear-gradient(to bottom, rgb(30 14 4 / .35), transparent 22%); }
 }
+/* (a tablet held upright sees more of the painting's width than a phone: where the phone's framing would cut someone at
+   the edge there, the story gives a tablet its own, --tpos) */
+@media (max-aspect-ratio: 3/4) and (orientation: portrait) and (min-width: 700px) {
+  .cx-film-open:not(.mx-open) .cx-film-open-pic img { object-position: var(--tpos, var(--ppos, 50% 40%)) !important; }
+}
 /* (a small phone: Begin and Watch side by side, and a smaller title, so the card stays below the painting's people) */
 @media (max-aspect-ratio: 3/4) and (orientation: portrait) and (max-width: 374px) {
   .cx-film-open .cx-film-title { font-size: 2.15rem; }
@@ -2157,9 +2180,8 @@ html[lang="hi"] .cx-consent-btn { font-family: "Mukta", var(--cx-ui); }
     linear-gradient(to bottom, rgb(5 3 2 / .82) 0%, transparent 20%),
     radial-gradient(ellipse 80% 70% at 50% 50%, transparent 55%, rgb(5 3 2 / .55) 100%); }
   /* the portrait is painted to the knee: it has faded away before the roster's band begins, so the band's edge never
-     reads as a line cut across the robe; the sheen that crosses the figure fades with it */
+     reads as a line cut across the robe */
   .cx-select > .cx-sel-hero .cx-sel-fig img { -webkit-mask-image: linear-gradient(to bottom, #000 70%, transparent 96%); mask-image: linear-gradient(to bottom, #000 70%, transparent 96%); }
-  .cx-sel-fig::after { -webkit-mask: var(--hero-url) center / 100% 100% no-repeat, linear-gradient(to bottom, #000 70%, transparent 96%); -webkit-mask-composite: source-in; mask: var(--hero-url) center / 100% 100% no-repeat, linear-gradient(to bottom, #000 70%, transparent 96%); mask-composite: intersect; }
 }
 
 /* ---------- A cut-out's world is a mood, not a scene ----------

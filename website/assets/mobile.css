@@ -137,8 +137,10 @@
   .cx-sel-btns .cx-btn > span { min-width: 0; line-height: 1.15; text-wrap: balance; overflow-wrap: normal; word-break: keep-all; }
   .cx-sel-story { display: inline-flex; }
 }
-/* a phone with the height for it shows the whole description (up to four lines); a short one keeps two */
+/* a phone with the height for it shows the whole description (up to four lines) */
 @media (max-width: 699px) and (min-height: 700px) { .cx-sel-sum { -webkit-line-clamp: 4; line-clamp: 4; } }
+/* a short phone (iPhone SE/8, 360x640) shows the whole description too: the words rise into the stage, the buttons stay */
+@media (max-width: 699px) and (min-height: 600px) and (max-height: 699px) { .cx-sel-sum { -webkit-line-clamp: 4; line-clamp: 4; } }
 @media (max-width: 699px) {
   .cx-sel-head { position: relative; z-index: 3; }   /* above the words' own shade, which reaches up to it on short phones */
   .cx-sel-h { letter-spacing: .2em; gap: .6rem; }

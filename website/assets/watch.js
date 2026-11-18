@@ -85,10 +85,11 @@ const freeze = () => { if (timer) { clearTimeout(timer); timer = 0; left = Math.
 const thaw = () => { if (fn && !timer) { due = performance.now() + left; timer = setTimeout(tick, left); } };
 const stopClock = () => { clearTimeout(timer); timer = 0; fn = null; };
 const MOVES = [[1.03, 0, 0, 1.16, 0, 0], [1.15, -1, 0, 1.15, 1, 0], [1.2, 0, 0, 1.05, 0, 0], [1.13, 0, .8, 1.16, 0, -.8], [1.05, .7, .5, 1.17, -.5, -.4]];
+const fxOf = (sc) => (matchMedia('(max-aspect-ratio: 3/4)').matches ? (matchMedia('(min-width: 700px)').matches ? sc.tx ?? sc.px : sc.px) : null) ?? sc.x ?? 50;
 const tf = (s, x, y, fx, fy) => { const b = (u, f) => (u >= 0 ? f : 100 - f) * (s - 1) * .85 * u; return `translate3d(${b(x, fx).toFixed(2)}%, ${b(y, fy).toFixed(2)}%, 0) scale(${s.toFixed(3)})`; };
 const camera = (ly, k) => {
 ly.anim?.cancel(); ly.anim = null;
-const sc = SC[k]; const fx = sc.x ?? 50, fy = sc.y ?? 45;
+const sc = SC[k]; const fx = fxOf(sc), fy = sc.y ?? 45;
 ly.cam.style.transform = sc.p && reduced() ? 'scale(1.3)' : '';
 if (reduced()) return;
 const m = k === 0 ? [1.02, 0, 0, 1.1, 0, 0] : MOVES[(k - 1) % MOVES.length].slice();
@@ -113,7 +114,7 @@ const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 const show = async (k, my) => {
 const sc = SC[k]; const ly = layers[cur ^ 1]; const old = layers[cur];
 if (ly.el.classList.contains('is-on')) { old.el.style.transition = 'none'; ly.el.classList.remove('is-on'); ly.anim?.cancel(); ly.anim = null; void old.el.offsetWidth; old.el.style.transition = ''; }
-ly.el.style.setProperty('--fx', (sc.x ?? 50) + '%'); ly.el.style.setProperty('--fy', (sc.y ?? 45) + '%');
+ly.el.style.setProperty('--fx', fxOf(sc) + '%'); ly.el.style.setProperty('--fy', (sc.y ?? 45) + '%');
 ly.el.classList.toggle('is-plate', !!sc.p);
 if (k === 0 && hero?.currentSrc && hero.complete) { ly.img.dataset.i = ''; ly.img.removeAttribute('srcset'); ly.img.src = hero.currentSrc; } else setImg(ly.img, sc);
 const wide = matchMedia('(min-aspect-ratio: 21/9)').matches;
@@ -134,6 +135,7 @@ if (!open || ended) return;
 if (reduced()) layers.forEach((l) => { l.anim?.cancel(); l.anim = null; });
 else if (!layers[cur].anim) camera(layers[cur], scene);
 }).observe(root, { attributes: true, attributeFilter: ['data-motion'] });
+for (const q of ['(max-aspect-ratio: 3/4)', '(min-width: 700px)']) matchMedia(q).addEventListener?.('change', () => { if (open && !scene) layers[cur].el.style.setProperty('--fx', fxOf(SC[0]) + '%'); });
 let shownCap = '';
 const setCap = (text, hold = 0) => {
 if (text === shownCap) return; shownCap = text; capEl.classList.add('is-out');
@@ -300,7 +302,7 @@ const focus = () => (keyNav ? playBtn : dlg).focus({ preventScroll: true });
 const hr = hero?.getBoundingClientRect();
 if (opener && hero && d.startViewTransition && !reduced() && hr && hr.bottom > innerHeight * .4) {
 const ly = layers[cur ^ 1]; ly.img.dataset.i = ''; ly.img.removeAttribute('srcset'); ly.img.src = hero.currentSrc || hero.src;
-ly.el.style.setProperty('--fx', (SC[0].x ?? 50) + '%'); ly.el.style.setProperty('--fy', (SC[0].y ?? 45) + '%');
+ly.el.style.setProperty('--fx', fxOf(SC[0]) + '%'); ly.el.style.setProperty('--fy', (SC[0].y ?? 45) + '%');
 hero.style.viewTransitionName = 'wt-hero'; dlg.classList.add('is-vt');
 const vt = d.startViewTransition(async () => { hero.style.viewTransitionName = ''; dlg.showModal(); focus(); ly.img.style.viewTransitionName = 'wt-hero'; ly.el.style.zIndex = ++z; ly.el.classList.add('is-on'); await ly.img.decode().catch(() => {}); });
 vt.finished.finally(() => { ly.img.style.viewTransitionName = ''; dlg.classList.remove('is-vt'); });

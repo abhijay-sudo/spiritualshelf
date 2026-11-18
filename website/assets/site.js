@@ -593,9 +593,12 @@
     function pop(btn, d) {
       head.textContent = d.term; body.textContent = d.def;
       const r = btn.getBoundingClientRect();
-      gloss.style.left = Math.max(8, Math.min(r.left, innerWidth - 300)) + 'px';
-      gloss.style.top = (r.bottom + 8) + 'px';
       try { gloss.showPopover(); } catch { gloss.hidden = false; }
+      // placed by its own measured size (shown first, so the size is real; it is placed before the next paint): it keeps
+      // the screen's 16px gutter at every reading size, and opens above the word when there is no room below it
+      const vw = document.documentElement.clientWidth || innerWidth, w = gloss.offsetWidth || 292, h = gloss.offsetHeight || 120;
+      gloss.style.left = Math.max(16, Math.min(r.left, vw - w - 16)) + 'px';
+      gloss.style.top = (r.bottom + 8 + h > innerHeight - 16 ? Math.max(16, r.top - 8 - h) : r.bottom + 8) + 'px';
     }
     function openSheet(d, btn) {
         const b = $('[data-lens-body]', sheet); b.innerHTML = `<ol class="lens-list">${cardHtml(d)}</ol>`;
@@ -656,6 +659,19 @@
     }
     sheet?.addEventListener('close', () => $$('.term[aria-expanded="true"]').forEach((t) => t.setAttribute('aria-expanded', 'false')));
     gloss.addEventListener('toggle', (e) => { if (e.newState === 'closed') $$('.term[aria-expanded="true"]').forEach((t) => t.setAttribute('aria-expanded', 'false')); });
+    // turning the phone (a change of width): an open meaning is placed again by its word once the page has re-flowed, or
+    // closes if the word has left the screen
+    let glossW = innerWidth;
+    addEventListener('resize', () => {
+      if (innerWidth === glossW) return; glossW = innerWidth;
+      let on = !gloss.hidden; try { on = gloss.matches(':popover-open'); } catch {}
+      const btn = $('.term[aria-expanded="true"]'); if (!on) return;
+      requestAnimationFrame(() => {
+        const r = btn?.getBoundingClientRect();
+        if (r && r.width && r.bottom > 0 && r.top < innerHeight && defs[btn.dataset.term]) { pop(btn, defs[btn.dataset.term]); return; }
+        try { gloss.hidePopover(); } catch { gloss.hidden = true; } $$('.term[aria-expanded="true"]').forEach((t) => t.setAttribute('aria-expanded', 'false'));
+      });
+    });
   }
 
   /* ---------- Reader ---------- */

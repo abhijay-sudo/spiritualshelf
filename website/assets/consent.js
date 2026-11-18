@@ -140,7 +140,14 @@
     if (!bar || bar.hidden) return;
     var on = dock && !dock.classList.contains('is-away') && !dock.classList.contains('is-tucked') && dock.offsetHeight > 0;
     var px = on ? dock.offsetHeight + (parseFloat(getComputedStyle(dock).bottom) || 0) : 0;
-    bar.style.setProperty('--cx-dock-clear', px + 'px');
+    // out of sight (tucked away, or waiting beside a stage) it takes its new place at once and then comes in there:
+    // sliding its foot (bottom) to the new place as it came in moved it on screen, a layout shift
+    if (bar.style.getPropertyValue('--cx-dock-clear') !== px + 'px') {
+      var out = bar.classList.contains('is-tucked') || bar.classList.contains('is-aside');
+      if (out) bar.style.transition = 'none';
+      bar.style.setProperty('--cx-dock-clear', px + 'px');
+      if (out) { void bar.offsetWidth; bar.style.transition = ''; }
+    }
     // on a page that is read it never shares the screen with the reader's dock: one bar at the foot at a time
     var tuck = (away || (reading && on)) && !bar.contains(d.activeElement) && !bar.hasAttribute('data-reopened');
     bar.classList.toggle('is-tucked', tuck); bar.inert = tuck || bar.classList.contains('is-aside');
@@ -148,10 +155,16 @@
   // The room the bar takes at the foot of the screen, which the openings and the footer keep free (cinema.css). It is the
   // bar's own height and its resting gap only, never the dock's clearance: this value pads the story's opening, which is
   // in the page's flow above the reading, so it must not change while someone reads (a change there moves the text).
+  // boot.js reserved it before the first paint; here it is only ever widened (a few pixels to spare never move anything),
+  // and fitted exactly only when the screen's width changes (a phone turned on its side), when everything is laid out anew.
+  var fitW = 0;
   var room = function () {
     if (!bar || bar.hidden || !bar.offsetHeight) return;
     var base = innerWidth <= 759 || (innerWidth > innerHeight && innerHeight <= 520) ? 6 : 12;
-    root.style.setProperty('--cx-consent-room', Math.ceil(bar.offsetHeight + base + 8) + 'px'); root.setAttribute('data-consent-room', '');
+    var px = Math.ceil(bar.offsetHeight + base + 8), was = root.hasAttribute('data-consent-room') ? parseFloat(root.style.getPropertyValue('--cx-consent-room')) || 0 : 0;
+    var turned = fitW && innerWidth !== fitW; fitW = innerWidth;
+    if (turned ? px !== was : px > was) root.style.setProperty('--cx-consent-room', px + 'px');
+    root.setAttribute('data-consent-room', '');
   };
   var scrolled = function () {
     if (!reading) return;

@@ -5,7 +5,7 @@
 <id>https://spritual.co.in/hi/feed.xml</id>
 <link rel="self" type="application/atom+xml" href="https://spritual.co.in/hi/feed.xml"/>
 <link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/"/>
-<updated>2026-11-18T15:25:50Z</updated>
+<updated>2026-11-18T15:40:01Z</updated>
 <author><name>Spritual</name><uri>https://spritual.co.in/hi/about/</uri></author>
 <icon>https://spritual.co.in/favicon.ico</icon>
 <logo>https://spritual.co.in/assets/icons/icon-512.png</logo>
@@ -14,7 +14,7 @@
 <id>https://spritual.co.in/hi/collections/krishna/books/later-tradition/arcs/holi/stories/prahlada-and-holika/</id>
 <link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/collections/krishna/books/later-tradition/arcs/holi/stories/prahlada-and-holika/"/>
 <link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/collections/krishna/books/later-tradition/arcs/holi/stories/prahlada-and-holika/"/>
-<updated>2026-11-18T15:25:50Z</updated>
+<updated>2026-11-18T15:40:01Z</updated>
 <category term="krishna"/>
 <summary>भागवत में आग भी बालक का कुछ नहीं बिगाड़ पाती। होली का अलाव उस बुआ को याद करता है जो उसे गोद में लेकर लपटों में बैठी थी।</summary>
 </entry>
@@ -62,6 +62,78 @@
 <updated>2026-11-18T13:35:06Z</updated>
 <category term="krishna"/>
 <summary>अमृत के लिए देवता और असुर मिलकर सागर मथते हैं। पहले विष निकलता है, फिर रत्न और एक देवी, और अंत में अमृत-कलश, जो केवल एक पक्ष के लिए उँडेला जाता है।</summary>
+</entry>
+<entry>
+<title>रामचरितमानस: अरण्यकाण्ड</title>
+<id>https://spritual.co.in/hi/ramcharitmanas/aranya-kand/</id>
+<link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/ramcharitmanas/aranya-kand/"/>
+<link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/ramcharitmanas/aranya-kand/"/>
+<updated>2026-11-18T12:39:26Z</updated>
+<category term="ramcharitmanas"/>
+<summary>गोस्वामी तुलसीदास कृत रामचरितमानस का अरण्यकाण्ड ऑनलाइन, दोहा 1–46 का पूरा पद्य-पाठ: वन का जीवन, सीता-हरण और शबरी का आतिथ्य।</summary>
+</entry>
+<entry>
+<title>रामचरितमानस: अयोध्याकाण्ड</title>
+<id>https://spritual.co.in/hi/ramcharitmanas/ayodhya-kand/</id>
+<link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/ramcharitmanas/ayodhya-kand/"/>
+<link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/ramcharitmanas/ayodhya-kand/"/>
+<updated>2026-11-18T12:39:26Z</updated>
+<category term="ramcharitmanas"/>
+<summary>गोस्वामी तुलसीदास कृत रामचरितमानस का अयोध्याकाण्ड ऑनलाइन, दोहा 1–326 का पूरा पद्य-पाठ: राज्याभिषेक के स्थान पर वनवास, और भरत का प्रेम।</summary>
+</entry>
+<entry>
+<title>रामचरितमानस: बालकाण्ड</title>
+<id>https://spritual.co.in/hi/ramcharitmanas/bal-kand/</id>
+<link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/ramcharitmanas/bal-kand/"/>
+<link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/ramcharitmanas/bal-kand/"/>
+<updated>2026-11-18T12:39:26Z</updated>
+<category term="ramcharitmanas"/>
+<summary>गोस्वामी तुलसीदास कृत रामचरितमानस का बालकाण्ड ऑनलाइन, दोहा 1–361 का पूरा पद्य-पाठ: श्रीराम का जन्म, बाल्यकाल और सीता-स्वयंवर में धनुष-भंग।</summary>
+</entry>
+<entry>
+<title>रामचरितमानस: किष्किन्धाकाण्ड</title>
+<id>https://spritual.co.in/hi/ramcharitmanas/kishkindha-kand/</id>
+<link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/ramcharitmanas/kishkindha-kand/"/>
+<link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/ramcharitmanas/kishkindha-kand/"/>
+<updated>2026-11-18T12:39:26Z</updated>
+<category term="ramcharitmanas"/>
+<summary>गोस्वामी तुलसीदास कृत रामचरितमानस का किष्किन्धाकाण्ड ऑनलाइन, दोहा 1–30 का पूरा पद्य-पाठ: हनुमान का श्रीराम से मिलन, सुग्रीव से मित्रता और खोज का आरम्भ।</summary>
+</entry>
+<entry>
+<title>रामचरितमानस: लंकाकाण्ड</title>
+<id>https://spritual.co.in/hi/ramcharitmanas/lanka-kand/</id>
+<link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/ramcharitmanas/lanka-kand/"/>
+<link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/ramcharitmanas/lanka-kand/"/>
+<updated>2026-11-18T12:39:26Z</updated>
+<category term="ramcharitmanas"/>
+<summary>गोस्वामी तुलसीदास कृत रामचरितमानस का लंकाकाण्ड ऑनलाइन, दोहा 1–121 का पूरा पद्य-पाठ: सेतु-बंध, युद्ध और रावण का अंत।</summary>
+</entry>
+<entry>
+<title>रामचरितमानस: सुन्दरकाण्ड</title>
+<id>https://spritual.co.in/hi/ramcharitmanas/sundar-kand/</id>
+<link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/ramcharitmanas/sundar-kand/"/>
+<link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/ramcharitmanas/sundar-kand/"/>
+<updated>2026-11-18T12:39:26Z</updated>
+<category term="ramcharitmanas"/>
+<summary>तुलसीदास कृत रामचरितमानस का सुन्दरकाण्ड, दोहा 1–60, हिन्दी भावार्थ सहित, 16 प्रसंगों में: समुद्र-लंघन, सीता की खोज, लंका-दहन और विभीषण की शरणागति।</summary>
+</entry>
+<entry>
+<title>रामचरितमानस: उत्तरकाण्ड</title>
+<id>https://spritual.co.in/hi/ramcharitmanas/uttar-kand/</id>
+<link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/ramcharitmanas/uttar-kand/"/>
+<link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/ramcharitmanas/uttar-kand/"/>
+<updated>2026-11-18T12:39:26Z</updated>
+<category term="ramcharitmanas"/>
+<summary>गोस्वामी तुलसीदास कृत रामचरितमानस का उत्तरकाण्ड ऑनलाइन, दोहा 1–130 का पूरा पद्य-पाठ: अयोध्या-आगमन, राज्याभिषेक और काकभुशुण्डि का उपदेश।</summary>
+</entry>
+<entry>
+<title>शिवताण्डवस्तोत्रम्</title>
+<id>https://spritual.co.in/hi/shiva-tandava-stotram/</id>
+<link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/shiva-tandava-stotram/"/>
+<link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/shiva-tandava-stotram/"/>
+<updated>2026-11-18T12:39:26Z</updated>
+<category term="hymn"/>
+<summary>शिवताण्डवस्तोत्रम् के सभी 17 श्लोक हिन्दी अर्थ सहित, और कैलास की वह कथा जिससे परंपरा रावण के इस स्तोत्र को जोड़ती है।</summary>
 </entry>
 <entry>
 <title>आग का अनंत स्तंभ</title>
@@ -278,78 +350,6 @@
 <updated>2026-11-13T08:32:15Z</updated>
 <category term="hymn"/>
 <summary>गोस्वामी तुलसीदास कृत सम्पूर्ण हनुमान चालीसा: दो दोहे, चालीस चौपाइयाँ और अंतिम दोहा, हर पद के सरल हिन्दी अर्थ सहित।</summary>
-</entry>
-<entry>
-<title>रामचरितमानस: अरण्यकाण्ड</title>
-<id>https://spritual.co.in/hi/ramcharitmanas/aranya-kand/</id>
-<link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/ramcharitmanas/aranya-kand/"/>
-<link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/ramcharitmanas/aranya-kand/"/>
-<updated>2026-11-13T08:32:15Z</updated>
-<category term="ramcharitmanas"/>
-<summary>गोस्वामी तुलसीदास कृत रामचरितमानस का अरण्यकाण्ड ऑनलाइन, दोहा 1–46 का पूरा पद्य-पाठ: वन का जीवन, सीता-हरण और शबरी का आतिथ्य।</summary>
-</entry>
-<entry>
-<title>रामचरितमानस: अयोध्याकाण्ड</title>
-<id>https://spritual.co.in/hi/ramcharitmanas/ayodhya-kand/</id>
-<link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/ramcharitmanas/ayodhya-kand/"/>
-<link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/ramcharitmanas/ayodhya-kand/"/>
-<updated>2026-11-13T08:32:15Z</updated>
-<category term="ramcharitmanas"/>
-<summary>गोस्वामी तुलसीदास कृत रामचरितमानस का अयोध्याकाण्ड ऑनलाइन, दोहा 1–326 का पूरा पद्य-पाठ: राज्याभिषेक के स्थान पर वनवास, और भरत का प्रेम।</summary>
-</entry>
-<entry>
-<title>रामचरितमानस: बालकाण्ड</title>
-<id>https://spritual.co.in/hi/ramcharitmanas/bal-kand/</id>
-<link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/ramcharitmanas/bal-kand/"/>
-<link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/ramcharitmanas/bal-kand/"/>
-<updated>2026-11-13T08:32:15Z</updated>
-<category term="ramcharitmanas"/>
-<summary>गोस्वामी तुलसीदास कृत रामचरितमानस का बालकाण्ड ऑनलाइन, दोहा 1–361 का पूरा पद्य-पाठ: श्रीराम का जन्म, बाल्यकाल और सीता-स्वयंवर में धनुष-भंग।</summary>
-</entry>
-<entry>
-<title>रामचरितमानस: किष्किन्धाकाण्ड</title>
-<id>https://spritual.co.in/hi/ramcharitmanas/kishkindha-kand/</id>
-<link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/ramcharitmanas/kishkindha-kand/"/>
-<link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/ramcharitmanas/kishkindha-kand/"/>
-<updated>2026-11-13T08:32:15Z</updated>
-<category term="ramcharitmanas"/>
-<summary>गोस्वामी तुलसीदास कृत रामचरितमानस का किष्किन्धाकाण्ड ऑनलाइन, दोहा 1–30 का पूरा पद्य-पाठ: हनुमान का श्रीराम से मिलन, सुग्रीव से मित्रता और खोज का आरम्भ।</summary>
-</entry>
-<entry>
-<title>रामचरितमानस: लंकाकाण्ड</title>
-<id>https://spritual.co.in/hi/ramcharitmanas/lanka-kand/</id>
-<link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/ramcharitmanas/lanka-kand/"/>
-<link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/ramcharitmanas/lanka-kand/"/>
-<updated>2026-11-13T08:32:15Z</updated>
-<category term="ramcharitmanas"/>
-<summary>गोस्वामी तुलसीदास कृत रामचरितमानस का लंकाकाण्ड ऑनलाइन, दोहा 1–121 का पूरा पद्य-पाठ: सेतु-बंध, युद्ध और रावण का अंत।</summary>
-</entry>
-<entry>
-<title>रामचरितमानस: सुन्दरकाण्ड</title>
-<id>https://spritual.co.in/hi/ramcharitmanas/sundar-kand/</id>
-<link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/ramcharitmanas/sundar-kand/"/>
-<link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/ramcharitmanas/sundar-kand/"/>
-<updated>2026-11-13T08:32:15Z</updated>
-<category term="ramcharitmanas"/>
-<summary>तुलसीदास कृत रामचरितमानस का सुन्दरकाण्ड, दोहा 1–60, हिन्दी भावार्थ सहित, 16 प्रसंगों में: समुद्र-लंघन, सीता की खोज, लंका-दहन और विभीषण की शरणागति।</summary>
-</entry>
-<entry>
-<title>रामचरितमानस: उत्तरकाण्ड</title>
-<id>https://spritual.co.in/hi/ramcharitmanas/uttar-kand/</id>
-<link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/ramcharitmanas/uttar-kand/"/>
-<link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/ramcharitmanas/uttar-kand/"/>
-<updated>2026-11-13T08:32:15Z</updated>
-<category term="ramcharitmanas"/>
-<summary>गोस्वामी तुलसीदास कृत रामचरितमानस का उत्तरकाण्ड ऑनलाइन, दोहा 1–130 का पूरा पद्य-पाठ: अयोध्या-आगमन, राज्याभिषेक और काकभुशुण्डि का उपदेश।</summary>
-</entry>
-<entry>
-<title>शिवताण्डवस्तोत्रम्</title>
-<id>https://spritual.co.in/hi/shiva-tandava-stotram/</id>
-<link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/shiva-tandava-stotram/"/>
-<link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/shiva-tandava-stotram/"/>
-<updated>2026-11-13T08:32:15Z</updated>
-<category term="hymn"/>
-<summary>शिवताण्डवस्तोत्रम् के सभी 17 श्लोक हिन्दी अर्थ सहित, और कैलास की वह कथा जिससे परंपरा रावण के इस स्तोत्र को जोड़ती है।</summary>
 </entry>
 <entry>
 <title>खंभे में सिंह</title>

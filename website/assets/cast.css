@@ -4,7 +4,7 @@
    cut), and their name, title and story sit on the calm side. On a phone the painting is the top of the page and the
    words follow under it. Everything here is in the page as built: nothing is moved into place by a script.
 
-   Hooks for light and motion (epic.js, legend.js):
+   Hooks for light and motion (epic.js):
      main.cast-page[data-char][data-tier="legend|lead|cast"]   who this is, and how much they carry in the stories
      .cast-hero[data-side="l|r"]                               which side of the stage they stand on
      .cast-stage                                               the stage (a size container: cqw / cqh are its own)
@@ -33,6 +33,12 @@
   /* the bar lies over the top of the stage: a head (its top is --head-top of the painting) is never under it. Where it
      would be, the painting comes down just far enough, and its top edge melts into the page (the mask below) */
   --bar: calc(var(--ed-head-h) + env(safe-area-inset-top, 0px) + 10px); }
+/* While it settles (epic.css ep-settle, and a legend's ep-depth with the scroll) the painting reaches past the stage's foot and
+   the stage cuts it there; where the foot falls between device pixels, both engines let that cut row through as a bright line
+   across the screen. A band of the page's own colour lies over the foot, outside the stage's cut and under the words; settled,
+   it lies on paper. Its top follows the stage's height: change the two together (and the phone's, below). */
+.cast-hero::before { content: ""; position: absolute; z-index: -1; left: 0; right: 0; top: calc(min(100%, max(100svh, 38rem)) - 2px); height: 4px; background: var(--cx-paper); pointer-events: none; }
+@media print, (forced-colors: active) { .cast-hero::before { display: none; } }
 /* (the painting stops one pixel short of the stage's foot, where the page's own colour has already taken over: on screens
    with a fractional pixel ratio the last row of the painting otherwise showed through as a hairline) */
 .cast-plate { position: absolute; inset: 0 0 1px; overflow: hidden; }
@@ -90,7 +96,7 @@ html[lang="hi"] .cast-name { line-height: 1.12; letter-spacing: 0; }
 html[lang="hi"] .cast-name-t, html[lang="hi"] .cast-name .ep-w { padding: .22em .08em .3em; margin: -.22em -.08em -.3em; }   /* the line is set close; the matras keep their room inside the piece */
 /* (site.css gives every Hindi element a line height of 1.75, for reading; it reached the piece inside the name, so a Hindi
    name stood in a box nearly twice as tall as an English one and the lines round it drifted apart) */
-html[lang="hi"] .cast-name :is(.cast-name-t, .ep-w, .ep-l, .lg-n2) { line-height: inherit; }
+html[lang="hi"] .cast-name :is(.cast-name-t, .ep-w, .ep-l) { line-height: inherit; }
 html[lang="hi"] .cast-name { margin-top: .2em; }   /* (the matras above the line, the ai of कैकेयी or the reph of कार्तिकेय, stand clear of the small line over the name) */
 /* a name of several words may break at its spaces, never inside a word (--name-w is then its widest word) */
 .cast-name--words { white-space: normal; overflow-wrap: normal; word-break: keep-all; hyphens: none; text-wrap: balance; }
@@ -142,6 +148,7 @@ html[lang="hi"] .cast-hymn-k { font: 400 .92rem/1.4 "Mukta", var(--cx-ui); lette
 @media (max-width: 859.98px) and (orientation: portrait), (max-width: 559.98px) {
   .cast-hero { display: block; min-height: 0; padding: 0 0 clamp(1.5rem, 1rem + 2vw, 2.5rem); --stage-h: clamp(18rem, 60svh, 46rem); }
   .cast-stage { position: relative; inset: auto; height: var(--stage-h); --zoom-now: var(--zoom-p, var(--zoom, 1)); --at-x-now: var(--at-xp, .5); --at-y-now: var(--at-yp, .4); --head-top-now: var(--head-top-p, var(--head-top, .5)); }
+  .cast-hero::before { top: calc(var(--stage-h) - 2px); }   /* the band over the stage's foot (above), at the foot here */
   .cast-hero[data-side="l"] .cast-stage { --at-x-now: var(--at-xp, .5); }
   .cast-stage::after, .cast-hero[data-side="l"] .cast-stage::after { background:
     linear-gradient(to top, var(--cx-paper) 0%, color-mix(in srgb, var(--cx-paper) 88%, transparent) 10%, color-mix(in srgb, var(--cx-paper) 46%, transparent) 25%, transparent 46%),
