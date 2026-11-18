@@ -5,36 +5,54 @@
 <id>https://spritual.co.in/hi/feed.xml</id>
 <link rel="self" type="application/atom+xml" href="https://spritual.co.in/hi/feed.xml"/>
 <link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/"/>
-<updated>2026-11-18T12:55:15Z</updated>
+<updated>2026-11-18T13:39:24Z</updated>
 <author><name>Spritual</name><uri>https://spritual.co.in/hi/about/</uri></author>
 <icon>https://spritual.co.in/favicon.ico</icon>
 <logo>https://spritual.co.in/assets/icons/icon-512.png</logo>
+<entry>
+<title>चार मुट्ठी चिउड़ा</title>
+<id>https://spritual.co.in/hi/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-and-sudama/</id>
+<link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-and-sudama/"/>
+<link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-and-sudama/"/>
+<updated>2026-11-18T13:39:24Z</updated>
+<category term="krishna"/>
+<summary>फटेहाल ब्राह्मण चिथड़े में चार मुट्ठी चिउड़ा बाँधे द्वारका पहुँचता है, पर देने में लाज आती है। कृष्ण स्वयं पोटली खींच लेते हैं।</summary>
+</entry>
+<entry>
+<title>चार वधुएँ, एक अग्नि</title>
+<id>https://spritual.co.in/hi/collections/ramayana/books/valmiki-ramayana/arcs/bala-kanda/stories/ramayana-the-wedding/</id>
+<link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/collections/ramayana/books/valmiki-ramayana/arcs/bala-kanda/stories/ramayana-the-wedding/"/>
+<link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/collections/ramayana/books/valmiki-ramayana/arcs/bala-kanda/stories/ramayana-the-wedding/"/>
+<updated>2026-11-18T13:39:05Z</updated>
+<category term="ramayana"/>
+<summary>थके घोड़ों के साथ दूत अयोध्या पहुँचते हैं: राम ने सीता को जीत लिया है। कुछ दिन बाद मिथिला में चार राजकुमार चार हाथ थामते हैं, और आकाश से फूल बरसते हैं।</summary>
+</entry>
 <entry>
 <title>द्वार पर डटा बालक</title>
 <id>https://spritual.co.in/hi/collections/ganesha/books/shiva-purana/arcs/rudra-samhita/stories/ganesha-elephant-head/</id>
 <link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/collections/ganesha/books/shiva-purana/arcs/rudra-samhita/stories/ganesha-elephant-head/"/>
 <link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/collections/ganesha/books/shiva-purana/arcs/rudra-samhita/stories/ganesha-elephant-head/"/>
-<updated>2026-11-18T12:55:15Z</updated>
+<updated>2026-11-18T13:35:06Z</updated>
 <category term="ganesha"/>
 <summary>पार्वती अपने रचे बालक को द्वार पर पहरे के लिए खड़ा करती हैं। वह शिव को भी भीतर नहीं जाने देता, और सारा स्वर्ग उससे युद्ध करने उतर आता है।</summary>
-</entry>
-<entry>
-<title>पर्वत बना मथानी</title>
-<id>https://spritual.co.in/hi/collections/krishna/books/bhagavata-purana/arcs/skandha-8/stories/vishnu-churning-the-ocean/</id>
-<link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/collections/krishna/books/bhagavata-purana/arcs/skandha-8/stories/vishnu-churning-the-ocean/"/>
-<link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/collections/krishna/books/bhagavata-purana/arcs/skandha-8/stories/vishnu-churning-the-ocean/"/>
-<updated>2026-11-18T12:55:04Z</updated>
-<category term="krishna"/>
-<summary>अमृत के लिए देवता और असुर मिलकर सागर मथते हैं। पहले विष निकलता है, फिर रत्न और एक देवी, और अंत में अमृत-कलश, जो केवल एक पक्ष के लिए उँडेला जाता है।</summary>
 </entry>
 <entry>
 <title>जिस रात द्वार खुले</title>
 <id>https://spritual.co.in/hi/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-born-in-prison/</id>
 <link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-born-in-prison/"/>
 <link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-born-in-prison/"/>
-<updated>2026-11-18T12:54:54Z</updated>
+<updated>2026-11-18T13:35:06Z</updated>
 <category term="krishna"/>
 <summary>आकाशवाणी कहती है: बहन की आठवीं संतान कंस का काल बनेगी। उस संतान के जन्म की रात लोहे के द्वार अपने-आप खुल जाते हैं।</summary>
+</entry>
+<entry>
+<title>पर्वत बना मथानी</title>
+<id>https://spritual.co.in/hi/collections/krishna/books/bhagavata-purana/arcs/skandha-8/stories/vishnu-churning-the-ocean/</id>
+<link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/collections/krishna/books/bhagavata-purana/arcs/skandha-8/stories/vishnu-churning-the-ocean/"/>
+<link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/collections/krishna/books/bhagavata-purana/arcs/skandha-8/stories/vishnu-churning-the-ocean/"/>
+<updated>2026-11-18T13:35:06Z</updated>
+<category term="krishna"/>
+<summary>अमृत के लिए देवता और असुर मिलकर सागर मथते हैं। पहले विष निकलता है, फिर रत्न और एक देवी, और अंत में अमृत-कलश, जो केवल एक पक्ष के लिए उँडेला जाता है।</summary>
 </entry>
 <entry>
 <title>आग का अनंत स्तंभ</title>

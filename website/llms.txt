@@ -12,8 +12,8 @@ Before quoting or summarising this site:
 
 ## Start here
 
-- [All stories](https://spritual.co.in/library/): Search 32 illustrated retellings from the Ramayana, Mahabharata and Puranas by name, feeling, collection or reading time, in English and Hindi.
-- [People of the stories](https://spritual.co.in/characters/): 78 people of the Ramayana, Mahabharata and Puranas, from Rama, Sita and Hanuman to Karna, Draupadi and Bhishma, each linked to their stories.
+- [All stories](https://spritual.co.in/library/): Search 34 illustrated retellings from the Ramayana, Mahabharata and Puranas by name, feeling, collection or reading time, in English and Hindi.
+- [People of the stories](https://spritual.co.in/characters/): 82 people of the Ramayana, Mahabharata and Puranas, from Rama, Sita and Hanuman to Karna, Draupadi and Bhishma, each linked to their stories.
 - [Festivals and their stories](https://spritual.co.in/festivals/): Dates for Diwali, Holi, Maha Shivaratri, Navratri, Janmashtami and more to November 2027 (New Delhi, Drik Panchang), each with a story to read.
 - [About Spritual](https://spritual.co.in/about/): Spritual is a free reading site of illustrated stories from the Ramayana, the Mahabharata and the Puranas, in English and Hindi, with no accounts or ads.
 - [Press](https://spritual.co.in/press/): Spritual in a line and in a paragraph: the facts, counted from the site itself, what it is not, where to begin, and how to reach its maker.
@@ -36,6 +36,7 @@ Before quoting or summarising this site:
 ### Ramayana (Valmiki Ramayana)
 
 - [The bow that broke the sky](https://spritual.co.in/collections/ramayana/books/valmiki-ramayana/arcs/bala-kanda/stories/ramayana-beginnings/): Narada names the ideal man, Sita is found in a furrow, Vishvamitra teaches Rama, and in Mithila Shiva's bow breaks: Valmiki's Bala Kanda, illustrated.
+- [Four brides, one fire](https://spritual.co.in/collections/ramayana/books/valmiki-ramayana/arcs/bala-kanda/stories/ramayana-the-wedding/): Messengers reach Ayodhya behind spent horses: Rama has won Sita. Days later, in Mithila, four princes take four hands, and the sky rains flowers.
 - [Two Ramas, one bow](https://spritual.co.in/collections/ramayana/books/valmiki-ramayana/arcs/bala-kanda/stories/ramayana-parashurama/): Out of a dust-dark whirlwind, the axe-bearing son of Jamadagni bars the road home and dares young Rama to draw the bow of Vishnu.
 - [Fourteen years, two sandals](https://spritual.co.in/collections/ramayana/books/valmiki-ramayana/arcs/ayodhya-kanda/stories/ramayana-promises-and-partings/): Rama is sent to the forest on the eve of his crowning; Sita and Lakshmana follow, Guha keeps watch, and Bharata takes Rama's sandals back to the throne.
 - [The deer, the vulture, the elder](https://spritual.co.in/collections/ramayana/books/valmiki-ramayana/arcs/aranya-kanda/stories/ramayana-loss-and-hospitality/): The golden deer, Ravana carrying Sita away, Jatayu's last fight and Shabari's welcome: the Aranya Kanda of the Valmiki Ramayana, illustrated.
@@ -51,6 +52,7 @@ Before quoting or summarising this site:
 - [The night the doors opened](https://spritual.co.in/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-born-in-prison/): A bodiless voice names Kamsa's killer: his sister's eighth child. On the night that child is born, iron doors open by themselves.
 - [The rope two fingers short](https://spritual.co.in/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-butter-and-rope/): His mother catches the butter thief and reaches for a rope. Every rope in the house, knotted together, comes up two fingers short.
 - [The mountain lifted](https://spritual.co.in/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-mountain/): Indra sends storm clouds on Vraja and young Krishna lifts Govardhan hill on one hand, sheltering the village for seven days. From the Bhagavata Purana.
+- [Four handfuls of flat rice](https://spritual.co.in/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-and-sudama/): A ragged brahmana walks to Dvaraka with four handfuls of rice tied in a rag, too ashamed to give them. Krishna takes them himself.
 - [The unmoving star](https://spritual.co.in/collections/krishna/books/bhagavata-purana/arcs/skandha-4/stories/dhruva-star/): Denied his father's lap at five, Dhruva goes to the forest and meditates until Vishnu appears and grants him the place of the pole star.
 - [The Lion in the Pillar](https://spritual.co.in/collections/krishna/books/bhagavata-purana/arcs/skandha-7/stories/prahlada-the-pillar/): Hiranyakashipu, who no creature can kill, asks his son Prahlad if his god is in the pillar; Narasimha steps out. From the Bhagavata Purana.
 - [A mountain for a churning rod](https://spritual.co.in/collections/krishna/books/bhagavata-purana/arcs/skandha-8/stories/vishnu-churning-the-ocean/): Gods and asuras churn the ocean for nectar. Poison rises first, then treasures and a goddess, and last a pot of nectar that is poured for one side alone.
