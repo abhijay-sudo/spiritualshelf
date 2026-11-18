@@ -24,12 +24,12 @@
 .cast-hero { position: relative; isolation: isolate; display: grid; align-items: center; box-sizing: border-box;
   min-height: min(100svh, max(36rem, 56.25vw)); padding: calc(var(--ed-head-h) + env(safe-area-inset-top, 0px) + 1.25rem) 0 clamp(2.5rem, 7svh, 5rem); background: var(--cx-paper); }
 .cast-stage { position: absolute; z-index: -2; inset: 0 0 auto; height: min(100%, max(100svh, 38rem)); overflow: hidden; container-type: size;
-  --zoom-now: var(--zoom, 1); --at-x-now: var(--at-x, .7); --at-y-now: var(--at-y, .36);
+  --zoom-now: var(--zoom, 1); --at-x-now: var(--at-x, .7); --at-y-now: var(--at-y, .36); --head-top-now: var(--head-top, .5);
   /* the painting covers the stage, pushed in by the zoom; it is 16:9 */
   --img-h: calc(max(100cqh, 56.25cqw) * var(--zoom-now)); --img-w: calc(var(--img-h) * 1.77778);
   /* its left and top: the face (--face-x, --face-y of the painting) goes to (--at-x-now, --at-y-now) of the stage, held inside the painting's edges */
   --img-l: clamp(calc(100cqw - var(--img-w)), calc(var(--at-x-now) * 100cqw - var(--face-x, .5) * var(--img-w)), 0px);
-  --img-t: max(calc(var(--bar) - var(--head-top, .5) * var(--img-h)), clamp(calc(100cqh - var(--img-h)), calc(var(--at-y-now) * 100cqh - var(--face-y, .3) * var(--img-h)), 0px));
+  --img-t: max(calc(var(--bar) - var(--head-top-now) * var(--img-h)), clamp(calc(100cqh - var(--img-h)), calc(var(--at-y-now) * 100cqh - var(--face-y, .3) * var(--img-h)), 0px));
   /* the bar lies over the top of the stage: a head (its top is --head-top of the painting) is never under it. Where it
      would be, the painting comes down just far enough, and its top edge melts into the page (the mask below) */
   --bar: calc(var(--ed-head-h) + env(safe-area-inset-top, 0px) + 10px); }
@@ -76,7 +76,7 @@
 
 /* ---------- The words ---------- */
 .cast-hero-in { position: relative; width: 100%; }
-.cast-hero-txt { container-type: inline-size; width: min(43%, 36rem); display: grid; gap: .55rem; align-content: start; justify-items: start; }
+.cast-hero-txt { container-type: inline-size; width: min(43%, var(--txt-w, 36rem)); display: grid; gap: .55rem; align-content: start; justify-items: start; }
 .cast-hero[data-side="l"] .cast-hero-txt { margin-left: auto; }
 .cast-hero-txt > * { min-width: 0; max-width: 100%; }
 .cast-hero-txt .crumbs { margin: 0 0 clamp(.5rem, 2.5svh, 1.5rem); }
@@ -88,6 +88,10 @@ html[lang="hi"] .cast-kicker { font: 500 1rem/1.4 "Mukta", var(--cx-ui); letter-
   font-size: min(clamp(3rem, 1.4rem + 6.2vw, 7.5rem), calc(11svh + 2rem), calc(100cqi / (var(--name-w, 6) * 1.035))); }
 html[lang="hi"] .cast-name { line-height: 1.12; letter-spacing: 0; }
 html[lang="hi"] .cast-name-t, html[lang="hi"] .cast-name .ep-w { padding: .22em .08em .3em; margin: -.22em -.08em -.3em; }   /* the line is set close; the matras keep their room inside the piece */
+/* (site.css gives every Hindi element a line height of 1.75, for reading; it reached the piece inside the name, so a Hindi
+   name stood in a box nearly twice as tall as an English one and the lines round it drifted apart) */
+html[lang="hi"] .cast-name :is(.cast-name-t, .ep-w, .ep-l, .lg-n2) { line-height: inherit; }
+html[lang="hi"] .cast-name { margin-top: .2em; }   /* (the matras above the line, the ai of कैकेयी or the reph of कार्तिकेय, stand clear of the small line over the name) */
 /* a name of several words may break at its spaces, never inside a word (--name-w is then its widest word) */
 .cast-name--words { white-space: normal; overflow-wrap: normal; word-break: keep-all; hyphens: none; text-wrap: balance; }
 /* lit from above: the page's ink at the head of the letters, the person's light at their foot (whole, or letter by letter: epic.js) */
@@ -113,6 +117,9 @@ html[lang="hi"] .cast-echo { font-family: var(--cx-title); }
 .cast-title::before, .cast-title::after { content: ""; flex: 0 0 var(--title-rule); height: 1px; background: linear-gradient(90deg, transparent, currentColor); transform-origin: 100% 50%; }
 .cast-title::after { flex: 1 1 0; min-width: 0; max-width: 7rem; background: linear-gradient(90deg, currentColor, transparent); transform-origin: 0 50%; }
 html[lang="hi"] .cast-title { font: 500 1.12rem/1.5 "Mukta", var(--cx-ui); letter-spacing: 0; text-transform: none; }
+/* a title with one very long name (Mahishasuramardini; --tl is its length) steps down just enough to stay whole in a
+   narrow column at the largest reading size, instead of being cut at the column's edge */
+.cast-title[style*="--tl"] { font-size: min(var(--title-fs, .8rem), calc((100cqi - var(--title-rule) - 1rem) / (var(--tl) * .93))); }
 .cast-about { margin: .5rem 0 0; max-width: 35rem; font: 400 clamp(1rem, .9rem + .22vw, 1.12rem)/1.62 var(--cx-text); color: var(--cx-ink-2); text-wrap: pretty; }
 html[lang="hi"] .cast-about { font-family: "Tiro Devanagari Hindi", var(--cx-text); line-height: 1.76; }
 /* how much of the library they walk through: one quiet line */
@@ -134,7 +141,7 @@ html[lang="hi"] .cast-hymn-k { font: 400 .92rem/1.4 "Mukta", var(--cx-ui); lette
 /* ---------- A phone held upright, and narrow windows: the painting on top, the words under it ---------- */
 @media (max-width: 859.98px) and (orientation: portrait), (max-width: 559.98px) {
   .cast-hero { display: block; min-height: 0; padding: 0 0 clamp(1.5rem, 1rem + 2vw, 2.5rem); --stage-h: clamp(18rem, 60svh, 46rem); }
-  .cast-stage { position: relative; inset: auto; height: var(--stage-h); --zoom-now: var(--zoom-p, var(--zoom, 1)); --at-x-now: var(--at-xp, .5); --at-y-now: var(--at-yp, .4); }
+  .cast-stage { position: relative; inset: auto; height: var(--stage-h); --zoom-now: var(--zoom-p, var(--zoom, 1)); --at-x-now: var(--at-xp, .5); --at-y-now: var(--at-yp, .4); --head-top-now: var(--head-top-p, var(--head-top, .5)); }
   .cast-hero[data-side="l"] .cast-stage { --at-x-now: var(--at-xp, .5); }
   .cast-stage::after, .cast-hero[data-side="l"] .cast-stage::after { background:
     linear-gradient(to top, var(--cx-paper) 0%, color-mix(in srgb, var(--cx-paper) 88%, transparent) 10%, color-mix(in srgb, var(--cx-paper) 46%, transparent) 25%, transparent 46%),
@@ -183,7 +190,7 @@ html[lang="hi"] .cast-hymn-k { font: 400 .92rem/1.4 "Mukta", var(--cx-ui); lette
   .cast-about { order: 2; font-size: .98rem; line-height: 1.5; margin-top: .7rem; }
   .cast-acts { order: 1; margin-top: .5rem; }
   .cast-facts { order: 3; }
-  .cast-title { --title-rule: 1.25rem; column-gap: .6rem; font-size: .7rem; letter-spacing: .14em; }
+  .cast-title { --title-rule: 1.25rem; --title-fs: .7rem; column-gap: .6rem; font-size: .7rem; letter-spacing: .14em; }
   .cast-title::after { display: none; }
   html[lang="hi"] .cast-title { font-size: 1rem; letter-spacing: 0; }
   .cast-facts { gap: .2rem .55rem; font-size: .7rem; letter-spacing: .08em; }
@@ -205,9 +212,12 @@ html[lang="hi"] .cast-hymn-k { font: 400 .92rem/1.4 "Mukta", var(--cx-ui); lette
 .cast-study .dossier summary { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; grid-template-areas: "ic t x" "ic sub x"; column-gap: 1rem; row-gap: .1rem; align-items: center; min-height: 4rem; box-sizing: border-box; padding: .8rem 1.25rem; cursor: pointer; list-style: none;
   font: inherit; letter-spacing: 0; text-transform: none; color: var(--cx-ink); border-radius: 4px; }
 .cast-study .dossier summary::after { content: none; }
-.cast-study .dossier summary .eyebrow-ic { grid-area: ic; display: grid; place-items: center; width: 2.5rem; height: 2.5rem; border-radius: 50%; color: var(--cx-saffron); background: color-mix(in srgb, var(--cx-saffron) 12%, transparent); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--cx-saffron) 30%, transparent); }
+/* (its label and mark are in the person's own light softened into the page's ink, never the alarm of a red or a
+   saffron label: a reader should feel invited to open it, not warned) */
+.cast-study .dossier summary .eyebrow-ic { grid-area: ic; display: grid; place-items: center; width: 2.5rem; height: 2.5rem; border-radius: 50%; color: color-mix(in srgb, var(--ep-a) 55%, var(--cx-ink-2)); background: color-mix(in srgb, var(--ep-a) 9%, transparent); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ep-a) 26%, transparent); }
 .cast-study .dossier summary .eyebrow-ic .ic { width: 1.15rem; height: 1.15rem; }
-.dossier-t { grid-area: t; align-self: end; font: 600 .78rem/1.3 var(--cx-ui); letter-spacing: .22em; text-transform: uppercase; color: var(--cx-saffron); }
+.dossier-t { grid-area: t; align-self: end; font: 600 .78rem/1.3 var(--cx-ui); letter-spacing: .22em; text-transform: uppercase; color: color-mix(in srgb, var(--ep-a) 45%, var(--cx-ink)); }
+:root[data-theme="light"] .dossier-t, :root[data-theme="light"] .cast-study .dossier summary .eyebrow-ic { color: color-mix(in srgb, var(--ep-a) 22%, var(--cx-ink-2)); }
 .dossier-sub { grid-area: sub; align-self: start; font: 400 1rem/1.4 var(--cx-ui); color: var(--cx-ink-2); }
 html[lang="hi"] .dossier-t { font: 600 1rem/1.4 "Mukta", var(--cx-ui); letter-spacing: .02em; text-transform: none; }
 html[lang="hi"] .dossier-sub { font-family: "Mukta", var(--cx-ui); }
@@ -217,8 +227,8 @@ html[lang="hi"] .dossier-sub { font-family: "Mukta", var(--cx-ui); }
 .dossier[open] .dossier-x::after { rotate: 0deg; opacity: 0; }
 @media (prefers-reduced-motion: reduce) { .dossier-x::before, .dossier-x::after { transition: none; } }
 :root[data-motion="reduce"] :is(.dossier-x::before, .dossier-x::after) { transition: none; }
-.cast-study .dossier summary:focus-visible { outline: 2px solid var(--cx-saffron); outline-offset: 2px; }
-.cast-study .dossier-in { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 28rem), 1fr)); gap: 1.5rem clamp(1.5rem, 4vw, 3.5rem); padding: .5rem 1.25rem 1.5rem; border-top: 1px solid var(--cx-line); margin-top: 0; font: 400 1.02rem/1.65 var(--cx-text); color: var(--cx-ink-2); }
+.cast-study .dossier summary:focus-visible { outline: 2px solid color-mix(in srgb, var(--ep-a) 70%, var(--cx-ink)); outline-offset: 2px; }
+.cast-study .dossier-in { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 28rem), 1fr)); gap: 1.75rem clamp(1.5rem, 4vw, 3.5rem); padding: .75rem 1.5rem 2rem; border-top: 1px solid var(--cx-line); margin-top: 0; font: 400 1.02rem/1.65 var(--cx-text); color: var(--cx-ink-2); }
 .cast-study .dossier-in > section { display: grid; gap: .35rem; align-content: start; padding-top: 1rem; }
 .cast-study .dossier-in .lens-k { color: var(--cx-ink-3); }
 .cast-study .dossier-in .sutra { grid-column: 1 / -1; padding: 1.1rem 1.4rem; border-radius: 3px; background: color-mix(in srgb, var(--ep-a) 8%, transparent); border-left: 2px solid color-mix(in srgb, var(--ep-a) 70%, transparent); }
@@ -249,16 +259,33 @@ html[lang="hi"] .cast-study .dossier-in { font-family: "Tiro Devanagari Hindi", 
 /* ---------- The People page: a lead's tile carries their title; the faces in the long list are a little larger ---------- */
 .cast-tile-k { min-width: 0; overflow: hidden; margin-top: .1rem; font: 600 .7rem/1.35 var(--cx-ui); font-size: min(.7rem, 6.3cqi); letter-spacing: .16em; text-transform: uppercase; color: color-mix(in srgb, var(--ep-a, #f3c47e) 62%, #fdf6ea); }
 html[lang="hi"] .cast-tile-k { font: 500 1rem/1.4 "Mukta", var(--cx-ui); letter-spacing: 0; text-transform: none; }
-/* The name stands on the dark foot of its tile, never across the figure. With a title under the name the foot is deeper:
-   the tile is a little taller, the figure stands higher in it and the dark reaches further up. On a narrow tile (two
-   to a row on a phone) the title is left to the person's own page. */
+/* The name stands on the dark foot of its tile, never across the figure: the tile is two rows, the figure in the room
+   the words leave and the words under it, so however many lines the words take the figure ends where the name begins.
+   The words carry the tile's dark foot themselves: it rises over the last of the figure, which is painted only to the
+   knee, so the cut edge falls away into the dark. With a title under the name the tile is a little taller. A title of
+   one name or of two takes the same two lines, so every name in a row of the wall stands on one line. On a narrow
+   tile (two to a row on a phone) the title is left to the person's own page. */
+.cast-tile { display: grid; grid-template-rows: minmax(0, 1fr) auto; grid-template-columns: minmax(0, 1fr); --foot: 4rem; --sink: 1.5rem; }
+.cast-tile::after { content: none; }
+.cast-tile-pic { position: relative; inset: auto; margin: 4% 4% 0; min-height: 0; display: block; }
+.cast-tile-pic .art { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; }
+.cast-tile-pic { grid-row: 1; }
+.cast-tile-txt { grid-row: 2; position: relative; inset: auto; margin-top: calc(-1 * (var(--foot) + var(--sink))); padding-top: var(--foot);
+  background: linear-gradient(to top, rgb(14 8 4 / .97) 0, rgb(14 8 4 / .95) calc(100% - var(--foot)), rgb(14 8 4 / .8) calc(100% - var(--foot) * .62), rgb(14 8 4 / .32) calc(100% - var(--foot) * .28), transparent 100%); }
 @media (min-width: 480px) {
   .cast-tiles:has(.cast-tile-k) .cast-tile { aspect-ratio: 3 / 4.85; }
-  .cast-tiles:has(.cast-tile-k) .cast-tile-pic { inset: 4% 4% 31%; }
-  .cast-tiles:has(.cast-tile-k) .cast-tile::after { background: linear-gradient(to top, rgb(14 8 4 / .97) 0%, rgb(14 8 4 / .94) 30%, rgb(14 8 4 / .78) 41%, rgb(14 8 4 / .3) 53%, transparent 64%); }
+  .cast-tile-k { min-height: 2.7em; } html[lang="hi"] .cast-tile-k { min-height: 2.8em; }
 }
-@media (max-width: 479.98px) { .cast-tile-k { display: none; } .cast-tile-pic { inset: 3% 3% 25%; } }
-@media (max-width: 379.98px) { .cast-tile { aspect-ratio: 3 / 5.1; } .cast-tile-pic { inset: 3% 3% 33%; } }   /* the narrowest phones: the same words in a smaller tile, so the foot is a larger part of it */
+@media (min-width: 1360px) { .cast-tiles:has(.cast-tile-k) .cast-tile { aspect-ratio: 3 / 5.3; } }   /* six to a row: a narrower tile, the same words */
+@media (max-width: 479.98px) { .cast-tile-k { display: none; } .cast-tile { --foot: 3.2rem; --sink: 1.1rem; } .cast-tile-pic { margin: 3% 3% 0; } }
+/* A legend painted in a portrait of their own (Parashurama, Ravana) stands in the wall as a slice of that painting: its
+   whole height, so the head is never cut, laid so the face is at the middle of the tile as near as the painting's own
+   edges allow, and melting into the tile's dark foot where the name stands. */
+.cast-tile--scene .cast-tile-pic { position: absolute; inset: 0 0 20%; margin: 0; overflow: hidden; container-type: size; --pl-h: 100cqh; --pl-w: calc(var(--pl-h) * 1.77778);
+  -webkit-mask-image: linear-gradient(to bottom, #000 58%, transparent 100%); mask-image: linear-gradient(to bottom, #000 58%, transparent 100%); }
+.cast-tile-plate { position: absolute; display: block; max-width: none; top: 0; height: var(--pl-h); width: var(--pl-w); left: clamp(calc(100cqw - var(--pl-w)), calc(50cqw - var(--face-x, .5) * var(--pl-w)), 0px);
+  transform-origin: calc(var(--face-x, .5) * 100%) calc(var(--face-y, .3) * 100%); }
+@media (max-width: 379.98px) { .cast-tile { aspect-ratio: 3 / 5.1; } }   /* the narrowest phones: the same words in a smaller tile, so the tile is a little taller */
 .cast-row { grid-template-columns: 4.25rem minmax(0, 1fr); }
 .cast-row-pic { width: 4.25rem; height: 4.25rem; }
 
@@ -270,3 +297,6 @@ html[lang="hi"] .cast-tile-k { font: 500 1rem/1.4 "Mukta", var(--cx-ui); letter-
 /* ---------- Still, printed, plain ---------- */
 @media (forced-colors: active) { .cast-stage::after { display: none; } .cast-hero-txt { background: Canvas; } }
 @media print { .cast-hero { min-height: 0; padding: 0; display: block; } .cast-stage { display: none; } .cast-hero-txt { width: auto; } .cast-acts, .cast-with { display: none; } }
+/* two round faces on the People page whose painting is far lighter or darker than the rest: brought to the others' light */
+#vishvamitra > .cast-row .cast-row-pic img { filter: contrast(1.18) brightness(.86) saturate(1.1); }
+#shurpanakha > .cast-row .cast-row-pic img { filter: brightness(1.3) contrast(1.05); }

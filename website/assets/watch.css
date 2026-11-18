@@ -98,6 +98,13 @@
   .wt-title.is-open .wt-k::before, .wt-title.is-open .wt-k::after { display: none; }
 }
 .wt-mid { display: flex; align-items: center; gap: .35rem; }
+/* a phone held upright: the painting is a tall strip of a wide picture, with its people in the middle and upper part.
+   Title cards stand in the lower part, on the shade, not across a face; they rise with the caption while the controls show */
+@media (max-aspect-ratio: 3/4) and (orientation: portrait) {
+  .wt-title { place-content: end center; padding-bottom: calc(env(safe-area-inset-bottom, 0px) + clamp(4.5rem, 12svh, 7rem)); transition: opacity .9s ease, transform .5s var(--cx-ease, ease); }
+  .wt-title.is-in { transition-duration: 1.4s, .5s; transition-delay: .45s, 0s; }
+  .wt:not(.is-idle) .wt-title { transform: translateY(-4.5rem); }
+}
 .wt-opt { display: flex; justify-content: flex-end; gap: .15rem; }
 .wt-b { pointer-events: auto; display: grid; place-items: center; width: 48px; height: 48px; padding: 0; border: 0; border-radius: 50%; background: transparent; color: #f6ead8; cursor: pointer; transition: background-color .2s, opacity .2s; }
 .wt-b:hover { background: rgb(255 240 220 / .12); }
@@ -158,11 +165,22 @@
 @media (prefers-reduced-motion: reduce) {
   .wt-title > *, .wt-cap p { translate: none !important; }
   .wt-cap { transition: none; }
+  .wt-title { transition: opacity .9s ease; } .wt-title.is-in { transition: opacity 1.4s ease .45s; }
   .wt-flash.is-on { animation: none; }
   :root .wt .wt-embers { display: none; }
 }
 :root[data-motion="reduce"] :is(.wt-title > *, .wt-cap p) { translate: none !important; }
 :root[data-motion="reduce"] .wt-cap { transition: none; }
+:root[data-motion="reduce"] .wt-title { transition: opacity .9s ease; } :root[data-motion="reduce"] .wt-title.is-in { transition: opacity 1.4s ease .45s; }
 :root[data-motion="reduce"] .wt-flash.is-on { animation: none; }
 :root[data-motion="reduce"] .wt .wt-embers { display: none; }
+/* a phone held upright: the title card does not rise with the controls; it stands high enough to clear them from the start */
+@media (prefers-reduced-motion: reduce) and (max-aspect-ratio: 3/4) and (orientation: portrait) {
+  .wt-title { padding-bottom: calc(env(safe-area-inset-bottom, 0px) + clamp(4.5rem, 12svh, 7rem) + 4.5rem); }
+  .wt:not(.is-idle) .wt-title { transform: none; }
+}
+@media (max-aspect-ratio: 3/4) and (orientation: portrait) {
+  :root[data-motion="reduce"] .wt-title { padding-bottom: calc(env(safe-area-inset-bottom, 0px) + clamp(4.5rem, 12svh, 7rem) + 4.5rem); }
+  :root[data-motion="reduce"] .wt:not(.is-idle) .wt-title { transform: none; }
+}
 @media print { .wt { display: none !important; } }

@@ -456,7 +456,9 @@ html[lang="hi"] .next small { text-transform: none; letter-spacing: 0; font-size
 /* Glossary */
 .term { background: none; border: 0; padding: 0; margin: 0; font: inherit; color: inherit; cursor: pointer; text-decoration-line: underline; text-decoration-style: solid; text-decoration-thickness: 1px; text-decoration-color: color-mix(in oklab, currentColor 36%, transparent); text-underline-offset: .26em; transition: text-decoration-color .2s ease, background-color .2s ease; border-radius: 3px; }
 .term:hover, .term[aria-expanded="true"] { background: color-mix(in oklab, var(--gold) 45%, transparent);; text-decoration-color: var(--gold-2); }
-#gloss { position: fixed; margin: 0; inset: auto; width: min(18rem, calc(100vw - 32px)); padding: .9rem 1rem; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); color: var(--ink); box-shadow: var(--shadow); font-size: .95rem; }
+#gloss { position: fixed; margin: 0; inset: auto; box-sizing: border-box; width: min(18rem, calc(100vw - 32px), 292px); padding: .9rem 1rem; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); color: var(--ink); box-shadow: var(--shadow); font-size: .95rem; }
+/* (site.js places it at most 300px from the right edge of the screen: at the larger reading sizes 18rem was wider than
+   that, and on a phone the meaning ran off the screen) */
 #gloss strong { font-family: var(--font-display); font-weight: 500; font-size: 1.15rem; display: block; margin-bottom: .2rem; color: var(--accent); }
 
 /* Dialogs */
@@ -907,6 +909,13 @@ dialog.sheet--bottom[open] { margin: auto auto 0; width: 100%; max-width: 100%; 
 dialog.sheet--bottom .sheet-in::before { content: ""; width: 2.6rem; height: 4px; border-radius: 4px; background: var(--border-hairline); margin: -.4rem auto .2rem; }
 dialog.sheet--bottom .lens-card { border: 0; padding: 0; background: transparent; font-size: .95rem; }
 @media (min-width: 600px) { dialog.sheet--bottom[open] { margin: auto; width: min(32rem, calc(100% - 32px)); border-radius: 24px; } }
+/* where the word's sheet is a card mid-screen, it opens in the half of the screen the tapped word is not in (site.js);
+   its title takes focus from code so the sheet opens at its top, and draws no ring for that */
+@media (min-width: 600px) and (min-height: 520.02px) {
+  dialog#lens.sheet--bottom[open][data-at="low"] { margin: auto auto 2rem; }
+  dialog#lens.sheet--bottom[open][data-at="high"] { margin: 2rem auto auto; }
+}
+#lens-title:focus:not(:focus-visible), #lens [tabindex="-1"]:focus { outline: none; }
 /* the reader's mirror */
 .mirror { display: grid; gap: .8rem; padding: 1.5rem; border-radius: var(--radius); background: var(--bg-elevated); border: 1px solid var(--border-hairline); }
 .mirror-q { font-size: clamp(1.4rem, 1.1rem + 1.2vw, 2rem); line-height: 1.25; }

@@ -601,6 +601,9 @@
         const b = $('[data-lens-body]', sheet); b.innerHTML = `<ol class="lens-list">${cardHtml(d)}</ol>`;
         b.querySelector('b').textContent = d.term; const dv = b.querySelector('.lens-deva'); if (dv) dv.textContent = d.deva; const tr = b.querySelector('.lens-translit'); if (tr) tr.textContent = d.translit;
         const li = b.querySelector('[data-lit]'); if (li) li.textContent = d.literal; b.querySelector('[data-def]').textContent = d.def; if (d.context) { b.querySelector('[data-ctx-k]').textContent = d.ctxLabel; b.querySelector('[data-ctx]').textContent = d.context; } const ci = b.querySelector('cite'); if (ci) ci.textContent = d.source.label;
+        // where the sheet is a card in the middle of the screen (tablets), it opens in the half the word is not in (site.css)
+        if (btn) { const r = btn.getBoundingClientRect(); sheet.dataset.at = (r.top + r.bottom) / 2 < innerHeight / 2 ? 'low' : 'high'; }
+        else delete sheet.dataset.at;
         sheet.showModal();
         // it opens at its top, on the word itself: the browser focuses the first control ("Done", at the foot) and would
         // scroll the sheet down to it, hiding the word and its literal meaning
@@ -609,9 +612,12 @@
         // the word stays in sight, above the (short) sheet; the page goes back to where it was when the sheet closes
         if (btn) requestAnimationFrame(() => {
           sheet.scrollTop = 0;
-          const r = btn.getBoundingClientRect(); const room = innerHeight - sheet.getBoundingClientRect().height;
-          const want = Math.max(80, room * .45);
-          if (r.top > room - 24 || r.top < 60) { const y = scrollY; scrollBy({ top: r.top - want, behavior: 'instant' }); nudged = { from: y, to: scrollY }; }
+          const r = btn.getBoundingClientRect(), s = sheet.getBoundingClientRect(); const room = s.top, below = innerHeight - s.bottom;
+          let want = null;
+          // the larger free band, above the sheet (always, for a sheet at the foot of a phone) or below it
+          if (room >= below) { if (r.top > room - 24 || r.top < 60) want = Math.max(80, room * .45); }
+          else if (r.top < s.bottom + 16 || r.bottom > innerHeight - 16) want = s.bottom + Math.max(16, (below - r.height) * .45);
+          if (want !== null) { const y = scrollY; scrollBy({ top: r.top - want, behavior: 'instant' }); nudged = { from: y, to: scrollY }; }
         });
     }
     let nudged = null;
@@ -925,8 +931,12 @@
     // It also stays out of the way while the story's opening is on screen (the opening has its own Begin and Listen).
     const dock = $('.reader-bar'); const ends = $$('.story-end, .cx-credits'); const hero = $('.cx-film-open');
     if (dock && 'IntersectionObserver' in window) {
-      const seen = new Set(); let heroOn = false;
-      const place = () => { const away = seen.size > 0 || heroOn; dock.classList.toggle('is-away', away); dock.inert = away; };
+      const seen = new Set(), caps = new Set(); let heroOn = false;
+      // a painting's own scene number and title passing through the dock's band at the foot of the screen: the dock waits
+      // beside it rather than lying on the title (not while it is reading aloud, when its controls are in use)
+      const place = () => { const away = seen.size > 0 || heroOn || (caps.size > 0 && !dock.classList.contains('is-listening')); dock.classList.toggle('is-away', away); dock.inert = away; };
+      const cio = new IntersectionObserver((es) => { es.forEach((en) => (en.isIntersecting ? caps.add(en.target) : caps.delete(en.target))); place(); }, { rootMargin: '-86% 0px 0px 0px' });
+      $$('.shot:not(.shot--card) .shot-card > *', reader).forEach((el) => cio.observe(el));
       const eio = new IntersectionObserver((es) => { es.forEach((en) => (en.isIntersecting ? seen.add(en.target) : seen.delete(en.target))); place(); }, { rootMargin: '0px 0px -20% 0px' });
       ends.forEach((el) => eio.observe(el));
       // page by page: it also steps aside while Previous / Next are at the foot of the screen, where it would cover them
@@ -950,6 +960,23 @@
     if (grid && mainCol && rails.length) {
       fitRails();
       if ('ResizeObserver' in window) { const ro = new ResizeObserver(fitRails); ro.observe(grid); ro.observe(mainCol); } else addEventListener('resize', fitRails);
+    }
+    // A full-width painting passes over the sticky rails. A line or card it would cut in half steps out (a short fade)
+    // while the painting goes by, so the rails never show a sliced word; what lies wholly beside it stays.
+    const wideShots = $$('.shot:not(.shot--card)', reader);
+    const rows = rails.flatMap((r) => $$(':scope > p, :scope > ol > li, :scope > .rail-progress', r));
+    if (rows.length && wideShots.length) {
+      let tick = false;
+      const cut = () => {
+        tick = false;
+        const on = wide.matches && !root.hasAttribute('data-rails-off');
+        const bands = on ? wideShots.map((s) => s.getBoundingClientRect()).filter((b) => b.bottom > 0 && b.top < innerHeight) : [];
+        const want = rows.map((el) => { if (!bands.length) return false; const r = el.getBoundingClientRect(); return r.height > 0 && bands.some((b) => b.top < r.bottom - 1 && b.bottom > r.top + 1); });
+        rows.forEach((el, i) => { if (el.classList.contains('is-cut') !== want[i]) el.classList.toggle('is-cut', want[i]); });
+      };
+      const ask = () => { if (!tick) { tick = true; requestAnimationFrame(cut); } };
+      addEventListener('scroll', ask, { passive: true }); addEventListener('resize', ask);
+      rails.forEach((r) => r.addEventListener('scroll', ask, { passive: true })); ask();
     }
     // below the desktop layout (phones, a phone on its side, tablets) the dock tucks away while the reader scrolls on into
     // the story, and comes back on a deliberate scroll up (64px of travel, the same rhythm as the header): a small upward

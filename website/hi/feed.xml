@@ -5,27 +5,27 @@
 <id>https://spritual.co.in/hi/feed.xml</id>
 <link rel="self" type="application/atom+xml" href="https://spritual.co.in/hi/feed.xml"/>
 <link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/"/>
-<updated>2026-11-18T08:15:16Z</updated>
+<updated>2026-11-18T08:41:53Z</updated>
 <author><name>Spritual</name><uri>https://spritual.co.in/hi/about/</uri></author>
 <icon>https://spritual.co.in/favicon.ico</icon>
 <logo>https://spritual.co.in/assets/icons/icon-512.png</logo>
-<entry>
-<title>एक बाण, तीन पुर</title>
-<id>https://spritual.co.in/hi/collections/shiva/books/shiva-purana/arcs/rudra-samhita/stories/shiva-three-cities/</id>
-<link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/collections/shiva/books/shiva-purana/arcs/rudra-samhita/stories/shiva-three-cities/"/>
-<link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/collections/shiva/books/shiva-purana/arcs/rudra-samhita/stories/shiva-three-cities/"/>
-<updated>2026-11-18T08:15:16Z</updated>
-<category term="shiva"/>
-<summary>सोने, चाँदी और लोहे के तीन पुर केवल एक बाण से गिर सकते हैं, उसी एक घड़ी में जब वे मिलें। लोकों से बने रथ पर शिव बाण साधते हैं।</summary>
-</entry>
 <entry>
 <title>दो अंगुल छोटी रस्सी</title>
 <id>https://spritual.co.in/hi/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-butter-and-rope/</id>
 <link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-butter-and-rope/"/>
 <link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-butter-and-rope/"/>
-<updated>2026-11-18T08:14:59Z</updated>
+<updated>2026-11-18T08:41:53Z</updated>
 <category term="krishna"/>
 <summary>मैया ने माखनचोर को पकड़ा और रस्सी उठाई। घर भर की रस्सियाँ जोड़ डालीं, फिर भी हर बार दो अंगुल छोटी।</summary>
+</entry>
+<entry>
+<title>एक बाण, तीन पुर</title>
+<id>https://spritual.co.in/hi/collections/shiva/books/shiva-purana/arcs/rudra-samhita/stories/shiva-three-cities/</id>
+<link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/collections/shiva/books/shiva-purana/arcs/rudra-samhita/stories/shiva-three-cities/"/>
+<link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/collections/shiva/books/shiva-purana/arcs/rudra-samhita/stories/shiva-three-cities/"/>
+<updated>2026-11-18T08:41:53Z</updated>
+<category term="shiva"/>
+<summary>सोने, चाँदी और लोहे के तीन पुर केवल एक बाण से गिर सकते हैं, उसी एक घड़ी में जब वे मिलें। लोकों से बने रथ पर शिव बाण साधते हैं।</summary>
 </entry>
 <entry>
 <title>महिषासुर की अंतिम गर्जना</title>

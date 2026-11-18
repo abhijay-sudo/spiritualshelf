@@ -16,12 +16,17 @@
   if (head) {
     // it tucks away on the way down and returns on a deliberate scroll up (64px of travel in one direction), not on the
     // small upward nudge of a thumb mid-sentence, which used to drop it over the line being read
+    // On a page that is read, where the reader's dock also tucks away (site.js: phones, tablets, a narrow desktop), the
+    // dock comes back first, at 64px; the header follows only after a further 160px up, or near the top, so the two
+    // never drop over the line being read together.
+    const readPage = !!$('[data-reader], [data-manas]');
+    const pocket = matchMedia('(max-width: 1199px), (orientation: landscape) and (max-height: 520px)');
     let lastY = scrollY, run = 0, ticking = false;
     const onScroll = () => {
       const y = scrollY, dy = y - lastY;
       run = dy > 0 === run > 0 ? run + dy : dy;
       head.classList.toggle('is-solid', y > 24);
-      const down = run > 8, up = run < -64;
+      const down = run > 8, up = run < (readPage && (pocket.matches || root.hasAttribute('data-rails-off')) ? -224 : -64);
       if (down && y > 420 && !head.classList.contains('is-open') && !head.contains(document.activeElement)) head.classList.add('is-hidden');
       else if (up || y < 120) head.classList.remove('is-hidden');
       mirror();

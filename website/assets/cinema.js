@@ -171,9 +171,6 @@
     const out = { n: T('n'), coll: T('coll'), title: T('title'), sum: T('sum'), min: T('min'), scenes: T('scenes'), go: T('go'), hero: T('hero'), name: T('name'), who: T('who'), chips: T('chips'), goT: $('[data-sel-go-t]', sel), story: T('story'), storyT: $('[data-sel-story-t]', sel) };
     const whoLabel = out.who ? out.who.textContent.replace(out.name ? out.name.textContent : '', '').trim() : '';
     const layers = $$('.cx-sel-bg img', sel); const fig = $('[data-sel-fig]', sel); const auto = $('[data-sel-auto]', sel);
-    // a url() inside a custom property resolves against the stylesheet that uses it, not the page: give the sheen's mask an absolute address
-    const heroUrl = (u) => { if (fig && u) fig.style.setProperty('--hero-url', `url('${new URL(u, document.baseURI).href}')`); };
-    if (out.hero) heroUrl(out.hero.getAttribute('src'));
     // on a phone the frame is tall and narrow: the camera goes to the character's face, not the middle of the figure
     const narrow = matchMedia('(max-width: 699px)');
     let outT = 0;
@@ -192,21 +189,25 @@
       // (on short screens the same name sits in the counter's line instead: both copies are kept in step)
       if (d.world) $$('[data-sel-world]', sel).forEach((el) => { const w = el.firstElementChild; const was = w.textContent; w.textContent = d.world; el.classList.toggle('is-foe', 'foe' in d); if (was !== d.world && !reduced()) { el.classList.remove('is-new'); void el.offsetWidth; el.classList.add('is-new'); } });
       out.n.textContent = String(inGrp().indexOf(i) + 1).padStart(2, '0'); out.coll.textContent = d.coll; out.sum.textContent = d.sum;
-      // the name lands letter by letter; each word is one piece, so a name is never broken inside a word, and it is
-      // set at the size its widest word allows (--nw: that word's width in em, measured from the title face)
+      // the name rises whole: one piece per word (plain text, so its kerning and joins are the face's own), so a name is
+      // never broken inside a word, set at the size its widest word allows (--nw: that word's width in em, from the title face)
       out.title.textContent = ''; if (d.nw) out.title.style.setProperty('--nw', d.nw);
-      { let k = 0; d.title.split(' ').forEach((word, wi) => { if (wi) out.title.append(' '); const w = document.createElement('span'); w.className = 'cx-sel-w';
-        (typeof Intl !== 'undefined' && Intl.Segmenter ? [...new Intl.Segmenter(root.lang || undefined, { granularity: 'grapheme' }).segment(word)].map((x) => x.segment) : [word]).forEach((ch) => { const sp = document.createElement('span'); sp.className = 'cx-sel-ch'; sp.style.setProperty('--k', k++); sp.textContent = ch; w.append(sp); });
-        out.title.append(w); }); }
+      d.title.split(' ').forEach((word, wi) => { if (wi) out.title.append(' '); const w = document.createElement('span'); w.className = 'cx-sel-w'; w.textContent = word; out.title.append(w); });
       out.title.setAttribute('aria-label', d.title);
       if (out.chips) out.chips.innerHTML = d.chips || '';   // built by the site's own generator (escaped there)
       out.go.href = t.href; out.go.setAttribute('aria-label', d.meet || d.title); if (out.goT) out.goT.textContent = d.meet || d.title;
       if (out.story && d.story) { out.story.href = d.story; out.story.setAttribute('aria-label', `${out.storyT ? out.storyT.textContent : ''}: ${d.storyT || ''}`); }
       // a character with a cut-out portrait steps in front of their world; one painted inside a scene is found by the
       // camera instead: the world itself pushes in on them, and the words move to the other side
-      const scene = d.mode === 'scene';
+      const scene = d.mode === 'scene'; const wasCut = !sel.classList.contains('is-scene');
       sel.classList.toggle('is-scene', scene); sel.classList.toggle('is-left', d.side === 'left'); sel.classList.toggle('is-calm', scene && d.calm === '1');
-      if (!scene && d.hero) { out.hero.srcset = d.heroset; out.hero.src = d.hero; heroUrl(d.hero); }
+      if (!scene && d.hero) {
+        // the last figure stays where it stood and fades while the next fades in over it (cinema.css, .is-ghost): a cross-fade, not a cut
+        if (wasCut && fig && !reduced() && !root.classList.contains('ep-lite')) { const g = fig.cloneNode(true); g.removeAttribute('data-sel-fig'); g.querySelector('img')?.removeAttribute('data-sel-hero'); g.classList.add('is-ghost'); fig.before(g); const bye = () => g.remove(); g.addEventListener('animationend', bye, { once: true }); setTimeout(bye, 700); }
+        out.hero.srcset = d.heroset; out.hero.src = d.hero;
+        // a figure not yet decoded fades in from the moment it is, rather than appearing part-way through its fade
+        if (!out.hero.complete && fig) { const want = d.hero; out.hero.addEventListener('load', () => { if (out.hero.getAttribute('src') === want && !reduced()) { fig.style.animation = 'none'; void fig.offsetWidth; fig.style.animation = ''; } }, { once: true }); }
+      }
       // the painting: the roster's small copy at once (it is already loaded), the full one as soon as it has decoded
       // the new world comes in over the old one behind a blade of light; the old one leaves when it is covered
       const my = ++token; const next = layers[1 - front]; const prev = layers[front]; const thumb = $('img', t);
@@ -319,9 +320,6 @@
       sel.addEventListener('pointermove', (e) => { if (pr || reduced()) return; pr = requestAnimationFrame(() => { pr = 0; const r = sel.getBoundingClientRect(); sel.style.setProperty('--px', (((e.clientX - r.left) / r.width) - .5).toFixed(3)); sel.style.setProperty('--py', (((e.clientY - r.top) / r.height) - .5).toFixed(3)); }); });
       sel.addEventListener('pointerleave', () => { sel.style.setProperty('--px', 0); sel.style.setProperty('--py', 0); });
     }
-    // sparks: a burst of the lead's own light as they arrive
-    const heroBox = $('.cx-select > .cx-sel-hero', sel);
-    if (heroBox && !reduced()) { const burst = document.createElement('span'); burst.className = 'cx-sel-sparks'; burst.setAttribute('aria-hidden', 'true'); for (let k = 0; k < 14; k++) { const sp = document.createElement('i'); sp.style.setProperty('--a', `${(k / 14) * 360 + (k % 2) * 9}deg`); sp.style.setProperty('--d', `${7 + (k % 4) * 3}rem`); sp.style.setProperty('--t', `${(k % 5) * 40}ms`); burst.append(sp); } heroBox.append(burst); }
     // the lead stands between the heading and the roster, whatever the screen and the reader's text size
     const roster = $('.cx-sel-roster', sel);
     const setRoster = () => sel.style.setProperty('--sel-roster-h', `${Math.round(roster.getBoundingClientRect().height)}px`);
@@ -490,7 +488,7 @@
   /* ---------- Theatre: the poster under the pointer leans toward it and catches the light ---------- */
   const fine = matchMedia('(hover: hover) and (pointer: fine)').matches;
   if (fine && !reduced()) {
-    for (const el of $$('[data-room="theatre"] .card, .cx-poster, .cast-tile')) {
+    for (const el of $$('[data-room="theatre"] .card, .cx-poster')) {
       el.classList.add('tilt');
       const sheen = document.createElement('span'); sheen.className = 'sheen'; sheen.setAttribute('aria-hidden', 'true'); el.append(sheen);
       let raf = 0;
@@ -550,7 +548,8 @@
   if (ember) { fire = () => { ember.cv.classList.toggle('is-on', fireOn()); ember.wake(); }; fire(); }
   // the same embers for the Watch theatre (watch.js): drawn inside it, while ok() says a fire scene is on screen
   window.SpritualFx = { embers: (host, ok) => (lowData ? null : motes('th-embers wt-embers', ['255,110,30', '255,196,110'], (w) => (w < 760 ? 24 : Math.min(60, Math.round(w / 24))), [18, 40], ok, 1.6, host)) };
-  if (root.dataset.room === 'theatre' && !reduced()) {
+  // (not on a person's page or the People page: there a person's own light and air are the only ones, and nothing crosses a face)
+  if (root.dataset.room === 'theatre' && !reduced() && !$('.cast-hero, .cast-wall')) {
     // the home opening has its own, richer dust (above): this layer rests while that one is on screen
     motes('th-embers', ['255,190,110', '255,214,160'], (w) => Math.round(Math.min(46, Math.max(14, w / 30))), [5, 16], () => root.dataset.theme !== 'light' && !root.classList.contains('cx-open-on'));
     if (fine) {

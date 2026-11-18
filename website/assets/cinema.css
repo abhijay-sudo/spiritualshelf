@@ -463,7 +463,9 @@ html[lang="hi"] .chip span { font-family: "Mukta", var(--cx-ui); }
 .cx-film-open { position: relative; min-height: 100vh; min-height: 100svh; display: grid; place-items: end center; color: var(--cx-cream); isolation: isolate; overflow: hidden; background: var(--cx-dusk); }
 .cx-film-open-pic { position: absolute; inset: 0; z-index: -2; }
 .cx-film-open-pic img { width: 100%; height: 100%; object-fit: cover; }
-:root:not([data-motion="reduce"]) .cx-film-open-pic img { animation: ed-dawn 2.2s cubic-bezier(.2, .7, .15, 1) both; }
+:root:not([data-motion="reduce"]) .cx-film-open-pic img { animation: cx-film-dawn 2.2s cubic-bezier(.2, .7, .15, 1) both; }
+/* (scale and opacity over the dusk ground: the same dawn as before, drawn by the compositor, not a filter repainted each frame) */
+@keyframes cx-film-dawn { from { scale: 1.06; opacity: .8; } }
 .cx-film-open .cx-open-shade { background: radial-gradient(ellipse 75% 50% at 50% 78%, rgb(40 18 4 / .55), rgb(40 18 4 / 0) 75%), linear-gradient(to top, rgb(30 14 4 / .65), rgb(30 14 4 / 0) 55%), linear-gradient(to bottom, rgb(30 14 4 / .35), transparent 22%); }
 .cx-film-card { display: grid; justify-items: center; gap: 1rem; max-width: 64rem; padding: calc(var(--ed-head-h) + 2rem) var(--cx-gut-r) calc(var(--cx-bar) + 2.25rem) var(--cx-gut); text-align: center; }
 .cx-film-k { margin: 0; font: 500 1rem/1.3 var(--cx-ui); color: var(--cx-gold); text-shadow: 0 1px 10px rgb(40 16 0 / .7); }
@@ -578,6 +580,12 @@ html[lang="hi"] .cx-film .scene h2, .cx-film .scene h2[lang="hi"] { font-family:
 :root[data-rails-off] .cx-film .rail { display: none !important; }
 .cx-film .rail { z-index: 1; }
 .cx-film .shot { z-index: 2; }
+/* a rail line or card a full-width painting would cut in half fades out while the painting passes (site.js) */
+.cx-film .rail :is(p, li, .rail-progress) { transition: opacity .2s var(--cx-ease); }
+.cx-film .rail .lens-card { transition: opacity .2s var(--cx-ease), border-color .25s, box-shadow .25s, background-color .25s, transform .25s var(--ease); }
+.cx-film .rail .is-cut { opacity: 0; pointer-events: none; }
+@media (prefers-reduced-motion: reduce) { .cx-film .rail :is(p, li, .rail-progress) { transition: none; } }
+:root[data-motion="reduce"] .cx-film .rail :is(p, li, .rail-progress) { transition: none; }
 /* the next story, as a poster */
 .cx-next { display: grid; gap: 0; padding: 0; overflow: hidden; border-radius: 4px; background: var(--cx-dusk); color: var(--cx-cream); text-decoration: none; }
 .cx-next-pic { aspect-ratio: 16 / 9; overflow: hidden; }
@@ -957,7 +965,9 @@ html[lang="hi"] .cast-h { letter-spacing: 0; line-height: 1.3; }
 .cast-more { padding-block: clamp(2rem, 1rem + 3vw, 4rem) clamp(4rem, 2rem + 6vw, 8rem); }
 .cast-tiles { list-style: none; margin: 0; padding: 0; display: grid; gap: clamp(.75rem, .4rem + 1vw, 1.25rem); grid-template-columns: repeat(2, minmax(0, 1fr)); }
 @media (min-width: 700px) { .cast-tiles { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
-@media (min-width: 1100px) { .cast-tiles { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
+/* twelve in the wall: two, three, four or six to a row, so no row is ever left short */
+@media (min-width: 1000px) { .cast-tiles { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+@media (min-width: 1360px) { .cast-tiles { grid-template-columns: repeat(6, minmax(0, 1fr)); } }
 .cast-tiles > li { scroll-margin-top: calc(var(--ed-head-h) + 1rem); min-width: 0; }
 .cast-tile { position: relative; display: block; aspect-ratio: 3 / 4.4; overflow: hidden; border-radius: 3px; text-decoration: none; color: #fdf6ea; isolation: isolate;
   background: radial-gradient(ellipse 80% 55% at 50% 38%, rgb(240 164 86 / .34), rgb(120 62 22 / .16) 55%, transparent 78%), linear-gradient(180deg, #2b1a10, #150d08);
@@ -977,6 +987,11 @@ html[lang="hi"] .cast-tile-o { font-family: var(--cx-title); }
 html[lang="hi"] .cast-tile-l, html[lang="hi"] .cast-tile-m { font-family: "Mukta", var(--cx-ui); letter-spacing: 0; text-transform: none; font-size: .95rem; }
 .cast-tile:hover, .cast-tile:focus-visible { translate: 0 -5px; box-shadow: inset 0 0 0 1px rgb(246 201 140 / .7), 0 30px 50px -24px rgb(0 0 0 / .85); }
 .cast-tile:hover .art, .cast-tile:focus-visible .art { scale: 1.045; }
+/* a wall tile painted in a scene: its painting leans in a little too, as a cut-out does */
+.cast-tile-plate { transition: scale .9s var(--cx-ease); }
+.cast-tile--scene:hover .cast-tile-plate, .cast-tile--scene:focus-visible .cast-tile-plate { scale: 1.045; }
+@media (prefers-reduced-motion: reduce) { .cast-tile-plate { transition: none; } }
+:root[data-motion="reduce"] .cast-tile-plate { transition: none; }
 @media (max-width: 480px) { .cast-tile-l { display: none; } .cast-tile { aspect-ratio: 3 / 4.6; } .cast-tile-txt { padding: .8rem .85rem .9rem; } }
 .cast-rows { list-style: none; margin: 0; padding: 0; display: grid; gap: 0 2.5rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 21rem), 1fr)); }
 .cast-rows > li { scroll-margin-top: calc(var(--ed-head-h) + 1rem); border-top: 1px solid var(--cx-line); }
@@ -1027,8 +1042,8 @@ html[lang="hi"] .cast-row-l { font-family: "Mukta", var(--cx-ui); font-size: .98
    cut through black. Everything here is switched off by the device's or the site's reduce-motion setting. */
 /* the one under the pointer holds the light; the rest of the row falls back */
 @media (hover: hover) {
-  :is(.grid, .cx-posters, .cx-rail, .cast-tiles) > * { transition: opacity .5s var(--cx-ease), filter .5s var(--cx-ease); }
-  :is(.grid, .cx-posters, .cx-rail, .cast-tiles):has(> :is(:hover, :focus-within)) > :not(:hover, :focus-within) { opacity: .55; filter: saturate(.7); }
+  :is(.grid, .cx-posters, .cx-rail) > * { transition: opacity .5s var(--cx-ease), filter .5s var(--cx-ease); }
+  :is(.grid, .cx-posters, .cx-rail):has(> :is(:hover, :focus-within)) > :not(:hover, :focus-within) { opacity: .55; filter: saturate(.7); }
 }
 /* lean: cinema.js follows the pointer and writes --rx/--ry (tilt) and --gx/--gy (where the light falls) */
 .tilt { transform: perspective(1100px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) !important; transition: transform .7s var(--cx-ease), translate .5s var(--cx-ease), box-shadow .5s var(--cx-ease); transform-style: preserve-3d; will-change: transform; }
@@ -1214,25 +1229,14 @@ html[lang="hi"]:root.cx-js:not(.cx-seen) .cx-home .cx-ol-b { animation-name: cx-
 .cx-sel-bg img:not([src]) { visibility: hidden; }
 :root:not([data-motion="reduce"]) .cx-sel-bg img { animation: sel-drift 26s ease-in-out infinite alternate; }
 @keyframes sel-drift { from { translate: -1.8% 0; } to { translate: 1.8% 0; } }
-:root:not([data-motion="reduce"]) .cx-sel-bg img.is-in { animation: sel-reveal .75s cubic-bezier(.7, 0, .2, 1) both, sel-drift 26s ease-in-out .75s infinite alternate; }
-@keyframes sel-reveal { from { clip-path: polygon(118% 0, 140% 0, 140% 100%, 100% 100%); filter: brightness(1.6) saturate(1.3); } to { clip-path: polygon(-30% 0, 140% 0, 140% 100%, -48% 100%); filter: brightness(.92) saturate(1.12) contrast(1.04); } }
-/* the light it is lit by */
-.cx-sel-rays { position: absolute; inset: -30% -20% 0 20%; z-index: -3; pointer-events: none; mix-blend-mode: screen; opacity: .5;
-  background: repeating-conic-gradient(from 200deg at 72% 0%, color-mix(in oklab, var(--sel-glow) 34%, transparent) 0deg 3deg, transparent 3deg 11deg);
-  -webkit-mask-image: radial-gradient(ellipse 60% 75% at 66% 10%, #000, transparent 72%); mask-image: radial-gradient(ellipse 60% 75% at 66% 10%, #000, transparent 72%); }
-:root:not([data-motion="reduce"]) .cx-sel-rays { animation: sel-rays 30s ease-in-out infinite alternate; }
-@keyframes sel-rays { from { rotate: -3deg; } to { rotate: 3deg; } }
+:root:not([data-motion="reduce"]) .cx-sel-bg img.is-in { animation: sel-reveal .42s cubic-bezier(.4, 0, .2, 1) both, sel-drift 26s ease-in-out .42s infinite alternate; }
+@keyframes sel-reveal { from { opacity: 0; } }
 .cx-sel-shade { position: absolute; inset: 0; z-index: -2; pointer-events: none; background:
   linear-gradient(to right, color-mix(in oklab, var(--sel-base) 94%, transparent) 0%, color-mix(in oklab, var(--sel-base) 70%, transparent) 28%, transparent 58%),
   linear-gradient(to top, var(--sel-base) 0%, color-mix(in oklab, var(--sel-base) 82%, transparent) 17%, transparent 42%),
   linear-gradient(to bottom, rgb(5 3 2 / .82) 0%, transparent 20%),
   radial-gradient(ellipse 80% 70% at 50% 50%, transparent 55%, rgb(5 3 2 / .55) 100%); }
 .cx-sel-shade::after { content: ""; position: absolute; inset: 0; mix-blend-mode: soft-light; background: radial-gradient(ellipse 55% 70% at 70% 45%, color-mix(in oklab, var(--sel-glow) 70%, transparent), transparent 70%); }
-.cx-sel-wipe { position: absolute; z-index: 6; top: -10%; bottom: -10%; left: 0; width: 18vw; pointer-events: none; opacity: 0; mix-blend-mode: screen; transform: skewX(-18deg);
-  background: linear-gradient(to right, transparent, color-mix(in oklab, var(--sel-glow) 70%, transparent) 38%, #fff8ea 50%, color-mix(in oklab, var(--sel-glow) 70%, transparent) 62%, transparent); filter: blur(6px); }
-:root:not([data-motion="reduce"]) .cx-select.is-swap .cx-sel-wipe { animation: sel-wipe-bar .75s cubic-bezier(.7, 0, .2, 1) both; }
-@keyframes sel-wipe-bar { 0% { opacity: .95; translate: 112vw 0; } 85% { opacity: .9; } 100% { opacity: 0; translate: -30vw 0; } }
-.cx-sel-flash { position: absolute; inset: 0; z-index: 7; pointer-events: none; opacity: 0; mix-blend-mode: screen; background: radial-gradient(ellipse 70% 60% at 62% 55%, #fff6e2, color-mix(in oklab, var(--sel-glow) 75%, transparent) 40%, transparent 75%); }
 /* the heading */
 .cx-sel-head { display: grid; justify-items: center; padding: clamp(.6rem, 2svh, 1.6rem) var(--cx-gut-r) 0 var(--cx-gut); }
 .cx-sel-h { margin: 0; min-width: 0; max-width: 100%; display: flex; align-items: center; gap: clamp(.8rem, 2vw, 1.8rem); font: 500 clamp(.82rem, .7rem + .5vw, 1.15rem)/1 "Cinzel", var(--cx-title); letter-spacing: .34em; text-transform: uppercase; color: color-mix(in oklab, var(--sel-glow) 80%, #fff); white-space: nowrap; text-shadow: 0 0 18px color-mix(in oklab, var(--sel-glow) 60%, transparent); }
@@ -1291,38 +1295,31 @@ html[lang="hi"] .cx-sel-title { line-height: 1.22; letter-spacing: 0; }
 .cx-sel-auto svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .cx-sel-auto .r { display: none; fill: currentColor; stroke: none; } .cx-sel-auto[aria-pressed="true"] .p { display: none; } .cx-sel-auto[aria-pressed="true"] .r { display: block; }
 :root:not(.cx-js) .cx-sel-auto { display: none; }
-/* a new choice: the lead steps into the light, their name stands up behind them, the title wipes on */
-:root:not([data-motion="reduce"]) .cx-select.is-swap .cx-sel-hero img { animation: sel-hero .7s cubic-bezier(.16, 1, .3, 1) both, sel-breathe 6s ease-in-out .7s infinite; }
-@keyframes sel-hero { 0% { opacity: 0; translate: 22% 0; filter: brightness(2.6) blur(8px) drop-shadow(0 0 22px color-mix(in oklab, var(--sel-glow) 50%, transparent)); } 55% { opacity: 1; } 100% { opacity: 1; translate: 0 0; } }
-:root:not([data-motion="reduce"]) .cx-select.is-swap .cx-sel-floor { animation: sel-floor .9s ease-out both; }
-@keyframes sel-floor { 0% { opacity: 0; scale: .4 1; } 40% { opacity: 1; scale: 1.15 1; } 100% { scale: 1 1; } }
-:root:not([data-motion="reduce"]) .cx-select.is-swap .cx-sel-name { animation: sel-name 1.1s cubic-bezier(.16, 1, .3, 1) both; }
-@keyframes sel-name { from { opacity: 0; letter-spacing: .5em; translate: -6% 0; } to { opacity: .62; } }
-:root:not([data-motion="reduce"]) .cx-select.is-swap .cx-sel-title { animation: sel-title .6s cubic-bezier(.2, .7, .2, 1) .12s both; }
-@keyframes sel-title { from { clip-path: inset(-10% 100% -20% -2%); translate: -1.2rem 0; } to { clip-path: inset(-10% -4% -20% -2%); translate: 0 0; } }
-:root:not([data-motion="reduce"]) .cx-select.is-swap :is(.cx-sel-count, .cx-sel-coll, .cx-sel-sum, .cx-sel-facts) { animation: sel-up .55s cubic-bezier(.16, 1, .3, 1) .18s both; }
-:root:not([data-motion="reduce"]) .cx-select.is-swap .cx-sel-sum { animation-delay: .26s; } :root:not([data-motion="reduce"]) .cx-select.is-swap .cx-sel-facts { animation-delay: .32s; }
+/* a new choice: the lead and their light cross-fade in (cinema.js keeps the last one a moment as it fades), their name
+   in the other script comes up behind them, and the words follow a breath later, each whole */
+:root:not([data-motion="reduce"]) .cx-select.is-swap .cx-sel-hero img { animation: sel-hero .42s cubic-bezier(.4, 0, .2, 1) both, sel-breathe 6s ease-in-out .42s infinite; }
+@keyframes sel-hero { from { opacity: 0; } }
+:root:not([data-motion="reduce"]) .cx-select.is-swap .cx-sel-floor { animation: sel-floor .42s cubic-bezier(.4, 0, .2, 1) both; }
+@keyframes sel-floor { from { opacity: 0; } }
+:root:not([data-motion="reduce"]) .cx-select.is-swap .cx-sel-name { animation: sel-name .6s cubic-bezier(.4, 0, .2, 1) both; }
+@keyframes sel-name { from { opacity: 0; } }
+:root:not([data-motion="reduce"]) .cx-select.is-swap :is(.cx-sel-count, .cx-sel-coll, .cx-sel-sum, .cx-sel-facts) { animation: sel-in .45s cubic-bezier(.2, .7, .2, 1) .06s both; }
+:root:not([data-motion="reduce"]) .cx-select.is-swap .cx-sel-sum { animation-delay: .1s; } :root:not([data-motion="reduce"]) .cx-select.is-swap .cx-sel-facts { animation-delay: .14s; }
+@keyframes sel-in { from { opacity: .3; translate: 0 .3rem; } }
 @keyframes sel-up { from { opacity: 0; translate: 0 .8rem; } }
-/* chosen: a white-gold flare, the lead steps forward, and the story opens */
-:root:not([data-motion="reduce"]) .cx-select.is-go .cx-sel-flash { animation: sel-flash .65s ease-out both; }
-@keyframes sel-flash { 0% { opacity: 0; } 25% { opacity: 1; } 100% { opacity: .15; } }
-:root:not([data-motion="reduce"]) .cx-select.is-go .cx-sel-hero img { animation: sel-forward .5s cubic-bezier(.2, .9, .3, 1) both; }
-@keyframes sel-forward { to { scale: 1.06; translate: -2% 0; filter: brightness(1.25) drop-shadow(0 0 40px var(--sel-glow)); } }
-:root:not([data-motion="reduce"]) .cx-select.is-go .cx-sel-title { animation: sel-punch .5s cubic-bezier(.2, .9, .3, 1.2) both; transform-origin: 0 100%; }
-@keyframes sel-punch { 40% { scale: 1.06; } 100% { scale: 1.03; } }
+/* chosen: the camera eases in a little, and the story opens */
 .cx-select.is-go :is(.cx-sel-roster, .cx-sel-head, .cx-sel-sum, .cx-sel-facts) { opacity: .2; transition: opacity .4s; }
 /* the select lights up when it is reached: the world fades up from black, the heading and roster arrive, the lead steps in */
-:root.cx-js:not([data-motion="reduce"]) .cx-select.sel-wait :is(.cx-sel-bg, .cx-sel-rays, .cx-sel-head, .cx-sel-name, .cx-sel-hero, .cx-sel-info, .cx-sel-go, .cx-sel-grid > li, .cx-sel-auto) { opacity: 0; }
+:root.cx-js:not([data-motion="reduce"]) .cx-select.sel-wait :is(.cx-sel-bg, .cx-sel-head, .cx-sel-name, .cx-sel-hero, .cx-sel-info, .cx-sel-go, .cx-sel-grid > li, .cx-sel-auto) { opacity: 0; }
 :root.cx-js:not([data-motion="reduce"]) .cx-select.is-lit .cx-sel-bg { animation: sel-dawn 1.6s ease-out both; }
 @keyframes sel-dawn { from { opacity: 0; filter: brightness(0); } to { opacity: 1; filter: none; } }
-:root.cx-js:not([data-motion="reduce"]) .cx-select.is-lit .cx-sel-rays { animation: cx-fade 2s ease-out .4s both, sel-rays 30s ease-in-out 2.4s infinite alternate; }
 :root.cx-js:not([data-motion="reduce"]) .cx-select.is-lit .cx-sel-head { animation: sel-up .9s cubic-bezier(.16, 1, .3, 1) .3s both; }
 :root.cx-js:not([data-motion="reduce"]) .cx-select.is-lit .cx-sel-grid > li { animation: sel-drop .7s cubic-bezier(.16, 1, .3, 1) both; animation-delay: calc(.45s + var(--k, 0) * 45ms); }
 @keyframes sel-drop { from { opacity: 0; translate: 0 1.6rem; } }
 :root.cx-js:not([data-motion="reduce"]) .cx-select.is-lit .cx-sel-auto { animation: cx-fade .6s ease-out 1.1s both; }
 :root.cx-js:not([data-motion="reduce"]) .cx-select.is-lit:not(.is-swap) .cx-sel-hero { animation: sel-hero-in 1.1s cubic-bezier(.16, 1, .3, 1) .55s both; }
-@keyframes sel-hero-in { from { opacity: 0; translate: 10% 0; } }
-:root.cx-js:not([data-motion="reduce"]) .cx-select.is-lit:not(.is-swap) .cx-sel-name { animation: sel-name 1.4s cubic-bezier(.16, 1, .3, 1) .7s both; }
+@keyframes sel-hero-in { from { opacity: 0; translate: 0 12px; } }
+:root.cx-js:not([data-motion="reduce"]) .cx-select.is-lit:not(.is-swap) .cx-sel-name { animation: sel-name 1.4s cubic-bezier(.4, 0, .2, 1) .7s both; }
 :root.cx-js:not([data-motion="reduce"]) .cx-select.is-lit:not(.is-swap) :is(.cx-sel-info, .cx-sel-go) { animation: sel-up .9s cubic-bezier(.16, 1, .3, 1) .85s both; }
 /* bigger than the 1920x1080 it was composed at: words grow with the screen */
 .cx-sel-head, .cx-sel-info, .cx-sel-go { zoom: var(--cx-k, 1); }
@@ -1364,12 +1361,12 @@ html[lang="hi"] .cx-sel-title { line-height: 1.22; letter-spacing: 0; }
   .cx-sel-stage { gap: .4rem; padding-bottom: .5rem; } .cx-sel-roster { padding-block: .3rem .5rem; }
   .cx-sel-go { min-height: 40px; }
 }
-@media (prefers-reduced-motion: reduce) { .cx-select { transition: none; } .cx-sel-bg img, .cx-sel-rays, .cx-sel-hero img { animation: none !important; } .cx-sel-tile, .cx-sel-tile-face img { transition: none; } }
+@media (prefers-reduced-motion: reduce) { .cx-select { transition: none; } .cx-sel-bg img, .cx-sel-hero img { animation: none !important; } .cx-sel-tile, .cx-sel-tile-face img { transition: none; } }
 /* the site's own reduce-motion switch counts the same as the device setting */
 :root[data-motion="reduce"] .cx-select { transition: none; }
-:root[data-motion="reduce"] :is(.cx-sel-bg img, .cx-sel-rays, .cx-sel-hero img, .cx-sel-wipe, .cx-sel-floor, .cx-sel-name, .cx-sel-title) { animation: none !important; }
+:root[data-motion="reduce"] :is(.cx-sel-bg img, .cx-sel-hero img, .cx-sel-floor, .cx-sel-name, .cx-sel-title) { animation: none !important; }
 :root[data-motion="reduce"] :is(.cx-sel-tile, .cx-sel-tile-face img) { transition: none; }
-@media print { .cx-sel-bg, .cx-sel-hero, .cx-sel-auto, .cx-sel-rays, .cx-sel-name { display: none; } .cx-select { height: auto; color: #000; background: none; } }
+@media print { .cx-sel-bg, .cx-sel-hero, .cx-sel-auto, .cx-sel-name { display: none; } .cx-select { height: auto; color: #000; background: none; } }
 /* small screens: the opening stays one screen with the longer line */
 @media (orientation: landscape) and (max-height: 520px) {
   .cx-home .cx-ol-a { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
@@ -1497,23 +1494,20 @@ html[lang="hi"] .mx-src { font-family: "Mukta", var(--cx-ui); font-size: 1.05rem
 /* ---------- The character select ----------
    The lead stands in the screen itself (anchored between the heading and the roster), so neither a small window nor a
    large reading size can crop them; their name in the other script stands up behind them; their own name lands letter by
-   letter; a ring of their light breaks outward as they arrive. */
+   letter. */
 .cx-select > .cx-sel-hero { position: absolute; z-index: 1; top: calc(var(--ed-head-h) + clamp(2.2rem, 5svh, 3.5rem)); bottom: var(--sel-roster-h, 9rem); right: max(var(--cx-gut-r), 5vw, calc((100vw - 88rem * var(--cx-k, 1)) / 2 + 2rem)); width: min(46vw, calc(40rem * var(--cx-k, 1))); height: auto; display: block; pointer-events: none; }
 .cx-select > .cx-sel-hero img { position: absolute; left: 50%; bottom: 0; height: 100%; width: auto; max-width: none; max-height: none; translate: -50% 0; object-fit: contain; object-position: 50% 100%; }
 .cx-select > .cx-sel-hero .cx-sel-floor { left: 8%; right: 8%; bottom: -3%; }
-.cx-sel-ring { position: absolute; left: 50%; top: 52%; width: 70%; aspect-ratio: 1; translate: -50% -50%; border-radius: 50%; pointer-events: none; opacity: 0; box-shadow: 0 0 0 2px color-mix(in oklab, var(--sel-glow) 80%, transparent), 0 0 60px 10px color-mix(in oklab, var(--sel-glow) 45%, transparent), inset 0 0 50px 6px color-mix(in oklab, var(--sel-glow) 35%, transparent); }
-:root:not([data-motion="reduce"]) .cx-select.is-swap .cx-sel-ring { animation: sel-ring .9s cubic-bezier(.16, 1, .3, 1) both; }
-@keyframes sel-ring { 0% { opacity: .95; scale: .25; } 100% { opacity: 0; scale: 1.6; } }
 .cx-select > .cx-sel-name { position: absolute; z-index: 0; top: calc(var(--ed-head-h) + clamp(2.6rem, 6svh, 4.2rem)); right: max(var(--cx-gut-r), 3vw); font-size: min(clamp(5rem, 1rem + 13vw, 17rem), calc(70vw / (var(--nl, 4) * .9))); line-height: 1; letter-spacing: .02em; }
 .cx-select > .cx-sel-name:lang(hi) { font-family: "Tiro Devanagari Hindi", var(--font-hi); font-weight: 400; letter-spacing: 0; }
 .cx-sel-title { --sel-ts: clamp(3rem, 1.4rem + 6vw, 7.5rem); line-height: .95; letter-spacing: -.02em; }
-.cx-sel-ch { display: inline-block; white-space: pre; }
 .cx-sel-w { display: inline-block; white-space: nowrap; }
-/* each letter keeps the name's own line height; :lang(hi) { line-height: 1.75 } in site.css otherwise reached the letters,
+/* each word keeps the name's own line height; :lang(hi) { line-height: 1.75 } in site.css otherwise reached the letters,
    so after the first swap a Hindi name stood ~30px taller than on arrival and the counter above it jumped */
-:lang(hi) :is(.cx-sel-ch, .cx-sel-w) { line-height: inherit; }
-:root:not([data-motion="reduce"]) .cx-select.is-swap .cx-sel-ch { animation: sel-slam .6s cubic-bezier(.2, .9, .3, 1.25) both; animation-delay: calc(.1s + var(--k) * 45ms); }
-@keyframes sel-slam { 0% { opacity: 0; translate: 0 -.5em; scale: 1.4; filter: blur(6px); } 60% { opacity: 1; filter: blur(0); } 100% { opacity: 1; translate: 0 0; scale: 1; } }
+:lang(hi) .cx-sel-w { line-height: inherit; }
+/* (the name rises a few pixels and comes up to full strength as one piece: it is never seen arriving letter by letter) */
+:root:not([data-motion="reduce"]) .cx-select.is-swap .cx-sel-w { animation: sel-slam .45s cubic-bezier(.2, .7, .2, 1) .04s both; }
+@keyframes sel-slam { from { opacity: .3; translate: 0 .1em; } }
 .cx-select :is(.cx-sel-title) { animation: none !important; clip-path: none !important; }
 .cx-sel-coll { font: 400 clamp(1.3rem, 1.1rem + .8vw, 1.9rem)/1.2 "Tiro Devanagari Hindi", var(--font-hi); letter-spacing: 0; text-transform: none; color: color-mix(in oklab, var(--sel-glow) 70%, #fff); }
 html[lang="hi"] .cx-sel-coll { font-family: "Cinzel", var(--cx-title); letter-spacing: .14em; text-transform: uppercase; font-size: clamp(.95rem, .85rem + .4vw, 1.2rem); }
@@ -1549,27 +1543,24 @@ html[lang="hi"] .cx-sel-tile-n { font-family: "Mukta", var(--cx-ui); font-size: 
 }
 :root.cx-js:not([data-motion="reduce"]) .cx-select.sel-wait :is(.cx-sel-btns) { opacity: 0; }
 :root.cx-js:not([data-motion="reduce"]) .cx-select.is-lit:not(.is-swap) .cx-sel-btns { animation: sel-up .9s cubic-bezier(.16, 1, .3, 1) .95s both; }
-:root[data-motion="reduce"] :is(.cx-sel-ring, .cx-sel-ch) { animation: none !important; }
-@media (prefers-reduced-motion: reduce) { .cx-sel-ring, .cx-sel-ch { animation: none !important; } }
+:root[data-motion="reduce"] .cx-sel-w { animation: none !important; }
+@media (prefers-reduced-motion: reduce) { .cx-sel-w { animation: none !important; } }
 /* depth on pointer: the world farthest (moves least, opposite way), the name behind the lead, the lead nearest */
 .cx-select { --px: 0; --py: 0; }
-.cx-sel-bg { translate: calc(var(--px) * -1.6%) calc(var(--py) * -1.2%); transition: translate 1.2s cubic-bezier(.16, 1, .3, 1); }
-.cx-select > .cx-sel-name { translate: calc(var(--px) * -3.5rem) calc(var(--py) * -1.4rem); transition: translate 1s cubic-bezier(.16, 1, .3, 1); }
-.cx-select > .cx-sel-hero { translate: calc(var(--px) * 1.6rem) calc(var(--py) * .7rem); transition: translate .9s cubic-bezier(.16, 1, .3, 1); }
-.cx-sel-rays { translate: calc(var(--px) * -2.4rem) 0; }
-/* sparks */
-.cx-sel-sparks { position: absolute; left: 50%; top: 55%; width: 0; height: 0; pointer-events: none; }
-.cx-sel-sparks i { position: absolute; left: 0; top: 0; width: 5px; height: 5px; margin: -2.5px; border-radius: 50%; background: #fff6e0; box-shadow: 0 0 10px 3px var(--sel-glow), 0 0 22px 6px color-mix(in oklab, var(--sel-glow) 50%, transparent); opacity: 0; }
-:root:not([data-motion="reduce"]) .cx-select.is-swap .cx-sel-sparks i { animation: sel-spark .9s cubic-bezier(.16, 1, .3, 1) both; animation-delay: calc(.08s + var(--t)); }
-@keyframes sel-spark { 0% { opacity: 1; transform: rotate(var(--a)) translateX(0) scale(1.4); } 100% { opacity: 0; transform: rotate(var(--a)) translateX(var(--d)) scale(.3); } }
-/* choosing: the camera pushes in on the lead while the world brightens, then the flare takes the frame */
+.cx-sel-bg { translate: calc(var(--px) * -.5%) calc(var(--py) * -.4%); transition: translate 1.2s cubic-bezier(.16, 1, .3, 1); }
+.cx-select > .cx-sel-name { translate: calc(var(--px) * -1rem) calc(var(--py) * -.4rem); transition: translate 1s cubic-bezier(.16, 1, .3, 1); }
+.cx-select > .cx-sel-hero { translate: calc(var(--px) * .6rem) calc(var(--py) * .3rem); transition: translate .9s cubic-bezier(.16, 1, .3, 1), opacity .42s cubic-bezier(.4, 0, .2, 1), visibility .42s; }
+/* the figure that is leaving fades out where it stood while the next fades in (cinema.js) */
+.cx-select > .cx-sel-hero .cx-sel-fig.is-ghost { animation: sel-ghost .42s cubic-bezier(.4, 0, .2, 1) both; }
+@keyframes sel-ghost { to { opacity: 0; } }
+/* choosing: the camera eases in a little on the lead and their world */
 :root:not([data-motion="reduce"]) .cx-select.is-go .cx-sel-bg { animation: sel-pushbg .5s cubic-bezier(.6, 0, .2, 1) both; }
-@keyframes sel-pushbg { to { scale: 1.12; filter: brightness(1.25); } }
+@keyframes sel-pushbg { to { scale: 1.035; } }
 :root:not([data-motion="reduce"]) .cx-select.is-go > .cx-sel-hero { animation: sel-pushhero .5s cubic-bezier(.6, 0, .2, 1) both; }
-@keyframes sel-pushhero { to { scale: 1.14; translate: -6% 2%; } }
-@media (prefers-reduced-motion: reduce) { .cx-sel-bg, .cx-select > .cx-sel-name, .cx-select > .cx-sel-hero, .cx-sel-rays { translate: none !important; transition: none; } .cx-sel-sparks { display: none; } }
-:root[data-motion="reduce"] :is(.cx-sel-bg, .cx-select > .cx-sel-name, .cx-select > .cx-sel-hero, .cx-sel-rays) { translate: none !important; }
-:root[data-motion="reduce"] .cx-sel-sparks { display: none; }
+@keyframes sel-pushhero { to { scale: 1.03; } }
+@media (prefers-reduced-motion: reduce) { .cx-sel-bg, .cx-select > .cx-sel-name, .cx-select > .cx-sel-hero { translate: none !important; transition: none; } .cx-sel-fig.is-ghost { display: none; } }
+:root[data-motion="reduce"] :is(.cx-sel-bg, .cx-select > .cx-sel-name, .cx-select > .cx-sel-hero) { translate: none !important; }
+:root[data-motion="reduce"] .cx-sel-fig.is-ghost { display: none; }
 
 /* ---------- The opening's living scenery ----------
    Over the dawn film: the sun blooms and throws slow rays, mist drifts along the far bank, a flock crosses the sky, and
@@ -1637,22 +1628,17 @@ html[lang="hi"] .cx-sel-tile-n { font-family: "Mukta", var(--cx-ui); font-size: 
 .cx-select.is-left .cx-sel-sum { margin-left: auto; }
 .cx-select.is-left > .cx-sel-name { right: auto; left: max(var(--cx-gut), 3vw); text-align: left; }
 .cx-select.is-scene > .cx-sel-name { opacity: .3; }
-/* the cut-out lead: a figure box that shrink-wraps the portrait, so a sheen can cross exactly the figure */
+/* the cut-out lead: a figure box that shrink-wraps the portrait (its shadow and light are the box's, so they are never cut square) */
 .cx-select > .cx-sel-hero .cx-sel-fig { position: absolute; left: 0; right: 0; bottom: 0; height: 100%; width: fit-content; margin-inline: auto; display: block;
   filter: drop-shadow(0 0 22px color-mix(in oklab, var(--sel-glow) 50%, transparent)) drop-shadow(0 26px 26px rgb(0 0 0 / .6)); }
 /* (the picture fades at its foot through a mask; a shadow drawn by the picture itself was cut off square by that mask,
    which showed as a grey panel behind a narrow figure such as Dhruva: the shadow belongs to the box round the picture) */
 .cx-select > .cx-sel-hero .cx-sel-fig img { position: static; left: auto; translate: none; height: 100%; width: auto; display: block; animation: none !important; filter: none; }
-.cx-sel-fig::after { content: ""; position: absolute; inset: 0; pointer-events: none; mix-blend-mode: screen; opacity: .55;
-  -webkit-mask: var(--hero-url) center / 100% 100% no-repeat; mask: var(--hero-url) center / 100% 100% no-repeat;
-  background: linear-gradient(108deg, transparent 42%, rgb(255 246 220 / .75) 50%, transparent 58%) 130% 0 / 320% 100% no-repeat; }
 :root:not([data-motion="reduce"]) .cx-sel-fig { animation: sel-breathe 6s ease-in-out infinite; }
-:root:not([data-motion="reduce"]) .cx-select.is-swap .cx-sel-fig { animation: sel-hero .7s cubic-bezier(.16, 1, .3, 1) both, sel-breathe 6s ease-in-out .7s infinite; }
-:root:not([data-motion="reduce"]) .cx-sel-fig::after { animation: sel-sheen 7.5s cubic-bezier(.4, 0, .2, 1) 1.2s infinite; }
-@keyframes sel-sheen { 0% { background-position: 130% 0; } 38%, 100% { background-position: -30% 0; } }
-@media (max-width: 699px) { .cx-select > .cx-sel-hero .cx-sel-fig { top: 0; bottom: auto; } .cx-sel-fig::after { display: none; } }
-@media (prefers-reduced-motion: reduce) { .cx-sel-fig, .cx-sel-fig::after { animation: none !important; } }
-:root[data-motion="reduce"] :is(.cx-sel-fig, .cx-sel-fig::after) { animation: none !important; }
+:root:not([data-motion="reduce"]) .cx-select.is-swap .cx-sel-fig:not(.is-ghost) { animation: sel-hero .42s cubic-bezier(.4, 0, .2, 1) both, sel-breathe 6s ease-in-out .42s infinite; }
+@media (max-width: 699px) { .cx-select > .cx-sel-hero .cx-sel-fig { top: 0; bottom: auto; } }
+@media (prefers-reduced-motion: reduce) { .cx-sel-fig { animation: none !important; } }
+:root[data-motion="reduce"] .cx-sel-fig { animation: none !important; }
 /* the roster: two rows of eleven on a wide screen; one sideways-scrolling row on a phone */
 .cx-sel-grid { grid-template-columns: repeat(var(--cols, 11), minmax(0, 1fr)); row-gap: .5rem; padding-top: 1rem; }
 .cx-sel-tile { aspect-ratio: 5 / 4; }
@@ -1710,7 +1696,6 @@ html[lang="hi"] .cx-sel-tile-n { font-family: "Mukta", var(--cx-ui); font-size: 
   .cx-sel-info { max-width: 46vw; }
   .cx-select > .cx-sel-hero .cx-sel-fig { left: 0; right: calc(.5rem - max(var(--cx-gut-r), 5vw)); width: auto; margin: 0; display: grid; justify-items: center; align-items: end; }
   .cx-select > .cx-sel-hero .cx-sel-fig img { max-width: 100%; object-fit: contain; object-position: 50% 100%; }
-  .cx-sel-fig::after { display: none; }
 }
 /* the select's character lines are written to be read whole: room for every word, never an ellipsis */
 .cx-sel-sum { -webkit-line-clamp: 3; }
@@ -1754,9 +1739,9 @@ html[lang="hi"] .cx-sel-realm-t { margin-right: 0; }
   .cx-sel-realms[hidden] ~ .cx-sel-grid { flex-wrap: wrap; }
   .cx-sel-tile-face img { width: 78%; }
 }
-/* the realm's characters arrive one after another, each catching the light as it lands */
-:root.cx-js:not([data-motion="reduce"]) .cx-select .cx-sel-grid.is-regroup > li { animation: sel-regroup .6s cubic-bezier(.16, 1, .3, 1) both; animation-delay: calc(var(--gk, 0) * 34ms); }
-@keyframes sel-regroup { from { opacity: 0; translate: 0 1.1rem; filter: brightness(2.4); } }
+/* the realm's characters arrive one after another */
+:root.cx-js:not([data-motion="reduce"]) .cx-select .cx-sel-grid.is-regroup > li { animation: sel-regroup .5s cubic-bezier(.2, .7, .2, 1) both; animation-delay: calc(var(--gk, 0) * 30ms); }
+@keyframes sel-regroup { from { opacity: .3; translate: 0 .5rem; } }
 /* a phone on its side: the three names sit beside the roster, not above it */
 @media (min-width: 700px) and (min-height: 521px) { .cx-sel-tile { min-height: 44px; } }
 /* the narrowest phones: the three names still fit on one line */
@@ -1820,7 +1805,7 @@ html[lang="hi"] .cx-sel-world { font-family: var(--cx-title); letter-spacing: .0
 .cx-sel-world.is-foe { color: #ff9a78; }
 .cx-sel-world.is-foe::before { background: linear-gradient(90deg, transparent, #ff6a4a); }
 :root.cx-js:not([data-motion="reduce"]) .cx-sel-world.is-new span { animation: sel-world .8s cubic-bezier(.16, 1, .3, 1) both; }
-@keyframes sel-world { from { clip-path: inset(0 100% 0 0); opacity: .2; } to { clip-path: inset(0 -1em 0 0); opacity: 1; } }
+@keyframes sel-world { from { opacity: .3; } }
 .cx-select.is-scene.is-left .cx-sel-world { justify-content: flex-start; }
 /* the stage reads from the right when the painting holds the left: the world's name sits with the rest of the block,
    not out over the figure (below 700px the stage reads from the left again) */
@@ -1883,7 +1868,7 @@ html[lang="hi"] .cx-sel-world { font-family: var(--cx-title); letter-spacing: .0
 }
 /* the People page: the antagonists in a section of their own, under an ember rule */
 .cast-foes { padding-top: 0; }
-.cast-foes .cast-h::after { content: ""; flex: 1; height: 1px; background: linear-gradient(90deg, rgba(220, 96, 70, .55), transparent); }
+.cast-foes .cast-h::after { content: ""; flex: 1; height: 1px; background: linear-gradient(90deg, color-mix(in srgb, var(--cx-saffron) 60%, transparent), transparent); }
 .cast-foes-lead { margin: calc(-1 * clamp(.8rem, .5rem + .8vw, 1.6rem)) 0 clamp(1.2rem, 1rem + 1vw, 2rem); max-width: 46rem; color: var(--cx-ink-2, #6b5a48); font-size: 1.02rem; }
 /* keyboard focus keeps each layout's own shape: the pill, the phone tab, the bare sideways-phone name */
 .cx-sel-realm:focus-visible { border-radius: 99px; }
@@ -1975,6 +1960,26 @@ html[lang="hi"] .lib-more-k { font: 500 .85rem/1 var(--cx-title); letter-spacing
   .cx-film-card :is(.mx-open-line, .story-sum) { display: none; }
   .cx-film-card .cx-facts { margin: 0; }
 }
+/* a phone held upright: a full-height 16:9 painting showed a third of its width, and the title card (half the screen)
+   lay across whoever stood in its middle (Krishna, Bharata, Hanuman, Shabari). The painting takes the upper part of the
+   screen instead, half its width in view, and gives way to dusk below, where the title stands on its own ground. */
+@media (max-aspect-ratio: 3/4) and (orientation: portrait) {
+  .cx-film-open:not(.mx-open) .cx-film-open-pic { top: calc(var(--ed-head-h, 3.5rem) + env(safe-area-inset-top, 0px)); bottom: 34%; }
+  .cx-film-open:not(.mx-open) .cx-film-open-pic img { object-position: var(--ppos, 50% 40%) !important; }
+  .cx-film-open:not(.mx-open) .cx-open-shade { background: linear-gradient(to top, var(--cx-dusk) 0, var(--cx-dusk) 34%, rgb(30 14 4 / .82) 41%, rgb(30 14 4 / .38) 52%, rgb(30 14 4 / 0) 64%), linear-gradient(to bottom, rgb(30 14 4 / .35), transparent 22%); }
+  .cx-film-open:not(.mx-open) .cx-film-card::before { inset: 22% -10% 0; }
+  .cx-film-open:not(.mx-open) .cx-film-card { gap: .8rem; padding-bottom: calc(var(--cx-bar) + 1.1rem); }
+  /* (the hymns and the Manas likewise: Hanuman kneels and Shiva dances above the title, not behind it) */
+  .mx-open .cx-film-open-pic { bottom: 30%; }
+  .mx-open .cx-open-shade, .st-open .cx-open-shade { background: linear-gradient(to top, var(--cx-dusk) 0, var(--cx-dusk) 30%, rgb(30 14 4 / .82) 37%, rgb(30 14 4 / .38) 48%, rgb(30 14 4 / 0) 60%), linear-gradient(to bottom, rgb(30 14 4 / .35), transparent 22%); }
+}
+/* (a small phone: Begin and Watch side by side, and a smaller title, so the card stays below the painting's people) */
+@media (max-aspect-ratio: 3/4) and (orientation: portrait) and (max-width: 374px) {
+  .cx-film-open .cx-film-title { font-size: 2.15rem; }
+  html[lang="hi"] .cx-film-open .cx-film-title { line-height: 1.14; }
+  .cx-film-open:not(.mx-open) .cx-film-btns { flex-wrap: nowrap; gap: .5rem; }
+  .cx-film-open:not(.mx-open) .cx-film-btns .cx-btn { padding-inline: .85rem; white-space: nowrap; }
+}
 
 /* the Ramcharitmanas: the site's own meaning under each doha group, set apart from the verses */
 .mx-mean { margin: 1.1rem auto 0; padding: 1rem 1.15rem; max-width: 44rem; border-radius: 14px; border: 1px solid color-mix(in oklab, var(--cx-gold) 28%, transparent); background: color-mix(in oklab, var(--cx-gold) 7%, transparent); font-size: clamp(1rem, .95rem + .2vw, 1.1rem); line-height: 1.7; color: var(--cx-ink-2); }
@@ -2017,8 +2022,8 @@ html[lang="hi"] .fest-list li.next.is-today strong::after { content: "  ·  आ�
 }
 
 /* ---------- The analytics question (consent.js): calm, never over the reader dock ----------
-   One slim strip along the foot of the screen at every width, in the middle: it lies on no figure, field or button of
-   the page above it, and it is one line tall. */
+   On a phone, one slim strip along the foot of the screen, one line tall; on a wide screen, a small card in the corner
+   (below). It lies on no figure, field or button of the page above it. */
 .cx-consent { position: fixed; z-index: 30; left: 50%; translate: -50% 0; bottom: max(calc(.75rem + env(safe-area-inset-bottom, 0px)), calc(var(--cx-dock-clear, 0px) + .5rem)); box-sizing: border-box; width: min(46rem, calc(100vw - 2rem));
   display: flex; flex-wrap: nowrap; align-items: center; gap: .4rem .9rem; padding: .5rem .6rem .5rem 1.15rem; background: var(--cx-dusk); color: var(--cx-cream); border: 1px solid rgb(255 240 220 / .16); border-radius: 6px; box-shadow: 0 14px 40px rgb(0 0 0 / .35); font-family: var(--cx-ui);
   animation: cx-consent-in .45s var(--cx-ease) both; transition: translate .3s var(--cx-ease), opacity .25s var(--cx-ease), visibility 0s, bottom .3s var(--cx-ease); }
@@ -2044,10 +2049,25 @@ html[lang="hi"] .cx-consent-btn { font-family: "Mukta", var(--cx-ui); }
 /* a full-screen stage (the opening, the character select) keeps its whole screen: the question waits beside it (consent.js) */
 .cx-consent.is-aside { visibility: hidden; opacity: 0; transition: opacity .25s var(--cx-ease), visibility 0s .25s; }
 /* a page that is read: it tucks away below the screen while the reader goes on down */
-.cx-consent.is-tucked { translate: -50% calc(100% + 2rem); opacity: 0; visibility: hidden; transition: translate .3s var(--cx-ease), opacity .25s var(--cx-ease), visibility 0s .3s; }
-@keyframes cx-consent-in { from { opacity: 0; translate: -50% .75rem; } }
+.cx-consent.is-tucked { translate: var(--cx-consent-x, -50%) calc(100% + 2rem); opacity: 0; visibility: hidden; transition: translate .3s var(--cx-ease), opacity .25s var(--cx-ease), visibility 0s .3s; }
+@keyframes cx-consent-in { from { opacity: 0; translate: var(--cx-consent-x, -50%) .75rem; } }
 @media (prefers-reduced-motion: reduce) { .cx-consent { animation: none; transition: none; } }
 :root[data-motion="reduce"] .cx-consent { animation: none; transition: none; }
+/* A wide screen (a laptop, a desktop, a tablet on its side): a small card in the lower left corner of the screen, not a
+   strip across the middle of its foot. The middle is where a page's own first controls land (the Library's search
+   field, Today's "Keep this intention", the first row of the People wall); the corner is the page's margin. The question takes the
+   card's first line, the two answers (equal, side by side) and the way to the details its second. */
+@media (min-width: 860px) and (min-height: 520.02px) {
+  .cx-consent { --cx-consent-x: 0%; left: max(1rem, env(safe-area-inset-left, 0px) + .75rem); translate: 0 0; width: min(21.5rem, calc(100vw - 2rem)); flex-wrap: wrap; gap: .5rem .6rem; padding: .7rem .75rem .7rem .95rem; border-radius: 8px;
+    background: color-mix(in srgb, var(--cx-dusk) 94%, transparent); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
+  .cx-consent-h { flex: 1 0 100%; }
+  .cx-consent-btns { flex: 1 1 auto; }
+  .cx-consent-btn { min-width: 0; min-height: 40px; padding: 0 .9rem; }
+  .cx-consent-text a { padding: .75rem .35rem .75rem .3rem; }
+  /* a page that opens on a painted banner shorter than the screen: the card first sits in the banner's own lower corner,
+     where there is only painting, and moves with the page (consent.js sets where; it rests in the screen's corner after) */
+  .cx-consent.is-banner { position: absolute; top: var(--cx-consent-top, auto); bottom: auto; }
+}
 /* stories: consent.js measures the reader dock (--cx-dock-clear: its height plus its gap from the bottom) while it is on
    screen, so the bar sits just above it, and lets the bar settle down when the dock tucks away or steps aside */
 @media (max-width: 759px), (max-width: 859.98px) and (orientation: portrait), (orientation: landscape) and (max-height: 520px) {
@@ -2071,6 +2091,9 @@ html[lang="hi"] .cx-consent-btn { font-family: "Mukta", var(--cx-ui); }
 /* (the opening keeps that room until the reader is back at it, even after the question is answered: it is above the
    reading, so giving it back mid-story would move the text; consent.js) */
 :root[data-consent-room] .cx-film-open { box-sizing: border-box; padding-bottom: var(--cx-consent-room, 0px); }
+/* (on a wide screen the card stands in the corner, clear of a story's opening, whose words are in the middle: the
+   opening keeps no room for it there) */
+@media (min-width: 1200px) and (min-height: 520.02px) { :root[data-consent-room] .cx-film-open { padding-bottom: 0; } }
 :root[data-consent-ask] .cx-credits::after { content: ""; display: block; height: var(--cx-consent-room, 0px); }
 /* the footer's "Privacy choices" reads like its neighbouring links */
 .cx-credits-choice { display: inline-flex; align-items: center; min-height: 40px; padding: 0; border: 0; background: none; color: inherit; font: inherit; cursor: pointer; text-decoration: underline; text-decoration-color: rgb(233 217 195 / .4); text-underline-offset: .2em; }
@@ -2091,3 +2114,67 @@ html[lang="hi"] .cx-consent-btn { font-family: "Mukta", var(--cx-ui); }
 @media (max-width: 699px) { .cx-select { --sel-fit: calc(100vw - var(--cx-gut) - var(--cx-gut-r)); } }
 @media (orientation: landscape) and (max-height: 520px) { .cx-select { --sel-fit: calc(58vw - var(--cx-gut) - var(--cx-gut-r)); } }
 .cx-select .cx-sel-title { font-size: min(var(--sel-ts, 3rem), calc(var(--sel-fit) / (var(--nw, 3) * 1.05))); text-wrap: balance; overflow-wrap: normal; word-break: keep-all; hyphens: none; }
+
+/* ---------- The select on a phone held upright: the chosen person is the subject ----------
+   The upper part of the screen is theirs alone. "Choose your character" steps down to stand over the roster, the roster
+   is set a little smaller, and the words begin under the chin. A cut-out stands in front of their world, which is dimmed
+   to its light and colour, so the people painted in it do not compete with the one chosen; a person painted in a scene
+   is framed with the face high in the band the words leave free. */
+@media (max-width: 699px) and (min-height: 521px) {
+  .cx-select { grid-template-rows: minmax(0, 1fr) auto auto; }
+  .cx-select > .cx-sel-stage { grid-row: 1; gap: .5rem; padding-bottom: .55rem; }
+  .cx-select > .cx-sel-head { grid-row: 2; padding: .35rem var(--cx-gut-r) 0 var(--cx-gut); }
+  .cx-select > .cx-sel-roster { grid-row: 3; padding-top: .3rem; }
+  .cx-sel-h { gap: .75rem; font-size: .66rem; letter-spacing: .3em; text-shadow: none; color: color-mix(in oklab, var(--sel-glow) 45%, #e9dccb); }
+  html[lang="hi"] .cx-sel-h { font-size: .9rem; letter-spacing: .04em; }
+  .cx-sel-h::before, .cx-sel-h::after { width: 2.25rem; }
+  .cx-sel-info { gap: .3rem; }
+  .cx-sel-info::before { inset: -2.5rem -100vw -12rem; background: linear-gradient(to bottom, transparent 0, color-mix(in oklab, var(--sel-base) 80%, transparent) 2.5rem, color-mix(in oklab, var(--sel-base) 92%, transparent) 100%); }
+  /* a cut-out: under the bar, as tall as the room above the roster; their world behind them only light and colour */
+  .cx-select > .cx-sel-hero { top: calc(var(--ed-head-h) + .35rem); bottom: calc(var(--sel-roster-h, 12rem) + 1.6rem); height: auto; right: -2%; width: 74vw; }
+  .cx-select:not(.is-scene) .cx-sel-shade { background:
+    linear-gradient(to top, var(--sel-base) 0%, color-mix(in oklab, var(--sel-base) 90%, transparent) 34%, color-mix(in oklab, var(--sel-base) 82%, transparent) 62%, color-mix(in oklab, var(--sel-base) 78%, transparent) 100%),
+    radial-gradient(ellipse 70% 38% at 62% 30%, color-mix(in oklab, var(--sel-glow) 20%, transparent), transparent 72%); }
+  .cx-select:not(.is-scene) .cx-sel-shade::after { background: radial-gradient(ellipse 60% 40% at 62% 28%, color-mix(in oklab, var(--sel-glow) 55%, transparent), transparent 70%); }
+  .cx-select:not(.is-scene) > .cx-sel-name { opacity: .32; }
+  /* (the words' own shade begins at the words, not above them, so it never lies across a cut-out's face) */
+  .cx-select:not(.is-scene) .cx-sel-info::before { inset: -.5rem -100vw -12rem; background: linear-gradient(to bottom, transparent 0, color-mix(in oklab, var(--sel-base) 72%, transparent) 2.25rem, color-mix(in oklab, var(--sel-base) 92%, transparent) 100%); }
+  /* a person painted in a scene: the face high in the free band, the shade starting under the chin */
+  .cx-select .cx-sel-bg img, .cx-select.is-left .cx-sel-bg img { --ty: 23%; }
+  .cx-select.is-scene .cx-sel-shade, .cx-select.is-scene.is-left .cx-sel-shade { background: linear-gradient(to top, var(--sel-base) 0%, color-mix(in oklab, var(--sel-base) 90%, transparent) 36%, transparent 58%), linear-gradient(to bottom, rgb(5 3 2 / .7) 0%, transparent 13%); }
+}
+/* the shortest phones (an iPhone SE): the line about them is left to their own page, so the face keeps its band */
+@media (max-width: 699px) and (min-height: 521px) and (max-height: 620px) {
+  .cx-select .cx-sel-sum { display: none; }
+  .cx-select .cx-sel-bg img, .cx-select.is-left .cx-sel-bg img { --ty: 20%; }
+}
+/* A cut-out on a wider screen: their world is often the very scene they are painted in (Krishna before the lifted
+   mountain, with the boy Krishna in it), so behind them it is dimmed further, and the one chosen is not doubled. */
+@media (min-width: 700px) {
+  .cx-select:not(.is-scene) .cx-sel-shade { background:
+    linear-gradient(to right, color-mix(in oklab, var(--sel-base) 94%, transparent) 0%, color-mix(in oklab, var(--sel-base) 70%, transparent) 28%, color-mix(in oklab, var(--sel-base) 52%, transparent) 50%, color-mix(in oklab, var(--sel-base) 58%, transparent) 72%, color-mix(in oklab, var(--sel-base) 48%, transparent) 100%),
+    linear-gradient(to top, var(--sel-base) 0%, color-mix(in oklab, var(--sel-base) 82%, transparent) 17%, transparent 42%),
+    linear-gradient(to bottom, rgb(5 3 2 / .82) 0%, transparent 20%),
+    radial-gradient(ellipse 80% 70% at 50% 50%, transparent 55%, rgb(5 3 2 / .55) 100%); }
+  /* the portrait is painted to the knee: it has faded away before the roster's band begins, so the band's edge never
+     reads as a line cut across the robe; the sheen that crosses the figure fades with it */
+  .cx-select > .cx-sel-hero .cx-sel-fig img { -webkit-mask-image: linear-gradient(to bottom, #000 70%, transparent 96%); mask-image: linear-gradient(to bottom, #000 70%, transparent 96%); }
+  .cx-sel-fig::after { -webkit-mask: var(--hero-url) center / 100% 100% no-repeat, linear-gradient(to bottom, #000 70%, transparent 96%); -webkit-mask-composite: source-in; mask: var(--hero-url) center / 100% 100% no-repeat, linear-gradient(to bottom, #000 70%, transparent 96%); mask-composite: intersect; }
+}
+
+/* ---------- A cut-out's world is a mood, not a scene ----------
+   The world behind a cut-out is often the very painting the person stands in (Dhruva, Krishna, Sita, Devi, Shiva): seen
+   sharp, the chosen one appears twice. Behind a cut-out it is only light and colour, out of focus. The rule is on the
+   picture itself (a cut-out's world is a scene-* painting; one painted inside a scene is shown from a shot-*), so each layer
+   keeps its own look through a change and no sharp copy appears while one gives way to the other. Shabari is the one
+   person shown inside a scene-* painting. The small push-in keeps the blur from darkening the picture's own edges. */
+.cx-sel-bg img[src*="art/scene-"]:not([src*="art/scene-ramayana-loss-and-hospitality"]) { filter: blur(16px) saturate(.75) brightness(.6); scale: 1.08; }
+/* (the select changes person by a plain cross-fade: the old blade of light, its flash, the ring and the rays are not drawn) */
+.cx-sel-wipe, .cx-sel-flash, .cx-sel-ring, .cx-sel-rays { display: none; }
+/* the light on the ground under a cut-out has faded before the roster's band, so the band never cuts it on a line */
+.cx-select:not(.is-scene) .cx-sel-floor { -webkit-mask-image: linear-gradient(to bottom, #000 22%, transparent 72%); mask-image: linear-gradient(to bottom, #000 22%, transparent 72%); }
+/* Kartikeya on a phone held upright: his profile sits low in the painting; the camera goes further in on it, so the face is
+   high in the band above the words (the select takes one zoom for all screens: this is its phone value for him) */
+@media (max-width: 699px) and (min-height: 521px) {
+  .cx-sel-bg img[src*="shot-ganesha-the-nearer-world-1-"] { --z: 1.8 !important; }
+}

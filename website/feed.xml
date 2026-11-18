@@ -5,27 +5,27 @@
 <id>https://spritual.co.in/feed.xml</id>
 <link rel="self" type="application/atom+xml" href="https://spritual.co.in/feed.xml"/>
 <link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/"/>
-<updated>2026-11-18T08:15:16Z</updated>
+<updated>2026-11-18T08:41:53Z</updated>
 <author><name>Spritual</name><uri>https://spritual.co.in/about/</uri></author>
 <icon>https://spritual.co.in/favicon.ico</icon>
 <logo>https://spritual.co.in/assets/icons/icon-512.png</logo>
-<entry>
-<title>One arrow for three cities</title>
-<id>https://spritual.co.in/collections/shiva/books/shiva-purana/arcs/rudra-samhita/stories/shiva-three-cities/</id>
-<link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/collections/shiva/books/shiva-purana/arcs/rudra-samhita/stories/shiva-three-cities/"/>
-<link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/collections/shiva/books/shiva-purana/arcs/rudra-samhita/stories/shiva-three-cities/"/>
-<updated>2026-11-18T08:15:16Z</updated>
-<category term="shiva"/>
-<summary>Three cities of gold, silver and iron can fall only to a single arrow, in the one hour they meet. Shiva takes aim from a chariot made of the worlds.</summary>
-</entry>
 <entry>
 <title>The rope two fingers short</title>
 <id>https://spritual.co.in/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-butter-and-rope/</id>
 <link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-butter-and-rope/"/>
 <link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-butter-and-rope/"/>
-<updated>2026-11-18T08:14:59Z</updated>
+<updated>2026-11-18T08:41:53Z</updated>
 <category term="krishna"/>
 <summary>His mother catches the butter thief and reaches for a rope. Every rope in the house, knotted together, comes up two fingers short.</summary>
+</entry>
+<entry>
+<title>One arrow for three cities</title>
+<id>https://spritual.co.in/collections/shiva/books/shiva-purana/arcs/rudra-samhita/stories/shiva-three-cities/</id>
+<link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/collections/shiva/books/shiva-purana/arcs/rudra-samhita/stories/shiva-three-cities/"/>
+<link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/collections/shiva/books/shiva-purana/arcs/rudra-samhita/stories/shiva-three-cities/"/>
+<updated>2026-11-18T08:41:53Z</updated>
+<category term="shiva"/>
+<summary>Three cities of gold, silver and iron can fall only to a single arrow, in the one hour they meet. Shiva takes aim from a chariot made of the worlds.</summary>
 </entry>
 <entry>
 <title>Mahishasura's last roar</title>

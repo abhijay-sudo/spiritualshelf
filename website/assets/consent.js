@@ -141,7 +141,8 @@
     var on = dock && !dock.classList.contains('is-away') && !dock.classList.contains('is-tucked') && dock.offsetHeight > 0;
     var px = on ? dock.offsetHeight + (parseFloat(getComputedStyle(dock).bottom) || 0) : 0;
     bar.style.setProperty('--cx-dock-clear', px + 'px');
-    var tuck = away && !bar.contains(d.activeElement) && !bar.hasAttribute('data-reopened');
+    // on a page that is read it never shares the screen with the reader's dock: one bar at the foot at a time
+    var tuck = (away || (reading && on)) && !bar.contains(d.activeElement) && !bar.hasAttribute('data-reopened');
     bar.classList.toggle('is-tucked', tuck); bar.inert = tuck || bar.classList.contains('is-aside');
   };
   // The room the bar takes at the foot of the screen, which the openings and the footer keep free (cinema.css). It is the
@@ -157,7 +158,9 @@
     var y = window.scrollY || 0, dy = y - lastY; lastY = y;
     run = dy > 0 === run > 0 ? run + dy : dy;         // travel in one direction
     var was = away;
-    if (atTop() || footOn) away = false; else if (run > 24) away = true;
+    // only the opening and the foot of the page are free of reading: anywhere else it waits out of the way, whichever way
+    // the reader is going (scrolling back up from the foot used to leave it on screen over the verses all the way up)
+    away = !(atTop() || footOn);
     if (away !== was) clear();
   };
   // a full-screen stage (the home opening, the character select, a person's own stage) keeps its whole screen, composed
@@ -185,17 +188,47 @@
     // a keyboard reader tabbing into a stage gets it whole at once, before the browser scrolls the stop into view
     d.addEventListener('focusin', function (e) { var now = stages.some(function (st) { return st.contains(e.target); }); if (now !== inside) { inside = now; place(); } });
   };
+  // A page that opens on a painted banner (the Library, the People page, Today, a collection) is shorter than the screen,
+  // so on a wide screen the screen's own corner already lies on the page's first row: a search field, a tile, a button.
+  // There the card first sits in the banner's own lower corner, on the painting alone, and moves with the page; once the
+  // banner has gone by, it rests in the corner of the screen. It takes the banner's corner only where none of the
+  // banner's words stand, never while someone is answering it, and never when it was asked for ("Privacy choices").
+  var banner = d.querySelector('.ed-page-head'), head = d.querySelector('.ed-head');
+  var wide = window.matchMedia ? matchMedia('(min-width: 860px) and (min-height: 520.02px)') : null;
+  var bannerTop = function () {
+    if (!banner || !wide || !wide.matches || !bar || bar.hidden || bar.hasAttribute('data-reopened')) return null;
+    var r = banner.getBoundingClientRect(), h = bar.offsetHeight, w = bar.offsetWidth, x = bar.getBoundingClientRect().left;
+    var y = r.bottom - h - 14, hb = head ? head.getBoundingClientRect().bottom : 0;
+    if (!h || r.bottom >= innerHeight || y < hb + 8 || y < r.top + 8) return null;     // the banner fills the screen, or the card would leave it
+    var words = banner.querySelectorAll('h1, h2, p, a, button, li');
+    for (var i = 0; i < words.length; i++) {
+      var rg = d.createRange(); rg.selectNodeContents(words[i]); var cs = rg.getClientRects();
+      for (var k = 0; k < cs.length; k++) if (cs[k].width > 0 && cs[k].right > x - 2 && cs[k].left < x + w + 2 && cs[k].bottom > y - 2 && cs[k].top < y + h + 2) return null;
+    }
+    return Math.round(y + (window.scrollY || 0));
+  };
+  var placeBanner = function () {
+    if (!bar || !banner) return;
+    var was = bar.classList.contains('is-banner');
+    if (bar.contains(d.activeElement)) return;
+    var top = bannerTop(), on = top !== null;
+    if (on) bar.style.setProperty('--cx-consent-top', top + 'px');
+    if (on === was) return;
+    bar.classList.toggle('is-banner', on);
+    // it arrives in its new place the way it first arrived (cinema.css: nothing moves under reduced motion)
+    bar.style.animation = 'none'; void bar.offsetWidth; bar.style.animation = '';
+  };
   var watchDock = function () {
     if (watching) return; watching = true;
     watchStage();
     if (dock && window.MutationObserver) new MutationObserver(clear).observe(dock, { attributes: true, attributeFilter: ['class', 'style'] });
-    var both = function () { room(); clear(); };
+    var both = function () { room(); clear(); placeBanner(); };
     addEventListener('resize', both);
     if (d.fonts && d.fonts.ready) d.fonts.ready.then(both);
     lastY = window.scrollY || 0; away = reading && !atTop();     // arriving part-way down a page (a kept place): it waits out of the way
     var tick = false;
-    addEventListener('scroll', function () { if (!tick) { tick = true; requestAnimationFrame(function () { tick = false; scrolled(); }); } }, { passive: true });
-    if (foot && 'IntersectionObserver' in window) new IntersectionObserver(function (es) { footOn = es[es.length - 1].isIntersecting; if (footOn && away) { away = false; clear(); } }).observe(foot);
+    addEventListener('scroll', function () { if (!tick) { tick = true; requestAnimationFrame(function () { tick = false; scrolled(); placeBanner(); }); } }, { passive: true });
+    if (foot && 'IntersectionObserver' in window) new IntersectionObserver(function (es) { footOn = es[es.length - 1].isIntersecting; var was = away; away = reading ? !(atTop() || footOn) : away && !footOn; if (away !== was) clear(); }).observe(foot);
   };
   var show = function (focus) {
     if (!bar) build();
@@ -204,7 +237,7 @@
     var c = read(); bar.toggleAttribute('data-reopened', !!focus);
     bar.querySelector('[data-consent-yes]').setAttribute('aria-pressed', String(!!c && c.value === 'granted'));
     bar.querySelector('[data-consent-no]').setAttribute('aria-pressed', String(!!c && c.value === 'denied'));
-    room(); clear();
+    room(); clear(); placeBanner();
     if (focus) bar.querySelector('h2').focus({ preventScroll: true });
   };
   var hide = function () {

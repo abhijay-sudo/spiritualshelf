@@ -21,6 +21,7 @@
     if (mq.matches || mine === 'reduce') d.dataset.motion = 'reduce'; else delete d.dataset.motion;
   });
   if (!calm && !mq.matches) d.classList.add('cx-js');
+  try { if ((navigator.connection && navigator.connection.saveData) || matchMedia('(prefers-reduced-data: reduce)').matches) d.classList.add('ep-lite'); } catch (e) {}
   // the home opening is composed at 1920x1080; on bigger screens (a 4K monitor at 100%, a television) the composition
   // grows with the screen, by the smaller of its width and height ratios (so a 32:9 screen still fits it in one screen).
   // Only the opening's words and buttons use it (cinema.css, zoom); the rest of the site keeps the reader's text size.
