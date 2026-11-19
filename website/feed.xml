@@ -5,16 +5,43 @@
 <id>https://spritual.co.in/feed.xml</id>
 <link rel="self" type="application/atom+xml" href="https://spritual.co.in/feed.xml"/>
 <link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/"/>
-<updated>2026-11-18T21:40:17Z</updated>
+<updated>2026-11-19T03:09:38Z</updated>
 <author><name>Spritual</name><uri>https://spritual.co.in/about/</uri></author>
 <icon>https://spritual.co.in/favicon.ico</icon>
 <logo>https://spritual.co.in/assets/icons/icon-512.png</logo>
+<entry>
+<title>The boy who questioned Death</title>
+<id>https://spritual.co.in/collections/sages/books/katha-upanishad/arcs/adhyaya-1/stories/nachiketa-and-yama/</id>
+<link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/collections/sages/books/katha-upanishad/arcs/adhyaya-1/stories/nachiketa-and-yama/"/>
+<link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/collections/sages/books/katha-upanishad/arcs/adhyaya-1/stories/nachiketa-and-yama/"/>
+<updated>2026-11-19T03:09:38Z</updated>
+<category term="sages"/>
+<summary>Given to Death by his own father, the boy Nachiketa waits three nights in Yama's house, then refuses long life and wealth for one answer.</summary>
+</entry>
+<entry>
+<title>A bed of arrows</title>
+<id>https://spritual.co.in/collections/mahabharata/books/vyasa-mahabharata/arcs/bhishma-parva/stories/mahabharata-bed-of-arrows/</id>
+<link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/collections/mahabharata/books/vyasa-mahabharata/arcs/bhishma-parva/stories/mahabharata-bed-of-arrows/"/>
+<link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/collections/mahabharata/books/vyasa-mahabharata/arcs/bhishma-parva/stories/mahabharata-bed-of-arrows/"/>
+<updated>2026-11-19T03:09:28Z</updated>
+<category term="mahabharata"/>
+<summary>Bhishma tells the Pandavas how to bring him down, then lies fifty-eight nights on arrows until the sun turns north. From the Mahabharata.</summary>
+</entry>
+<entry>
+<title>The golden vessel from the fire</title>
+<id>https://spritual.co.in/collections/ramayana/books/valmiki-ramayana/arcs/bala-kanda/stories/ramayana-birth-of-rama/</id>
+<link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/collections/ramayana/books/valmiki-ramayana/arcs/bala-kanda/stories/ramayana-birth-of-rama/"/>
+<link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/collections/ramayana/books/valmiki-ramayana/arcs/bala-kanda/stories/ramayana-birth-of-rama/"/>
+<updated>2026-11-19T03:09:19Z</updated>
+<category term="ramayana"/>
+<summary>A sonless king holds a great sacrifice; the gods need a man to end Ravana, and Vishnu chooses Dasharatha for his father. From Valmiki's Bala Kanda.</summary>
+</entry>
 <entry>
 <title>Hanuman reaches for the sun</title>
 <id>https://spritual.co.in/collections/ramayana/books/valmiki-ramayana/arcs/kishkindha-kanda/stories/hanuman-reaches-for-the-sun/</id>
 <link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/collections/ramayana/books/valmiki-ramayana/arcs/kishkindha-kanda/stories/hanuman-reaches-for-the-sun/"/>
 <link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/collections/ramayana/books/valmiki-ramayana/arcs/kishkindha-kanda/stories/hanuman-reaches-for-the-sun/"/>
-<updated>2026-11-18T21:40:17Z</updated>
+<updated>2026-11-18T21:49:48Z</updated>
 <category term="ramayana"/>
 <summary>Newborn Hanuman takes the rising sun for a fruit and leaps; Indra's thunderbolt strikes him down. Years later Jambavan reminds him who he is. From Valmiki.</summary>
 </entry>

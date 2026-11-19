@@ -53,7 +53,7 @@
   --gutter-l: max(16px, env(safe-area-inset-left, 0px));
   --gutter-r: max(16px, env(safe-area-inset-right, 0px));
   --measure: 66ch;
-  --c-ramayana: #1f5a4f; --c-krishna: #2f4f7a; --c-shiva: #4a5370; --c-devi: #b4553f; --c-ganesha: #cf8f2e; --c-mahabharata: #6b3f3a; --on-pigment: #fbf8f3; --lamp-clay: #8a6a56;
+  --c-ramayana: #1f5a4f; --c-krishna: #2f4f7a; --c-shiva: #4a5370; --c-devi: #b4553f; --c-ganesha: #cf8f2e; --c-mahabharata: #6b3f3a; --c-sages: #9a5b1f; --on-pigment: #fbf8f3; --lamp-clay: #8a6a56;
   --touch: 44px;
 }
 /* Sanctum lamp: garbhagriha basalt, carved teak, parchment glow. Chosen in Reading comfort, or inherited from a dark OS theme. */
@@ -242,6 +242,7 @@ html[lang="hi"] .need .legend { text-transform: none; letter-spacing: 0; font-si
 [data-c="devi"] { --c: var(--c-devi); --on-c: var(--on-pigment); }
 [data-c="ganesha"] { --c: var(--c-ganesha); --on-c: var(--ink-primary); }
 [data-c="mahabharata"] { --c: var(--c-mahabharata); --on-c: var(--on-pigment); }
+[data-c="sages"] { --c: var(--c-sages); --on-c: var(--on-pigment); }
 .plate { position: relative; width: 100%; height: 100%; display: grid; place-items: center; overflow: hidden; color: var(--c); background: radial-gradient(circle at 75% 25%, color-mix(in oklab, var(--c) 22%, transparent), transparent 62%), color-mix(in oklab, var(--c) 10%, var(--surface)); }
 .plate svg { width: 46%; max-width: 9rem; height: auto; fill: none; stroke: currentColor; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; opacity: .9; }
 .plate .dot { fill: currentColor; stroke: none; }
