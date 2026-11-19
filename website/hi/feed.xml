@@ -5,10 +5,28 @@
 <id>https://spritual.co.in/hi/feed.xml</id>
 <link rel="self" type="application/atom+xml" href="https://spritual.co.in/hi/feed.xml"/>
 <link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/"/>
-<updated>2026-11-19T04:42:27Z</updated>
+<updated>2026-11-19T05:00:23Z</updated>
 <author><name>Spritual</name><uri>https://spritual.co.in/hi/about/</uri></author>
 <icon>https://spritual.co.in/favicon.ico</icon>
 <logo>https://spritual.co.in/assets/icons/icon-512.png</logo>
+<entry>
+<title>वेल और आम का वृक्ष</title>
+<id>https://spritual.co.in/hi/collections/ganesha/books/kanda-puranam/arcs/yuddha-kandam/stories/murugan-and-the-vel/</id>
+<link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/collections/ganesha/books/kanda-puranam/arcs/yuddha-kandam/stories/murugan-and-the-vel/"/>
+<link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/collections/ganesha/books/kanda-puranam/arcs/yuddha-kandam/stories/murugan-and-the-vel/"/>
+<updated>2026-11-19T05:00:23Z</updated>
+<category term="ganesha"/>
+<summary>1008 ब्रह्मांडों का राजा देवताओं से मछलियाँ ढुलवाता है। शिव के षण्मुख पुत्र एक वेल से उत्तर देते हैं, और सागर से आम का वृक्ष उठता है।</summary>
+</entry>
+<entry>
+<title>लता-पत्तों से भरी नाव</title>
+<id>https://spritual.co.in/hi/collections/krishna/books/skanda-purana/arcs/reva-khanda/stories/satyanarayan-katha/</id>
+<link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/collections/krishna/books/skanda-purana/arcs/reva-khanda/stories/satyanarayan-katha/"/>
+<link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/collections/krishna/books/skanda-purana/arcs/reva-khanda/stories/satyanarayan-katha/"/>
+<updated>2026-11-19T05:00:15Z</updated>
+<category term="krishna"/>
+<summary>एक वणिक संतान के लिए व्रत का वचन देकर भूल जाता है: कारागार, लता-पत्तों में बदला माल, घर के पास डूबी नाव। स्कंद पुराण, रेवा खण्ड से।</summary>
+</entry>
 <entry>
 <title>अग्नि और हिम के पार</title>
 <id>https://spritual.co.in/hi/collections/shiva/books/shiva-purana/arcs/rudra-samhita/stories/shiva-parvati-tapas/</id>

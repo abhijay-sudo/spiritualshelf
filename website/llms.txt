@@ -12,8 +12,8 @@ Before quoting or summarising this site:
 
 ## Start here
 
-- [All stories](https://spritual.co.in/library/): Search 40 illustrated retellings from the Ramayana, Mahabharata and Puranas by name, feeling, collection or reading time, in English and Hindi.
-- [People of the stories](https://spritual.co.in/characters/): 90 people of the Ramayana, Mahabharata and Puranas, from Rama, Sita and Hanuman to Karna, Draupadi and Bhishma, each linked to their stories.
+- [All stories](https://spritual.co.in/library/): Search 42 illustrated retellings from the Ramayana, Mahabharata and Puranas by name, feeling, collection or reading time, in English and Hindi.
+- [People of the stories](https://spritual.co.in/characters/): 91 people of the Ramayana, Mahabharata and Puranas, from Rama, Sita and Hanuman to Karna, Draupadi and Bhishma, each linked to their stories.
 - [Festivals and their stories](https://spritual.co.in/festivals/): Dates for Diwali, Holi, Maha Shivaratri, Navratri, Janmashtami and more to November 2027 (New Delhi, Drik Panchang), each with a story to read.
 - [Questions the stories answer](https://spritual.co.in/questions/): 23 questions answered from the stories themselves, each with the scene it comes from: Samudra Manthan, Ganesha’s elephant head, Krishna and Sudama, Lanka Dahan.
 - [Glossary](https://spritual.co.in/glossary/): 28 words the stories use, each with a plain meaning: dharma, avatar, itihasa, purana, kanda, parva, tapasya, sharanagati and more, in English and Hindi.
@@ -62,6 +62,7 @@ Before quoting or summarising this site:
 - [The Lion in the Pillar](https://spritual.co.in/collections/krishna/books/bhagavata-purana/arcs/skandha-7/stories/prahlada-the-pillar/): Hiranyakashipu, who no creature can kill, asks his son Prahlad if his god is in the pillar; Narasimha steps out. From the Bhagavata Purana.
 - [A mountain for a churning rod](https://spritual.co.in/collections/krishna/books/bhagavata-purana/arcs/skandha-8/stories/vishnu-churning-the-ocean/): Samudra Manthan retold from the Bhagavata Purana: gods and asuras churn the Ocean of Milk; Halahala, Lakshmi, Dhanvantari, Mohini and Rahu, in 9 scenes.
 - [Three steps across the worlds](https://spritual.co.in/collections/krishna/books/bhagavata-purana/arcs/skandha-8/stories/vamana-three-steps/): Vamana, a boy, asks Bali, king of the three worlds, for three paces of land; Bali's guru says refuse, and Bali gives anyway. From the Bhagavata Purana.
+- [A boat full of leaves](https://spritual.co.in/collections/krishna/books/skanda-purana/arcs/reva-khanda/stories/satyanarayan-katha/): A merchant promises a vow for a child, then forgets it: prison, a cargo turned to leaves, a boat sunk within reach of home. From the Skanda Purana.
 
 ### Shiva (Valmiki Ramayana and Shiva Purana)
 
@@ -79,6 +80,7 @@ Before quoting or summarising this site:
 
 - [The boy who kept the door](https://spritual.co.in/collections/ganesha/books/shiva-purana/arcs/rudra-samhita/stories/ganesha-elephant-head/): Parvati shapes a son to guard her door; he bars Shiva, fights all heaven and is beheaded, then revived with an elephant's head. From the Shiva Purana.
 - [Seven times around](https://spritual.co.in/collections/ganesha/books/shiva-purana/arcs/rudra-samhita/stories/ganesha-the-nearer-world/): Kartikeya races around the whole earth; Ganesha circles his parents Shiva and Parvati seven times instead. From the Shiva Purana, illustrated.
+- [The Vel and the mango tree](https://spritual.co.in/collections/ganesha/books/kanda-puranam/arcs/yuddha-kandam/stories/murugan-and-the-vel/): A king of 1008 universes makes the gods carry fish. Shiva's six-faced son answers with one Vel, and a mango tree rises from the sea. Kanda Puranam.
 
 ### Mahabharata (Vyasa Mahabharata)
 
