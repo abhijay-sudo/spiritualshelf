@@ -12,8 +12,8 @@ Before quoting or summarising this site:
 
 ## Start here
 
-- [All stories](https://spritual.co.in/library/): Search 39 illustrated retellings from the Ramayana, Mahabharata and Puranas by name, feeling, collection or reading time, in English and Hindi.
-- [People of the stories](https://spritual.co.in/characters/): 88 people of the Ramayana, Mahabharata and Puranas, from Rama, Sita and Hanuman to Karna, Draupadi and Bhishma, each linked to their stories.
+- [All stories](https://spritual.co.in/library/): Search 40 illustrated retellings from the Ramayana, Mahabharata and Puranas by name, feeling, collection or reading time, in English and Hindi.
+- [People of the stories](https://spritual.co.in/characters/): 90 people of the Ramayana, Mahabharata and Puranas, from Rama, Sita and Hanuman to Karna, Draupadi and Bhishma, each linked to their stories.
 - [Festivals and their stories](https://spritual.co.in/festivals/): Dates for Diwali, Holi, Maha Shivaratri, Navratri, Janmashtami and more to November 2027 (New Delhi, Drik Panchang), each with a story to read.
 - [Questions the stories answer](https://spritual.co.in/questions/): 23 questions answered from the stories themselves, each with the scene it comes from: Samudra Manthan, Ganesha’s elephant head, Krishna and Sudama, Lanka Dahan.
 - [Glossary](https://spritual.co.in/glossary/): 28 words the stories use, each with a plain meaning: dharma, avatar, itihasa, purana, kanda, parva, tapasya, sharanagati and more, in English and Hindi.
@@ -68,6 +68,7 @@ Before quoting or summarising this site:
 - [The river in Shiva's hair](https://spritual.co.in/collections/shiva/books/valmiki-ramayana/arcs/bala-kanda/stories/shiva-river/): King Bhagiratha's penance brings the river Ganga down from heaven; Shiva catches her in his matted hair. Ganga Avataran, from the Valmiki Ramayana.
 - [The fire with no end](https://spritual.co.in/collections/shiva/books/shiva-purana/arcs/vidyeshvara-samhita/stories/shiva-pillar-of-fire/): Brahma and Vishnu fight over who is lord; a pillar of fire rises between them. One seeks its foot, one its top, and one returns with a lie. Shiva Purana.
 - [One arrow for three cities](https://spritual.co.in/collections/shiva/books/shiva-purana/arcs/rudra-samhita/stories/shiva-three-cities/): Tripura: three cities of gold, silver and iron that can fall only to a single arrow, in the one hour they meet. Shiva takes aim. From the Shiva Purana.
+- [Through fire and snow](https://spritual.co.in/collections/shiva/books/shiva-purana/arcs/rudra-samhita/stories/shiva-parvati-tapas/): Shiva burns Kama to ash and vanishes; the mountain's daughter answers with tapas, ringed by fire and standing in winter water. From the Shiva Purana.
 
 ### Devi (Devi Mahatmya)
 
