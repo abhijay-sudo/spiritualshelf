@@ -5,25 +5,16 @@
 <id>https://spritual.co.in/hi/feed.xml</id>
 <link rel="self" type="application/atom+xml" href="https://spritual.co.in/hi/feed.xml"/>
 <link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/"/>
-<updated>2026-11-19T03:09:38Z</updated>
+<updated>2026-11-19T03:20:17Z</updated>
 <author><name>Spritual</name><uri>https://spritual.co.in/hi/about/</uri></author>
 <icon>https://spritual.co.in/favicon.ico</icon>
 <logo>https://spritual.co.in/assets/icons/icon-512.png</logo>
-<entry>
-<title>मृत्यु से प्रश्न करने वाला बालक</title>
-<id>https://spritual.co.in/hi/collections/sages/books/katha-upanishad/arcs/adhyaya-1/stories/nachiketa-and-yama/</id>
-<link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/collections/sages/books/katha-upanishad/arcs/adhyaya-1/stories/nachiketa-and-yama/"/>
-<link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/collections/sages/books/katha-upanishad/arcs/adhyaya-1/stories/nachiketa-and-yama/"/>
-<updated>2026-11-19T03:09:38Z</updated>
-<category term="sages"/>
-<summary>पिता ने ही उसे मृत्यु को दे दिया। यम के घर तीन रातें भूखा रहकर बालक नचिकेता लंबी आयु और धन ठुकरा देता है, बस एक उत्तर के लिए।</summary>
-</entry>
 <entry>
 <title>बाणों की शय्या</title>
 <id>https://spritual.co.in/hi/collections/mahabharata/books/vyasa-mahabharata/arcs/bhishma-parva/stories/mahabharata-bed-of-arrows/</id>
 <link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/collections/mahabharata/books/vyasa-mahabharata/arcs/bhishma-parva/stories/mahabharata-bed-of-arrows/"/>
 <link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/collections/mahabharata/books/vyasa-mahabharata/arcs/bhishma-parva/stories/mahabharata-bed-of-arrows/"/>
-<updated>2026-11-19T03:09:28Z</updated>
+<updated>2026-11-19T03:20:17Z</updated>
 <category term="mahabharata"/>
 <summary>भीष्म पांडवों को स्वयं अपनी मृत्यु का उपाय बताते हैं, फिर सूर्य के उत्तरायण होने तक अट्ठावन रातें बाणों पर लेटे रहते हैं। महाभारत से।</summary>
 </entry>
@@ -32,9 +23,18 @@
 <id>https://spritual.co.in/hi/collections/ramayana/books/valmiki-ramayana/arcs/bala-kanda/stories/ramayana-birth-of-rama/</id>
 <link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/collections/ramayana/books/valmiki-ramayana/arcs/bala-kanda/stories/ramayana-birth-of-rama/"/>
 <link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/collections/ramayana/books/valmiki-ramayana/arcs/bala-kanda/stories/ramayana-birth-of-rama/"/>
-<updated>2026-11-19T03:09:19Z</updated>
+<updated>2026-11-19T03:20:17Z</updated>
 <category term="ramayana"/>
 <summary>पुत्रहीन राजा महायज्ञ करते हैं; देवताओं को रावण के अंत के लिए एक मनुष्य चाहिए, और विष्णु दशरथ को अपना पिता चुनते हैं। वाल्मीकि रामायण, बाल काण्ड से।</summary>
+</entry>
+<entry>
+<title>मृत्यु से प्रश्न करने वाला बालक</title>
+<id>https://spritual.co.in/hi/collections/sages/books/katha-upanishad/arcs/adhyaya-1/stories/nachiketa-and-yama/</id>
+<link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/collections/sages/books/katha-upanishad/arcs/adhyaya-1/stories/nachiketa-and-yama/"/>
+<link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/collections/sages/books/katha-upanishad/arcs/adhyaya-1/stories/nachiketa-and-yama/"/>
+<updated>2026-11-19T03:20:17Z</updated>
+<category term="sages"/>
+<summary>पिता ने ही उसे मृत्यु को दे दिया। यम के घर तीन रातें भूखा रहकर बालक नचिकेता लंबी आयु और धन ठुकरा देता है, बस एक उत्तर के लिए।</summary>
 </entry>
 <entry>
 <title>सूरज को पकड़ने उछले हनुमान</title>

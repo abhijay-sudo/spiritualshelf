@@ -1899,7 +1899,7 @@ html[lang="hi"] .cx-sel-realm-t { margin-right: 0; }
   .cx-sel-grid > li { flex-basis: calc((100% - 5 * clamp(.3rem, .7vw, .6rem)) / 6); }
   .cx-sel-tile-face img { width: 60%; }
 }
-/* without scripts every character is listed: two even rows, as before the realms */
+/* without scripts every character is listed in even rows of at most 22, so a tile never shrinks below its name */
 @media (min-width: 700px) and (min-height: 521px) {
   .cx-sel-realms[hidden] ~ .cx-sel-grid { display: grid; grid-template-columns: repeat(var(--cols-all, 12), minmax(0, 1fr)); }
 }
