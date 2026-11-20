@@ -1911,6 +1911,10 @@ html[lang="hi"] .cx-sel-realm-t { margin-right: 0; }
   .cx-sel-grid > li { flex: 0 1 calc((100% - (var(--cols, 11) - 1) * clamp(.3rem, .7vw, .6rem)) / var(--cols, 11)); }
   .cx-sel-realms[hidden] ~ .cx-sel-grid { flex-wrap: wrap; }
   .cx-sel-tile-face img { width: 78%; }
+  /* a realm of 37 or more sets 19-20 tiles in a row: the gaps close to the smallest, so a long name still stands whole on its tile */
+  .cx-sel-grid[data-tight] { column-gap: .3rem; }
+  .cx-sel-grid[data-tight] > li { flex-basis: calc((100% - (var(--cols, 11) - 1) * .3rem) / var(--cols, 11)); }
+  html:not([lang="hi"]) .cx-sel-grid[data-tight] .cx-sel-tile .cx-sel-tile-n { left: .15rem; right: 0; letter-spacing: -.02em; }
 }
 /* the realm's characters arrive one after another */
 :root.cx-js:not([data-motion="reduce"]) .cx-select .cx-sel-grid.is-regroup > li { animation: sel-regroup .5s cubic-bezier(.2, .7, .2, 1) both; animation-delay: calc(var(--gk, 0) * 30ms); }

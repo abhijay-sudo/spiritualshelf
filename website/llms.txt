@@ -12,8 +12,8 @@ Before quoting or summarising this site:
 
 ## Start here
 
-- [All stories](https://spritual.co.in/library/): Search 42 illustrated retellings from the Ramayana, Mahabharata and Puranas by name, feeling, collection or reading time, in English and Hindi.
-- [People of the stories](https://spritual.co.in/characters/): 91 people of the Ramayana, Mahabharata and Puranas, from Rama, Sita and Hanuman to Karna, Draupadi and Bhishma, each linked to their stories.
+- [All stories](https://spritual.co.in/library/): Search 44 illustrated retellings from the Ramayana, Mahabharata and Puranas by name, feeling, collection or reading time, in English and Hindi.
+- [People of the stories](https://spritual.co.in/characters/): 96 people of the Ramayana, Mahabharata and Puranas, from Rama, Sita and Hanuman to Karna, Draupadi and Bhishma, each linked to their stories.
 - [Festivals and their stories](https://spritual.co.in/festivals/): Dates for Diwali, Holi, Maha Shivaratri, Navratri, Janmashtami and more to November 2027 (New Delhi, Drik Panchang), each with a story to read.
 - [Questions the stories answer](https://spritual.co.in/questions/): 23 questions answered from the stories themselves, each with the scene it comes from: Samudra Manthan, Ganesha’s elephant head, Krishna and Sudama, Lanka Dahan.
 - [Glossary](https://spritual.co.in/glossary/): 28 words the stories use, each with a plain meaning: dharma, avatar, itihasa, purana, kanda, parva, tapasya, sharanagati and more, in English and Hindi.
@@ -69,6 +69,7 @@ Before quoting or summarising this site:
 - [The river in Shiva's hair](https://spritual.co.in/collections/shiva/books/valmiki-ramayana/arcs/bala-kanda/stories/shiva-river/): King Bhagiratha's penance brings the river Ganga down from heaven; Shiva catches her in his matted hair. Ganga Avataran, from the Valmiki Ramayana.
 - [The fire with no end](https://spritual.co.in/collections/shiva/books/shiva-purana/arcs/vidyeshvara-samhita/stories/shiva-pillar-of-fire/): Brahma and Vishnu fight over who is lord; a pillar of fire rises between them. One seeks its foot, one its top, and one returns with a lie. Shiva Purana.
 - [One arrow for three cities](https://spritual.co.in/collections/shiva/books/shiva-purana/arcs/rudra-samhita/stories/shiva-three-cities/): Tripura: three cities of gold, silver and iron that can fall only to a single arrow, in the one hour they meet. Shiva takes aim. From the Shiva Purana.
+- [The sacrifice without Shiva](https://spritual.co.in/collections/shiva/books/shiva-purana/arcs/rudra-samhita/stories/shiva-sati-and-daksha/): Daksha invites every god to his sacrifice but Shiva. Sati goes uninvited, finds no share for her husband, and gives up her body. From the Shiva Purana.
 - [Through fire and snow](https://spritual.co.in/collections/shiva/books/shiva-purana/arcs/rudra-samhita/stories/shiva-parvati-tapas/): Shiva burns Kama to ash and vanishes; the mountain's daughter answers with tapas, ringed by fire and standing in winter water. From the Shiva Purana.
 
 ### Devi (Devi Mahatmya)
@@ -89,6 +90,7 @@ Before quoting or summarising this site:
 - [Lo, I have won](https://spritual.co.in/collections/mahabharata/books/vyasa-mahabharata/arcs/sabha-parva/stories/mahabharata-the-dice-hall/): Yudhishthira loses everything to Shakuni's dice, Draupadi is dragged into the hall and her robe cannot be stripped. The Sabha Parva of the Mahabharata.
 - [Savitri follows death](https://spritual.co.in/collections/mahabharata/books/vyasa-mahabharata/arcs/vana-parva/stories/mahabharata-savitri/): Savitri marries Satyavan knowing he has one year to live; when Yama comes with his noose, she walks after him. From the Vana Parva of the Mahabharata.
 - [The armour, still dripping](https://spritual.co.in/collections/mahabharata/books/vyasa-mahabharata/arcs/vana-parva/stories/mahabharata-the-golden-armour/): Surya warns Karna in a dream that Indra will ask for his armour and earrings; Karna, who never refuses, gives them. Kavach Kundal, from the Vana Parva.
+- [Krishna, or his army](https://spritual.co.in/collections/mahabharata/books/vyasa-mahabharata/arcs/udyoga-parva/stories/mahabharata-krishna-or-his-army/): Duryodhana and Arjuna find Krishna asleep in Dwaraka. One may take his army of ten crores, the other Krishna unarmed. From the Mahabharata.
 - [The song between two armies](https://spritual.co.in/collections/mahabharata/books/vyasa-mahabharata/arcs/bhishma-parva/stories/mahabharata-the-song/): At Kurukshetra, Arjuna lets his bow fall and Krishna, his charioteer, begins the Bhagavad Gita. Retold from the Bhishma Parva of the Mahabharata.
 - [A bed of arrows](https://spritual.co.in/collections/mahabharata/books/vyasa-mahabharata/arcs/bhishma-parva/stories/mahabharata-bed-of-arrows/): Bhishma tells the Pandavas how to bring him down, then lies fifty-eight nights on arrows until the sun turns north. From the Mahabharata.
 - [Alone inside the wheel](https://spritual.co.in/collections/mahabharata/books/vyasa-mahabharata/arcs/drona-parva/stories/mahabharata-abhimanyu/): Abhimanyu knew how to enter Drona's Chakravyuha, not how to leave it: one boy against an army until six warriors close in. From the Drona Parva.

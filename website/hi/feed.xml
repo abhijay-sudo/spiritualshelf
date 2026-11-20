@@ -5,10 +5,28 @@
 <id>https://spritual.co.in/hi/feed.xml</id>
 <link rel="self" type="application/atom+xml" href="https://spritual.co.in/hi/feed.xml"/>
 <link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/"/>
-<updated>2026-11-19T05:12:24Z</updated>
+<updated>2026-11-20T19:40:41Z</updated>
 <author><name>Spritual</name><uri>https://spritual.co.in/hi/about/</uri></author>
 <icon>https://spritual.co.in/favicon.ico</icon>
 <logo>https://spritual.co.in/assets/icons/icon-512.png</logo>
+<entry>
+<title>कृष्ण, या उनकी सेना</title>
+<id>https://spritual.co.in/hi/collections/mahabharata/books/vyasa-mahabharata/arcs/udyoga-parva/stories/mahabharata-krishna-or-his-army/</id>
+<link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/collections/mahabharata/books/vyasa-mahabharata/arcs/udyoga-parva/stories/mahabharata-krishna-or-his-army/"/>
+<link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/collections/mahabharata/books/vyasa-mahabharata/arcs/udyoga-parva/stories/mahabharata-krishna-or-his-army/"/>
+<updated>2026-11-20T19:40:41Z</updated>
+<category term="mahabharata"/>
+<summary>द्वारका में सोए कृष्ण के पास दुर्योधन और अर्जुन पहुँचते हैं। एक को दस करोड़ की सेना मिलेगी, दूसरे को निहत्थे कृष्ण। महाभारत से।</summary>
+</entry>
+<entry>
+<title>शिव के बिना यज्ञ</title>
+<id>https://spritual.co.in/hi/collections/shiva/books/shiva-purana/arcs/rudra-samhita/stories/shiva-sati-and-daksha/</id>
+<link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/collections/shiva/books/shiva-purana/arcs/rudra-samhita/stories/shiva-sati-and-daksha/"/>
+<link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/collections/shiva/books/shiva-purana/arcs/rudra-samhita/stories/shiva-sati-and-daksha/"/>
+<updated>2026-11-20T19:40:41Z</updated>
+<category term="shiva"/>
+<summary>दक्ष अपने यज्ञ में शिव को छोड़ सब देवताओं को बुलाते हैं। सती बिना बुलाए जाती हैं, पति का भाग नहीं पातीं और देह त्याग देती हैं। शिव पुराण से।</summary>
+</entry>
 <entry>
 <title>वेल और आम का वृक्ष</title>
 <id>https://spritual.co.in/hi/collections/ganesha/books/kanda-puranam/arcs/yuddha-kandam/stories/murugan-and-the-vel/</id>
