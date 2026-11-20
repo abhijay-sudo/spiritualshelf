@@ -12,8 +12,8 @@
      .cast-plate (also .cast-hero-pic) > .cast-plate-img       a person painted in a scene: the painting (its transform-origin is the face)
      .cast-plate > .cast-sky                                   the painting's own top edge carried on above it, out of focus (only where it had to come down)
      .cast-focus                                               the box that person stands in: from above the head to the foot of the stage
-     .cast-figure.cast-focus (also .cast-hero-pic)             a drawn figure (someone not yet painted): the whole figure, in front of .cast-world (their world, out of focus)
-     .cast-figure > .cast-cut > .fig                           the figure itself: .cast-cut is what moves and casts the shadow, the picture inside it only fades at its foot
+     .cast-figure.cast-focus (also .cast-hero-pic)             a cut-out portrait: the whole figure, in front of .cast-world (their world, out of focus)
+     .cast-figure > .cast-cut > .art                           the cut-out itself: .cast-cut is what moves and casts the shadow, the picture inside it only fades at its foot
      .cast-name, .cast-echo, .cast-title, .cast-about, .cast-facts, .cast-acts   the words, in order (on a phone the button comes before the paragraph)
      .cast-title-in > span                                     each traditional name in a title, the dot between two of them inside the second
    --ep-a is the person's light. */
@@ -64,7 +64,7 @@
 /* someone else stands on the calm side of this painting: it is closed further, so no second face shows through the words */
 .cast-hero[data-calm="deep"] { --calm-a: 98%; --calm-b: 98%; --calm-c: 93%; --calm-d: 58%; }
 
-/* a drawn figure stands in front of their world, which is only light and colour behind them */
+/* a painted cut-out stands in front of their world, which is only light and colour behind them */
 .cast-world { position: absolute; inset: 0 0 1px; overflow: hidden; }
 .cast-world img { position: absolute; left: -8%; top: -8%; width: 116%; height: 116%; max-width: none; object-fit: cover; object-position: var(--world-pos, 50% 40%); filter: blur(22px) saturate(1.15) brightness(.8); }
 /* (the whole figure stands inside the first screen, under the bar: its height is the stage's or the screen's, whichever is less) */
@@ -205,7 +205,7 @@ html[lang="hi"] .cast-hymn-k { font: 400 .92rem/1.4 "Mukta", var(--cx-ui); lette
   .cast-facts b { font-size: 1.15rem; }
 }
 
-/* by daylight (the paper theme) the world behind a drawn figure is kept light */
+/* by daylight (the paper theme) the world behind a cut-out is kept light */
 :root[data-theme="light"] .cast-world img { filter: blur(22px) saturate(1.1) brightness(1.08); }
 :root[data-theme="light"] .cast-cut { filter: drop-shadow(0 24px 26px rgb(60 30 10 / .28)); }
 :root[data-theme="light"] .cast-title { color: color-mix(in srgb, var(--ep-a) 30%, var(--cx-saffron-2)); }
@@ -294,6 +294,7 @@ html[lang="hi"] .cast-tile-k { font: 500 1rem/1.4 "Mukta", var(--cx-ui); letter-
 .cast-tile { display: grid; grid-template-rows: minmax(0, 1fr) auto; grid-template-columns: minmax(0, 1fr); --foot: 4rem; --sink: 1.5rem; }
 .cast-tile::after { content: none; }
 .cast-tile-pic { position: relative; inset: auto; margin: 4% 4% 0; min-height: 0; display: block; }
+.cast-tile-pic .art { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; }
 .cast-tile-pic { grid-row: 1; }
 .cast-tile-txt { grid-row: 2; position: relative; inset: auto; margin-top: calc(-1 * (var(--foot) + var(--sink))); padding-top: var(--foot);
   background: linear-gradient(to top, rgb(14 8 4 / .97) 0, rgb(14 8 4 / .95) calc(100% - var(--foot)), rgb(14 8 4 / .8) calc(100% - var(--foot) * .62), rgb(14 8 4 / .32) calc(100% - var(--foot) * .28), transparent 100%); }

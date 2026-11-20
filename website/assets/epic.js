@@ -36,7 +36,7 @@
   var hero = $('.cast-hero'), main = hero && hero.closest('main'), tier = main ? main.dataset.tier : '';
   if (hero && (tier === 'legend' || tier === 'lead') && !lowData && !reduced()) {
     var stage = $('.cast-stage', hero), focus = $('.cast-focus', hero), scene = hero.classList.contains('cast-hero--scene');
-    // their light: a drawn figure has it already (.cast-aura); a person painted in a scene has it laid in the box they stand in
+    // their light: a cut-out has it already (.cast-aura); a person painted in a scene has it laid in the box they stand in
     if (scene && focus) { var bl = d.createElement('i'); bl.className = 'ep-bloom'; bl.setAttribute('aria-hidden', 'true'); focus.appendChild(bl); }
     var kind = tier === 'legend' && AIR[main.dataset.air];
     if (kind && stage) {
@@ -45,11 +45,11 @@
       var rnd = function () { seed = (seed * 1664525 + 1013904223) >>> 0; return seed / 4294967296; };
       var r = function (a) { return a[0] + rnd() * (a[1] - a[0]); };
       var air = d.createElement('div'); air.className = 'ep-air'; air.setAttribute('aria-hidden', 'true');
-      // behind a drawn figure (between it and its world); over a painting, under the calm side's veil
+      // behind a cut-out figure (between it and its world); over a painting, under the calm side's veil
       stage.insertBefore(air, stage.firstElementChild ? stage.firstElementChild.nextSibling : null);
       var lay = function () {
         var S = stage.getBoundingClientRect(), W = S.width, H = S.height; if (!W || !H) return;
-        // every face is kept clear: the head of the figure (a drawn figure's top, or the face a painting is framed on), with room round it
+        // every face is kept clear: the head of the figure (a cut-out's top, or the face a painting is framed on), with room round it
         var faces = [], fr = focus && focus.getBoundingClientRect();
         if (fr && fr.width) {
           if (scene) { var hd = fr.width / 3.4; faces.push([fr.left - S.left + fr.width / 2, fr.top - S.top + hd * .9, hd * .85, hd * 1.05]); }

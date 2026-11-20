@@ -159,9 +159,9 @@
     let lastX = -1, lastY = -1; const moved = (e) => e.clientX !== lastX || e.clientY !== lastY;
     addEventListener('pointermove', (e) => { lastX = e.clientX; lastY = e.clientY; }, { passive: true });
     const T = (k) => $(`[data-sel-${k}]`, sel);
-    const out = { n: T('n'), coll: T('coll'), title: T('title'), sum: T('sum'), min: T('min'), scenes: T('scenes'), go: T('go'), name: T('name'), who: T('who'), chips: T('chips'), goT: $('[data-sel-go-t]', sel), story: T('story'), storyT: $('[data-sel-story-t]', sel) };
+    const out = { n: T('n'), coll: T('coll'), title: T('title'), sum: T('sum'), min: T('min'), scenes: T('scenes'), go: T('go'), hero: T('hero'), name: T('name'), who: T('who'), chips: T('chips'), goT: $('[data-sel-go-t]', sel), story: T('story'), storyT: $('[data-sel-story-t]', sel) };
     const whoLabel = out.who ? out.who.textContent.replace(out.name ? out.name.textContent : '', '').trim() : '';
-    const layers = $$('.cx-sel-bg img', sel); const auto = $('[data-sel-auto]', sel);
+    const layers = $$('.cx-sel-bg img', sel); const fig = $('[data-sel-fig]', sel); const auto = $('[data-sel-auto]', sel);
     // on a phone the frame is tall and narrow: the camera goes to the character's face, not the middle of the figure
     const narrow = matchMedia('(max-width: 699px)');
     let outT = 0;
@@ -191,13 +191,22 @@
       if (out.chips) out.chips.innerHTML = d.chips || '';   // built by the site's own generator (escaped there)
       out.go.href = t.href; out.go.setAttribute('aria-label', d.meet || d.title); if (out.goT) out.goT.textContent = d.meet || d.title;
       if (out.story && d.story) { out.story.href = d.story; out.story.setAttribute('aria-label', `${out.storyT ? out.storyT.textContent : ''}: ${d.storyT || ''}`); }
-      // each person is found by the camera in their own painting: the world pushes in on them, and the words take the other side
-      sel.classList.toggle('is-left', d.side === 'left'); sel.classList.toggle('is-calm', d.calm === '1');
+      // a character with a cut-out portrait steps in front of their world; one painted inside a scene is found by the
+      // camera instead: the world itself pushes in on them, and the words move to the other side
+      const scene = d.mode === 'scene'; const wasCut = !sel.classList.contains('is-scene');
+      sel.classList.toggle('is-scene', scene); sel.classList.toggle('is-left', d.side === 'left'); sel.classList.toggle('is-calm', scene && d.calm === '1');
+      if (!scene && d.hero) {
+        // the last figure stays where it stood and fades while the next fades in over it (cinema.css, .is-ghost): a cross-fade, not a cut
+        if (wasCut && fig && !reduced() && !root.classList.contains('ep-lite')) { const g = fig.cloneNode(true); g.removeAttribute('data-sel-fig'); g.querySelector('img')?.removeAttribute('data-sel-hero'); g.classList.add('is-ghost'); fig.before(g); const bye = () => g.remove(); g.addEventListener('animationend', bye, { once: true }); setTimeout(bye, 700); }
+        out.hero.srcset = d.heroset; out.hero.src = d.hero;
+        // a figure not yet decoded fades in from the moment it is, rather than appearing part-way through its fade
+        if (!out.hero.complete && fig) { const want = d.hero; out.hero.addEventListener('load', () => { if (out.hero.getAttribute('src') === want && !reduced()) { fig.style.animation = 'none'; void fig.offsetWidth; fig.style.animation = ''; } }, { once: true }); }
+      }
       band();
       // the painting: the roster's small copy at once (it is already loaded), the full one as soon as it has decoded
       // the new world comes in over the old one behind a blade of light; the old one leaves when it is covered
       const my = ++token; const next = layers[1 - front]; const prev = layers[front]; const thumb = $('img', t);
-      next.removeAttribute('srcset'); next.removeAttribute('sizes'); { const face = d.ffx && narrow.matches; next.style.setProperty('--fx', `${face ? d.ffx : d.fx}%`); next.style.setProperty('--fy', `${face ? d.ffy : d.fy}%`); } next.style.setProperty('--z', d.z || 1); next.style.setProperty('--say', d.ay ? d.ay + '%' : ''); next.classList.add('is-fit'); next.style.setProperty('--fit-k', d.fk); next.style.setProperty('--fit-t', d.ft); next.style.setProperty('--fit-x', parseFloat(d.ffx) / 100); next.src = thumb.currentSrc || thumb.src;
+      next.removeAttribute('srcset'); next.removeAttribute('sizes'); { const face = d.ffx && narrow.matches; next.style.setProperty('--fx', `${face ? d.ffx : d.fx}%`); next.style.setProperty('--fy', `${face ? d.ffy : d.fy}%`); } next.style.setProperty('--z', d.z || 1); next.style.setProperty('--say', d.ay ? d.ay + '%' : ''); const fit = scene && !d.old; next.classList.toggle('is-fit', fit); if (fit) { next.style.setProperty('--fit-k', d.fk); next.style.setProperty('--fit-t', d.ft); next.style.setProperty('--fit-x', parseFloat(d.ffx) / 100); } next.src = thumb.currentSrc || thumb.src;
       layers.forEach((x) => x.classList.remove('is-out', 'is-in'));
       prev.classList.remove('is-on'); prev.classList.add('is-out'); next.classList.add('is-on');
       if (!reduced()) { void next.offsetWidth; next.classList.add('is-in'); }

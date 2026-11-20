@@ -364,6 +364,15 @@
       if (why) { why.hidden = !pick.need; if (pick.need) why.textContent = fmt(UI.because, { need: pick.need.label.toLowerCase() }); }
       slot.replaceChildren(c);
     }
+    const heroFig = $('[data-hero-fig] img');
+    if (heroFig) {
+      const c = cardFor(pick.slug); const lead = c?.dataset.lead; const id = (UI.art || []).includes(lead) ? lead : (UI.art || []).includes(c?.dataset.c) ? c.dataset.c : null;
+      if (id && heroFig.dataset.art !== id) {
+        const src = c.querySelector(`img[data-art="${id}"]`);
+        const swap = () => { heroFig.src = UI.artBase + id + '-540.webp'; heroFig.srcset = `${UI.artBase}${id}-540.webp 540w, ${UI.artBase}${id}-1080.webp 1080w, ${UI.artBase}${id}-1600.webp 1600w`; if (src) { heroFig.width = src.width; heroFig.height = src.height; } heroFig.dataset.art = id; heroFig.classList.remove('is-swapping'); };
+        if (reduced()) swap(); else { heroFig.classList.add('is-swapping'); setTimeout(swap, 260); }
+      }
+    }
     const more = $('[data-more]');
     if (more) { const slugs = allSlugs(); const i = slugs.indexOf(pick.slug); more.replaceChildren(...[1, 2, 3].map((k) => cardFor(slugs[(i + k) % slugs.length])).filter(Boolean)); }
     paintSave();
