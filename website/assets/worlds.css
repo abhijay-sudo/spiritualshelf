@@ -1,0 +1,177 @@
+/* Scroll worlds (/worlds/…). Loaded on those pages only. The page below is complete as a plain article; assets/worlds.js
+   adds .wl-on to <html> when motion is welcome, and only then is the view pinned and driven by the scroll. */
+.is-wl { background: #0d0806; }
+.wl { --wl-base: #0d0806; --wl-ink: #fff6e8; --wl-dim: rgb(255 246 232 / .82); --wl-gold: #e7c27a; --wl-pane-h: 100%; --wl-gut: max(1.15rem, env(safe-area-inset-left, 0px) + 1rem, 5vw); --wl-gut-r: max(1.15rem, env(safe-area-inset-right, 0px) + 1rem, 5vw); --wl-text-l: var(--wl-gut); display: block; background: var(--wl-base); color: var(--wl-ink); }
+.wl-track { position: relative; background: var(--wl-base); }
+.wl-view { position: relative; z-index: 0; isolation: isolate; }
+.wl-canvas, .wl-gauge, .wl-measure, .wl-rail, .wl-pic--plate { display: none; }
+.wl-stages { list-style: none; margin: 0; padding: 0; }
+.wl-stage { position: relative; display: grid; gap: 1.4rem; max-width: 46rem; margin: 0 auto; padding: clamp(2rem, 1rem + 4vw, 3.5rem) var(--wl-gut); }
+.wl-pic { margin: 0; aspect-ratio: 16 / 9; overflow: hidden; -webkit-mask-image: linear-gradient(to bottom, transparent, #000 7%, #000 88%, transparent), linear-gradient(to right, transparent, #000 5%, #000 95%, transparent); mask-image: linear-gradient(to bottom, transparent, #000 7%, #000 88%, transparent), linear-gradient(to right, transparent, #000 5%, #000 95%, transparent); -webkit-mask-composite: source-in; mask-composite: intersect; }
+.wl-pic img { display: block; width: 100%; height: 100%; max-width: none; object-fit: cover; }
+.wl-text { display: grid; gap: .7rem; max-width: 40rem; }
+.wl-text > * { margin: 0; }
+.wl-text p { font: 400 clamp(1.08rem, 1rem + .45vw, 1.32rem)/1.58 var(--cx-text); color: var(--wl-ink); text-shadow: 0 1px 12px rgb(10 5 0 / .8); text-wrap: pretty; }
+.wl-h2 { font: 500 clamp(1.55rem, 1.2rem + 1.5vw, 2.4rem)/1.14 var(--cx-title); letter-spacing: -.012em; color: var(--wl-gold); text-shadow: 0 1px 16px rgb(10 5 0 / .8); text-wrap: balance; }
+.wl-n { font: 500 .8rem/1 var(--cx-ui); letter-spacing: .08em; color: var(--wl-dim); font-variant-numeric: tabular-nums; }
+html[lang="hi"] .wl-text p { font-family: "Tiro Devanagari Hindi", var(--cx-text); line-height: 1.75; }
+html[lang="hi"] .wl-h2, html[lang="hi"] .wl-h1 { line-height: 1.32; letter-spacing: 0; }
+
+/* the opening stage is one full screen in both modes, so nothing moves when the script takes over */
+.wl-stage--title { display: block; max-width: none; height: 100svh; margin: 0; padding: 0; }
+.wl-stage--title .wl-pic { position: absolute; left: 0; top: 0; width: 100%; height: var(--wl-pane-h); aspect-ratio: auto; -webkit-mask-image: none; mask-image: none; }
+.wl-stage--title::after, .wl-on .wl-view::after { content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none; background: linear-gradient(to top, rgb(13 8 6 / .96), rgb(13 8 6 / .86) 24%, rgb(13 8 6 / .5) 46%, rgb(13 8 6 / 0) 66%), linear-gradient(to bottom, rgb(13 8 6 / .5), rgb(13 8 6 / 0) 22%); }
+.wl-stage--title .wl-text, .wl-on .wl-text { position: absolute; z-index: 3; left: var(--wl-text-l); right: var(--wl-gut-r); bottom: calc(max(1rem, env(safe-area-inset-bottom, 0px)) + 3.4rem); }
+.wl-kicker { font: 500 .95rem/1.2 var(--cx-ui); color: var(--wl-gold); }
+html[lang="hi"] .wl-kicker, html[lang="hi"] .wl-cue, html[lang="hi"] .wl-out, html[lang="hi"] .wl-gauge, html[lang="hi"] .wl-measure, html[lang="hi"] .wl-rail, html[lang="hi"] .wl-n { font-family: "Mukta", var(--cx-ui); }
+.wl-h1 { font: 500 clamp(2.5rem, 1.5rem + 4.6vw, 5.2rem)/1.04 var(--cx-title); letter-spacing: -.02em; color: #fff8ee; text-shadow: 0 2px 30px rgb(20 8 0 / .6); text-wrap: balance; }
+.wl-title .wl-lead { max-width: 36rem; }
+.wl-cue { font: 500 .9rem/1.2 var(--cx-ui); color: var(--wl-dim); }
+.wl-cue[hidden] { display: none; }
+
+/* ways out: always present, never in the way */
+.wl-ways { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem 1.25rem; max-width: 46rem; margin: 0 auto; padding: 1rem var(--wl-gut) 0; }
+.wl-out { display: inline-flex; align-items: center; gap: .4rem; min-height: 44px; font: 500 .9rem/1 var(--cx-ui); color: var(--wl-ink); text-decoration: none; text-shadow: 0 1px 10px rgb(10 5 0 / .9); }
+.wl-out:hover { color: var(--wl-gold); }
+.wl-skip { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.wl-skip:focus-visible { position: static; width: auto; height: auto; clip-path: none; padding: .6rem .9rem; font: 500 .9rem/1 var(--cx-ui); color: #1b140f; background: var(--wl-gold); border-radius: 2px; }
+.wl-step { display: inline-grid; place-items: center; width: 44px; height: 44px; padding: 0; border: 0; border-radius: 50%; background: none; color: var(--wl-ink); cursor: pointer; }
+.wl-step[hidden] { display: none; }
+.wl-step svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; filter: drop-shadow(0 1px 6px rgb(10 5 0 / .9)); }
+.wl-step:hover { color: var(--wl-gold); }
+.wl :is(a, button):focus-visible { outline: 2px solid var(--wl-gold); outline-offset: 3px; }
+.wl-view > .wl-ways { position: absolute; z-index: 5; }
+
+/* after the journey: how it was made, the sources, where to go next */
+.wl-after { background: var(--wl-base); color: var(--wl-ink); scroll-margin-top: var(--ed-head-h, 60px); }
+.wl-after:focus { outline: none; }
+.wl-after-in { display: grid; gap: 1rem; max-width: 44rem; margin: 0 auto; padding: clamp(3rem, 2rem + 4vw, 5rem) var(--wl-gut) clamp(2rem, 1rem + 3vw, 4rem); }
+.wl-after-in > * { margin: 0; }
+.wl-after p, .wl-sources { font: 400 1.05rem/1.65 var(--cx-text); color: var(--wl-dim); }
+html[lang="hi"] .wl-after p, html[lang="hi"] .wl-sources { font-family: "Tiro Devanagari Hindi", var(--cx-text); line-height: 1.8; }
+.wl-h3 { margin-top: 1rem; font: 500 1.35rem/1.2 var(--cx-title); color: var(--wl-gold); }
+.wl-sources { margin: 0; padding-left: 1.2rem; }
+.wl-sources a, .wl-link { color: var(--wl-ink); text-decoration: underline; text-decoration-color: rgb(231 194 122 / .6); text-underline-offset: .2em; }
+.wl-sources a:hover, .wl-link:hover { color: var(--wl-gold); }
+.wl-after-ways { display: flex; flex-wrap: wrap; gap: .4rem 1.5rem; }
+.wl-link { min-height: 44px; display: inline-flex; align-items: center; padding: 0; border: 0; background: none; font: 500 .98rem/1.3 var(--cx-ui); cursor: pointer; text-align: left; }
+html[lang="hi"] .wl-link { font-family: "Mukta", var(--cx-ui); font-size: 1.05rem; }
+.wl-link[hidden] { display: none; }
+.wl .mx-kands { background: var(--cx-paper); }
+
+/* the lokas as a still page: each world is a band of its own colour */
+.wl--lokas .wl-stage { max-width: none; padding-inline: max(var(--wl-gut), calc((100% - 44rem) / 2)); background: linear-gradient(to bottom, var(--wl-tone), var(--wl-tone-2)); }
+.wl--lokas .wl-stage--title { padding: 0; }
+
+/* a phone held upright: the painting keeps the upper part of the screen, the words the lower third */
+@media (max-aspect-ratio: 4/5) {
+  .wl { --wl-pane-h: 68%; }
+  .wl-gauge-rail { height: 21svh; }
+  .wl-gauge-rail em { color: transparent; }
+  .wl-gauge-rail em.is-at { color: #fff; }
+  .wl-on .wl-m--h { width: 7rem; margin-left: -3.5rem; }
+  /* the dark margin behind the water is kept narrow on a phone, so it never dims a face beside it */
+  .wl-on .wl--ganga .wl-view::before { width: calc(var(--wl-gutter) * 1.15); background: linear-gradient(to right, rgb(8 8 14 / .86), rgb(8 8 14 / .5) 50%, rgb(8 8 14 / 0)); }
+  .wl-stage--title::after, .wl-on .wl-view::after { background: linear-gradient(to top, rgb(13 8 6) 30%, rgb(13 8 6 / .9) 40%, rgb(13 8 6 / .45) 54%, rgb(13 8 6 / 0) 68%), linear-gradient(to bottom, rgb(13 8 6 / .55), rgb(13 8 6 / 0) 18%); }
+}
+
+/* ---- the pinned view (only when assets/worlds.js has said motion is welcome) ---- */
+.wl-on .wl-view { position: sticky; top: 0; height: 100svh; overflow: hidden; overflow: clip; contain: layout paint; }
+.wl-on .wl-stage { position: absolute; inset: 0; display: block; max-width: none; margin: 0; padding: 0; background: none; pointer-events: none; }
+.wl-on .wl--lokas .wl-stage--title { background: linear-gradient(to bottom, var(--wl-tone), var(--wl-tone-2)); }
+.wl-on .wl-pic { position: absolute; z-index: 0; left: 0; top: 0; width: 100%; height: var(--wl-pane-h); aspect-ratio: auto; -webkit-mask-image: none; mask-image: none; opacity: 0; will-change: opacity; }
+.wl-on .wl-pic--plate { display: block; }
+.wl-on .wl-pic--sea { background: radial-gradient(120% 70% at 50% 0%, #2b4a63, #14283c 55%, #0d1622 100%); }
+.wl-on .wl-pic--deep { background: radial-gradient(120% 80% at 30% 20%, #16263f, #0c1424 60%, #0d0806 100%); }
+.wl-on .wl-pic img { position: absolute; left: 0; top: 0; transform-origin: 0 0; will-change: transform; backface-visibility: hidden; }
+.wl-on .wl-stage--title .wl-pic { opacity: 1; }
+.wl-on .wl-stage--title::after { display: none; }
+.wl-on .wl-text { opacity: 0; will-change: opacity, transform; }
+.wl-on .wl-stage--title .wl-text { opacity: 1; }
+.wl-on .wl-canvas { display: block; position: absolute; z-index: 2; inset: 0; width: 100%; height: 100%; pointer-events: none; opacity: 0; transition: opacity 1.2s ease; }
+.wl-on .wl-canvas.is-live { opacity: 1; }
+.wl-on .wl-view > .wl-ways { left: var(--wl-gut); right: var(--wl-gut-r); top: calc(var(--ed-head-h, 60px) + env(safe-area-inset-top, 0px) + .15rem); max-width: none; margin: 0; padding: 0; pointer-events: none; }
+.wl-on .wl-ways > * { pointer-events: auto; }
+.wl-on .wl-step { position: absolute; right: -.5rem; top: calc(100svh - var(--ed-head-h, 60px) - env(safe-area-inset-top, 0px) - max(.6rem, env(safe-area-inset-bottom, 0px)) - 44px - .15rem); }
+.wl-on .wl-step[data-wl-prev] { right: calc(44px - .25rem); }
+.wl-on .wl-step:disabled { opacity: .35; cursor: default; }
+
+/* Hanuman's leap: the gauge in the margin, and the two measures of Surasa's contest */
+.wl-on .wl-gauge { display: grid; justify-items: end; gap: .45rem; position: absolute; z-index: 4; right: var(--wl-gut-r); top: calc(var(--ed-head-h, 60px) + env(safe-area-inset-top, 0px) + 1rem); font: 500 .74rem/1.1 var(--cx-ui); color: var(--wl-ink); text-shadow: 0 1px 8px rgb(10 5 0 / .95), 0 0 2px rgb(10 5 0 / .8); pointer-events: none; opacity: 0; transition: opacity .8s ease; }
+.wl-on .wl-gauge.is-live { opacity: 1; }
+.wl-gauge-rail { position: relative; display: block; width: 1px; height: min(34svh, 17rem); margin-right: 3px; background: linear-gradient(to bottom, rgb(231 194 122 / .9), rgb(231 194 122 / .45)); }
+.wl-gauge-rail i { position: absolute; left: -3px; top: -3.5px; width: 7px; height: 7px; border-radius: 50%; background: #ffe6b0; box-shadow: 0 0 10px 2px rgb(255 214 140 / .7); will-change: transform; }
+.wl-gauge-rail em { position: absolute; right: -3px; display: flex; align-items: center; gap: .4rem; height: 1px; font-style: normal; white-space: nowrap; color: var(--wl-dim); transition: color .4s; }
+.wl-gauge-rail em::after { content: ""; width: 7px; height: 1px; background: rgb(231 194 122 / .9); }
+.wl-gauge-rail em.is-at { color: #fff; }
+.wl-gauge-b { color: var(--wl-gold); }
+.wl-on .wl-measure { display: block; position: absolute; z-index: 4; inset: 0; pointer-events: none; opacity: 0; font: 500 .8rem/1.2 var(--cx-ui); color: var(--wl-dim); text-shadow: 0 1px 8px rgb(5 10 20 / .9); }
+.wl-m { position: absolute; left: 0; top: 0; display: grid; justify-items: center; gap: .15rem; width: 11rem; margin-left: -5.5rem; text-align: center; will-change: transform; }
+.wl-m b { min-height: 1.3em; font: 500 1.25rem/1.1 var(--cx-title); color: #fff; font-variant-numeric: tabular-nums; }
+.wl-m--h b { color: #ffd98f; }
+html[lang="hi"] .wl-m b { font-family: "Mukta", var(--cx-ui); font-weight: 600; }
+
+/* the descent of Ganga: the water runs down a dark margin and the words stand beside it */
+.wl--ganga { --wl-gutter: 20vw; }
+.wl-on .wl--ganga { --wl-text-l: calc(var(--wl-gutter) + .35rem); }
+.wl-on .wl--ganga .wl-view::before { content: ""; position: absolute; z-index: 1; left: 0; top: 0; bottom: 0; width: calc(var(--wl-gutter) * 1.7); pointer-events: none; background: linear-gradient(to right, rgb(8 8 14 / .9), rgb(8 8 14 / .72) 45%, rgb(8 8 14 / 0)); opacity: 0; transition: opacity 1.2s ease; }
+.wl-on .wl--ganga.is-live .wl-view::before { opacity: 1; }
+.wl-on .wl--ganga .wl-stage--title .wl-text { left: var(--wl-gut); }
+.wl-on .wl--ganga .wl-ways { justify-content: flex-end; }
+.wl-on .wl--ganga .wl-out { margin-right: 0; }
+
+/* the fourteen lokas: a rail of fourteen marks, the earth's surface between the seventh and the eighth */
+.wl-on .wl-rail { display: grid; gap: 7px; position: absolute; z-index: 4; right: var(--wl-gut-r); top: calc(var(--ed-head-h, 60px) + env(safe-area-inset-top, 0px) + 1.2rem); margin: 0; padding: 0; list-style: none; font: 500 .72rem/1 var(--cx-ui); color: var(--wl-dim); text-shadow: 0 1px 8px rgb(10 5 0 / .9); pointer-events: none; }
+.wl-rail li { display: flex; justify-content: flex-end; align-items: center; gap: .5rem; height: 9px; }
+.wl-rail li::after { content: ""; width: 10px; height: 1px; background: currentColor; opacity: .7; transition: width .5s, opacity .5s, background-color .5s; }
+.wl-rail li span { opacity: 0; transition: opacity .5s; white-space: nowrap; }
+.wl-rail li.is-at { color: #fff; }
+.wl-rail li.is-at::after { width: 22px; opacity: 1; background: var(--wl-gold); }
+.wl-rail-gap { margin-top: 12px; }
+@media (min-width: 1100px) { .wl-rail li span { opacity: .6; } .wl-rail li.is-at span { opacity: 1; } }
+.wl-on .wl--lokas .wl-text { max-width: 34rem; }
+.wl-on .wl--lokas .wl-h2 { font-size: clamp(2.1rem, 1.4rem + 3.4vw, 4rem); color: #fff8ee; }
+
+@media (min-aspect-ratio: 4/5) {
+  .wl--ganga { --wl-gutter: clamp(9rem, 15vw, 16rem); }
+  .wl-on .wl-text, .wl-stage--title .wl-text { max-width: min(40rem, 52vw); }
+  .wl-on .wl--ganga .wl-ways { justify-content: flex-start; }
+}
+/* a short phone held upright: the words set a little smaller, so they keep to the lower part of the screen */
+@media (max-aspect-ratio: 4/5) and (max-height: 700px) { .wl-text p { font-size: 1rem; line-height: 1.5; } html[lang="hi"] .wl-text p { line-height: 1.62; } .wl-h2 { font-size: 1.4rem; } .wl-text { gap: .5rem; } }
+@media (max-height: 520px) { .wl-h1 { font-size: 2rem; } .wl-text p { font-size: 1rem; line-height: 1.45; } .wl-h2 { font-size: 1.35rem; } }
+
+/* ---- QA pass: nothing of ours stands on a painting's face, and every label is readable on any sky ---- */
+/* the way out is a dark pill of its own, so it reads on the palest sky and on a bright cloud alike */
+.wl-out { padding: 0 1rem 0 .85rem; border-radius: 999px; background: rgb(13 8 6 / .72); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); text-shadow: none; font-size: 1rem; }
+html[lang="hi"] .wl-out { font-size: 1.05rem; }
+.wl-out:hover { background: rgb(13 8 6 / .88); }
+/* a phone held upright: the painting begins below a dark strip that holds the way out, so the way out is never on a face */
+@media (max-aspect-ratio: 4/5) {
+  .wl { --wl-strip: calc(var(--ed-head-h, 60px) + env(safe-area-inset-top, 0px) + 3.4rem); }
+  .wl-on .wl-pic, .wl-on .wl-stage--title .wl-pic { top: var(--wl-strip); height: calc(var(--wl-pane-h) - var(--wl-strip)); }
+  .wl-on .wl-gauge, .wl-on .wl-rail { top: calc(var(--wl-strip) + .7rem); }
+  .wl-on .wl--ganga .wl-view::before { top: var(--wl-strip); }
+  .wl-on .wl--lokas .wl-view { background: var(--wl-base); }
+  .wl-on .wl--lokas .wl-canvas { top: var(--wl-strip); height: calc(100% - var(--wl-strip)); }
+}
+/* the gauge's names and the rail's names stand on a soft dark backing of their own (the sky behind them may be pale) */
+.wl-on .wl-gauge { font-size: .8rem; }
+.wl-gauge-a, .wl-gauge-b, .wl-gauge-rail em { padding: .22rem .55rem; border-radius: 999px; background: rgb(13 8 6 / .66); text-shadow: none; }
+.wl-gauge-rail em { height: auto; transform: translateY(-50%); right: 3px; color: var(--wl-ink); }
+.wl-gauge-rail em::after { margin-right: -.2rem; }
+.wl-rail li span { opacity: 1; padding: .2rem .5rem; border-radius: 999px; background: rgb(13 8 6 / .62); text-shadow: none; font-size: .75rem; }
+.wl-rail li:not(.is-at) span { opacity: 0; }
+@media (min-width: 1100px) { .wl-rail li span, .wl-rail li.is-at span { opacity: 1; } .wl-rail li:not(.is-at) span { opacity: .88; } .wl-rail li { height: 18px; } }
+.wl-rail li::after { filter: drop-shadow(0 0 2px rgb(10 5 0 / .85)); }
+.wl-rail li.is-at span { color: #fff; }
+.wl-on .wl-rail { gap: 6px; }
+/* (the stage ends at the screen's foot, so the words keep their place above it; it was the full screen's height moved down by the strip, which pushed them below the fold) */
+@media (max-aspect-ratio: 4/5) { .wl-on .wl--lokas .wl-stage--title { top: var(--wl-strip); height: auto; bottom: 0; } .wl-on .wl--lokas .wl-stage--title .wl-pic { top: 0; height: 100%; } }
+
+/* the Fourteen Lokas' first stage stands on a pale gradient: its label, title and lede sit on a dark foot of their own, so each reads at 4.5:1 or more */
+.wl-on .wl--lokas .wl-stage--title::after { display: block; z-index: 1; background: linear-gradient(to top, rgb(13 8 6 / .97) 0, rgb(13 8 6 / .94) 52%, rgb(13 8 6 / .7) 68%, rgb(13 8 6 / 0) 88%); }
+.wl--lokas .wl-kicker { color: #f6dfa6; }
+@media (max-aspect-ratio: 4/5) {
+  .wl-on .wl--lokas .wl-stage--title .wl-text::before { content: ""; position: absolute; z-index: -1; pointer-events: none; left: calc(-1 * var(--wl-text-l)); right: calc(-1 * var(--wl-gut-r)); top: -4.6rem; bottom: -4rem; background: linear-gradient(to bottom, rgb(13 8 6 / 0), rgb(13 8 6 / .6) 1.8rem, rgb(13 8 6 / .93) 3.6rem, rgb(13 8 6 / .96)); }
+}

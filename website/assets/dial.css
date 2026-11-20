@@ -1,0 +1,77 @@
+/* The brass dial (assets/dial.js). Fetched with it, the first time the emblem in the bar is pressed. */
+.dl { position: fixed; inset: 0; width: 100%; height: 100%; max-width: none; max-height: none; margin: 0; padding: 0; border: 0; background: rgb(10 6 3 / .99); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); color: #f3e7d7; overflow: auto; overscroll-behavior: contain; }
+.dl::backdrop { background: rgb(10 6 3 / .97); }
+.dl-in { position: relative; min-height: 100%; box-sizing: border-box; display: grid; justify-items: center; align-content: center; gap: .55rem; padding: max(3.4rem, env(safe-area-inset-top, 0px) + 3.2rem) max(1rem, env(safe-area-inset-right, 0px)) max(1.25rem, env(safe-area-inset-bottom, 0px) + 1rem) max(1rem, env(safe-area-inset-left, 0px)); text-align: center; }
+.dl-close { position: absolute; right: max(.75rem, env(safe-area-inset-right, 0px)); top: max(.6rem, env(safe-area-inset-top, 0px)); min-height: 44px; padding: 0 .9rem; border: 1px solid rgb(240 213 145 / .4); border-radius: 2px; background: transparent; color: #f3e7d7; font: 500 .95rem var(--cx-ui, Georgia, serif); cursor: pointer; }
+.dl-close:hover { border-color: #f0d591; }
+.dl :focus-visible { outline: 2px solid #ffd978; outline-offset: 3px; }
+.dl-face { position: relative; width: min(80vw, 35svh, 27rem); aspect-ratio: 1; border-radius: 50%; touch-action: none; -webkit-user-select: none; user-select: none; cursor: grab; -webkit-tap-highlight-color: transparent; filter: drop-shadow(0 18px 30px rgb(0 0 0 / .55)); }
+.dl-face:active { cursor: grabbing; }
+.dl-base, .dl-ring, .dl-ring-in, .dl-ring-art { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.dl-ring { pointer-events: none; border-radius: 50%; outline: 0 !important; transition: transform .6s cubic-bezier(.2, 1.3, .36, 1); will-change: transform; }
+.dl-ring-in { transition: opacity .16s ease; }
+.dl-ring.is-swap .dl-ring-in { opacity: 0; }
+.dl-groove { fill: none; stroke: #241405; stroke-width: 1.6; opacity: .9; }
+.dl-shine { fill: none; stroke: rgb(255 246 214 / .38); stroke-width: .8; }
+.dl-ticks { fill: none; stroke: #33200a; stroke-width: 5; opacity: .5; }
+.dl-bead { fill: #5a1d0e; stroke: #f3dca0; stroke-width: 1.4; transition: fill .3s ease, stroke .3s ease; }
+.dl-bead.is-sel { fill: #ffdd85; stroke: #fff8e2; }
+.dl-focus { fill: none; stroke: rgb(255 240 200 / 0); transition: stroke .2s ease; }
+.dl-ring.is-act .dl-focus { stroke: rgb(255 238 190 / .13); }
+.dl-ring:focus-visible .dl-focus { stroke: rgb(255 238 190 / .3); }
+.dl-index { fill: #ffd978; }
+.dl-index-line { stroke: #ffe7a6; stroke-width: 1.3; opacity: .5; fill: none; }
+.dl-yantra * { fill: none; stroke: #d9ae56; stroke-width: 1.25; stroke-linejoin: round; }
+.dl-yantra .dl-petals path { stroke-width: 1; opacity: .8; }
+.dl-yantra .dl-bindu { fill: #ffd978; stroke: none; }
+/* the ring in hand, and the names on either side of its mark */
+.dl-near { width: min(100%, 27rem); display: grid; gap: .1rem; margin-top: .35rem; }
+.dl-near p { margin: 0; }
+.dl-near-k { font: 500 .74rem/1.4 var(--cx-ui, Georgia, serif); letter-spacing: .12em; text-transform: uppercase; color: #a8927d; }
+html[lang="hi"] .dl-near-k { letter-spacing: 0; font-size: .88rem; }
+.dl-near-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; align-items: start; min-height: 3.3rem; }
+.dl-near-b { min-height: 44px; display: flex; gap: .45rem; align-items: baseline; padding: .35rem 0; border: 0; background: none; color: #cdb9a3; font: 400 .9rem/1.35 var(--cx-ui, Georgia, serif); text-align: left; text-wrap: balance; cursor: pointer; -webkit-tap-highlight-color: transparent; transition: color .2s ease; }
+html[lang="hi"] .dl-near-b { line-height: 1.55; }
+.dl-near-b b { font-weight: 400; }
+.dl-near-b span { color: #e9b95a; }
+.dl-near-b--n { justify-content: flex-end; text-align: right; }
+.dl-near-b:hover { color: #fff3df; }
+.dl-near-b.is-none { visibility: hidden; }
+.dl-read { display: grid; gap: .2rem; align-content: start; width: min(100%, 30rem); min-height: 7.4rem; margin-top: .5rem; }
+.dl-read p { margin: 0; }
+.dl-k { font: 500 .78rem/1.4 var(--cx-ui, Georgia, serif); letter-spacing: .12em; text-transform: uppercase; color: #e9b95a; }
+.dl-a { font: 400 .95rem/1.45 var(--cx-ui, Georgia, serif); color: #cdb9a3; }
+.dl-t { font: 500 clamp(1.45rem, 1.2rem + 1.4vw, 1.9rem)/1.18 var(--cx-title, Georgia, serif); color: #fff3df; text-wrap: balance; }
+html[lang="hi"] .dl-k { letter-spacing: 0; font-size: .92rem; }
+html[lang="hi"] .dl-a { line-height: 1.6; }
+html[lang="hi"] .dl-t { line-height: 1.4; }
+.dl-acts { margin: .2rem 0 0; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: .5rem 1.25rem; font: 500 .98rem var(--cx-ui, Georgia, serif); }
+.dl-acts a { min-height: 44px; display: inline-flex; align-items: center; color: #f5c877; text-underline-offset: 3px; }
+.dl-acts a:hover { color: #ffe0a3; }
+.dl-acts .dl-go { padding: 0 1.3rem; border: 1px solid #e9b95a; border-radius: 2px; background: linear-gradient(160deg, #f4dc9c, #c99a3d 55%, #a87722); color: #2a1806; text-decoration: none; }
+.dl-acts .dl-go:hover { color: #2a1806; filter: brightness(1.07); }
+.dl-hint { margin: .1rem 0 0; max-width: 26rem; font: 400 .84rem/1.5 var(--cx-ui, Georgia, serif); color: #a8927d; }
+html[lang="hi"] .dl-hint { line-height: 1.7; }
+/* it opens out of the emblem: the face grows from the bar, each ring swinging round to its mark */
+@keyframes dl-face-in { from { transform: translate(var(--dl-x, 0), var(--dl-y, 0)) scale(.08); opacity: .2; } to { transform: none; opacity: 1; } }
+@keyframes dl-spin-in { from { transform: rotate(var(--dl-spin, 60deg)); } to { transform: none; } }
+@keyframes dl-rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+@keyframes dl-veil { from { opacity: 0; } to { opacity: 1; } }
+.dl.is-in::backdrop { animation: dl-veil .35s ease both; }
+@keyframes dl-bg { from { background-color: rgb(10 6 3 / 0); } }
+.dl.is-in { animation: dl-bg .35s ease both; }
+.dl.is-in .dl-face { animation: dl-face-in .62s cubic-bezier(.2, .85, .25, 1) both; }
+.dl.is-in .dl-ring-in { animation: dl-spin-in .95s cubic-bezier(.2, .8, .2, 1) both; }
+.dl.is-in .dl-ring[data-k="0"] .dl-ring-in { --dl-spin: -70deg; }
+.dl.is-in .dl-ring[data-k="1"] .dl-ring-in { --dl-spin: 95deg; }
+.dl.is-in .dl-ring[data-k="2"] .dl-ring-in { --dl-spin: -120deg; }
+.dl.is-in .dl-near, .dl.is-in .dl-read, .dl.is-in .dl-acts, .dl.is-in .dl-hint, .dl.is-in .dl-close { animation: dl-rise .5s ease .32s both; }
+.dl.is-shut { opacity: 0; transition: opacity .24s ease; }
+.dl.is-shut .dl-face { transform: scale(.94); transition: transform .24s ease; }
+.dl.is-shut::backdrop { opacity: 0; transition: opacity .24s ease; }
+@media (max-height: 560px) { .dl-face { width: min(60vw, 62svh); } .dl-in { grid-template-columns: auto minmax(0, 1fr); column-gap: 1.5rem; align-items: center; } .dl-face { grid-row: 1 / span 4; } .dl-hint { display: none; } }
+@media (prefers-reduced-motion: reduce) { .dl.is-in .dl-face, .dl.is-in .dl-ring-in, .dl.is-in .dl-near, .dl.is-in .dl-read, .dl.is-in .dl-acts, .dl.is-in .dl-hint, .dl.is-in .dl-close, .dl.is-in::backdrop, .dl.is-in { animation: none; } .dl-ring { transition: none; } }
+:root[data-motion="reduce"] .dl.is-in .dl-face, :root[data-motion="reduce"] .dl.is-in .dl-ring-in, :root[data-motion="reduce"] .dl.is-in .dl-near, :root[data-motion="reduce"] .dl.is-in .dl-read, :root[data-motion="reduce"] .dl.is-in .dl-acts, :root[data-motion="reduce"] .dl.is-in .dl-hint, :root[data-motion="reduce"] .dl.is-in .dl-close { animation: none; }
+:root[data-motion="reduce"] .dl-ring { transition: none; }
+/* a phone's visible height (about 664 px in a browser with its bars): the whole dial, its names and its buttons fit without scrolling */
+@media (max-height: 760px) and (max-width: 700px) { .dl-in { gap: .35rem; padding-top: max(3rem, env(safe-area-inset-top, 0px) + 2.8rem); } .dl-read { min-height: 6rem; margin-top: .25rem; } .dl-near-row { min-height: 2.8rem; } }

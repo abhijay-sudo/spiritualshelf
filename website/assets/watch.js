@@ -26,14 +26,17 @@ const reduced = ctx.reduced;
 const words = (t) => t.split(/\s+/).filter(Boolean).length;
 const seg = window.Intl?.Segmenter ? new Intl.Segmenter(L, { granularity: 'grapheme' }) : null;
 const readMs = (t) => Math.max(3200, L === 'hi' && seg ? [...seg.segment(t.replace(/\s+/g, ''))].length * 100 : words(t) * 330);
+const openQ = (t) => ((t.match(/"/g) || []).length % 2 === 1) || (t.match(/“/g) || []).length > (t.match(/”/g) || []).length;
 const halve = (s) => {
 if (words(s) <= 28) return [s];
 let best = -1; const mid = s.length / 2;
-for (const m of s.matchAll(/[,;:—–]\s/g)) { const i = m.index + 1; if (words(s.slice(0, i)) >= 6 && words(s.slice(i)) >= 6 && (best < 0 || Math.abs(i - mid) < Math.abs(best - mid))) best = i; }
+for (const m of s.matchAll(/[,;:—–]\s/g)) { const i = m.index + 1; if (!openQ(s.slice(0, i)) && words(s.slice(0, i)) >= 6 && words(s.slice(i)) >= 6 && (best < 0 || Math.abs(i - mid) < Math.abs(best - mid))) best = i; }
 return best < 0 ? [s] : [...halve(s.slice(0, best).trim()), ...halve(s.slice(best).trim())];
 };
 const chunk = (text) => {
-const ss = (text.replace(/\s+/g, ' ').trim().match(/[^.!?।]+(?:[.!?।]+["”’')]*|$)/g) || []).map((x) => x.trim()).filter(Boolean).flatMap(halve);
+const raw = (text.replace(/\s+/g, ' ').trim().match(/[^.!?।]+(?:[.!?।]+["”’')]*|$)/g) || []).map((x) => x.trim()).filter(Boolean);
+const whole = []; for (const x of raw) { const p = whole[whole.length - 1]; if (p && openQ(p)) whole[whole.length - 1] = p + ' ' + x; else whole.push(x); }   // a quotation that runs over several sentences stays whole
+const ss = whole.flatMap(halve);
 const out = [];
 for (const s of ss) { const p = out[out.length - 1]; if (p && (words(p) < 7 || words(s) < 5) && words(p) + words(s) <= 20) out[out.length - 1] = p + ' ' + s; else out.push(s); }
 return out;

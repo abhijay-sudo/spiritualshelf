@@ -135,6 +135,15 @@
   var reading = !!d.querySelector('[data-reader], [data-manas]');
   var away = false, lastY = 0, run = 0, footOn = false;
   var foot = d.querySelector('.cx-credits');
+  // On a wide screen the question is asked where it can cover nothing: in the room the page's own footer keeps for it (a
+  // fixed corner card lay over a map's pins, the home's ways to read, a button, wherever the reader stopped). It stands in
+  // the banner's own painting when the page opens on one (below), and at the end of the page otherwise.
+  var wide = window.matchMedia ? matchMedia('(min-width: 860px) and (min-height: 520.02px)') : null;
+  var deskFoot = !!foot && !!wide && wide.matches;
+  // On a phone every other page (a map, a list, the breathing ring) is also kept clear: the strip would lie over its
+  // text wherever the reader stops, so it waits and is asked at the foot of the page, in the room the footer keeps for it
+  var footOnly = !reading && !!foot && 'IntersectionObserver' in window && matchMedia('(max-width: 759px), (orientation: landscape) and (max-height: 520px)').matches;
+  if (footOnly) reading = true;
   var atTop = function () { return (window.scrollY || 0) < innerHeight * .5; };
   var clear = function () {
     if (!bar || bar.hidden) return;
@@ -167,19 +176,19 @@
     root.setAttribute('data-consent-room', '');
   };
   var scrolled = function () {
-    if (!reading) return;
+    if (!reading || deskFoot) return;
     var y = window.scrollY || 0, dy = y - lastY; lastY = y;
     run = dy > 0 === run > 0 ? run + dy : dy;         // travel in one direction
     var was = away;
     // only the opening and the foot of the page are free of reading: anywhere else it waits out of the way, whichever way
     // the reader is going (scrolling back up from the foot used to leave it on screen over the verses all the way up)
-    away = !(atTop() || footOn);
+    away = footOnly ? !footOn : !(atTop() || footOn);
     if (away !== was) clear();
   };
   // a full-screen stage (the home opening, the character select, a person's own stage) keeps its whole screen, composed
   // to fit it: the question waits beside it, not over it (on a person's page it would lie on the figure's feet, the study
   // row or "Begin their story"), and appears once the reader moves on
-  var stages = [].slice.call(d.querySelectorAll('.cx-home .cx-open, .cx-select, .cast-hero, .cx-film-open'));
+  var stages = [].slice.call(d.querySelectorAll('.cx-home .cx-open, .cx-select, .cast-hero, .cx-film-open, [data-wl-view]' /* [worlds] a pinned scroll world is a stage too */));
   var watchStage = function () {
     if (!stages.length) return;
     var seenSet = [], inside = false;
@@ -207,7 +216,6 @@
   // banner has gone by, it rests in the corner of the screen. It takes the banner's corner only where none of the
   // banner's words stand, never while someone is answering it, and never when it was asked for ("Privacy choices").
   var banner = d.querySelector('.ed-page-head'), head = d.querySelector('.ed-head');
-  var wide = window.matchMedia ? matchMedia('(min-width: 860px) and (min-height: 520.02px)') : null;
   var bannerTop = function () {
     if (!banner || !wide || !wide.matches || !bar || bar.hidden || bar.hasAttribute('data-reopened')) return null;
     var r = banner.getBoundingClientRect(), h = bar.offsetHeight, w = bar.offsetWidth, x = bar.getBoundingClientRect().left;
@@ -231,17 +239,26 @@
     // it arrives in its new place the way it first arrived (cinema.css: nothing moves under reduced motion)
     bar.style.animation = 'none'; void bar.offsetWidth; bar.style.animation = '';
   };
+  var placeFoot = function () {
+    if (!deskFoot || !bar || bar.hidden) return;
+    var on = !bar.classList.contains('is-banner') && !bar.hasAttribute('data-reopened');   // asked for ("Privacy choices"): in the corner, where the reader is
+    if (on) { var h = bar.offsetHeight; if (h) bar.style.setProperty('--cx-consent-top', Math.round(foot.getBoundingClientRect().bottom + (window.scrollY || 0) - h - 12) + 'px'); }
+    if (on === bar.classList.contains('is-foot')) return;
+    bar.classList.toggle('is-foot', on);
+    bar.style.animation = 'none'; void bar.offsetWidth; bar.style.animation = '';
+  };
   var watchDock = function () {
     if (watching) return; watching = true;
     watchStage();
     if (dock && window.MutationObserver) new MutationObserver(clear).observe(dock, { attributes: true, attributeFilter: ['class', 'style'] });
-    var both = function () { room(); clear(); placeBanner(); };
+    var both = function () { room(); clear(); placeBanner(); placeFoot(); };
+    if (deskFoot && window.ResizeObserver) new ResizeObserver(function () { placeFoot(); }).observe(d.body);
     addEventListener('resize', both);
     if (d.fonts && d.fonts.ready) d.fonts.ready.then(both);
-    lastY = window.scrollY || 0; away = reading && !atTop();     // arriving part-way down a page (a kept place): it waits out of the way
+    lastY = window.scrollY || 0; away = !deskFoot && (footOnly || (reading && !atTop()));     // arriving part-way down a page (a kept place): it waits out of the way
     var tick = false;
-    addEventListener('scroll', function () { if (!tick) { tick = true; requestAnimationFrame(function () { tick = false; scrolled(); placeBanner(); }); } }, { passive: true });
-    if (foot && 'IntersectionObserver' in window) new IntersectionObserver(function (es) { footOn = es[es.length - 1].isIntersecting; var was = away; away = reading ? !(atTop() || footOn) : away && !footOn; if (away !== was) clear(); }).observe(foot);
+    addEventListener('scroll', function () { if (!tick) { tick = true; requestAnimationFrame(function () { tick = false; scrolled(); placeBanner(); placeFoot(); }); } }, { passive: true });
+    if (foot && !deskFoot && 'IntersectionObserver' in window) new IntersectionObserver(function (es) { footOn = es[es.length - 1].isIntersecting; var was = away; away = reading ? (footOnly ? !footOn : !(atTop() || footOn)) : away && !footOn; if (away !== was) clear(); }).observe(foot);
   };
   var show = function (focus) {
     if (!bar) build();
@@ -250,7 +267,7 @@
     var c = read(); bar.toggleAttribute('data-reopened', !!focus);
     bar.querySelector('[data-consent-yes]').setAttribute('aria-pressed', String(!!c && c.value === 'granted'));
     bar.querySelector('[data-consent-no]').setAttribute('aria-pressed', String(!!c && c.value === 'denied'));
-    room(); clear(); placeBanner();
+    room(); clear(); placeBanner(); placeFoot();
     if (focus) bar.querySelector('h2').focus({ preventScroll: true });
   };
   var hide = function () {

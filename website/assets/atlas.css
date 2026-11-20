@@ -1,0 +1,197 @@
+/* The Atlas of Bharatvarsha (/atlas/). Loaded only on that page. Without JavaScript the sheet is still, every pin is a
+   link to its entry below, and the whole road is drawn. */
+.at { padding: calc(var(--ed-head-h) + clamp(1.75rem, 1rem + 3vw, 4.5rem)) 0 var(--cx-sec); background: var(--cx-paper); color: var(--cx-ink); overflow-x: clip; }
+.at-head { display: grid; gap: .9rem; }
+.at-lead, .at-sec-lead, .at-route-lead { margin: 0; max-width: 44rem; font: 400 clamp(1.02rem, .98rem + .25vw, 1.16rem)/1.6 var(--cx-text); color: var(--cx-ink-2); text-wrap: pretty; }
+html[lang="hi"] .at-lead, html[lang="hi"] .at-sec-lead, html[lang="hi"] .at-route-lead { font-family: "Tiro Devanagari Hindi", var(--cx-text); line-height: 1.8; }
+.at-h2 { margin: 0; font: 500 clamp(1.5rem, 1.25rem + 1vw, 2.1rem)/1.15 var(--cx-title); letter-spacing: -.01em; color: var(--cx-ink); }
+html[lang="hi"] .at-h2 { line-height: 1.35; letter-spacing: 0; }
+.at-stage { display: grid; gap: 1.1rem; margin-top: clamp(1.75rem, 1rem + 3vw, 3.5rem); }
+.at-route-head { display: grid; gap: .5rem; }
+@media (min-width: 900px) {
+  .at-stage { grid-template-columns: minmax(0, 1.2fr) minmax(19rem, .8fr); grid-template-rows: auto 1fr; gap: 1.1rem clamp(2rem, 4vw, 4.5rem); align-items: start; }
+  .at-map { grid-column: 1; grid-row: 1 / span 2; }
+  .at-route-head, .at-route { grid-column: 2; }
+}
+@media (max-width: 899px) { .at-stop-txt { order: -1; } }
+
+/* ---- the sheet ---- */
+.at-map { position: relative; margin: 0; width: min(100%, calc((100svh - var(--ed-head-h) - 6.5rem) * .8)); min-width: min(100%, 20rem); justify-self: center; }
+.at-view { position: relative; aspect-ratio: 4 / 5; overflow: hidden; touch-action: pan-y; outline: 0; -webkit-user-select: none; user-select: none; -webkit-tap-highlight-color: transparent; }
+.at-view:focus-visible { outline: 2px solid var(--cx-saffron); outline-offset: 4px; }
+.at-zoomed .at-view { cursor: grab; touch-action: none; -webkit-mask-image: linear-gradient(to right, transparent, #000 4%, #000 96%, transparent), linear-gradient(to bottom, transparent, #000 3.5%, #000 96.5%, transparent); -webkit-mask-composite: source-in; mask-image: linear-gradient(to right, transparent, #000 4%, #000 96%, transparent), linear-gradient(to bottom, transparent, #000 3.5%, #000 96.5%, transparent); mask-composite: intersect; }
+.at-zoomed .at-view.is-drag { cursor: grabbing; }
+.at-sheet { position: absolute; inset: 0; transform-origin: 0 0; --inv: 1; }
+.at-sheet.is-ease { transition: transform .5s cubic-bezier(.22, .8, .2, 1); }
+.at-sheet.is-moving { will-change: transform; }
+.at-relief { display: block; width: 100%; height: 100%; -webkit-user-drag: none; pointer-events: none; filter: drop-shadow(0 10px 22px rgb(0 0 0 / .35)); }
+.at-zoomed .at-relief { filter: none; }
+.at-ink { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+.at-river, .at-river-glow, .at-ghost, .at-gold { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.at-ink { --sw: calc(.42 + .58 * var(--inv)); }
+.at-river-glow { stroke: #e4f3f1; stroke-width: calc(6.5px * var(--sw)); opacity: .3; }
+.at-river { stroke: #47748a; stroke-width: calc(2.1px * var(--sw)); opacity: .9; }
+.at-ghost { stroke: #4f3217; stroke-width: calc(1.5px * var(--sw)); stroke-dasharray: 1.5 6; opacity: .5; }
+.at-gold { stroke: #f0b53a; stroke-width: calc(3.2px * var(--sw)); }
+.at-gold--under { stroke: #5a330b; stroke-width: calc(6.4px * var(--sw)); opacity: .62; }
+.at-live .at-gold { stroke-dasharray: 1; stroke-dashoffset: 1; }
+@keyframes at-ink { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+.at-live.at-draw .at-river, .at-live.at-draw .at-river-glow { stroke-dasharray: 1; animation: at-ink 2.6s cubic-bezier(.3, .1, .2, 1) both; }
+
+/* the pen: a bead of wet gold at the head of the line */
+.at-bead { position: absolute; left: 0; top: 0; width: 0; height: 0; display: none; pointer-events: none; }
+.at-live .at-bead { display: block; transition: opacity .45s ease; }
+.at-bead.is-off { opacity: 0; }
+.at-bead::before, .at-bead::after { content: ""; position: absolute; border-radius: 50%; translate: -50% -50%; scale: var(--inv); }
+.at-bead::before { width: 30px; height: 30px; background: radial-gradient(circle, rgb(255 214 120 / .85), rgb(255 190 70 / .28) 45%, transparent 70%); animation: at-breathe 3.2s ease-in-out infinite; }
+.at-bead::after { width: 9px; height: 9px; background: radial-gradient(circle at 35% 30%, #fff6d8, #f2b83c 55%, #9a5b0e); box-shadow: 0 0 0 1px rgb(70 38 6 / .7); }
+@keyframes at-breathe { 0%, 100% { opacity: .55; transform: scale(.82); } 50% { opacity: 1; transform: scale(1.12); } }
+
+/* ---- names on the sheet: each a link to its entry in the list ---- */
+.at-pins { position: absolute; inset: 0; margin: 0; padding: 0; list-style: none; pointer-events: none; }
+.at-pin { position: absolute; width: 0; height: 0; scale: var(--inv); }
+.at .at-pin a { position: absolute; left: -22px; top: -22px; height: 44px; display: flex; align-items: center; pointer-events: auto; text-decoration: none; white-space: nowrap; color: #2e1b0b; font: 500 .84rem/1.1 var(--cx-title); letter-spacing: .01em; outline: 0; -webkit-tap-highlight-color: transparent; }
+html[lang="hi"] .at-pin a { font: 500 .86rem/1.3 "Mukta", var(--cx-ui); letter-spacing: 0; }
+.at-pin i { flex: none; width: 44px; height: 44px; display: grid; place-items: center; }
+.at-pin i::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #d5653a, #8a2a10); box-shadow: 0 0 0 1.5px #f6e7c1, 0 0 0 2.6px #5f3710, 0 2px 4px rgb(40 20 5 / .5); transition: transform .35s cubic-bezier(.3, 1.5, .5, 1), box-shadow .35s ease; }
+.at-pin span { translate: var(--dx, 0) var(--dy, 0); margin-left: -12px; text-shadow: 0 0 2px #f3e4bf, 0 0 3px #f3e4bf, 0 0 5px #f3e4bf, 0 0 8px #f3e4bf; }
+.at .at-pin--l a { left: auto; right: -22px; flex-direction: row-reverse; }
+.at-pin--l span { margin: 0 -12px 0 0; }
+.at .at-pin--t a, .at .at-pin--b a { left: 0; translate: -50% 0; height: auto; }
+.at .at-pin--t a { top: auto; bottom: -22px; flex-direction: column-reverse; }
+.at-pin--t span { margin: 0 0 -13px; }
+.at .at-pin--b a { flex-direction: column; }
+.at-pin--b span { margin: -13px 0 0; }
+.at-pin a:hover i::before, .at-pin a:focus-visible i::before, .at-pin.is-on i::before, .at-pin.is-here i::before { transform: scale(1.45); box-shadow: 0 0 0 1.5px #fff3cf, 0 0 0 3px #b9811d, 0 0 14px 4px rgb(255 205 100 / .75); }
+.at-pin a:focus-visible span { text-decoration: underline; text-underline-offset: 3px; }
+/* a name on the sheet stays in dark ink whatever its state; only the pin glows */
+.at .at-pin a:hover, .at .at-pin a:focus-visible, .at .at-pin.is-on a, .at .at-pin.is-here a { color: #2e1b0b; }
+.at-pin.is-on span, .at-pin.is-here span { font-weight: 700; }
+/* the stops the road reaches only in the story: named under the sheet, never on it */
+.at-off { margin: .7rem 0 0; font: 400 .9rem/1.55 var(--cx-ui); color: var(--cx-ink-3); text-wrap: pretty; }
+html[lang="hi"] .at-off { line-height: 1.8; }
+.at-off a { display: inline-block; padding: .1rem 0; font-weight: 500; transition: color .3s ease, text-shadow .4s ease; }
+.at-off a.is-here { color: var(--cx-saffron-2); text-shadow: 0 0 14px rgb(255 205 100 / .55); text-decoration-thickness: 2px; }
+.at .at-rname { position: absolute; translate: -50% -50%; rotate: var(--a); scale: var(--inv); padding: 4px 6px; white-space: nowrap; text-decoration: none; color: #24566e; font: italic 500 .74rem/1 var(--cx-text); letter-spacing: .09em; text-shadow: 0 0 2px #f3e4bf, 0 0 4px #f3e4bf, 0 0 6px #f3e4bf; }
+html[lang="hi"] .at-rname { font: 500 .78rem/1.3 "Mukta", var(--cx-ui); letter-spacing: 0; }
+.at-rname:focus-visible { outline: 2px solid #24566e; outline-offset: 1px; }
+/* where the sheet is too crowded for a river's name, it is written only in the closer view (and always in the list below) */
+.at-rname[data-rank="2"] { transition: opacity .4s ease, visibility 0s; }
+.at-map:not(.at-z3) .at-rname[data-rank="2"] { opacity: 0; visibility: hidden; transition: opacity .3s ease, visibility 0s .3s; }
+@media (max-width: 700px) {
+  .at-pin[data-rank="2"] { transition: opacity .4s ease, visibility 0s; }
+  .at-map:not(.at-z2) .at-pin[data-rank="2"] { opacity: 0; visibility: hidden; transition: opacity .3s ease, visibility 0s .3s; }
+  .at .at-pin a { font-size: .78rem; }
+  .at .at-rname { font-size: .68rem; }
+}
+
+/* ---- zoom, and the thread that draws the road ---- */
+.at-tools { position: absolute; right: 4.5%; top: 52%; display: grid; gap: 6px; z-index: 3; }
+.at-tools button { width: 38px; height: 38px; display: grid; place-items: center; padding: 0; border-radius: 50%; border: 1px solid rgb(90 55 16 / .7); background: radial-gradient(circle at 35% 28%, #f6dea0, #c79535 60%, #8f6217); color: #3a2208; cursor: pointer; box-shadow: 0 2px 6px rgb(0 0 0 / .35), inset 0 1px 0 rgb(255 255 255 / .5); transition: transform .2s ease, filter .2s ease; }
+.at-tools button:hover { filter: brightness(1.08); }
+.at-tools button:active { transform: scale(.94); }
+.at-tools button:focus-visible { outline: 2px solid var(--cx-ink); outline-offset: 2px; }
+.at-tools button[disabled] { opacity: .45; cursor: default; }
+.at-tools svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
+.at-scrub { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: .6rem; margin-top: .9rem; }
+.at-scrub button { min-width: 44px; height: 44px; padding: 0 .7rem; border: 1px solid var(--cx-line-2); border-radius: 2px; background: transparent; color: var(--cx-ink); font: 500 .9rem var(--cx-ui); cursor: pointer; }
+.at-scrub button:hover { border-color: var(--cx-saffron); color: var(--cx-saffron); }
+.at-scrub button:focus-visible, .at-range:focus-visible { outline: 2px solid var(--cx-saffron); outline-offset: 3px; }
+.at-scrub button[disabled] { opacity: .4; cursor: default; }
+.at-range { -webkit-appearance: none; appearance: none; width: 100%; height: 44px; margin: 0; background: transparent; cursor: pointer; --p: 0%; touch-action: none; }
+.at-range::-webkit-slider-runnable-track { height: 2px; background: linear-gradient(to right, #e9ab33 var(--p), var(--cx-line-2) var(--p)); }
+.at-range::-moz-range-track { height: 2px; background: linear-gradient(to right, #e9ab33 var(--p), var(--cx-line-2) var(--p)); }
+.at-range::-webkit-slider-thumb { -webkit-appearance: none; width: 22px; height: 22px; margin-top: -10px; border-radius: 50%; border: 1px solid #5a330b; background: radial-gradient(circle at 35% 28%, #fff3cf, #e9ab33 55%, #9a5b0e); box-shadow: 0 0 0 5px rgb(233 171 51 / .16), 0 2px 5px rgb(0 0 0 / .4); }
+.at-range::-moz-range-thumb { width: 22px; height: 22px; border-radius: 50%; border: 1px solid #5a330b; background: radial-gradient(circle at 35% 28%, #fff3cf, #e9ab33 55%, #9a5b0e); box-shadow: 0 0 0 5px rgb(233 171 51 / .16), 0 2px 5px rgb(0 0 0 / .4); }
+.at-ticks { grid-column: 2; display: flex; justify-content: space-between; margin: -1.15rem 11px 0; pointer-events: none; }
+.at-ticks i { width: 5px; height: 5px; border-radius: 50%; background: var(--cx-line-2); transition: background .3s ease; }
+.at-ticks i.is-on { background: #e9ab33; }
+
+/* ---- Rama's road, stop by stop ---- */
+.at-js { display: none; }
+.at-live .at-js { display: inline; }
+.at-route { display: grid; gap: .8rem; min-width: 0; }
+.at-stops { list-style: none; margin: .6rem 0 0; padding: 0; display: grid; gap: 2.25rem; }
+.at-stop { display: grid; gap: .9rem; min-width: 0; }
+.at-live .at-stops { gap: 0; }
+.at-live .at-stop { grid-area: 1 / 1; opacity: 0; visibility: hidden; transition: opacity .22s ease, visibility 0s .22s; }
+.at-live .at-stop.is-on { opacity: 1; visibility: visible; transition: opacity .55s ease .2s; }
+.at-stop-pic img, .at-art img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover;
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 5%, #000 95%, transparent), linear-gradient(to bottom, transparent, #000 5%, #000 94%, transparent); -webkit-mask-composite: source-in;
+  mask-image: linear-gradient(to right, transparent, #000 5%, #000 95%, transparent), linear-gradient(to bottom, transparent, #000 5%, #000 94%, transparent); mask-composite: intersect; }
+.at-stop-txt { display: grid; gap: .45rem; }
+.at-stop-k, .at-src span, .at-in span { font: 500 .72rem/1.3 var(--cx-ui); letter-spacing: .08em; text-transform: uppercase; color: var(--cx-saffron); }
+html[lang="hi"] .at-stop-k, html[lang="hi"] .at-src span, html[lang="hi"] .at-in span { letter-spacing: 0; font-size: .84rem; line-height: 1.5; }
+.at-stop-k { margin: 0; }
+.at-stop-h { margin: 0; font: 500 clamp(1.6rem, 1.3rem + 1.2vw, 2.2rem)/1.12 var(--cx-title); }
+html[lang="hi"] .at-stop-h { line-height: 1.35; }
+.at-nopin { display: block; margin-top: .3rem; font: 400 .82rem/1.4 var(--cx-ui); color: var(--cx-ink-3); letter-spacing: .02em; }
+.at-stop-q { margin: 0; padding: 0; border: 0; }
+.at-stop-q p { margin: 0; font: italic 400 clamp(1.08rem, 1rem + .35vw, 1.25rem)/1.5 var(--cx-text); color: var(--cx-ink-2); text-wrap: pretty; }
+html[lang="hi"] .at-stop-q p { font-style: normal; font-family: "Tiro Devanagari Hindi", var(--cx-text); line-height: 1.8; }
+.at-stop-a { margin: .2rem 0 0; font: 500 .98rem/1.45 var(--cx-ui); }
+.at a { color: var(--cx-saffron); text-underline-offset: 3px; }
+.at a:hover { color: var(--cx-saffron-2); }
+.at-legend { margin: .8rem 0 0; font: 400 .84rem/1.6 var(--cx-ui); color: var(--cx-ink-3); }
+html[lang="hi"] .at-legend { line-height: 1.8; }
+.at-key { display: inline-block; width: 1.6rem; height: 0; margin-right: .4rem; vertical-align: middle; border-top: 3px solid #e9ab33; }
+
+/* ---- the lists: the whole atlas in words ---- */
+.at-sec { margin-top: var(--cx-sec); display: grid; gap: 1.1rem; }
+.at-places { list-style: none; margin: .5rem 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 17.5rem), 1fr)); gap: clamp(1.75rem, 1rem + 2vw, 3rem) clamp(1.25rem, 1rem + 1.5vw, 2.5rem); }
+.at-place { display: grid; gap: .75rem; align-content: start; min-width: 0; scroll-margin-top: calc(var(--ed-head-h) + 1rem); }
+.at-art { display: block; }
+.at-place-txt, .at-plain { display: grid; gap: .35rem; min-width: 0; }
+.at-place h3, .at-plain h3 { margin: 0; font: 500 1.4rem/1.2 var(--cx-title); color: var(--cx-ink); }
+html[lang="hi"] .at-place h3, html[lang="hi"] .at-plain h3 { line-height: 1.4; }
+.at-place p, .at-plain p, .at-credits p, .at-credits li { margin: 0; font: 400 1rem/1.55 var(--cx-text); color: var(--cx-ink-2); overflow-wrap: anywhere; }
+html[lang="hi"] .at-place p, html[lang="hi"] .at-plain p, html[lang="hi"] .at-credits p, html[lang="hi"] .at-credits li { font-family: "Tiro Devanagari Hindi", var(--cx-text); line-height: 1.8; }
+.at-place:target h3, .at-plain:target h3 { color: var(--cx-saffron); }
+.at-plains { list-style: none; margin: .5rem 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr)); gap: 1.5rem clamp(1.25rem, 1rem + 1.5vw, 2.5rem); }
+.at-plain { padding-top: 1rem; border-top: 1px solid var(--cx-line); scroll-margin-top: calc(var(--ed-head-h) + 1rem); align-content: start; }
+.at-plain .at-art { display: none; }
+.at-note { font-size: .9rem !important; color: var(--cx-ink-3) !important; }
+.at-q { margin: 0; padding: 0; border: 0; }
+.at .at-q p { font-style: italic; color: var(--cx-ink-2); }
+html[lang="hi"] .at .at-q p { font-style: normal; }
+.at-credits { max-width: 54rem; margin-inline: auto; }
+.at-credits ul { margin: 0; padding-left: 1.1rem; display: grid; gap: .3rem; }
+
+/* ---- the card a place lifts ---- */
+.at-card { position: absolute; z-index: 4; width: min(17.5rem, calc(100% - 1rem)); padding: 0 0 .9rem; background: #1d140d; color: #f3e7d7; border: 1px solid rgb(233 171 51 / .45); border-radius: 3px; box-shadow: 0 18px 40px rgb(0 0 0 / .5), 0 2px 8px rgb(0 0 0 / .4); opacity: 0; visibility: hidden; transform: translateY(8px) scale(.97); transform-origin: var(--ox, 50%) var(--oy, 100%); transition: opacity .28s ease, transform .4s cubic-bezier(.22, .9, .3, 1.15), visibility 0s .3s; }
+.at-card.is-open { opacity: 1; visibility: visible; transform: none; transition: opacity .28s ease, transform .4s cubic-bezier(.22, .9, .3, 1.15); }
+.at-card .at-art { display: block; }
+.at-card .at-art img { -webkit-mask-image: linear-gradient(to bottom, #000 68%, transparent); mask-image: linear-gradient(to bottom, #000 68%, transparent); -webkit-mask-composite: source-over; mask-composite: add; border-radius: 2px 2px 0 0; }
+.at-card-txt { position: relative; margin-top: -1.1rem; padding: 0 .95rem; }
+.at-card .at-art img { opacity: 0; transition: opacity .35s ease; }
+.at-card .at-art img.is-in { opacity: 1; }
+.at-card.is-dock { left: 6px !important; width: auto; right: 6px; padding-bottom: .75rem; }
+.at-card.is-dock .at-art { float: left; width: 43%; margin: .6rem .8rem .2rem .6rem; }
+.at-card.is-dock .at-art img { -webkit-mask-image: none; mask-image: none; border-radius: 2px; }
+.at-card.is-dock .at-card-txt { margin-top: 0; padding: .65rem .9rem 0 .7rem; }
+.at-card.is-dock h3 { padding-right: 2.2rem; font-size: 1.15rem; }
+.at-card.is-dock p { font-size: .84rem; }
+.at-card.is-dock .at-src, .at-card.is-dock .at-in { clear: both; padding-top: .15rem; }
+.at-card h3 { margin: 0 0 .25rem; font: 500 1.3rem/1.2 var(--cx-title); color: #fff3df; }
+html[lang="hi"] .at-card h3 { line-height: 1.4; }
+.at-card p { margin: .3rem 0 0; font: 400 .9rem/1.45 var(--cx-ui); color: #d9c7b0; overflow-wrap: anywhere; }
+html[lang="hi"] .at-card p { line-height: 1.65; }
+.at-card a { color: #f5b565; }
+.at-card a:hover { color: #ffd08f; }
+.at-card .at-src span, .at-card .at-in span { color: #e9ab33; }
+.at-card-x { position: absolute; right: 4px; top: 4px; z-index: 1; width: 36px; height: 36px; display: grid; place-items: center; padding: 0; border: 0; border-radius: 50%; background: rgb(20 12 6 / .6); color: #fff3df; font: 400 1.2rem/1 var(--cx-ui); cursor: pointer; }
+.at-card-x:focus-visible { outline: 2px solid #f5b565; }
+
+@media (prefers-reduced-motion: reduce) { .at-bead::before { animation: none; } .at-sheet.is-ease, .at-card, .at-live .at-stop, .at-pin i::before, .at-live .at-bead, .at-off a { transition: none !important; } .at-live.at-draw .at-river, .at-live.at-draw .at-river-glow { animation: none; } }
+:root[data-motion="reduce"] .at-bead::before, :root.ep-lite .at-bead::before { animation: none; }
+:root[data-motion="reduce"] .at-sheet.is-ease, :root[data-motion="reduce"] .at-card, :root[data-motion="reduce"] .at-live .at-stop, :root[data-motion="reduce"] .at-live .at-bead, :root[data-motion="reduce"] .at-off a { transition: none !important; }
+:root[data-motion="reduce"] .at-live.at-draw .at-river, :root[data-motion="reduce"] .at-live.at-draw .at-river-glow { animation: none; }
+@media print { .at-tools, .at-scrub, .at-card, .at-bead { display: none !important; } .at-live .at-stop { opacity: 1 !important; visibility: visible !important; grid-area: auto !important; } }
+
+/* two names that would meet: the lower-ranked gives way (assets/atlas.js) */
+.at-pin.is-clash { opacity: 0; visibility: hidden; }
+/* the pin the keyboard is on shows a ring of its own, and is never left under the foot of the page (the analytics question) */
+.at-pin a:focus-visible i::before { outline: 2px solid #fff6dc; outline-offset: 3px; box-shadow: 0 0 0 1.5px #fff3cf, 0 0 0 3px #b9811d, 0 0 0 6px #2e1b0b, 0 0 14px 4px rgb(255 205 100 / .75); }
+.at-pin a { scroll-margin-bottom: 9rem; scroll-margin-top: 6rem; }
+.at-skip:not(:focus-visible) { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.at-skip:focus-visible { position: relative; display: inline-block; z-index: 5; margin: .5rem 0; padding: .7rem 1rem; background: var(--cx-gold, #e7c27a); color: #1b140f; font: 500 .95rem/1 var(--cx-ui); border-radius: 2px; }

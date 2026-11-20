@@ -35,6 +35,7 @@
     }
   }
 
+  let vtWho = false;
   let vtImg = null;   // the picture that opens into the next page (a poster, or the story select's stage)
   /* ---------- The opening's scenery leans with the pointer (rays, mist, birds and lamps at different depths) ---------- */
   const openEl = $('.cx-home .cx-open'); const lean = { x: 0, y: 0 };
@@ -158,15 +159,18 @@
     let lastX = -1, lastY = -1; const moved = (e) => e.clientX !== lastX || e.clientY !== lastY;
     addEventListener('pointermove', (e) => { lastX = e.clientX; lastY = e.clientY; }, { passive: true });
     const T = (k) => $(`[data-sel-${k}]`, sel);
-    const out = { n: T('n'), coll: T('coll'), title: T('title'), sum: T('sum'), min: T('min'), scenes: T('scenes'), go: T('go'), hero: T('hero'), name: T('name'), who: T('who'), chips: T('chips'), goT: $('[data-sel-go-t]', sel), story: T('story'), storyT: $('[data-sel-story-t]', sel) };
+    const out = { n: T('n'), coll: T('coll'), title: T('title'), sum: T('sum'), min: T('min'), scenes: T('scenes'), go: T('go'), name: T('name'), who: T('who'), chips: T('chips'), goT: $('[data-sel-go-t]', sel), story: T('story'), storyT: $('[data-sel-story-t]', sel) };
     const whoLabel = out.who ? out.who.textContent.replace(out.name ? out.name.textContent : '', '').trim() : '';
-    const layers = $$('.cx-sel-bg img', sel); const fig = $('[data-sel-fig]', sel); const auto = $('[data-sel-auto]', sel);
+    const layers = $$('.cx-sel-bg img', sel); const auto = $('[data-sel-auto]', sel);
     // on a phone the frame is tall and narrow: the camera goes to the character's face, not the middle of the figure
     const narrow = matchMedia('(max-width: 699px)');
     let outT = 0;
     let cur = 0, front = 0, token = 0, stopped = reduced(), lastPointer = 'mouse', timer = 0, leaving = false;
     // where the strip must scroll to bring a tile to its middle (measured on screen: the strip is not the tile's offsetParent)
     const centreOf = (li) => { const g = grid.getBoundingClientRect(), r = li.getBoundingClientRect(); return grid.scrollLeft + (r.left - g.left) - (grid.clientWidth - r.width) / 2; };
+    // how much of the screen the words leave above them (a phone held upright lays a close portrait's whole head in that band: cinema.css, .is-fit)
+    const info = $('.cx-sel-info', sel); const band = () => { if (!info || !narrow.matches) return; const b = Math.round(info.getBoundingClientRect().top - sel.getBoundingClientRect().top); if (b > 0) sel.style.setProperty('--sel-band', b + 'px'); };
+    band(); addEventListener('resize', band, { passive: true }); document.fonts?.ready.then(band);
     const pick = (i, byUser) => {
       i = (i + n) % n; if (byUser) halt();
       if (i === cur) return;
@@ -187,21 +191,13 @@
       if (out.chips) out.chips.innerHTML = d.chips || '';   // built by the site's own generator (escaped there)
       out.go.href = t.href; out.go.setAttribute('aria-label', d.meet || d.title); if (out.goT) out.goT.textContent = d.meet || d.title;
       if (out.story && d.story) { out.story.href = d.story; out.story.setAttribute('aria-label', `${out.storyT ? out.storyT.textContent : ''}: ${d.storyT || ''}`); }
-      // a character with a cut-out portrait steps in front of their world; one painted inside a scene is found by the
-      // camera instead: the world itself pushes in on them, and the words move to the other side
-      const scene = d.mode === 'scene'; const wasCut = !sel.classList.contains('is-scene');
-      sel.classList.toggle('is-scene', scene); sel.classList.toggle('is-left', d.side === 'left'); sel.classList.toggle('is-calm', scene && d.calm === '1');
-      if (!scene && d.hero) {
-        // the last figure stays where it stood and fades while the next fades in over it (cinema.css, .is-ghost): a cross-fade, not a cut
-        if (wasCut && fig && !reduced() && !root.classList.contains('ep-lite')) { const g = fig.cloneNode(true); g.removeAttribute('data-sel-fig'); g.querySelector('img')?.removeAttribute('data-sel-hero'); g.classList.add('is-ghost'); fig.before(g); const bye = () => g.remove(); g.addEventListener('animationend', bye, { once: true }); setTimeout(bye, 700); }
-        out.hero.srcset = d.heroset; out.hero.src = d.hero;
-        // a figure not yet decoded fades in from the moment it is, rather than appearing part-way through its fade
-        if (!out.hero.complete && fig) { const want = d.hero; out.hero.addEventListener('load', () => { if (out.hero.getAttribute('src') === want && !reduced()) { fig.style.animation = 'none'; void fig.offsetWidth; fig.style.animation = ''; } }, { once: true }); }
-      }
+      // each person is found by the camera in their own painting: the world pushes in on them, and the words take the other side
+      sel.classList.toggle('is-left', d.side === 'left'); sel.classList.toggle('is-calm', d.calm === '1');
+      band();
       // the painting: the roster's small copy at once (it is already loaded), the full one as soon as it has decoded
       // the new world comes in over the old one behind a blade of light; the old one leaves when it is covered
       const my = ++token; const next = layers[1 - front]; const prev = layers[front]; const thumb = $('img', t);
-      next.removeAttribute('srcset'); next.removeAttribute('sizes'); { const face = d.ffx && narrow.matches; next.style.setProperty('--fx', `${face ? d.ffx : d.fx}%`); next.style.setProperty('--fy', `${face ? d.ffy : d.fy}%`); } next.style.setProperty('--z', d.z || 1); next.style.setProperty('--say', d.ay ? d.ay + '%' : ''); next.src = thumb.currentSrc || thumb.src;
+      next.removeAttribute('srcset'); next.removeAttribute('sizes'); { const face = d.ffx && narrow.matches; next.style.setProperty('--fx', `${face ? d.ffx : d.fx}%`); next.style.setProperty('--fy', `${face ? d.ffy : d.fy}%`); } next.style.setProperty('--z', d.z || 1); next.style.setProperty('--say', d.ay ? d.ay + '%' : ''); next.classList.add('is-fit'); next.style.setProperty('--fit-k', d.fk); next.style.setProperty('--fit-t', d.ft); next.style.setProperty('--fit-x', parseFloat(d.ffx) / 100); next.src = thumb.currentSrc || thumb.src;
       layers.forEach((x) => x.classList.remove('is-out', 'is-in'));
       prev.classList.remove('is-on'); prev.classList.add('is-out'); next.classList.add('is-on');
       if (!reduced()) { void next.offsetWidth; next.classList.add('is-in'); }
@@ -423,19 +419,23 @@
 
   /* ---------- A story poster opens into its story (cross-document view transition; the page also dissolves without it) ---------- */
   document.addEventListener('click', (e) => {
-    const a = e.target.closest('a[href]'); vtImg = null;
+    const a = e.target.closest('a[href]'); vtImg = null; vtWho = false;
     if (!a || a.target === '_blank' || e.defaultPrevented || e.metaKey || e.ctrlKey || e.shiftKey) return;
     let url; try { url = new URL(a.href, location.href); } catch { return; }
-    if (url.origin !== location.origin || !/\/stories\//.test(url.pathname) || url.hash) return;
-    const img = a.querySelector('.cx-poster-pic img, .cx-now-screen img, .card-art img, .ed-card-pic img, .cx-next-pic img') || (a.matches('[data-vt-link], .cx-btn') ? $('.cx-now-screen img') : null);
+    const who = /\/characters\/[^/]+\/$/.test(url.pathname);
+    if (url.origin !== location.origin || !(who || /\/stories\//.test(url.pathname)) || url.hash) return;
+    // (a person's tile opens into their page: the cut-out figure itself, or the tile's slice of their painting)
+    const img = who ? a.querySelector('.cast-tile--scene .cast-tile-pic, .cast-tile-pic .art, .cx-cast-pic img') : a.querySelector('.cx-poster-pic img, .cx-now-screen img, .card-art img, .ed-card-pic img, .cx-next-pic img') || a.closest('.card')?.querySelector('.card-art img') || (a.matches('[data-vt-link], .cx-btn') ? $('.cx-now-screen img') : null);
     if (!img) return;
-    vtImg = img;
-    try { sessionStorage.setItem('cx-vt', url.pathname); } catch {}
+    // a picture only part in the screen (a card low under the foot, or half above the top) does not morph: it would grow from a place the reader cannot see
+    const ir = img.getBoundingClientRect(); if (ir.top < 0 || ir.left < 0 || ir.bottom > innerHeight || ir.right > innerWidth) return;
+    vtImg = img; vtWho = who;
+    try { sessionStorage.setItem('cx-vt', url.pathname); sessionStorage.setItem('cx-vtk', who ? 'who' : ''); } catch {}
   }, true);
   addEventListener('pageswap', (e) => {
     if (!e.viewTransition || !vtImg) return;
-    vtImg.style.viewTransitionName = 'cx-hero';
-    e.viewTransition.finished?.finally?.(() => { if (vtImg) vtImg.style.viewTransitionName = ''; });
+    vtImg.style.viewTransitionName = 'cx-hero'; if (vtWho) document.documentElement.dataset.vt = 'who';
+    e.viewTransition.finished?.finally?.(() => { if (vtImg) vtImg.style.viewTransitionName = ''; delete document.documentElement.dataset.vt; });
   });
 
   /* ---------- The cinematic layer (mobile.css): each scene's title card plays in, the painting on screen drifts slowly,
@@ -552,4 +552,27 @@
 
   kick();
   addEventListener('load', kick);
+})();
+
+/* A row that scrolls sideways ends in a soft fade while more lies beyond its edge, so the next item never shows as words cut
+   mid-letter; at the end of the row the fade is gone. */
+(() => {
+  const rows = document.querySelectorAll('.cx-cast-row, .cx-ways-grid, .cx-scroll, .cx-posters');
+  rows.forEach((r) => {
+    // a card that the row's edge cuts shows its picture only: its label would show as half a word (cinema.css, .is-peek)
+    let raf = 0;
+    const peek = () => { raf = 0; const b = r.getBoundingClientRect(), lo = Math.max(b.left, 0), hi = Math.min(b.right, innerWidth); for (const li of (r.classList.contains('cx-scroll') && r.firstElementChild ? r.firstElementChild : r).children) { const x = li.getBoundingClientRect(); li.classList.toggle('is-peek', x.width > 0 && ((x.right > hi + 1 && x.left < hi - 1) || (x.left < lo - 1 && x.right > lo + 1))); } };
+    const upd = () => { const more = r.scrollWidth - r.clientWidth - r.scrollLeft > 4 && r.scrollWidth > r.clientWidth + 4; r.classList.toggle('has-more', more); if (!raf) raf = requestAnimationFrame(peek); };
+    upd(); r.addEventListener('scroll', upd, { passive: true }); addEventListener('resize', upd); addEventListener('load', upd);
+    if ('ResizeObserver' in window) new ResizeObserver(upd).observe(r);
+  });
+})();
+
+/* "Look closer" (the brass lens): its script and styles are fetched only when the reader nears the section, not with the story's first screens. */
+(() => {
+  const s = document.getElementById('look-closer'); if (!s || !s.dataset.lensJs || !('IntersectionObserver' in window)) return;
+  let done = false;
+  const go = () => { if (done) return; done = true; const l = document.createElement('link'); l.rel = 'stylesheet'; l.href = s.dataset.lensCss; document.head.appendChild(l); const j = document.createElement('script'); j.src = s.dataset.lensJs; j.defer = true; document.head.appendChild(j); };
+  const o = new IntersectionObserver((es) => { if (es.some((e) => e.isIntersecting)) { o.disconnect(); go(); } }, { rootMargin: '1600px 0px' });
+  o.observe(s); addEventListener('hashchange', () => { if (location.hash === '#look-closer') go(); });
 })();

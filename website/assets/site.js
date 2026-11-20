@@ -31,6 +31,14 @@
     $('a', hint)?.addEventListener('click', () => store.set('hiHint', true));
   })();
 
+  /* ---------- The constellation of people: its script is fetched only where the sky will be drawn ---------- */
+  // Never for Save-Data (the list is the page). If the script cannot be had, the sky's place closes at once.
+  (() => {
+    const sky = $('[data-stars]'); if (!sky || !sky.dataset.js) return;
+    if (root.classList.contains('ep-lite')) return sky.classList.add('is-off');
+    const js = document.createElement('script'); js.src = sky.dataset.js; js.async = true; js.onerror = () => sky.classList.add('is-off'); document.head.append(js);
+  })();
+
   /* ---------- Sound: synthesised, opt-in, remembered ---------- */
   const Sound = (() => {
     let ctx, master, drone, want = 1;   // want: how loud the drone sits (Watch lowers it under the narration)
@@ -119,11 +127,14 @@
     const riverStop = () => { if (!river || !ctx) return; const r = river; river = null; r.g.gain.linearRampToValueAtTime(0, ctx.currentTime + 1.5); setTimeout(() => { r.src.stop(); r.lfo.stop(); }, 1700); };
     const swell = () => { if (!drone || drone.pending || !ctx) return; const g = drone.g.gain; const t = ctx.currentTime; const lv = drone.level || 0.07; g.cancelScheduledValues(t); g.setValueAtTime(g.value, t); g.linearRampToValueAtTime(lv * 1.6, t + 1.2); g.linearRampToValueAtTime(lv, t + 4); };
     const duck = (v) => { want = v; if (!drone || drone.pending || !ctx) return; const g = drone.g.gain; const t = ctx.currentTime; g.cancelScheduledValues(t); g.setValueAtTime(g.value, t); g.linearRampToValueAtTime((drone.level || 0.07) * v, t + 1.5); };
-    return { on, bell, whisper, breath, droneStart, droneStop, swell, duck, river: riverStart, riverStop };
+    /* aura: the page's one audio context and its master gain, for assets/aura.js (bus(false) never creates one) */
+    const bus = (make = true) => { if (make) ensure(); return ctx ? { ctx, master } : null; };
+    return { on, bell, whisper, breath, droneStart, droneStop, swell, duck, river: riverStart, riverStop, bus };
   })();
   const paintSound = () => {
     const on = Sound.on();
     for (const b of $$('[data-sound]')) { b.setAttribute('aria-pressed', String(on)); b.title = on ? UI.soundDrone : UI.soundOffLong; const l = b.querySelector('.label, .visually-hidden'); if (l) l.textContent = on ? UI.soundDrone : UI.soundOffLong; }
+    document.dispatchEvent(new CustomEvent('spritual:sound', { detail: on }));   /* aura: the lamp was lit or snuffed */
   };
   document.addEventListener('click', (e) => {
     const b = e.target.closest('[data-sound]');
@@ -136,6 +147,15 @@
   // the score carries on from page to page: browsers only let it start again after the first touch or key on a new page
   if (Sound.on()) { const resume = (e) => { if (e.target.closest?.('[data-sound], [data-sound-invite]')) return; removeEventListener('pointerdown', resume); removeEventListener('keydown', resume); Sound.droneStart(); }; addEventListener('pointerdown', resume); addEventListener('keydown', resume); }
   addEventListener('pagehide', Sound.droneStop);
+  /* aura (assets/aura.js): the sound that answers the reading, and the gold of the rituals. Fetched only on the pages that
+     use it and only when the page is idle: on the quiet moment and on Today; on a story only once the lamp is lit (at once
+     when the reader lights it, since that touch is what lets it sound). */
+  if (UI.aura) {
+    let asked = false;
+    const aura = () => { if (asked) return; asked = true; const js = document.createElement('script'); js.src = UI.aura.js; js.async = true; js.onload = () => window.SpritualAura?.({ UI, store, reduced, Sound }); document.head.append(js); };
+    const idle = () => { if (window.requestIdleCallback) requestIdleCallback(aura, { timeout: 3000 }); else setTimeout(aura, 1500); };   // Safari has no idle callback
+    if (!UI.aura.tags || Sound.on()) idle(); else document.addEventListener('spritual:sound', (e) => { if (e.detail) aura(); });
+  }
 
   /* ---------- Opening ---------- */
   const opening = $('[data-opening-screen]');
@@ -255,7 +275,13 @@
       const p = store.get('prefs', {});
       const apply = () => { if (value) { root.dataset[name] = value; p[name] = value; } else { delete root.dataset[name]; delete p[name]; } if (name === 'motion') osCalm(); };
       // a new text size re-flows the whole story: the paragraph being read stays where it is on the screen
-      if (name === 'theme' && document.startViewTransition && !reduced()) document.startViewTransition(apply); else if (name === 'size' && window.__keepPlace) window.__keepPlace(apply); else apply();
+      if (name === 'theme' && document.startViewTransition && !reduced()) {
+        // the new light spreads from the switch that was touched, as a lamp's would
+        const b = (e.target.closest('label') || e.target).getBoundingClientRect(), x = Math.round(b.left + b.width / 2), y = Math.round(b.top + b.height / 2), r = Math.ceil(Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y)));
+        root.classList.add('vt-wave'); const vt = document.startViewTransition(apply);
+        vt.ready.then(() => root.animate({ clipPath: [`circle(0 at ${x}px ${y}px)`, `circle(${r}px at ${x}px ${y}px)`] }, { duration: 600, easing: 'cubic-bezier(.4, 0, .2, 1)', pseudoElement: '::view-transition-new(root)' })).catch(() => {});
+        vt.finished.finally(() => root.classList.remove('vt-wave'));
+      } else if (name === 'size' && window.__keepPlace) window.__keepPlace(apply); else apply();
       store.set('prefs', p); haptic();
     });
   }
@@ -337,15 +363,6 @@
       const why = slot.closest('[data-today-wrap]')?.querySelector('[data-why]');
       if (why) { why.hidden = !pick.need; if (pick.need) why.textContent = fmt(UI.because, { need: pick.need.label.toLowerCase() }); }
       slot.replaceChildren(c);
-    }
-    const heroFig = $('[data-hero-fig] img');
-    if (heroFig) {
-      const c = cardFor(pick.slug); const lead = c?.dataset.lead; const id = (UI.art || []).includes(lead) ? lead : (UI.art || []).includes(c?.dataset.c) ? c.dataset.c : null;
-      if (id && heroFig.dataset.art !== id) {
-        const src = c.querySelector(`img[data-art="${id}"]`);
-        const swap = () => { heroFig.src = UI.artBase + id + '-540.webp'; heroFig.srcset = `${UI.artBase}${id}-540.webp 540w, ${UI.artBase}${id}-1080.webp 1080w, ${UI.artBase}${id}-1600.webp 1600w`; if (src) { heroFig.width = src.width; heroFig.height = src.height; } heroFig.dataset.art = id; heroFig.classList.remove('is-swapping'); };
-        if (reduced()) swap(); else { heroFig.classList.add('is-swapping'); setTimeout(swap, 260); }
-      }
     }
     const more = $('[data-more]');
     if (more) { const slugs = allSlugs(); const i = slugs.indexOf(pick.slug); more.replaceChildren(...[1, 2, 3].map((k) => cardFor(slugs[(i + k) % slugs.length])).filter(Boolean)); }
@@ -565,6 +582,19 @@
     addEventListener('keydown', (e) => { if (e.key === '/' && !/input|textarea/i.test(document.activeElement?.tagName)) { e.preventDefault(); $('#q')?.focus(); } });
   }
 
+  /* ---------- [type] Living typography (assets/type.js): fetched when the page is idle, and only where it is used; at
+     once when a language switch is carrying the reader's paragraph across ---------- */
+  let tyLoad = null;   // (asked for at once by the first touch of a glossed word, below)
+  if (UI.typeJs) {
+    let asked = false;
+    const ty = () => { if (asked) return; asked = true; const js = document.createElement('script'); js.src = UI.typeJs; js.async = true; js.onload = () => window.SpritualType?.({ UI, say }); js.onerror = () => { root.classList.remove('ty-arr', 'ty-arw'); tyLoad = null; }; document.head.append(js); };
+    let now = root.classList.contains('ty-arr'); try { now = now || !!sessionStorage.getItem('spritual:ty-lang'); } catch {}
+    tyLoad = ty; for (const ev of ['pointerdown', 'focusin']) document.addEventListener(ev, (e) => { if (e.target.closest?.('.term')) ty(); }, { passive: true });
+    // (a language switch: the film asks where the reader was just before its first frame, film.js; type.js takes this over when it arrives)
+    if (root.classList.contains('ty-arr')) window.SpritualTypePlace = () => { try { const st = JSON.parse(sessionStorage.getItem('spritual:ty-lang')), sc = $$('[data-reader] .scene')[st.n - 1], host = (st.j >= 0 && $$('.scene-text > .pair', sc)[st.j]) || $('.shot', sc); ($(':scope > .fm-sp', host) || sc).scrollIntoView({ block: 'start', behavior: 'instant' }); } catch {} };
+    if (now) ty(); else (window.requestIdleCallback || setTimeout)(ty, { timeout: 2000 });
+  }
+
   /* ---------- Glossary ---------- */
   const gloss = $('#gloss');
   if (gloss) {
@@ -575,13 +605,17 @@
     const cardHtml = (d) => `<li class="lens-card"><p class="lens-term"><b></b>${d.deva && d.deva !== d.term ? ' <span class="lens-deva" lang="hi"></span>' : ''}${d.translit ? ' <i class="lens-translit"></i>' : ''}</p>${d.literal ? `<p class="lens-row"><span class="lens-k">${UI.lensLiteral}</span><span data-lit></span></p>` : ''}<p class="lens-row"><span class="lens-k">${UI.lensMeaning}</span><span data-def></span></p>${d.context ? '<p class="lens-row"><span class="lens-k" data-ctx-k></span><span data-ctx></span></p>' : ''}${d.source ? `<p class="lens-src"><span class="lens-k">${UI.lensSource}</span><cite></cite>${d.source.verify ? ` <span class="verify" title="${UI.verify}">[VERIFY]</span>` : ''}</p>` : ''}</li>`;
     const show = (btn) => {
       const id = btn.dataset.term; const d = defs[id]; if (!d) return;
+      // [type] the meaning opens inside the paragraph, between the lines (assets/type.js), wherever the lens rail is not in use.
+      // A word touched before that script has arrived waits for it (0.4 s at most), so a word opens one way in a visit.
+      if (!railOn() && tyLoad && !window.SpritualTypeGloss && !btn._tyW) { btn._tyW = 1; tyLoad(); const t0 = performance.now(); const go = () => { if (window.SpritualTypeGloss || performance.now() - t0 > 400) { show(btn); btn._tyW = 0; } else setTimeout(go, 25); }; go(); return; }
+      if (!railOn() && window.SpritualTypeGloss?.(btn, d)) return;
       $$('.term[aria-expanded="true"]').forEach((t) => t.setAttribute('aria-expanded', 'false')); btn.setAttribute('aria-expanded', 'true');
       if (railOn()) {
         lit(id); const card = $(`[data-lens-card="${id}"]`);
         if (card) {
           btn.setAttribute('aria-controls', card.id); card.scrollIntoView({ behavior: 'auto', block: 'nearest' });
           // a full-width painting can pass over the rail: keep the lit card in a clear stretch of it, or show the meaning by the word
-          if (!clearOfShots(card)) { pop(btn, d); return; }
+          if (!clearOfShots(card)) { if (!window.SpritualTypeGloss?.(btn, d)) pop(btn, d); /* [type] */ return; }
         }
         // the rail is visual; say the meaning too, so "expanded" is never empty
         say(`${d.term}: ${d.def}`);
@@ -757,7 +791,7 @@
       // keep the reader's exact place: the paragraph at the top of the screen stays there across the change
       if (save || late) keepPlace(apply);
       if (save) { const p = store.get('prefs', {}); p.read = mode; store.set('prefs', p); haptic(); }
-      else if (!late) { apply(); requestAnimationFrame(() => scrollTo(0, y)); }
+      else if (!late) { apply(); requestAnimationFrame(() => { if (!/\bty-(arr|held)\b/.test(root.className)/* [type] a language switch has put the reader on their paragraph by now */) scrollTo(0, y); }); }
     };
     setRead(store.get('prefs', {}).read || UI.lang, false);
     readBtns.forEach((b) => b.addEventListener('click', () => setRead(b.dataset.read, true)));
@@ -847,7 +881,7 @@
       // when the browser's own jump happened before pictures and fonts had settled; stop the moment the reader scrolls themselves
       if (hashed) {
         const target = scenes[startScene - 1]; let mine = false;
-        const jump = () => { if (!mine) target.scrollIntoView({ block: 'start', behavior: 'instant' }); };
+        const jump = () => { if (!mine && !root.classList.contains('ty-held')/* [type] type.js places the reader on their paragraph */) target.scrollIntoView({ block: 'start', behavior: 'instant' }); };
         for (const ev of ['wheel', 'touchstart', 'keydown', 'pointerdown']) addEventListener(ev, () => { mine = true; }, { once: true, passive: true });
         jump(); (document.fonts?.ready || Promise.resolve()).then(jump);
         if (document.readyState !== 'complete') addEventListener('load', () => setTimeout(jump, 60), { once: true });
@@ -1301,4 +1335,13 @@
     if (Sound.on()) { Sound.droneStart(); Sound.river(); }
     addEventListener('pagehide', Sound.riverStop);
   }
+})();
+
+/* [atlas] the brass dial: the emblem in the bar fetches assets/dial.js and dial.css the first time it is pressed */
+(() => {
+  const b = document.querySelector('[data-dial]'); if (!b || !window.HTMLDialogElement) return; b.hidden = false; let ready;
+  b.addEventListener('click', () => {
+    ready = ready || Promise.all([new Promise((ok, no) => { const l = document.createElement('link'); l.rel = 'stylesheet'; l.href = b.dataset.dialCss; l.onload = ok; l.onerror = no; document.head.append(l); }), new Promise((ok, no) => { const s = document.createElement('script'); s.src = b.dataset.dialJs; s.onload = ok; s.onerror = no; document.head.append(s); })]);
+    ready.then(() => window.SpritualDial.open(b)).catch(() => { ready = null; });
+  });
 })();

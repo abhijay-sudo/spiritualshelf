@@ -1,0 +1,48 @@
+/* Spritual: living typography (assets/type.js). Fetched after the page has loaded; nothing here is needed to read it. */
+
+/* 1. Ink. A scene's title while it is being written (the mask and the room for its soft edge are set by type.js,
+   line by line, and taken away when the title is whole). */
+
+/* 2. Language. The lines dissolve before the page changes language, and form again where they stood. */
+.ty-leave :is(.scene-text p, .shot-card h2, .shot-card .scene-no, .story-sum) { opacity: 0 !important; filter: blur(5px); transition: opacity .26s ease, filter .26s ease !important; }
+.ty-leave.fm-live .fm-beat.on > .fm-t { opacity: 0 !important; filter: blur(5px); transition: opacity .26s ease, filter .26s ease !important; }
+.ty-leave.fm-live .fm-beat.on > .fm-t :is(p, h2, .scene-no) { filter: none; }
+.ty-form-o { animation: ty-form-o .95s cubic-bezier(.2, .6, .2, 1) backwards; }
+@keyframes ty-form-o { from { opacity: 0; filter: blur(7px); } to { opacity: 1; filter: blur(0); } }
+
+/* 3. Metre. The marks under a verse (their still form is set with the page itself) pulse once, each in its turn: a light
+   syllable for one count, a heavy one for two. Not the hymn read word by word (.ty-m-s): its marks stay still. */
+.ty-m i, .ty-m b { --o: .62; transform-origin: 50% 60%; }
+.ty-m b.e { --o: .3; }
+.ty-play .ty-m:not(.ty-m-s) i { animation: ty-beat calc(var(--ty-u, 135ms) * 3.4) cubic-bezier(.2, .7, .3, 1) var(--d, 0ms) both; }
+.ty-play .ty-m:not(.ty-m-s) b { animation: ty-beat calc(var(--ty-u, 135ms) * 4.6) cubic-bezier(.2, .7, .3, 1) var(--d, 0ms) both; }
+@keyframes ty-beat { 0% { opacity: var(--o); transform: none; } 16% { opacity: 1; transform: scaleY(1.28); } 100% { opacity: var(--o); transform: none; } }
+
+/* 4. Gloss. The paragraph parts at the end of the word's line and the meaning stands between the lines. */
+.ty-gloss { display: grid; grid-template-rows: 0fr; opacity: 0; transition: grid-template-rows .36s cubic-bezier(.3, .7, .2, 1), opacity .3s ease .05s; white-space: normal; text-indent: 0; text-align: left; -webkit-text-stroke: 0; font-weight: 400; font-style: normal; cursor: auto; -webkit-user-select: text; user-select: text; }
+.ty-gloss.is-open { grid-template-rows: 1fr; opacity: 1; }
+.ty-gloss.is-still { transition: none; }
+.ty-gloss-in { display: block; min-height: 0; overflow: hidden; }
+.ty-gloss-c { display: grid; gap: .22em; margin: .6em 0 .75em .1em; padding: .1em 0 .15em .95em; border-left: 1px solid var(--accent-gold, #c9a25a); font-size: .88em; line-height: 1.5; text-wrap: pretty; text-shadow: inherit; }
+.ty-gloss-c > span { display: block; }
+.ty-g-t b { font-family: var(--font-display, inherit); font-weight: 500; font-size: 1.12em; color: var(--accent, inherit); }
+.ty-g-t i { opacity: .8; }
+.ty-g-deva { opacity: .9; }
+.ty-g-k { font-size: .78em; letter-spacing: .08em; text-transform: uppercase; opacity: .72; }
+html[lang="hi"] .ty-g-k { font-size: .86em; letter-spacing: 0; text-transform: none; }
+.ty-g-c, .ty-g-s, .ty-g-l { font-size: .94em; opacity: .86; }
+.fm .ty-gloss-c { border-left-color: var(--fm-gold, #e9c98c); color: var(--fm-ink, #f6ead8); }
+.fm .ty-g-t b { color: var(--fm-gold, #e9c98c); }
+.fm .ty-gloss { pointer-events: auto; }
+/* in the film the paragraph is held by its foot: the empty stretch above it gives up what the meaning takes, and the
+   paragraph is drawn higher by as much (type.js, "lift"). The second rule repeats film.css's own fade for lit words. */
+.fm .fm-beat.ty-lift::before { transition: height .36s cubic-bezier(.3, .7, .2, 1); }
+.fm-live .fm-beat.ty-lift > .fm-t { transition: opacity .8s cubic-bezier(.2, .6, .2, 1) .16s, translate .36s cubic-bezier(.3, .7, .2, 1); }
+@media print { .ty-gloss { display: none; } }
+
+/* 5. Three sentences gain weight and light as the reader reaches them (--k, 0 to 1, set by type.js). The weight is a
+   stroke of the letters' own colour, so no word changes width and no line breaks differently. */
+.ty-k { --k: 0; --ty-kc: var(--accent-vermilion-2, #a54d0d); color: color-mix(in oklab, currentColor, var(--ty-kc) calc(var(--k) * 78%)); -webkit-text-stroke: calc(var(--k) * .026em) currentColor; paint-order: stroke fill; text-shadow: 0 0 calc(var(--k) * .7em) color-mix(in srgb, var(--ty-kc) calc(var(--k) * 30%), transparent); }
+.fm .ty-k { --ty-kc: #ffd691; text-shadow: 0 1px 2px rgb(0 0 0 / .85), 0 0 20px rgb(0 0 0 / .6), 0 0 calc(var(--k) * .9em) rgb(255 190 96 / calc(var(--k) * .6)), 0 0 calc(var(--k) * 2.2em) rgb(255 170 70 / calc(var(--k) * .28)); }
+.ty-k .term { color: inherit; }
+@media print { .ty-k { color: inherit; -webkit-text-stroke: 0; text-shadow: none; } }

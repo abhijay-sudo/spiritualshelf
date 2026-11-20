@@ -27,7 +27,7 @@
   .cast-hero-txt > .cast-acts { --k: 4; } .cast-hero-txt > .cast-about { --k: 5; } .cast-hero-txt > .cast-facts { --k: 6; }
 }
 /* a person painted in a scene: their light, a soft bloom with no edge, centred on them inside the box they stand in
-   (.cast-focus) and under the calm side's veil; a cut-out has its own (cast.css, .cast-aura) */
+   (.cast-focus) and under the calm side's veil; a drawn figure has its own (cast.css, .cast-aura) */
 .ep-bloom { position: absolute; left: -40%; top: 0; width: 180%; margin-top: -38%; aspect-ratio: 1; border-radius: 50%; pointer-events: none; mix-blend-mode: screen;
   background: radial-gradient(closest-side, color-mix(in srgb, var(--ep-a) 24%, transparent), color-mix(in srgb, var(--ep-a) 11%, transparent) 42%, color-mix(in srgb, var(--ep-a) 3%, transparent) 64%, transparent); }
 /* a legend's atmosphere (epic.js): small soft motes behind the words, placed away from every face */
@@ -64,7 +64,7 @@
 
 /* ---------- Motion (none of it with reduce-motion, by the device or by the site's own switch) ---------- */
 @media screen and (prefers-reduced-motion: no-preference) {
-  /* a person's page: the camera settles on the painting (on the face, for a painting), a cut-out steps out of its
+  /* a person's page: the camera settles on the painting (on the face, for a painting), a drawn figure steps out of its
      world, their light blooms, and the words arrive in order, each whole, faint at first and never absent */
   :root.cx-js:not(.ep-lite):not([data-motion="reduce"]) .cast-page .cast-plate { transform-origin: calc(var(--img-l) + var(--face-x, .5) * var(--img-w)) calc(var(--img-t) + var(--face-y, .3) * var(--img-h));
     animation: ep-settle var(--ep-set) cubic-bezier(.2, .65, .12, 1) both; }
@@ -100,8 +100,9 @@
      screen arrive when they are reached: cinema.js, .th-rv); under the pointer a tile lifts a little (cinema.css) */
   :root.cx-js:not(.ep-lite):not([data-motion="reduce"]) .cast-tiles > li:not(.th-rv) { animation: ep-tile .55s cubic-bezier(.2, .7, .2, 1) calc(min(var(--i, 0), 11) * 45ms) both; }
 
-  /* home: the cast row drifts, each figure in its own time */
-  :root:not([data-motion="reduce"]) .ep-float .cx-cast-pic img.art { animation: ep-float 6.5s ease-in-out calc(var(--ep-n, 0) * -1.3s) infinite alternate; }
+  /* home: the cast row breathes, each portrait in its own time (the camera a breath nearer the face, never a slide:
+     a painting has edges a drift would show) */
+  :root:not([data-motion="reduce"]) .ep-float .face--arch > img { animation: ep-float 6.5s ease-in-out calc(var(--ep-n, 0) * -1.3s) infinite alternate; }
   :root:not([data-motion="reduce"]) .ep-float a:is(:hover, :focus-visible) .cx-cast-pic { box-shadow: 0 0 0 1px color-mix(in srgb, var(--ep-a, #f3c47e) 70%, transparent), 0 0 44px -6px color-mix(in srgb, var(--ep-a, #f3c47e) 80%, transparent); }
   .cx-cast-pic { transition: box-shadow .6s var(--cx-ease, ease); }
 
@@ -124,7 +125,6 @@
 :root[data-motion="reduce"] :is(.ep-air, .ep-bloom), :root.ep-lite :is(.ep-air, .ep-bloom) { display: none; }
 /* Save-Data: the home select is still too (it changes character by a cut, its world and figure at rest) */
 :root.ep-lite :is(.cx-select, .cx-select *) { animation: none !important; }
-:root.ep-lite .cx-sel-fig.is-ghost { display: none; }
 @media print { .ep-rv { opacity: 1 !important; } .ep-air, .ep-bloom { display: none; } }
 
 @keyframes ep-settle { from { scale: var(--ep-s0, 1.03); } }
@@ -140,7 +140,7 @@
 @keyframes ep-glint { 0%, 100% { opacity: 0; } 50% { opacity: var(--a); } }
 @keyframes ep-tile { from { opacity: .35; translate: 0 10px; } }
 @keyframes ep-depth { to { transform: translate3d(0, 18px, 0); } }
-@keyframes ep-float { from { translate: 0 0; } to { translate: 0 -5px; } }
+@keyframes ep-float { from { scale: 1; } to { scale: 1.035; } }
 @keyframes ep-arrive { from { opacity: .32; transform: translate3d(0, 1.1rem, 0); } to { opacity: 1; transform: none; } }
 @keyframes ep-arrive-soft { from { opacity: .45; } to { opacity: 1; } }
 @keyframes ep-arrive-side { from { opacity: .32; transform: translate3d(-1.25rem, 0, 0); } to { opacity: 1; transform: none; } }

@@ -25,6 +25,9 @@
     if (mq.matches || mine === 'reduce') d.dataset.motion = 'reduce'; else delete d.dataset.motion;
   });
   if (!calm && !mq.matches) d.classList.add('cx-js');
+  // [type] a language switch that carries the reader's paragraph across (assets/type.js): the story's words wait unseen
+  // until they are in place (cinema.css, .ty-arr and .ty-arw, which also show them by themselves if that script never arrives)
+  try { var ty = me && me.hasAttribute('data-read') && d.classList.contains('cx-js') && JSON.parse(sessionStorage.getItem('spritual:ty-lang') || 'null'); if (ty && Date.now() - ty.t < 20000 && /#page-\d+$/.test(location.hash)) d.classList.add('ty-arr', 'ty-arw'); } catch (e) {}
   try { if ((navigator.connection && navigator.connection.saveData) || matchMedia('(prefers-reduced-data: reduce)').matches) d.classList.add('ep-lite'); } catch (e) {}
   // The Unbroken Shot (film.js, film.css): a story page is laid out as a film from its first paint, so a reader arriving
   // in the middle of a story never sees the page change under them. Its styles are fetched here, off the critical path.
@@ -137,9 +140,11 @@
     if (!e.viewTransition) return;
     var w; try { w = sessionStorage.getItem('cx-vt'); sessionStorage.removeItem('cx-vt'); } catch (x) { return; }
     if (!w || w !== location.pathname) return;
-    var t = document.querySelector('[data-vt-target] img'); if (!t) return;
+    var t = document.querySelector('[data-vt-target] img,img[data-vt-target]'); if (!t) return;
     t.style.viewTransitionName = 'cx-hero';
-    var clear = function () { t.style.viewTransitionName = ''; };
+    var who = ''; try { who = sessionStorage.getItem('cx-vtk'); sessionStorage.removeItem('cx-vtk'); } catch (x) {}
+    if (who) d.dataset.vt = 'who';
+    var clear = function () { t.style.viewTransitionName = ''; delete d.dataset.vt; };
     e.viewTransition.finished.then(clear, clear);
   });
   var sw = me && me.dataset.sw;

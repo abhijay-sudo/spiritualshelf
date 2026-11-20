@@ -117,8 +117,7 @@
   .cx-sel-grid { flex: 1 1 0; min-width: 0; display: grid; grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: 96px; gap: .5rem; overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory; scroll-padding-inline: var(--cx-gut); scrollbar-width: none; margin-inline-start: calc(-1 * var(--cx-gut)); padding: .9rem .9rem .3rem var(--cx-gut); -webkit-mask-image: linear-gradient(90deg, #000 85%, transparent); mask-image: linear-gradient(90deg, #000 85%, transparent); }
   .cx-sel-grid > li { scroll-snap-align: start; }
   .cx-sel-tile, .cx-sel-grid[data-many="true"] .cx-sel-tile, .cx-sel-grid[data-huge="true"] .cx-sel-tile { aspect-ratio: auto; width: 96px; height: 124px; min-height: 44px; container-type: normal; }
-  .cx-sel-tile-bg, .cx-sel-tile-face { bottom: 32px; }
-  .cx-sel-tile-face img { width: 84%; top: 4%; }
+  .cx-sel-tile-bg { bottom: 32px; }
   .cx-sel-tile::after { background: linear-gradient(to top, rgb(5 3 2 / .96) 0 32px, transparent 60%); }
   .cx-sel-tile-n, html[lang="hi"] .cx-sel-tile-n, .cx-sel-grid[data-huge="true"] .cx-sel-tile-n { left: 6px; right: 14px; bottom: 0; height: 32px; display: flex; align-items: center; justify-content: center; text-align: center; font: 600 13px/1.1 var(--cx-ui); letter-spacing: 0; text-transform: none; white-space: nowrap; overflow: hidden; text-overflow: clip; overflow-wrap: normal; }
   html[lang="hi"] .cx-sel-tile-n { font-family: "Mukta", var(--cx-ui); font-size: 14px; }
@@ -164,12 +163,14 @@
   .cx-sel-realm-pic { width: 28px; height: 28px; }
   .cx-sel-grid { margin-inline-start: 0; padding: .55rem .9rem .2rem .2rem; grid-auto-columns: 92px; }
   .cx-sel-tile, .cx-sel-grid[data-many="true"] .cx-sel-tile, .cx-sel-grid[data-huge="true"] .cx-sel-tile { width: 92px; height: 74px; }
-  .cx-sel-tile-bg, .cx-sel-tile-face { bottom: 24px; }
-  .cx-sel-tile-face img { width: 62%; top: 0; }
+  .cx-sel-tile-bg { bottom: 24px; }
   .cx-sel-tile::after { background: linear-gradient(to top, rgb(5 3 2 / .96) 0 24px, transparent 70%); }
   .cx-sel-tile-n, html[lang="hi"] .cx-sel-tile-n, .cx-sel-grid[data-huge="true"] .cx-sel-tile-n { height: 24px; white-space: nowrap; }
   html:not([lang="hi"]) .cx-sel-grid .cx-sel-tile-n { font-size: min(13px, calc(76px / (var(--nl, 8) * .58))); }
   .cx-sel-stage { max-width: 58%; gap: .3rem; }
+  /* a face painted on the left: the words take the right of the short screen, as they do on a wide one (they lay across the face) */
+  .cx-select.is-left > .cx-sel-stage { justify-self: end; }
+  .cx-select.is-left .cx-sel-info > :is(.cx-sel-count, .cx-sel-coll) { grid-column: 1 / -1; }
   .cx-sel-count { font-size: .8rem; } .cx-sel-count b { font-size: 1.15rem; line-height: 1; }
   .cx-sel-title { --sel-ts: clamp(1.7rem, 1rem + 2.4vw, 2.2rem); line-height: 1.05; }
   .cx-sel-sum { -webkit-line-clamp: 1; line-clamp: 1; font-size: .875rem; }

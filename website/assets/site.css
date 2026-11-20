@@ -668,6 +668,8 @@ html[lang="hi"] .ritual h2 { text-transform: none; letter-spacing: 0; font-size:
 }
 ::view-transition-old(root), ::view-transition-new(root) { animation-duration: .3s; }
 :root[data-motion="reduce"]::view-transition-old(root), :root[data-motion="reduce"]::view-transition-new(root) { animation: none; }
+/* the theme switch: the new theme opens in a circle from the switch (site.js); the old one holds still beneath it */
+.vt-wave::view-transition-old(root), .vt-wave::view-transition-new(root) { animation: none !important; mix-blend-mode: normal; }
 /* stagger grids in the class fallback */
 .grid > *:nth-child(2), .coll-grid > *:nth-child(2) { transition-delay: .06s; } .grid > *:nth-child(3), .coll-grid > *:nth-child(3) { transition-delay: .12s; }
 .grid > *:nth-child(4), .coll-grid > *:nth-child(4) { transition-delay: .18s; } .grid > *:nth-child(5), .coll-grid > *:nth-child(5) { transition-delay: .24s; } .grid > *:nth-child(6), .coll-grid > *:nth-child(6) { transition-delay: .3s; }
@@ -1111,3 +1113,22 @@ html[lang="hi"] .intertitle span { font-style: normal; font-family: var(--font-h
   .char-grid--codex .char--codex { grid-column: auto; }
 }
 .char .art { aspect-ratio: 4 / 5; object-fit: contain; object-position: 50% 100%; }
+
+/* [atlas] the brass dial's emblem in the bar: hidden until site.js wakes it; assets/dial.js and dial.css load on first use */
+.dial-fab { flex: none; display: grid; place-items: center; width: 44px; height: 44px; padding: 0; border: 0; border-radius: 50%; background: none; color: #e2ad4c; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.dial-fab[hidden] { display: none; }
+.dial-fab svg { width: 26px; height: 26px; fill: none; stroke: currentColor; stroke-width: 1.15; stroke-linejoin: round; transition: transform .7s cubic-bezier(.2, .8, .2, 1); }
+.dial-fab .dial-fab-dot { fill: currentColor; stroke: none; }
+.dial-fab:hover svg, .dial-fab:focus-visible svg, .dial-fab[aria-expanded="true"] svg { transform: rotate(22.5deg); }
+.has-hero .dial-fab svg { filter: drop-shadow(0 0 2px rgb(20 8 0 / .8)) drop-shadow(0 0 6px rgb(20 8 0 / .5)); }
+.dial-fab:focus-visible { outline: 2px solid currentColor; outline-offset: -4px; }
+@media (max-width: 359px) { .dial-fab { display: none; } }
+@media (prefers-reduced-motion: reduce) { .dial-fab svg { transition: none; } }
+@media print { .dial-fab { display: none; } }
+
+/* the breathing legend: three equal columns, never wrapped mid-label, never smaller than 11 px */
+.ring-legend { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .4rem; justify-items: center; text-align: center; font-size: max(.78rem, 11px); }
+.ring-legend .ring-k { display: inline-flex; align-items: baseline; gap: .15rem .3rem; flex-wrap: wrap; justify-content: center; }
+@media (max-width: 420px) { .ring-legend .ring-k { flex-direction: column; align-items: center; } .ring-legend .ring-k::before { margin: 0 0 .2rem; } }
+.ring-legend { font-size: max(.72rem, 11px); letter-spacing: .02em; gap: .25rem; }
+.ring-legend .ring-k { white-space: nowrap; flex-wrap: nowrap; }
