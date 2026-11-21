@@ -2438,3 +2438,9 @@ html[lang="hi"] .cx-consent-btn { font-family: "Mukta", var(--cx-ui); }
   .st-open[data-st-left] .cx-film-card::before { inset: 20% -6% 0 -30%; }
   .st-open[data-st-left] .cx-open-shade { background: linear-gradient(to right, rgb(18 9 3 / .8), rgb(18 9 3 / .5) 34%, rgb(18 9 3 / 0) 52%), linear-gradient(to top, rgb(30 14 4 / .55), rgb(30 14 4 / 0) 45%), linear-gradient(to bottom, rgb(30 14 4 / .35), transparent 22%); }
 }
+
+/* Typesetting: no stranded last word. Paragraphs and list items are set "pretty" (the browser avoids a lone word on the last line); short blocks
+   that are read as a unit (summaries, captions, card text, intros) are balanced, so their lines come out even. Both are hints: a browser that does not know them
+   sets the text as before. */
+p, li, dd, figcaption, blockquote { text-wrap: pretty; }
+.cx-sel-sum, .cx-sel-facts, .story-sum, .card-sum, .card-text, .cx-open-sub, .cx-sub-t, .wt-cap p, .ed-card-s, .ed-lede, .cast-about, .at-lead, .at-sec-lead, .at-route-lead, .sheet-sum, .fm-peek, .cx-text, .cx-lede, [class*="-sum"], [class*="-lede"], [class*="-intro"] { text-wrap: balance; }
