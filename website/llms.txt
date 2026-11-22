@@ -12,7 +12,7 @@ Before quoting or summarising this site:
 
 ## Start here
 
-- [All stories](https://spritual.co.in/library/): Search 44 illustrated retellings from the Ramayana, Mahabharata and Puranas by name, feeling, collection or reading time, in English and Hindi.
+- [All stories](https://spritual.co.in/library/): Search 48 illustrated retellings from the Ramayana, Mahabharata and Puranas by name, feeling, collection or reading time, in English and Hindi.
 - [People of the stories](https://spritual.co.in/characters/): 96 people of the Ramayana, Mahabharata and Puranas, from Rama, Sita and Hanuman to Karna, Draupadi and Bhishma, each linked to their stories.
 - [Festivals and their stories](https://spritual.co.in/festivals/): Dates for Diwali, Holi, Maha Shivaratri, Navratri, Janmashtami and more to November 2027 (New Delhi, Drik Panchang), each with a story to read.
 - [Questions the stories answer](https://spritual.co.in/questions/): 23 questions answered from the stories themselves, each with the scene it comes from: Samudra Manthan, Ganesha’s elephant head, Krishna and Sudama, Lanka Dahan.
@@ -39,6 +39,7 @@ Before quoting or summarising this site:
 
 - [The golden vessel from the fire](https://spritual.co.in/collections/ramayana/books/valmiki-ramayana/arcs/bala-kanda/stories/ramayana-birth-of-rama/): A sonless king holds a great sacrifice; the gods need a man to end Ravana, and Vishnu chooses Dasharatha for his father. From Valmiki's Bala Kanda.
 - [The bow that broke the sky](https://spritual.co.in/collections/ramayana/books/valmiki-ramayana/arcs/bala-kanda/stories/ramayana-beginnings/): Narada names the ideal man, Sita is found in a furrow, Vishvamitra teaches Rama, and in Mithila Shiva's bow breaks: Valmiki's Bala Kanda, illustrated.
+- [The woman no one could see](https://spritual.co.in/collections/ramayana/books/valmiki-ramayana/arcs/bala-kanda/stories/ramayana-tataka-and-ahalya/): Young Rama follows Vishvamitra, faces a yakshi strong as a thousand elephants, then enters a hermitage near Mithila. From Valmiki's Ramayana.
 - [Four brides, one fire](https://spritual.co.in/collections/ramayana/books/valmiki-ramayana/arcs/bala-kanda/stories/ramayana-the-wedding/): Messengers bring Ayodhya the news that Rama has won Sita; in Mithila four princes marry four brides. Sita Ram Vivah, from Valmiki's Bala Kanda.
 - [Two Ramas, one bow](https://spritual.co.in/collections/ramayana/books/valmiki-ramayana/arcs/bala-kanda/stories/ramayana-parashurama/): Parashurama, the axe-bearing son of Jamadagni, bars the road home and dares young Rama to draw the bow of Vishnu. From Valmiki's Bala Kanda.
 - [Fourteen years, two sandals](https://spritual.co.in/collections/ramayana/books/valmiki-ramayana/arcs/ayodhya-kanda/stories/ramayana-promises-and-partings/): Rama is sent to the forest on the eve of his crowning; Sita and Lakshmana follow, Guha keeps watch, and Bharata takes Rama's sandals back to the throne.
@@ -55,6 +56,7 @@ Before quoting or summarising this site:
 
 - [The night the doors opened](https://spritual.co.in/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-born-in-prison/): A voice names Kamsa's killer: his sister's eighth child. On the night Krishna is born, the bolted prison doors open by themselves. Bhagavata Purana.
 - [The rope two fingers short](https://spritual.co.in/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-butter-and-rope/): Yashoda catches Krishna, the butter thief, and tries to tie him; every rope in the house comes up two fingers short. Damodar Leela, Bhagavata Purana.
+- [The dance on Kaliya's hoods](https://spritual.co.in/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-kaliya/): Venom boils a pool of the Yamuna. A cowherd boy climbs a kadamba tree, tightens his belt and jumps in. From the Bhagavata Purana, in plain words.
 - [The mountain lifted](https://spritual.co.in/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-mountain/): Indra sends storm clouds on Vraja and young Krishna lifts Govardhan hill on one hand, sheltering the village for seven days. From the Bhagavata Purana.
 - [Four handfuls of flat rice](https://spritual.co.in/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-and-sudama/): Sudama (Kuchela), Krishna's poor friend, walks to Dwarka with four handfuls of flat rice and asks for nothing. Retold from Bhagavata Purana 10.80-81.
 - [The unmoving star](https://spritual.co.in/collections/krishna/books/bhagavata-purana/arcs/skandha-4/stories/dhruva-star/): Denied his father's lap at five, Dhruva goes to the forest and meditates until Vishnu appears and grants him the place of the pole star.
@@ -79,6 +81,7 @@ Before quoting or summarising this site:
 
 ### Ganesha & Family (Shiva Purana)
 
+- [Six faces for six mothers](https://spritual.co.in/collections/ganesha/books/shiva-purana/arcs/rudra-samhita/stories/kartikeya-six-faces/): Shiva's fire is too fierce for Agni and for Ganga. In a thicket of reeds it becomes a boy, and six mothers quarrel over him. From the Shiva Purana.
 - [The boy who kept the door](https://spritual.co.in/collections/ganesha/books/shiva-purana/arcs/rudra-samhita/stories/ganesha-elephant-head/): Parvati shapes a son to guard her door; he bars Shiva, fights all heaven and is beheaded, then revived with an elephant's head. From the Shiva Purana.
 - [Seven times around](https://spritual.co.in/collections/ganesha/books/shiva-purana/arcs/rudra-samhita/stories/ganesha-the-nearer-world/): Kartikeya races around the whole earth; Ganesha circles his parents Shiva and Parvati seven times instead. From the Shiva Purana, illustrated.
 - [The Vel and the mango tree](https://spritual.co.in/collections/ganesha/books/kanda-puranam/arcs/yuddha-kandam/stories/murugan-and-the-vel/): A king of 1008 universes makes the gods carry fish. Shiva's six-faced son answers with one Vel, and a mango tree rises from the sea. Kanda Puranam.
@@ -99,6 +102,7 @@ Before quoting or summarising this site:
 ### Seekers & Sages (Katha Upanishad)
 
 - [The boy who questioned Death](https://spritual.co.in/collections/sages/books/katha-upanishad/arcs/adhyaya-1/stories/nachiketa-and-yama/): Given to Death by his own father, the boy Nachiketa waits three nights in Yama's house, then refuses long life and wealth for one answer.
+- [Only his mother's name](https://spritual.co.in/collections/sages/books/chandogya-upanishad/arcs/chandogya-4/stories/satyakama-and-the-truth/): Asked his family, a boy gives his mother's plain answer word for word. A bull, a fire and two birds teach him the rest. Chandogya Upanishad.
 
 ## Hindi edition
 

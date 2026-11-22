@@ -5,10 +5,46 @@
 <id>https://spritual.co.in/hi/feed.xml</id>
 <link rel="self" type="application/atom+xml" href="https://spritual.co.in/hi/feed.xml"/>
 <link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/"/>
-<updated>2026-11-20T19:40:41Z</updated>
+<updated>2026-11-21T00:49:25Z</updated>
 <author><name>Spritual</name><uri>https://spritual.co.in/hi/about/</uri></author>
 <icon>https://spritual.co.in/favicon.ico</icon>
 <logo>https://spritual.co.in/assets/icons/icon-512.png</logo>
+<entry>
+<title>छह माताओं के लिए छह मुख</title>
+<id>https://spritual.co.in/hi/collections/ganesha/books/shiva-purana/arcs/rudra-samhita/stories/kartikeya-six-faces/</id>
+<link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/collections/ganesha/books/shiva-purana/arcs/rudra-samhita/stories/kartikeya-six-faces/"/>
+<link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/collections/ganesha/books/shiva-purana/arcs/rudra-samhita/stories/kartikeya-six-faces/"/>
+<updated>2026-11-21T00:49:25Z</updated>
+<category term="ganesha"/>
+<summary>शिव का तेज न अग्नि सह पाए, न गंगा। सरकंडों में वह बालक बना, और छह माताएँ झगड़ पड़ीं कि गोद में कौन ले। शिव पुराण से।</summary>
+</entry>
+<entry>
+<title>कालिय के फनों पर नृत्य</title>
+<id>https://spritual.co.in/hi/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-kaliya/</id>
+<link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-kaliya/"/>
+<link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-kaliya/"/>
+<updated>2026-11-21T00:49:25Z</updated>
+<category term="krishna"/>
+<summary>यमुना के कुंड में विष खौल रहा है। एक ग्वाल-बालक कदंब पर चढ़ता है, फेंटा कसता है और कूद पड़ता है। भागवत पुराण से, सरल शब्दों में।</summary>
+</entry>
+<entry>
+<title>जिन्हें कोई देख न सका</title>
+<id>https://spritual.co.in/hi/collections/ramayana/books/valmiki-ramayana/arcs/bala-kanda/stories/ramayana-tataka-and-ahalya/</id>
+<link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/collections/ramayana/books/valmiki-ramayana/arcs/bala-kanda/stories/ramayana-tataka-and-ahalya/"/>
+<link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/collections/ramayana/books/valmiki-ramayana/arcs/bala-kanda/stories/ramayana-tataka-and-ahalya/"/>
+<updated>2026-11-21T00:49:25Z</updated>
+<category term="ramayana"/>
+<summary>किशोर राम विश्वामित्र के पीछे चलते हैं, हज़ार हाथियों के बल वाली यक्षिणी का सामना करते हैं, फिर मिथिला के पास एक आश्रम में जाते हैं। वाल्मीकि रामायण से।</summary>
+</entry>
+<entry>
+<title>बस माँ का नाम</title>
+<id>https://spritual.co.in/hi/collections/sages/books/chandogya-upanishad/arcs/chandogya-4/stories/satyakama-and-the-truth/</id>
+<link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/collections/sages/books/chandogya-upanishad/arcs/chandogya-4/stories/satyakama-and-the-truth/"/>
+<link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/collections/sages/books/chandogya-upanishad/arcs/chandogya-4/stories/satyakama-and-the-truth/"/>
+<updated>2026-11-21T00:49:25Z</updated>
+<category term="sages"/>
+<summary>गोत्र पूछा गया, तो बालक ने माँ का सीधा उत्तर ज्यों का त्यों कह दिया। आगे की विद्या साँड़, अग्नि और दो पक्षियों ने दी। छान्दोग्य उपनिषद से।</summary>
+</entry>
 <entry>
 <title>कृष्ण, या उनकी सेना</title>
 <id>https://spritual.co.in/hi/collections/mahabharata/books/vyasa-mahabharata/arcs/udyoga-parva/stories/mahabharata-krishna-or-his-army/</id>
