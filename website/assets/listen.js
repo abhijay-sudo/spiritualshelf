@@ -97,7 +97,8 @@
   const sheet = $('#comfort .sheet-title');
   if (sheet && UI.icPlay && !$('[data-listen-sheet]')) {
     const row = d.createElement('div'); row.className = 'lst-entry';
-    row.innerHTML = `<button type="button" data-listen data-listen-sheet>${UI.icPlay}<span>${UI.listen}</span></button><p class="lst-entry-n">${hi ? 'आपके फ़ोन की अपनी आवाज़ में। कुछ भी फ़ोन से बाहर नहीं जाता।' : 'In your phone’s own voice. Nothing leaves the phone.'}</p>`;
+    row.setAttribute('role', 'group'); row.setAttribute('aria-labelledby', 'lst-entry-h');   // [fixR] a heading of its own, like every other group in the sheet
+    row.innerHTML = `<p class="legend lst-entry-h" id="lst-entry-h">${S.region}</p><button type="button" data-listen data-listen-sheet>${UI.icPlay}<span>${UI.listen}</span></button><p class="lst-entry-n">${hi ? 'आपके फ़ोन की अपनी आवाज़ में। कुछ भी फ़ोन से बाहर नहीं जाता।' : 'In your phone’s own voice. Nothing leaves the phone.'}</p>`;
     ($('.sample', sheet.closest('form')) || sheet).before(row); btns.push($('[data-listen]', row));
   }
   const label = () => btns.forEach((b) => {
@@ -205,9 +206,18 @@
   // Safari sometimes loses a sentence's end: if nothing is speaking and nothing is waiting, go on (the check runs only while listening)
   const sentenceLost = () => { if (st !== 'playing') { clearInterval(wd); wd = 0; return; } if (started && !synth.speaking && !synth.pending && Date.now() - started > 900) { const my = tok; setTimeout(() => { if (my === tok && st === 'playing' && !synth.speaking && !synth.pending) { if (sleepDue) stop(S.slept); else speakAt(i + 1); } }, 700); } };
 
+  // [fixR] the scene Listen starts from is read from the screen at the moment of the press (the film's own position, or the scene under the middle
+  // of the viewport), never from the last value an observer happened to leave: after a quick scroll or a jump that value can lag behind
+  const sceneNow = () => {
+    if (root.dataset.mode === 'leaf') return R.current();
+    const f = root.classList.contains('fm') ? window.SpritualFilmNow?.() : null;
+    if (f) return f.ended ? total : Math.min(total, Math.max(1, Math.floor(f.at) || 1));
+    let k = 0, mid = innerHeight * .4; scenes.forEach((sc, j) => { if (sc.getBoundingClientRect().top <= mid) k = j + 1; });
+    return k || R.current();
+  };
   const startPoint = () => {
     // from what is on the screen (the paragraph that begins in view), not back at the top of the scene
-    const n = R.current(), s = scenes[n - 1], L = R.readLang(), h = $(`h2[lang="${L}"]`, s);
+    const n = sceneNow(), s = scenes[n - 1], L = R.readLang(), h = $(`h2[lang="${L}"]`, s);
     let items = [...(h ? [h] : []), ...R.visibleParas(s)].filter((el) => el.textContent.trim());
     if (root.dataset.mode !== 'leaf') {
       let k = items.findIndex((el) => { const r = el.getBoundingClientRect(); return r.top >= 72 && r.top < innerHeight - 120; });

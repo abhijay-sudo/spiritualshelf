@@ -98,6 +98,7 @@ html:not(.fm) { --dock-h: calc(1.6rem + 54px); }
 /* it keeps company with the dock: while the dock is away (the reader is reading on) the pill goes with it, so nothing sits over the words */
 html:not(.fm):has(.reader-bar:is(.is-away, .is-tucked)) .fm-whisper.is-on { opacity: 0; translate: -50% var(--dock-h); }
 @media (min-width: 1200px) { html:not(.fm):not([data-rails-off]) .fm-whisper { display: none !important; } }
+.fm-whisper.is-on.is-rest { opacity: .5; }
 .fm-whisper.is-on { opacity: .92; translate: 0 var(--aa-dy, 0px); }
 html:not(.fm) .fm-whisper.is-on { translate: -50% 0; }
 @media (min-width: 900px) { .cmf-js.fm .fm-whisper { top: 24px; left: 28px; font-size: 12px; } html[lang="hi"] .fm-whisper { font-size: 15px; } }
@@ -117,19 +118,7 @@ html:not(.fm) .fm-whisper.is-on { translate: -50% 0; }
 /* ---------- the comfort sheet: a rising, settling, lit panel ---------- */
 dialog#comfort.sheet--story { box-shadow: 0 0 0 1px rgb(233 201 140 / .2), 0 30px 80px rgb(0 0 0 / .5), 0 0 70px rgb(233 168 80 / .08); }
 #comfort.sheet--story .sheet-in { gap: .95rem; }
-/* the groups in the order a reader reaches for them: Night Lamp (the one a tired reader wants at once), size, Hindi size, spacing, width, colour, motion, the button, page-turning */
-#comfort.sheet--story .sheet-title { order: 0; }
-#comfort.sheet--story .sheet-in > fieldset:has([name="lamp"]) { order: 1; }
-#comfort.sheet--story .sheet-in > fieldset:nth-of-type(1) { order: 2; }        /* text size */
-#comfort.sheet--story .sheet-in > fieldset:has([name="hisize"]) { order: 3; }
-#comfort.sheet--story .sheet-in > fieldset:has([name="lead"]) { order: 4; }
-#comfort.sheet--story .sheet-in > fieldset:has([name="measure"]) { order: 5; }
-#comfort.sheet--story .sheet-in > fieldset:has([name="theme"]) { order: 6; }
-#comfort.sheet--story .sheet-in > fieldset:has([name="motion"]) { order: 7; }
-#comfort.sheet--story .sheet-in > fieldset:has([name="aa"]) { order: 8; }
-#comfort.sheet--story .sheet-in > .comfort-mode { order: 9; }
-#comfort.sheet--story .sheet-in > .sample:not(.sample--hi) { order: 10; }
-#comfort.sheet--story .sheet-in > .sheet-foot { order: 11; }
+/* the groups stand in the order a reader reaches for them (Night Lamp, size, Hindi size, spacing, width, colour, motion, the button, page-turning, Listen, the sample): written in that order in the markup (build.mjs comfortDialog), so no re-ordering here */
 #comfort.sheet--story fieldset { min-width: 0; border: 0; padding: 0; margin: 0; }
 #comfort.sheet--story .chips { margin-top: .35rem; gap: .4rem; }
 #comfort.sheet--story .chip span { min-height: 44px; box-sizing: border-box; padding: 0 .95rem; font-size: .9rem; }
@@ -142,7 +131,7 @@ dialog#comfort.sheet--story { box-shadow: 0 0 0 1px rgb(233 201 140 / .2), 0 30p
   #comfort.sheet--story .sheet-in > fieldset .chip { flex: 1 1 auto; }
   #comfort.sheet--story .sheet-in > fieldset .chip span { justify-content: center; width: 100%; }
   #comfort.sheet--story .cmf-measure { display: none; }   /* a phone's line is the width of its screen */
-  #comfort.sheet--story .sheet-foot { position: sticky; bottom: 0; order: 11; margin: .2rem 0 -1.25rem; padding: .7rem 0 1.25rem; background: linear-gradient(to top, var(--surface) 70%, transparent); z-index: 1; }
+  #comfort.sheet--story .sheet-foot { position: sticky; bottom: 0; margin: .2rem 0 -1.25rem; padding: .7rem 0 1.25rem; background: linear-gradient(to top, var(--surface) 70%, transparent); z-index: 1; }
 }
 @media (prefers-reduced-motion: no-preference) {
   :root:not([data-motion="reduce"]) dialog#comfort[open] .sheet-in > * { animation: cmf-in var(--dur-3) var(--ease-settle) both; }
@@ -229,3 +218,11 @@ html.fm #comfort.sheet--story .note { color: #bba98f; }
 #comfort.sheet--story .sheet-in > fieldset:nth-of-type(1) .chip, #comfort.sheet--story .sheet-in > fieldset:has([name="hisize"]) .chip { display: grid; }
 #comfort.sheet--story .sheet-in > fieldset:nth-of-type(1) .chip span, #comfort.sheet--story .sheet-in > fieldset:has([name="hisize"]) .chip span { height: 100%; }
 @media (max-width: 699.98px) { .fm .scene-text p.fm-t { hanging-punctuation: none; } }   /* (WebKit hung the opening quote 8 px outside a column its lines then did not use) */
+
+/* ---------- [fixR] the sheet's small notes, Listen row and larger text ---------- */
+#comfort .cmf-set .note, #comfort fieldset > .note { margin: .5rem 0 0; font-size: .86rem; line-height: 1.5; opacity: .85; }
+#comfort.sheet--story .chips { row-gap: .5rem; }
+#comfort.sheet--story .chip { min-width: 0; }
+#comfort.sheet--story .chip span { white-space: normal; text-align: center; line-height: 1.25; padding-block: .35rem; }   /* at the largest text a pill wraps its words or drops to the next row; it never runs into its neighbour */
+#comfort.sheet--story .lst-entry { margin: .35rem 0 .25rem; gap: .45rem; }
+#comfort.sheet--story .lst-entry-h { margin: 0; font: inherit; font-weight: 600; color: inherit; }

@@ -12,7 +12,9 @@ html[lang="hi"] .at-h2 { line-height: 1.35; letter-spacing: 0; }
   .at-stage { grid-template-columns: minmax(0, 1.2fr) minmax(19rem, .8fr); grid-template-rows: auto 1fr; gap: 1.1rem clamp(2rem, 4vw, 4.5rem); align-items: start; }
   .at-map { grid-column: 1; grid-row: 1 / span 2; }
   .at-route-head, .at-route { grid-column: 2; }
+  .at-route { grid-row: 2; }   /* [A] the anchor span between the map and the list no longer takes the row (it left the stop card hundreds of pixels down) */
 }
+.at-stage > #at-after { position: absolute; width: 1px; height: 1px; }
 @media (max-width: 899px) { .at-stop-txt { order: -1; } }
 
 /* ---- the sheet ---- */
@@ -258,3 +260,21 @@ html[lang="hi"] .at-fly-txt .at-stop-q p { line-height: 1.7; }
 
 /* reduced motion on a wide screen: the map stays beside the list of stops as it is read, so the left of the page is never empty */
 @media (min-width: 900px) { .at-live.at-still .at-map { position: sticky; top: 5.5rem; } }
+
+/* [A] "Named in" behind one summary where a place is named in many stories */
+.at-more { margin: .35rem 0 0; }
+.at-more > summary { display: inline-flex; align-items: center; min-height: 44px; padding: 0 .1rem; cursor: pointer; list-style: none; font: 500 .72rem/1.3 var(--cx-ui); letter-spacing: .08em; text-transform: uppercase; color: var(--cx-saffron); }
+html[lang="hi"] .at-more > summary { letter-spacing: 0; font-size: .84rem; }
+.at-more > summary::-webkit-details-marker { display: none; }
+.at-more > summary::after { content: ""; width: .45rem; height: .45rem; margin-left: .55rem; border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; transform: rotate(45deg) translateY(-2px); transition: transform var(--dur-2, 320ms) var(--ease-settle, ease); }
+.at-more[open] > summary::after { transform: rotate(-135deg) translateY(-2px); }
+.at-more > summary:focus-visible { outline: 2px solid var(--cx-gold, #e7c27a); outline-offset: 3px; border-radius: 2px; }
+.at-more > .at-in { margin-top: .1rem; }
+/* [A] the flight's controls rest in the sea at the sheet's lower left while idle (the top left lay on Kailasa, Kurukshetra and
+   the Himalaya); they rise to the top, clear of the painting that comes up from the foot, once the flight starts */
+@supports (height: 1cqh) {
+  .at-live .at-fly-layer { container-type: size; }
+  .at-live .at-fly-bar { translate: 0 calc(100cqh - 100% - 20px); transition: translate var(--dur-3, 640ms) var(--ease-settle, cubic-bezier(.22, .8, .2, 1)); }
+  .at-flying .at-fly-bar { translate: 0 0; }
+  @media (prefers-reduced-motion: reduce) { .at-live .at-fly-bar { transition: none; } }
+}

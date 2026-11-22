@@ -30,7 +30,7 @@ const nodes = []; const byId = {};
 for (const el of document.querySelectorAll('.st-p')) {
 const d = el.dataset; const a = el.querySelector('.st-p-a'); const i = nodes.length;
 const n = { id: d.id, el, i, realm: realms.find((r) => r.id === el.closest('.st-realm').dataset.realm), lx: +d.x, ly: +d.y, r: +d.r, tier: d.tier, light: d.light, cell: +d.cell,
-name: el.querySelector('.st-p-n').textContent, other: d.o, en: d.en, href: a.getAttribute('href'), title: el.querySelector('.st-p-k')?.textContent || '', line: el.querySelector('.st-p-l').textContent,
+sc: +d.sc || 0, name: el.querySelector('.st-p-n').textContent, other: d.o, en: d.en, href: a.getAttribute('href'), title: el.querySelector('.st-p-k')?.textContent || '', line: el.querySelector('.st-p-l').textContent,
 ties: [...el.querySelectorAll('.st-ties > li')].map((li) => ({ k: li.dataset.k, ph: li.dataset.ph, fl: li.dataset.fl || '', ev: li.dataset.ev || '' })), withs: [...el.querySelectorAll('.st-with a')].map((x) => ({ k: x.dataset.k, n: +x.dataset.n })),
 x: 0, y: 0, px: 0, py: 0, pr: 0, vis: false, ph: (i * 2.399) % TAU, sp: 0.36 + ((i * 7) % 11) * 0.02, near: null, kin: null, lab: null,
 in: 0, dr: 0, bt: 0, sm: null, under: 1, pulseAt: 0, wd: -1, dim: 1, hot: 0, glow: 0, pulse: -1e9, la: 0, bu: 0, lci: 0, spr: null, halo: null, rgb: null, rank: 0 };
@@ -253,9 +253,9 @@ if (p >= 0.999) return ctx.quadraticCurveTo(e.mx, e.my, x1, y1);
 const u = 1 - p; ctx.quadraticCurveTo(x0 + (e.mx - x0) * p, y0 + (e.my - y0) * p, u * u * x0 + 2 * u * p * e.mx + p * p * x1, u * u * y0 + 2 * u * p * e.my + p * p * y1);
 };
 const QP4 = [0, 0, 0, 0]; const qpt = (e, t) => { const u = 1 - t; QP4[0] = u * u * e.ax + 2 * u * t * e.mx + t * t * e.bx; QP4[1] = u * u * e.ay + 2 * u * t * e.my + t * t * e.by; QP4[2] = 2 * u * (e.mx - e.ax) + 2 * t * (e.bx - e.mx); QP4[3] = 2 * u * (e.my - e.ay) + 2 * t * (e.by - e.my); return QP4; };
-const labAt = (n, ci, f) => { const L = n.lab; const r = n.dr * (n === f ? 1.1 : 1); return ci === 0 ? [n.px - L.w / 2, n.py + r + 5] : ci === 1 ? [n.px - L.w / 2, n.py - r - 5 - L.h] : ci === 2 ? [n.px + r - 5, n.py - L.h / 2] : [n.px - r + 5 - L.w, n.py - L.h / 2]; };
+const labAt = (n, ci, f) => { const L = n.lab; const r = n.dr * (n === f ? 1.1 : 1); if (ci === 4) return [n.px - L.w / 2, n.py + r * 0.7 - L.h / 2]; return ci === 0 ? [n.px - L.w / 2, n.py + r + 5] : ci === 1 ? [n.px - L.w / 2, n.py - r - 5 - L.h] : ci === 2 ? [n.px + r - 5, n.py - L.h / 2] : [n.px - r + 5 - L.w, n.py - L.h / 2]; };
 const edgeA = (x0, x1) => { const g = Math.min(W * 0.05, 36); return clamp01((Math.min(x0, W - x1) - g * 0.4) / g); };
-const byRank = [...nodes].sort((a, b) => b.r - a.r || a.i - b.i); const titles = []; const placed = [];
+const byRank = [...nodes].sort((a, b) => b.r - a.r || b.sc - a.sc || b.ties.length - a.ties.length || a.i - b.i); const titles = []; const placed = [];
 const glow = document.createElement('canvas'); const gx = glow.getContext('2d'); let glowS = 3; let capR = null; let capF = 0; let introT = 0; let introDone = false; let introFast = false; let introHold = 0; let comets = []; let ripples = []; let shoot = null; let shootAt = 0;
 const ptr = { x: 0, y: 0, tx: 0, ty: 0 }; const rwid = {};
 const rnd = rng(5); const rndr = Math.random;
@@ -353,7 +353,7 @@ ctx.beginPath(); ctx.moveTo(bx + dx * 9, by + dy * 9); ctx.lineTo(bx - dx * 5 - 
 }
 }
 titles.length = 0; placed.length = 0;
-const far = clamp01((rest.k * 1.5 - k) / (rest.k * 0.5)); const ta = far * 0.5 * (f ? 0.3 : 1) * clamp01(intro * 3 - 1.4);
+const far = clamp01((rest.k * 1.5 - k) / (rest.k * 0.5)); const ta = far * 0.78 * (f ? 0.3 : 1) * clamp01(intro * 3 - 1.4);
 if (ta > 0.01) {
 const base = Math.max(13, Math.min(narrow ? 21 : 30, 40 * k)); ctx.fillStyle = `rgb(${GOLD})`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.font = `500 ${base.toFixed(1)}px ${font}`; try { ctx.letterSpacing = hi ? '0px' : '0.16em'; } catch (e) {}
 for (const r of realms) { const s = hi ? r.name : r.name.toUpperCase(); const ck = s + base.toFixed(1); const w = (rwid[ck] || (rwid[ck] = ctx.measureText(s).width)) + 10; const x0 = sx(r.cx); const xc = clamp(x0, w / 2 + 10, W - w / 2 - 10); const x = Math.abs(xc - x0) < w * 0.7 ? xc : x0; const y = sy(r.cy - r.hh - (TITLE - 20)); const a = ta * r.a * edgeA(x - w / 2, x + w / 2) * clamp01((y - base - topH) / 12) * clamp01((H - 80 - y) / 12); if (a < 0.02) continue; ctx.globalAlpha = a; ctx.lineJoin = 'round'; ctx.lineWidth = 6; ctx.strokeStyle = 'rgba(8,5,16,.88)'; ctx.strokeText(s, x, y); ctx.fillText(s, x, y); titles.push([x - w / 2, y - base / 2, w, base]); }
@@ -369,19 +369,20 @@ for (const n of order) {
 if (nl >= lmax) break; if (!n.vis || n.in < 0.5) continue; if (!f && n.tier === 'cast' && n.pr < 15) continue; if (!f && n.tier === 'lead' && n.pr < 13) continue; if (!f && n.pr < 12) continue; if (f && n !== f && (n.pr < 9 || n.dim < 0.4)) continue;
 const L = n.lab; if (!L) continue; let done = false;
 const seq = n.lci > 0 ? [n.lci, 0, 1, 2, 3] : [0, 1, 2, 3];
-for (let pas = 0; pas < 2 && !done; pas++) for (const ci of seq) {
+const top = n.rank <= 1 && !f;
+for (let pas = 0; pas < (top ? 3 : 2) && !done; pas++) for (const ci of pas === 2 ? [4, 0, 1] : seq) {
 const cp = labAt(n, ci, f); const lx = cp[0]; const ly = cp[1];
 const la = (f ? 1 : n.realm.a) * edgeA(lx + 4, lx + L.w - 4) * clamp01((ly + 4 - topH) / 8) * clamp01((H - 60 - ly - L.h + 4) / 8); if (la < (pas ? 0.5 * (f ? 1 : n.realm.a) : 0.9 * (f ? 1 : n.realm.a))) continue;
 const ty = ly + L.h / 2 - 7; let ok = true; for (const p of placed) if (hit(lx - 3, ty - 3, L.w + 6, 20, p[0], p[1], p[2], p[3])) { ok = false; break; }
-const mg = ci === 0 ? 0 : ci === 1 ? 4 : 10;
-if (ok && n !== f) for (const m of nodes) if (m !== n && m.vis && m.in > 0.3 && hit(lx + 6 - mg, ty + 1 - mg, L.w - 12 + mg * 2, 12 + mg * 2, m.px - m.dr * 0.9, m.py - m.dr * 0.9, m.dr * 1.8, m.dr * 1.8)) { ok = false; break; }
+const mg = pas === 2 || ci === 0 ? 0 : ci === 1 ? 4 : 10;
+if (ok && n !== f) for (const m of nodes) if (m !== n && !(pas === 2 && m.rank > n.rank) && m.vis && m.in > 0.3 && hit(lx + 6 - mg, ty + 1 - mg, L.w - 12 + mg * 2, 12 + mg * 2, m.px - m.dr * 0.9, m.py - m.dr * 0.9, m.dr * 1.8, m.dr * 1.8)) { ok = false; break; }
 if (!ok) continue; placed.push([lx, ty, L.w, 14]); n.want = la; n.lci = ci; done = true; nl++; break;
 }
 if (!done) n.lci = 0;
 }
 for (const n of nodes) {
 n.la += (n.want - n.la) * (still ? 1 : Math.min(1, dt * 7)); if (n.la < 0.03 || !n.vis) continue; const L = n.lab; const cp = labAt(n, n.lci, f); const lx = cp[0]; const ly = cp[1];
-ctx.globalAlpha = n.la * n.in * (f ? (n === f || f.kin.has(n.id) ? 1 : 0.72) : 1) * Math.max(0.5, n.dim); ctx.drawImage(labels.c, L.x * labels.s, L.y * labels.s, L.w * labels.s, L.h * labels.s, lx, ly, L.w, L.h);
+ctx.globalAlpha = n.la * n.in * (f ? (n === f || f.kin.has(n.id) ? 1 : 0.86) : 1) * Math.max(0.72, n.dim); ctx.drawImage(labels.c, L.x * labels.s, L.y * labels.s, L.w * labels.s, L.h * labels.s, lx, ly, L.w, L.h);
 }
 }
 if (f && f.vis && k >= 0.75 && fs > 0.6 && labels) {
@@ -492,7 +493,7 @@ const r = stage.getBoundingClientRect(); if (!r.width || !r.height) return;
 const d0 = Math.min(QP[Q].dpr, window.devicePixelRatio || 1); const d = Math.min(d0, Math.sqrt(QP[Q].px / (r.width * r.height)));
 if (!force && r.width === W && r.height === H && d === dpr) return;
 const was = W; boxHpx = boxEl.getBoundingClientRect().height || r.height; W = r.width; H = r.height; dpr = d; cv.width = Math.round(W * d); cv.height = Math.round(H * d); narrow = W <= 700; FLOOR = narrow ? FLOORS.narrow : FLOORS.wide; glowS = Q >= 2 ? 4 : 3; glow.width = Math.ceil(W / glowS); glow.height = Math.ceil(H / glowS); gx.imageSmoothingQuality = 'low';
-{ const tr = topEl.getBoundingClientRect(); const br = boxEl.getBoundingClientRect(); topH = Math.max(56, Math.round(tr.top - br.top + [...topEl.children].reduce((m, c) => Math.max(m, c.getBoundingClientRect().bottom - tr.top), 0) + 6)); }
+{ const tr = topEl.getBoundingClientRect(); const br = boxEl.getBoundingClientRect(); topH = Math.max(56, Math.round(tr.top - br.top + [...topEl.children].reduce((m, c) => Math.max(m, c.getBoundingClientRect().bottom - tr.top), 0) + 6)); sky.style.setProperty('--st-top', topH + 'px'); }
 ctlRects.length = 0; for (const el of sky.querySelectorAll('.st-ctl, .st-wander, .st-cue')) { const z = el.getBoundingClientRect(); const s = stage.getBoundingClientRect(); ctlRects.push([z.left - s.left - 6, z.top - s.top - 6, z.width + 12, z.height + 12]); }
 wide = W > H * 1.15; arrange(); const rearr = layoutKey !== lastKey; lastKey = layoutKey;
 kMin = fitK(ovBox, freeRect('none'), padOf()) * 0.9; const hm = fitBox(ovBox, freeRect('none'), padOf()); hm.k = Math.min(hm.k, narrow ? 1.3 : 1.6); Object.assign(home, camFor((ovBox.x0 + ovBox.x1) / 2, (ovBox.y0 + ovBox.y1) / 2, hm.k, freeRect('none')));
@@ -505,7 +506,7 @@ Object.assign(cam, rest); Object.assign(to, rest); if (restRealm) quietRealm(res
 else { introDone = true; introT = 7; }
 if (document.fonts && document.fonts.status !== 'loaded') document.fonts.ready.then(makeLabels); else makeLabels();
 dustInit(); bakeAll();
-loadFaces(sky.dataset.atlas); if (Q < 2) (window.requestIdleCallback || setTimeout)(wantHd);
+loadFaces(sky.dataset.atlas); if (Q < 2 && !(window.SpritualNet && window.SpritualNet.slow())) (window.requestIdleCallback || setTimeout)(wantHd);
 } else {
 if (rearr || atHome) { stopFlight(); const g = !atHome && unf ? camOfRealm(unf) : homeSel === 'sky' ? home : rest; Object.assign(to, g); Object.assign(cam, g); } else if (sel) { fly(nodeCam(sel), 0.6); } else clampCam(to);
 dustInit(); if (labelDpr !== dpr) makeLabels(); if (nodes[0].spr && nodes[0].spr.width !== sprD(nodes[0])) bakeAll();
@@ -654,7 +655,7 @@ const wTick = (now, still) => {
 const w = wander;
 if (!w.run) {
 if (hover && !sel && !pts.size && now - lastInput > 25000) { hover = null; stage.classList.remove('is-over'); showCard(null); setPanel('none'); wake(); }
-if (still || !introDone || w.user || sel || hover || pts.size || card.contains(document.activeElement) || wanderLock()) return;
+if (still || !introDone || w.user || sel || hover || pts.size || card.contains(document.activeElement) || document.activeElement === q || q.value || !card.hidden || wanderLock()) return;
 if (w.started ? now - lastInput > 25000 : wanderBusy && now > wanderBusy) wStart(w.started);
 return;
 }
@@ -708,8 +709,7 @@ ease = 0.22; wake();
 on(stage, 'pointerup', up); on(stage, 'pointercancel', up);
 on(stage, 'pointerleave', (e) => { if (e.pointerType === 'mouse') { ptr.tx = ptr.ty = 0; if (hover) { hover = null; stage.classList.remove('is-over'); if (!sel) { showCard(null); setPanel(wander.run ? 'cap' : 'none'); } wake(); } } });
 on(stage, 'wheel', (e) => {
-const zoomIn = e.deltaY < 0; const atFar = to.k <= home.k * 1.02 && !flight;
-if (!zoomIn && atFar && !e.ctrlKey && !e.metaKey) return;
+if (!e.ctrlKey && !e.metaKey) return;
 e.preventDefault(); userInput(); const r = stage.getBoundingClientRect(); const dy = e.deltaMode === 1 ? e.deltaY * 16 : e.deltaY; zoomAt(e.clientX - r.left, e.clientY - r.top, Math.exp(-dy * (e.ctrlKey ? 0.011 : 0.0017)), 0.13); sky.classList.add('is-used');
 }, { passive: false });
 on(stage, 'dblclick', (e) => { if (e.pointerType === 'touch') return; if (!at(e.clientX, e.clientY, 4)) goRest(); });
@@ -735,18 +735,67 @@ const g = e.target.closest('[data-st-go]'); const z = e.target.closest('[data-st
 if (g) { if (g.dataset.stGo === 'all') { userInput(); goHome(); } else goRealm(realms.find((x) => x.id === g.dataset.stGo)); }
 if (z) { userInput(); zoomAt(W / 2, H / 2, +z.dataset.stZoom > 0 ? 1.4 : 1 / 1.4, 0.3); sky.classList.add('is-used'); }
 if (h) { userInput(); goRest(); }
-if (v) scrollTo(v.dataset.stView === 'wall' ? document.getElementById('cast-wall') : null);
+if (v) { scrollTo(v.dataset.stView === 'wall' ? document.getElementById('cast-wall') : null); viewNow(v.dataset.stView); }
 if (cue) { e.preventDefault(); scrollTo(document.getElementById('cast-wall')); }
 if (fb) { const f2 = fb.closest('.st-find'); f2.classList.add('is-open'); fb.setAttribute('aria-expanded', 'true'); q.focus(); }
 });
-const form = sky.querySelector('[data-st-find]'); const q = form.querySelector('input');
-const norm = (s) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().trim();
-const find = () => { const s = norm(q.value); if (!s) return; const keys = (n) => [n.name, n.other, n.en].map(norm); const n = nodes.find((x) => keys(x).includes(s)) || nodes.find((x) => keys(x).some((v) => v.startsWith(s))) || nodes.find((x) => keys(x).some((v) => v.includes(s))); if (n) { pick(n, { by: 'find' }); q.value = ''; closeFind(); } else say(UI.none); };
-const closeFind = () => { form.classList.remove('is-open'); form.querySelector('[data-st-findbtn]').setAttribute('aria-expanded', 'false'); };
+const wallEl = document.getElementById('cast-wall'); let viewing = 'sky';
+const viewNow = (v) => { if (v === viewing) return; viewing = v; for (const b of sky.querySelectorAll('[data-st-view]')) b.setAttribute('aria-pressed', String(b.dataset.stView === v)); };
+if (wallEl) { let vr = 0; const vcheck = () => { vr = 0; viewNow(wallEl.getBoundingClientRect().top < innerHeight * 0.55 ? 'wall' : 'sky'); }; on(window, 'scroll', () => { if (!vr) vr = requestAnimationFrame(vcheck); }, { passive: true }); }
+const form = sky.querySelector('[data-st-find]'); const q = form.querySelector('input'); const sug = form.querySelector('[data-st-sug]'); const note = form.querySelector('[data-st-note]');
+const FD = window.SpritualFind; if (FD) FD.setSyn(UI.syn);
+const norm = FD ? FD.key : (s) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().trim();
+for (const n of nodes) { n.kn = norm(n.name + ' ' + n.other + ' ' + n.en); n.ka = norm(n.el.dataset.al || ''); n.kl = norm(n.title + ' ' + n.line + ' ' + (n.el.dataset.al || '')); }
+const rankFind = (raw) => {
+const ws = FD ? FD.words(raw) : [norm(raw)].filter(Boolean); if (!ws.length) return [];
+const nameB = (n, w) => { const a = FD ? FD.find(n.kn, w) : n.kn.includes(w) ? 4 : 0; return a >= 4 ? (a === 5 ? 100 : 80) : FD && FD.find(n.ka, w) >= 4 ? 78 : a === 3 ? 50 : 0; };
+const lineB = (n, w) => (FD && FD.find(n.kl, w) >= 2 ? 20 : FD && FD.find(n.kn + ' ' + n.ka, w, true) === 1 ? 35 : 0);
+const order = (x, y) => y.s - x.s || y.n.sc - x.n.sc || x.n.rank - y.n.rank || x.n.i - y.n.i;
+const pass = (need, line) => { const out = []; for (const n of nodes) { let tot = 0; let hit = 0; for (const w of ws) { const b = nameB(n, w) || (line ? lineB(n, w) : 0); if (b) { tot += b; hit++; } } if (hit >= need && hit) out.push({ n, s: tot + hit * 1000 }); } return out.sort(order); };
+let r = pass(ws.length, false);   // every word is a name
+if (!r.length && ws.length > 1) r = pass(1, false);   // "Sita Ram": the two of them
+if (!r.length) r = pass(ws.length, true);   // then their lines and a slip of a letter
+return r;
+};
+let sugList = []; let sugAt = -1; let noteT = 0;
+const hideNote = () => { clearTimeout(noteT); note.hidden = true; note.textContent = ''; };
+const showNote = (txt) => { note.textContent = (UI.noneQ || UI.none).replace('{q}', () => txt).replace(/ (\S+)$/, ' $1'); note.hidden = false; };
+const setSug = (list) => {
+sugList = list; sugAt = -1; sug.textContent = '';
+for (const [i, r] of list.entries()) {
+const li = document.createElement('li'); li.id = 'st-o' + i; li.setAttribute('role', 'option'); li.setAttribute('aria-selected', 'false'); li.dataset.i = i;
+const a = document.createElement('span'); a.className = 'st-sug-n'; a.textContent = r.n.name; li.append(a);
+if (r.n.other && r.n.other !== r.n.name) { const o = document.createElement('span'); o.className = 'st-sug-o'; o.lang = hi ? 'en' : 'hi'; o.textContent = r.n.other; li.append(o); }
+if (r.n.title) { const t = document.createElement('span'); t.className = 'st-sug-t'; t.textContent = r.n.title; li.append(t); }
+sug.append(li);
+}
+sug.hidden = !list.length; q.setAttribute('aria-expanded', String(!!list.length)); q.removeAttribute('aria-activedescendant');
+};
+const mark = (i) => { sugAt = i; for (const li of sug.children) { const hot = +li.dataset.i === i; li.setAttribute('aria-selected', String(hot)); if (hot) li.scrollIntoView({ block: 'nearest' }); } if (i >= 0) q.setAttribute('aria-activedescendant', 'st-o' + i); else q.removeAttribute('aria-activedescendant'); };
+const closeFind = () => { form.classList.remove('is-open'); form.querySelector('[data-st-findbtn]').setAttribute('aria-expanded', 'false'); setSug([]); hideNote(); };
+const chooseNode = (n) => { pick(n, { by: 'find' }); q.value = ''; closeFind(); };
+const findUpdate = () => {
+const raw = q.value.trim(); clearTimeout(noteT); if (!raw) { setSug([]); hideNote(); return; }
+const res = rankFind(raw); setSug(res.slice(0, 6));
+if (res.length) hideNote(); else { note.hidden = true; noteT = setTimeout(() => showNote(raw), 450); }
+};
+const find = () => {
+const raw = q.value.trim(); if (!raw) return; const res = rankFind(raw);
+if (sugAt >= 0 && sugList[sugAt]) return chooseNode(sugList[sugAt].n);
+if (res.length) return chooseNode(res[0].n);
+setSug([]); clearTimeout(noteT); showNote(raw); say(note.textContent);
+};
 on(form, 'submit', (e) => { e.preventDefault(); find(); });
-on(q, 'keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); find(); } else if (e.key === 'Escape') { closeFind(); } e.stopPropagation(); userInput(); });
-on(q, 'focus', userInput); on(q, 'blur', () => setTimeout(() => { if (!q.value) closeFind(); }, 150));
-on(q, 'change', () => { const s = norm(q.value); if (nodes.some((n) => norm(n.name) === s)) find(); });
+on(q, 'input', findUpdate);
+on(q, 'keydown', (e) => {
+if (e.key === 'Enter') { e.preventDefault(); find(); }
+else if (e.key === 'Escape') { if (!sug.hidden) { setSug([]); } else closeFind(); }
+else if ((e.key === 'ArrowDown' || e.key === 'ArrowUp') && sugList.length) { e.preventDefault(); mark(e.key === 'ArrowDown' ? (sugAt + 1) % sugList.length : (sugAt <= 0 ? sugList.length : sugAt) - 1); }
+e.stopPropagation(); userInput();
+});
+on(sug, 'pointerdown', (e) => e.preventDefault());
+on(sug, 'click', (e) => { const li = e.target.closest('li'); if (li && sugList[+li.dataset.i]) chooseNode(sugList[+li.dataset.i].n); });
+on(q, 'focus', () => { userInput(); findUpdate(); }); on(q, 'blur', () => setTimeout(() => { if (!q.value) closeFind(); else { setSug([]); } }, 150));
 on(topEl, 'pointerdown', () => { lastInput = performance.now(); });
 on(mq, 'change', () => { wake(); });
 on(window, 'pagehide', (e) => { cancelAnimationFrame(raf); raf = 0; shown = false; if (!e.persisted) { ac.abort(); io.disconnect(); } });

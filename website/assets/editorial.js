@@ -46,6 +46,20 @@
     // keyboard: the panel follows its button in the tab order; it closes once focus moves on past both
     const leave = (e) => { const to = e.relatedTarget; if (!mega.hidden && to && to !== megaBtn && !mega.contains(to)) setMega(false); };
     mega.addEventListener('focusout', leave); megaBtn.addEventListener('focusout', leave);
+    // [A] arrow keys, as a keyboard reader expects of a menu button: Down opens it and lands on the first collection; Up and
+    // Down then walk its links in order (Home and End to the ends); Up from the first returns to the button
+    const links = () => Array.prototype.slice.call(mega.querySelectorAll('a[href]'));
+    megaBtn.addEventListener('keydown', (e) => {
+      if (e.key !== 'ArrowDown' || e.altKey || e.ctrlKey || e.metaKey) return;
+      e.preventDefault(); if (mega.hidden) setMega(true); const a = links()[0]; if (a) a.focus();
+    });
+    mega.addEventListener('keydown', (e) => {
+      const k = e.key; if (k !== 'ArrowDown' && k !== 'ArrowUp' && k !== 'Home' && k !== 'End') return;
+      const all = links(), i = all.indexOf(document.activeElement); if (i < 0) return;
+      e.preventDefault();
+      if (k === 'ArrowUp' && i === 0) { megaBtn.focus(); return; }
+      all[k === 'Home' ? 0 : k === 'End' ? all.length - 1 : Math.max(0, Math.min(all.length - 1, i + (k === 'ArrowDown' ? 1 : -1)))].focus();
+    });
   }
   // the full-screen menu closes when a link inside it is followed (same-page anchors included)
   $('#ed-menu')?.addEventListener('click', (e) => { if (e.target.closest('a')) e.currentTarget.close(); });

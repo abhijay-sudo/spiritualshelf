@@ -55,24 +55,25 @@
       if (d.readyState === 'complete') later(); else addEventListener('load', later, { once: true });
     } }
 
-  /* ---------- a story page: one quiet line, "Pick up at scene 4?", and "Start again" beside it; gone after about 8 seconds ---------- */
+  /* ---------- a story page: one quiet line, "Pick up at scene 4?", and "Start again" beside it ----------
+     It lives in the opening card's normal flow, between the buttons and the Keep control (never laid over either), in room that boot.js
+     held from the first paint (html.pk-can, joyb.css), so nothing moves when it fades in. It stays until the reader chooses or
+     leaves the opening: a timed line is gone before a slow reader has found it. */
   const reader = $('[data-reader]');
   if (reader) {
     const slug = reader.dataset.slug, btns = $('.cx-film-btns'), pl = places(), p = pl[slug];
     if (btns && p && !p.d && p.s >= 2 && p.s <= p.t && !/^#page-/.test(location.hash) && $(`#page-${p.s}`)) {
       const el = d.createElement('p'); el.className = 'pk'; el.setAttribute('role', 'group'); el.setAttribute('aria-label', S.pick(p.s));
       el.innerHTML = `<a href="#page-${p.s}"></a><button type="button"></button>`; $('a', el).textContent = nbsp(S.pick(p.s)); $('button', el).textContent = S.again;
-      btns.append(el);
-      let t = 0; const off = () => { clearTimeout(t); el.classList.remove('is-on'); el.classList.add('is-off'); setTimeout(() => { if (!el.contains(d.activeElement)) { el.inert = true; el.hidden = true; } }, still() ? 0 : 700); };
-      const arm = () => { clearTimeout(t); t = setTimeout(off, 8000); };
-      requestAnimationFrame(() => setTimeout(() => { el.classList.add('is-on'); arm(); }, still() ? 0 : 900));
-      el.addEventListener('pointerenter', () => clearTimeout(t)); el.addEventListener('pointerleave', arm); el.addEventListener('focusin', () => clearTimeout(t)); el.addEventListener('focusout', arm);
-      $('a', el).addEventListener('click', () => { clearTimeout(t); d.dispatchEvent(new CustomEvent('spritual:pickup')); setTimeout(off, 300); });
+      btns.after(el); root.classList.add('pk-in');
+      const off = () => { el.classList.remove('is-on'); el.classList.add('is-off'); setTimeout(() => { if (!el.contains(d.activeElement)) { el.inert = true; el.hidden = true; root.classList.remove('pk-can', 'pk-in'); } }, still() ? 0 : 700); };
+      requestAnimationFrame(() => setTimeout(() => { el.classList.add('is-on'); }, still() ? 0 : 900));
+      $('a', el).addEventListener('click', () => { d.dispatchEvent(new CustomEvent('spritual:pickup')); setTimeout(off, 300); });
       $('button', el).addEventListener('click', () => {
         const all = get('places', {}); delete all[slug]; set('places', all); const last = get('last', null); if (last && last.slug === slug) del('last');
         off(); $('.cx-film-btns a[href="#page-1"]')?.focus({ preventScroll: true });
       });
-    }
+    } else root.classList.remove('pk-can');   // boot.js held room for a line that will not come
   }
 
   /* ---------- the Closing Beat: Keep this (privately, on this device) and the leave-taking to the next story ---------- */

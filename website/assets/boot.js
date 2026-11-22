@@ -7,6 +7,20 @@
   try { var hr = new Date(), hm = hr.getHours() * 60 + hr.getMinutes(); d.dataset.hour = hm < 300 || hm >= 1170 ? 'night' : hm < 480 ? 'dawn' : hm < 990 ? 'day' : 'dusk'; } catch (e) {}
   // the not-found page carries both languages; a missing address under /hi/ gets the Hindi one (see lost.js)
   if (me && me.hasAttribute('data-lost') && /^\/hi(\/|$)/.test(location.pathname)) { d.lang = 'hi'; d.dataset.lostLang = 'hi'; }
+  // [lang] the language a reader chose with the pill (any page) is remembered on this device, and English pages that have a Hindi
+  // edition open in it (before the first paint, so nothing flashes). Taking the pill back to English is remembered the same way, and
+  // "?lang=en" on an English page chooses English. Nothing is sent anywhere; no preference, no change.
+  try {
+    document.addEventListener('click', function (e) {
+      var a = e.target.closest && e.target.closest('a[data-lang-switch], [data-hi-hint] a'); if (!a) return;
+      try { localStorage.setItem('spritual:lang', (a.getAttribute('hreflang') || a.getAttribute('lang')) === 'hi' ? 'hi' : 'en'); } catch (x) {}
+    }, true);
+    if (/[?&]lang=en\b/.test(location.search)) { try { localStorage.setItem('spritual:lang', 'en'); } catch (x) {} }
+    if (d.lang === 'en' && !(me && me.hasAttribute('data-lost')) && localStorage.getItem('spritual:lang') === 'hi' && !/[?&]lang=en\b/.test(location.search)) {
+      var alt = document.querySelector('link[rel="alternate"][hreflang="hi"]');
+      if (alt) { var au = new URL(alt.href, location.href); if (/^\/hi\//.test(au.pathname)) { location.replace(au.pathname + location.search + location.hash); return; } }   // (the path only: the same site, whichever host it is served from)
+    }
+  } catch (e) {}
   var calm = false;
   try {
     var p = JSON.parse(localStorage.getItem('spritual:prefs') || '{}');
@@ -36,6 +50,10 @@
   // [keep] a browser that can keep a story for offline reading (the Cache API on a secure page): the hero's quiet keep control
   // holds its place from the first paint (site.css .kp-can), so it never moves the story's buttons when it appears
   if (window.caches && window.fetch && window.isSecureContext) d.classList.add('kp-can');
+  // [joyB] "Pick up at scene N?" (assets/joyb.js) takes one line in the story opening's flow; when this story has a place on this device the
+  // room for it is held from the first paint (joyb.css html.pk-can), so the line fades in without moving Keep or the buttons
+  try { if (me && me.hasAttribute('data-read')) { var pkS = location.pathname.replace(/\/+$/, '').split('/').pop(), pkP = (JSON.parse(localStorage.getItem('spritual:places') || 'null') || {})[pkS];
+    if (pkP && !pkP.d && pkP.s >= 2 && pkP.s <= pkP.t && !/^#page-/.test(location.hash)) d.classList.add('pk-can'); } } catch (e) {}
   d.classList.add('lst-js');   // [lane F] script is running: the Listen buttons may show
   if (!calm && !mq.matches) d.classList.add('cx-js');
   // [calm] Light mode (assets/calm.js, calm.css): the reader's own choice (Reading comfort > Motion), or this tab's own
@@ -49,6 +67,56 @@
   // ...and whatever happens, neither waits past about 1.2 s from the start of the page: a slow phone never shows a bare painting for long
   try { if (d.classList.contains('ty-arw')) setTimeout(function () { d.classList.remove('ty-arr', 'ty-arw'); }, Math.max(0, 1200 - performance.now())); } catch (e) {}
   try { if ((navigator.connection && navigator.connection.saveData) || matchMedia('(prefers-reduced-data: reduce)').matches) d.classList.add('ep-lite'); } catch (e) {}
+  // [perf] How heavy this line is, and which width of a painting to ask for. Shared by the reader (film.js, site.js).
+  // slow(): Save-Data, a reported 2g/3g (or under 1.2 Mbit/s), or, where the browser reports nothing (Safari), what this page's
+  // own big files have actually achieved so far (under about 150 KB/s). pick(): the smallest width that covers a stage cw px
+  // wide at this screen's density; on a slow line a width one step softer (a painting is soft, a wait is not).
+  window.SpritualNet = (function () {
+    var c = navigator.connection || {};
+    function measured() {
+      try {
+        var big = performance.getEntriesByType('resource').filter(function (r) { return r.transferSize > 20000 && r.responseEnd > r.responseStart; });
+        if (big.length < 2) return false;
+        var b = 0, a = 1e9, z = 0; big.forEach(function (r) { b += r.transferSize; a = Math.min(a, r.responseStart); z = Math.max(z, r.responseEnd); });
+        return z > a && b / (z - a) * 1000 < 150000;
+      } catch (e) { return false; }
+    }
+    return {
+      slow: function () { return !!c.saveData || /^(slow-)?[23]g$/.test(c.effectiveType || '') || (c.downlink > 0 && c.downlink < 1.2) || (!c.effectiveType && measured()); },
+      pick: function (set, cw, narrow) {
+        var need = cw * Math.min(window.devicePixelRatio || 1, narrow ? 1 : 1.5) * .93; if (this.slow()) need *= .62;
+        for (var i = 0; i < set.length; i++) if (set[i][1] >= need) return set[i][0];
+        return set[set.length - 1][0];
+      }
+    };
+  })();
+  // [perf] A shared scene link (#page-N): the painting of that scene is asked for first, at high priority, at the width the
+  // film will pick, so the title is never held over an empty stage while the story's cover loads first.
+  var deepLink = false;
+  try {
+    var ss = me && me.dataset.sceneSets, hm = /^#page-(\d+)$/.exec(location.hash);
+    if (ss && hm && me.dataset.film && !d.classList.contains('ep-lite')) {
+      var sset = JSON.parse(ss)[+hm[1] - 1];
+      if (sset) {
+        var ent = sset.split(',').map(function (x) { x = x.trim().split(/\s+/); return [x[0], parseInt(x[1], 10) || 0]; }).sort(function (a, b) { return a[1] - b[1]; });
+        var sw = innerWidth, sh = innerHeight, scw = 16 * Math.max(sw / 16, sh / 9);
+        var sp = document.createElement('link'); sp.rel = 'preload'; sp.as = 'image'; sp.href = window.SpritualNet.pick(ent, scw, sw < 900); sp.setAttribute('fetchpriority', 'high'); document.head.appendChild(sp);
+        // the story's cover is not what this reader came for: its early request is dropped, and the words wait (film.css) for the painting
+        var cp = document.querySelector('link[rel=preload][as=image][fetchpriority]'); if (cp && cp !== sp && cp.getAttribute('imagesrcset')) cp.parentNode.removeChild(cp);
+        deepLink = true;
+      }
+    }
+  } catch (e) {}
+  // [perf] The People page's sky: its script and its small sheet of faces are asked for now, at high priority, instead of
+  // after site.js has run (an injected script is fetched last, behind every painting on the page). Not with Save-Data (ep-lite).
+  try {
+    var sj = me && me.dataset.skyJs;
+    if (sj && !d.classList.contains('ep-lite')) {
+      var pl = document.createElement('link'); pl.rel = 'preload'; pl.as = 'script'; pl.href = sj; document.head.appendChild(pl);
+      var sa = me.dataset.skyAtlas;
+      if (sa && window.fetch && window.createImageBitmap) { var pa = document.createElement('link'); pa.rel = 'preload'; pa.as = 'fetch'; pa.crossOrigin = 'anonymous'; pa.href = sa; document.head.appendChild(pa); }
+    }
+  } catch (e) {}
   // The Unbroken Shot (film.js, film.css): a story page is laid out as a film from its first paint, so a reader arriving
   // in the middle of a story never sees the page change under them. Its styles are fetched here, off the critical path.
   // Not with Save-Data, page-by-page or side-by-side reading, a very short screen, or once the reader has chosen the
@@ -57,9 +125,11 @@
   try {
     var fc = me && me.dataset.film;
     if (fc && !d.classList.contains('ep-lite') && p.film !== 'off' && p.mode !== 'leaf' && p.read !== 'both' && innerHeight >= 480) {
-      d.classList.add('fm'); var fl = document.createElement('link'); fl.rel = 'stylesheet'; fl.href = fc; document.head.appendChild(fl);
+      d.classList.add('fm'); if (document.querySelector('link[data-film-css]')) throw 0; var fl = document.createElement('link'); fl.rel = 'stylesheet'; fl.href = fc; document.head.appendChild(fl);
     }
   } catch (e) {}
+  if (d.classList.contains('fm')) setTimeout(function () { d.classList.add('hero-ok'); }, 6000);
+  if (deepLink && d.classList.contains('fm')) { d.classList.add('fm-deep'); setTimeout(function () { if (!d.classList.contains('fm-live')) d.classList.remove('fm-deep'); }, 5000); }
   // Until the analytics question is answered (consent.js: no valid choice, or one older than a year), a painted opening
   // keeps room at its foot for it (cinema.css, --cx-consent-room). The room is reserved here, before the first paint, at
   // the bar's measured height for this screen, language and text size (Chromium and WebKit alike); consent.js, which
@@ -74,7 +144,7 @@
         : cw >= 760 ? (ch >= cw ? [76, 81, 89] : [83, 91, 104])[k]
         // a phone held upright: the question takes one, two or three lines beside its answers
         : [hi ? (cw < 375 ? 92 : 70) : (cw < 360 ? 101 : 70), hi ? (cw <= 340 ? 121 : cw < 360 ? 143 : cw < 390 ? 121 : cw < 430 ? 99 : 76) : (cw < 360 ? 134 : cw < 375 ? 114 : cw < 430 ? 93 : 75), cw < 430 ? (hi ? 162 : 152) : (hi ? 137 : 128)][k];
-      d.style.setProperty('--cx-consent-room', room + 'px'); d.setAttribute('data-consent-room', '');
+      room += 4; /* [A] 44px answers */ d.style.setProperty('--cx-consent-room', room + 'px'); d.setAttribute('data-consent-room', '');
     }
   } catch (e) {}
   // the home opening is composed at 1920x1080; on bigger screens (a 4K monitor at 100%, a television) the composition
@@ -96,7 +166,7 @@
   try {
     if (me && me.hasAttribute('data-titles')) {
       var titlesAt = +localStorage.getItem('spritual:titlesAt') || 0, ref = document.referrer || '';
-      if (sessionStorage.getItem('spritual:titles') || Date.now() - titlesAt < 6048e5 || d.classList.contains('ep-lite')) d.classList.add('cx-seen');   // [joyQ] Save-Data gets the finished composition, not the sequence
+      if (sessionStorage.getItem('spritual:titles') || Date.now() - titlesAt < 6048e5 || d.classList.contains('ep-lite') || matchMedia('(forced-colors: active)').matches) d.classList.add('cx-seen');   // [A] forced colours too: the finished page, not words waiting on animation   // [joyQ] Save-Data gets the finished composition, not the sequence
       else if (ref && ref.indexOf(location.origin + '/') !== 0) { d.classList.add('cx-seen'); sessionStorage.setItem('spritual:titles', '1'); }
       else { localStorage.setItem('spritual:titlesAt', String(Date.now())); sessionStorage.setItem('spritual:titles', '1'); }
       localStorage.setItem('spritual:seen', '1');

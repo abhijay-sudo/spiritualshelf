@@ -1,0 +1,88 @@
+/* joyh: the home page's character select and opening, round two (lane H).
+   Every rule here loads after cinema.css / mobile.css / epic.css and answers one reported fault.
+   Motion tokens: transform and opacity only; both reduce-motion switches respected by not adding any new motion. */
+
+/* ---------- 1. "Meet <Name>": one line, one brand colour ----------
+   The button used to wrap a long name into two lines and took a different glow colour for every person, so the same
+   gold-on-dark call to action changed shape and hue from one character to the next. It is now one saffron (the site's own
+   button colour on dark), always one line; when two buttons cannot share a row the second drops beneath instead of the
+   first breaking. The character's own colour still lights the name, the numeral, the floor and the tile; only the button
+   is constant. */
+.cx-select { --sel-btn: #f0a456; --sel-btn-hi: #ffbb73; }
+.cx-select .cx-sel-btns { display: flex; flex-wrap: wrap; gap: .5rem; width: 100%; max-width: 30rem; margin: 0; }
+.cx-select .cx-sel-btns .cx-btn { flex: 1 1 auto; min-width: 0; white-space: nowrap; text-align: center; line-height: 1.25; padding-block: .35rem; }
+.cx-select .cx-sel-btns .cx-btn > span { white-space: nowrap; text-wrap: nowrap; }
+.cx-select .cx-sel-go { flex-grow: 1.15; background: var(--sel-btn); color: #160c05; box-shadow: 0 0 0 1px rgb(255 255 255 / .25) inset, 0 10px 30px -10px rgb(240 164 86 / .65); transition: background-color .25s, transform .3s var(--ease-settle, cubic-bezier(.22, .8, .2, 1)); }
+.cx-select .cx-sel-go:hover { background: var(--sel-btn-hi); color: #160c05; }
+.cx-select .cx-sel-go:active { transform: translateY(1px); }
+@media (min-width: 700px) { .cx-select .cx-sel-btns { flex-wrap: nowrap; width: auto; max-width: none; } .cx-select .cx-sel-btns .cx-btn { flex: 0 0 auto; } }
+/* the arrow only rides along when the name leaves room for it (a button never has to choose between the two) */
+@media (max-width: 699px) { .cx-select .cx-sel-btns .cx-btn { font-size: .94rem; padding-inline: .8rem; } }
+@media (max-width: 399px) { .cx-select .cx-sel-btns .cx-btn { font-size: .875rem; padding-inline: .6rem; } }
+html[lang="hi"] .cx-select .cx-sel-btns .cx-btn { line-height: 1.5; padding-block: .2rem; }
+
+/* ---------- 2. The roster: one strip, whole names ----------
+   On a wide screen a realm's thirty-odd characters were squeezed into two rows of 55px chips whose names shrank to 5-9px
+   and were cut off. Now (as on a phone) it is a single strip of equal tiles, each wide enough for a name set at 11px or
+   more; what does not fit is an ellipsis, and the full name rides in the tile's title. The strip scrolls (trackpad, wheel,
+   arrows, a drag), its edges fade, and the character in hand is kept in view. */
+.cx-sel-grid > li > .cx-sel-tile[data-cut]::after { content: none; }
+@media (min-width: 700px) and (min-height: 521px) {
+  .cx-select { --tile-w: calc(112px * var(--cx-k, 1)); --tile-h: calc(96px * var(--cx-k, 1)); --plate: calc(28px * var(--cx-k, 1)); }
+  :root.cx-js .cx-select .cx-sel-grid[data-sel-grid] { display: grid; grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: var(--tile-w); justify-content: start; column-gap: .5rem; row-gap: 0; overflow-x: auto; overflow-y: hidden; overscroll-behavior-x: contain; scroll-snap-type: x proximity; scrollbar-width: none; flex: 1 1 0; min-width: 0; margin: 0; padding: 1.1rem 1.5rem .7rem; scroll-padding-inline: 1.5rem; -webkit-mask-image: linear-gradient(90deg, transparent, #000 1.5rem, #000 calc(100% - 2.5rem), transparent); mask-image: linear-gradient(90deg, transparent, #000 1.5rem, #000 calc(100% - 2.5rem), transparent); }
+  :root.cx-js .cx-select .cx-sel-grid[data-sel-grid]::-webkit-scrollbar { display: none; }
+  :root.cx-js .cx-select .cx-sel-grid[data-sel-grid] > li { flex: none; min-width: 0; scroll-snap-align: center; }
+  :root.cx-js .cx-select .cx-sel-grid[data-sel-grid] > li[hidden] { display: none; }
+  :root.cx-js .cx-select .cx-sel-grid[data-sel-grid] > li.is-foe-first { margin-left: 1rem; }
+  :root.cx-js .cx-select .cx-sel-grid[data-sel-grid] > li.is-foe-first::before { left: -.65rem; }
+  :root.cx-js .cx-select .cx-sel-grid[data-sel-grid] .cx-sel-tile { aspect-ratio: auto; width: var(--tile-w); height: var(--tile-h); min-height: 44px; container-type: normal; }
+  :root.cx-js .cx-select .cx-sel-grid[data-sel-grid] .cx-sel-tile-bg, .cx-select .cx-sel-grid[data-sel-grid] .cx-sel-tile-face { bottom: var(--plate); }
+  :root.cx-js .cx-select .cx-sel-grid[data-sel-grid] .cx-sel-tile-face img { width: 70%; top: 3%; }
+  :root.cx-js .cx-select .cx-sel-grid[data-sel-grid] .cx-sel-tile::after { background: linear-gradient(to top, rgb(5 3 2 / .96) 0 var(--plate), transparent 60%); }
+  :root.cx-js .cx-select .cx-sel-grid[data-sel-grid] .cx-sel-tile.is-on { translate: 0 -.35rem; box-shadow: inset 0 0 0 2px var(--t-glow), 0 0 0 1px rgb(5 3 2 / .9), 0 0 18px 2px color-mix(in oklab, var(--t-glow) 60%, transparent); }
+  :root.cx-js .cx-select .cx-sel-grid[data-sel-grid] > li.is-foe .cx-sel-tile.is-on { translate: 0 -.35rem; }
+  /* the name stands on its own plate under the face: 11px at the very least, never a pinch smaller to make it fit */
+  :root.cx-js .cx-select .cx-sel-grid[data-sel-grid] .cx-sel-tile .cx-sel-tile-n { left: 6px; right: 12px; bottom: 0; height: var(--plate); display: block; line-height: var(--plate); text-align: center; letter-spacing: 0; text-transform: none; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font: 600 clamp(11px, calc(94px / (var(--nl, 8) * .56)), 12.5px)/var(--plate) var(--cx-ui); }
+  html[lang="hi"]:root.cx-js .cx-select .cx-sel-grid[data-sel-grid] .cx-sel-tile .cx-sel-tile-n { font: 500 clamp(12px, calc(94px / (var(--nl, 5) * .95)), 14px)/var(--plate) "Mukta", var(--cx-ui); }
+}
+/* a phone: the same promise (11px at least, an ellipsis and a title rather than a smaller and smaller name) */
+@media (max-width: 699px), (max-height: 520px) {
+  html:not([lang="hi"]) .cx-select .cx-sel-grid[data-sel-grid] .cx-sel-tile .cx-sel-tile-n { font-size: clamp(11px, calc(80px / (var(--nl, 8) * .56)), 13px); text-overflow: ellipsis; letter-spacing: 0; }
+  html[lang="hi"] .cx-select .cx-sel-grid[data-sel-grid] .cx-sel-tile .cx-sel-tile-n { text-overflow: ellipsis; }
+}
+/* the keyboard's place in the strip: a generous gold ring that is never clipped by the strip */
+.cx-select .cx-sel-grid[data-sel-grid] .cx-sel-tile:focus-visible { outline: 2px solid #ffd9a0; outline-offset: 3px; }
+
+/* ---------- 3. The opening: Skip that answers, scrims that are light, lanterns that keep clear ---------- */
+/* Skip: the keyframes only named pointer-events at their last step, so it flipped to none at the HALF-way point of the
+   animation (about 2.2 s of a 4.4 s phone sequence, 3.7 s of 7.4 s on a desktop) while the pill was still showing and the
+   painting beneath took the tap. Both ends are now stated, the pill is there from the first frame (no fade-in to wait for),
+   and it only stops answering as it fades out. */
+@keyframes cx-skip-life { 0% { opacity: 1; pointer-events: auto; } 93% { opacity: 1; pointer-events: auto; } 100% { opacity: 0; visibility: hidden; pointer-events: none; } }
+:root.cx-js:not(.cx-seen) .cx-home .cx-intro-skip:not([hidden]) { top: calc(env(safe-area-inset-top, 0px) + .6rem); min-width: 44px; }
+/* the navigation is not there yet: it neither shows nor takes the tap or the keyboard until the sequence has ended */
+:root.cx-js:not(.cx-seen) body:has(.cx-home) .ed-head { pointer-events: none; }
+
+/* a first frame that is not a void: a warm breath of light where the first lamp will be, inside the night itself (so it leaves with it) */
+:root.cx-js:not(.cx-seen):not(.cx-fest-end) .cx-night::before { content: ""; position: absolute; left: 0; right: 0; top: calc(var(--seam, 50%) - 22svh); height: 44svh; background: radial-gradient(ellipse 60% 50% at 50% 50%, rgb(255 150 60 / .13), rgb(255 150 60 / 0) 70%); opacity: 0; animation: cx-appear calc(var(--tk) * .7s) ease-out 0s forwards; }
+
+/* glimpses: one painting at a time, handing over to the next, never two laid over each other */
+.cx-glim { animation-duration: calc(var(--tk) * .8s); }
+.cx-glim:last-child { animation-duration: calc(var(--tk) * 1.3s); }
+@keyframes cx-glim { 0% { opacity: 0; scale: 1.08; } 40% { opacity: .38; } 70% { opacity: .2; } 100% { opacity: 0; scale: 1; } }
+
+/* the title's dusk: three radial blobs (card, kicker, line) stacked into one dark smudge with a visible rim. Now one wide, long-eased
+   veil over the card (no rim: its last stops are near zero), and the small lines carry their own soft shadow instead of a blob each */
+.cx-welcome-k::before { inset: -2em -45%; background: radial-gradient(closest-side, rgb(24 10 2 / .36), rgb(24 10 2 / .33) 30%, rgb(24 10 2 / .24) 50%, rgb(24 10 2 / .13) 68%, rgb(24 10 2 / .05) 84%, rgb(24 10 2 / 0)); }
+.cx-open-card::before { background: radial-gradient(closest-side, rgb(24 10 2 / .56), rgb(24 10 2 / .55) 20%, rgb(24 10 2 / .5) 34%, rgb(24 10 2 / .42) 46%, rgb(24 10 2 / .32) 58%, rgb(24 10 2 / .22) 69%, rgb(24 10 2 / .13) 79%, rgb(24 10 2 / .06) 88%, rgb(24 10 2 / .017) 95%, rgb(24 10 2 / 0)); }
+.cx-open-sub::before { inset: -3em -55%; background: radial-gradient(closest-side, rgb(24 10 2 / .46), rgb(24 10 2 / .44) 26%, rgb(24 10 2 / .36) 42%, rgb(24 10 2 / .25) 58%, rgb(24 10 2 / .14) 72%, rgb(24 10 2 / .06) 85%, rgb(24 10 2 / .016) 95%, rgb(24 10 2 / 0)); }
+.cx-open-sub { text-shadow: 0 0 2px rgb(20 8 2 / .55), 0 1px 10px rgb(20 8 2 / .75), 0 0 26px rgb(20 8 2 / .55); }
+.cx-welcome-k { text-shadow: 0 0 2px rgb(20 8 2 / .5), 0 1px 10px rgb(20 8 2 / .7), 0 0 22px rgb(20 8 2 / .5); }
+
+/* lanterns on a phone upright: the water between the words and the buttons only (the foot is the Choose button and the sound pill) */
+@media (max-width: 759px) and (orientation: portrait) { .cx-lamp { top: calc(62% + (var(--y) - 60%) * .44); } }
+/* a short laptop screen: a lower strip, so the words above it keep their room */
+@media (min-width: 700px) and (min-height: 521px) and (max-height: 800px) {
+  .cx-select { --tile-w: calc(104px * var(--cx-k, 1)); --tile-h: calc(76px * var(--cx-k, 1)); --plate: calc(25px * var(--cx-k, 1)); }
+  :root.cx-js .cx-select .cx-sel-grid[data-sel-grid] { padding-block: .9rem .45rem; }
+}

@@ -1,0 +1,26 @@
+/* My reading: the stories you are in, and the stories kept on this phone (assets/myreading.js). Cards rise and settle in turn;
+   transform and opacity only; still under reduced motion. Colours come from the page's own tokens, so every theme and the Night Lamp follow. */
+.myr-list { list-style: none; margin: 0; padding: 0; display: grid; gap: .75rem; }
+@media (min-width: 720px) { .myr-list { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .9rem 1rem; } }
+.myr-item { position: relative; display: grid; grid-template-columns: 4.5rem minmax(0, 1fr); align-items: center; gap: .9rem; min-height: 44px; padding: .7rem .9rem .7rem .7rem; text-decoration: none; color: inherit;
+  border: 1px solid var(--cx-line, rgb(42 30 21 / .16)); border-radius: 14px; background: var(--cx-surface, transparent);
+  transition: transform var(--dur-2, 320ms) var(--ease-settle, cubic-bezier(.22, .8, .2, 1)), box-shadow var(--dur-2, 320ms) var(--ease-lamp, ease), border-color var(--dur-2, 320ms) var(--ease-lamp, ease); }
+.myr-item:active { transform: scale(.985); transition-duration: var(--dur-1, 160ms); }
+.myr-item:focus-visible { outline: 2px solid var(--cx-marigold, #e9ab33); outline-offset: 3px; box-shadow: 0 0 0 6px rgb(233 171 51 / .18); }
+@media (hover: hover) { .myr-item:hover { transform: translateY(-2px); border-color: rgb(233 171 51 / .55); box-shadow: 0 10px 26px -14px rgb(60 30 5 / .5), 0 0 0 1px rgb(233 171 51 / .16); } .myr-item:hover:active { transform: scale(.985); } }
+.myr-pic { display: block; width: 4.5rem; aspect-ratio: 1; overflow: hidden; border-radius: 9px; background: radial-gradient(circle at 50% 40%, #2b2013, #150f09); }
+.myr-pic img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.myr-txt { display: grid; gap: .22rem; min-width: 0; }
+.myr-txt strong { font: 500 1.08rem/1.25 var(--cx-title, Georgia, serif); }
+html[lang="hi"] .myr-txt strong { line-height: 1.45; }
+.myr-sub { font: 400 .9rem/1.3 var(--cx-ui, system-ui, sans-serif); opacity: .8; }
+html[lang="hi"] .myr-sub { font-family: "Mukta", var(--cx-ui, system-ui, sans-serif); }
+.myr-bar { display: block; height: 3px; margin-top: .25rem; border-radius: 3px; background: rgb(127 110 90 / .3); overflow: hidden; }
+.myr-bar i { display: block; height: 100%; width: calc(var(--p, 0) * 100%); border-radius: inherit; background: var(--cx-marigold, #e9ab33); }
+.myr-item strong::after { content: "\00a0→"; color: var(--cx-marigold, #e9ab33); }
+.myr-note { margin: 0 0 .9rem; max-width: 34rem; }
+.myr-list > li { opacity: 0; transform: translateY(12px); animation: myr-in var(--dur-3, 640ms) var(--ease-settle, cubic-bezier(.22, .8, .2, 1)) calc(var(--i, 0) * 60ms) forwards; }
+@keyframes myr-in { to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .myr-list > li { opacity: 1; transform: none; animation: none; } .myr-item { transition: none; } }
+:root[data-motion="reduce"] .myr-list > li { opacity: 1; transform: none; animation: none; }
+:root[data-motion="reduce"] .myr-item { transition: none; }

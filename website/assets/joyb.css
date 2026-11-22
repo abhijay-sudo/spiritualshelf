@@ -80,10 +80,17 @@ html[lang="hi"] .cb-ds { font-size: .94rem; }
 .cb-veil { position: fixed; inset: 0; z-index: 90; background: radial-gradient(ellipse at 50% 64%, rgb(255 190 110 / .16), transparent 55%), #0b0706; opacity: 0; pointer-events: none; transition: opacity 560ms var(--ease-settle); }
 .cb-veil.is-on { opacity: 1; pointer-events: auto; }
 
-/* ---------- Pick up where you left off: one quiet line under the opening's buttons, gone after a few seconds ---------- */
+/* ---------- Pick up where you left off: one quiet line in the opening card's flow, between the buttons and Keep ----------
+   In flow (never absolute): it can neither be covered by nor cover the Keep control. boot.js adds html.pk-can before the first paint
+   when this story has a place; until the line exists, Keep stands one line lower (room held), so the line arrives without moving anything. */
 .cx-film-btns { position: relative; }
-.pk { position: absolute; left: 0; right: 0; top: calc(100% + .55rem); z-index: 3; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: .1rem .9rem; margin: 0; font: 400 .98rem/1.3 var(--cx-ui, inherit); color: #f3e7d7; text-shadow: 0 1px 3px rgb(0 0 0 / .9); opacity: 0; transform: translateY(8px); transition: opacity var(--d3) var(--ease-settle), transform var(--d3) var(--ease-settle); pointer-events: none; }
+.pk { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 0 .9rem; box-sizing: border-box; width: max-content; max-width: 100%; min-height: 44px; margin: .55rem 0 0; font: 400 .98rem/1.3 var(--cx-ui, inherit); color: #f3e7d7; text-shadow: 0 1px 3px rgb(0 0 0 / .9); opacity: 0; transform: translateY(8px); transition: opacity var(--d3) var(--ease-settle), transform var(--d3) var(--ease-settle); pointer-events: none; }
 html[lang="hi"] .pk { font-size: 1.06rem; line-height: 1.6; }
+.pk[hidden] { display: none; }
+html.pk-can:not(.pk-in) .kp--hero { margin-top: calc(.95rem + .55rem + 44px); }
+@media (max-width: 759px) { html.pk-can:not(.pk-in) .kp--hero { margin-top: calc(.8rem + .55rem + 44px); } }
+/* a wide screen sets the opening's card to the left (cinema.css): the resume line and Keep stand under the buttons, not centred in the card */
+@media (min-width: 900px) and (min-aspect-ratio: 1/1) and (min-height: 520.02px) { .cx-film-open:not(.mx-open) .cx-film-card .kp--hero { margin-left: 0; } .cx-film-open:not(.mx-open) .cx-film-card .pk { justify-content: flex-start; margin-left: -.35rem; } }
 .pk.is-on { opacity: 1; transform: none; pointer-events: auto; }
 .pk.is-off { opacity: 0; transform: none; transition-duration: var(--d3); pointer-events: none; }
 .pk a, .pk button { display: inline-flex; align-items: center; min-height: 44px; padding: 0 .35rem; background: none; border: 0; color: inherit; font: inherit; cursor: pointer; -webkit-tap-highlight-color: transparent; }

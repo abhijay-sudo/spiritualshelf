@@ -23,7 +23,8 @@
       const f = root.classList.contains('fm') ? window.SpritualFilmNow?.() : null;
       if (f) {
         // film: the film's own position (scene + fraction); the opening and the afterword are not the story
-        if (f.at >= 1 && !f.ended) { k = clamp(Math.floor(f.at), 1, N); frac = clamp(f.at - Math.floor(f.at), 0, 1); show = true; }
+        if (f.at >= 1 && !f.ended && !f.closing) {   // (not once the closing beat's words are rising: the whisper would print over them)
+          k = clamp(Math.floor(f.at), 1, N); frac = clamp(f.at - Math.floor(f.at), 0, 1); show = true; }
       } else if (!root.classList.contains('fm')) {
         const hb = hero ? hero.getBoundingClientRect().bottom : 0, et = endSec ? endSec.getBoundingClientRect().top : Infinity;
         if (hb < vh * .2 && et > vh * .6) {
@@ -40,6 +41,9 @@
     };
     // (once now, and once more after the film's own easing has settled)
     const kick = () => { if (!raf) raf = requestAnimationFrame(place); clearTimeout(tail); tail = setTimeout(() => { if (!raf) raf = requestAnimationFrame(place); }, 340); };
+    // [fixR] at rest the whisper dims, so a still painting is not held under a bright label (it comes back with the next scroll)
+    let restT = 0; const wake = () => { w.classList.remove('is-rest'); clearTimeout(restT); restT = setTimeout(() => w.classList.add('is-rest'), 2600); };
+    addEventListener('scroll', wake, { passive: true }); wake();
     addEventListener('scroll', kick, { passive: true });
     addEventListener('resize', kick);
     // the film starts later than this file: look again when it is live, and when the reading mode changes

@@ -1,0 +1,48 @@
+/* Small layout and finish fixes found by the 23 Nov 2026 customer tests (lane A). New file so it merges cleanly; loaded on every page
+   after mobile.css. Everything here is plain CSS (no motion), so reduced motion and Save-Data need nothing special. */
+
+/* --- the footer comes up out of the page, not out of a black edge: the page's own colour fades into the footer's brown --- */
+.cx-credits { position: relative; }
+.cx-credits::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: clamp(3rem, 2rem + 4vw, 6rem); pointer-events: none; background: linear-gradient(to bottom, var(--cx-paper), transparent); }
+@media (forced-colors: active) { .cx-credits::before { display: none; } }
+
+/* --- a separator that would stand at the start of a wrapped line is hidden (assets/polish.js marks the first item on each line) --- */
+.sep-first::before { display: none !important; }
+.sep-first > i { visibility: hidden; }
+
+/* --- rails: the first card stands one gutter in from the screen's edge (the snap used to pull it to x = 0) --- */
+@media (max-width: 759px) { .cx-posters, .cx-sel-grid, .cx-cast-row, .cx-ways-grid, .cx-rail, [class~="has-more"] { scroll-padding-inline: var(--cx-gut, 16px); } }
+
+/* --- a story's opening on a wide screen: the genre pill and the Keep button stand on the title's left edge --- */
+@media (min-width: 900px) and (min-aspect-ratio: 1/1) and (min-height: 520.02px) {
+  .cx-film-open:not(.mx-open) .cx-film-card > .cx-film-k, .cx-film-open:not(.mx-open) .cx-film-card > .kp--hero, .kp-can .cx-film-open:not(.mx-open) .cx-film-card > .kp--hero { justify-self: start; margin-inline: 0; }
+  .cx-film-open:not(.mx-open) .cx-film-card > .kp--hero .kp-row { justify-content: flex-start; }
+}
+/* the alias line says what it is */
+.cx-film-aka { font-weight: 400; opacity: .78; margin-right: .35em; }
+
+/* --- a button that is only an outline over a painting gets a quiet dark fill (404, openings): readable on any painting --- */
+.cx-btn--ghost { background: rgb(30 15 5 / .46); }
+.cx-btn--ghost:hover { background: rgb(30 15 5 / .62); }
+.cx-credits .cx-btn--ghost { background: transparent; }
+.cx-lost .cx-btn--ghost { background: rgb(24 12 4 / .82); border-color: var(--cx-cream); }
+
+/* --- festivals: the coming-up row keeps its date and title on the same lines as every other row (its frame grows outward) --- */
+.fest-list li.next { padding-inline: .75rem; margin-inline: -.75rem; }
+
+/* --- "Clear filters" is a button only while something is filtered (site.js hides it otherwise) --- */
+.link-btn[hidden] { display: none; }
+
+/* --- a touch or a click opens the menu without a keyboard ring on the first button (Safari rings an autofocused dialog button) --- */
+html[data-input="pointer"] dialog :focus-visible { outline: none; box-shadow: none; }
+
+/* --- text that is set in short lines never ends on one stranded word --- */
+.at-lead, .at-route-lead, .cast-about, .cx-finale-body, .fest-list p, .lib-try { text-wrap: pretty; }
+.at-h2, .cx-h2, .cast-h, .cx-title { text-wrap: balance; }
+
+/* --- a wide screen, a story whose painting has people where the title usually stands: the title takes the other side (data-tside, build.mjs) --- */
+@media (min-width: 900px) and (min-aspect-ratio: 1/1) and (min-height: 520.02px) {
+  .cx-film-open[data-tside="right"]:not(.mx-open) { place-items: end end; }
+  .cx-film-open[data-tside="right"]:not(.mx-open) .cx-film-card { padding: 0 clamp(40px, 6.5vw, 120px) clamp(3.5rem, 9svh, 6rem) 2rem; }
+  .cx-film-open[data-tside="right"]:not(.mx-open) .cx-open-shade { background: linear-gradient(to left, rgb(18 9 3 / .78) 0, rgb(18 9 3 / .5) 30%, rgb(18 9 3 / 0) 58%), linear-gradient(to top, rgb(18 9 3 / .8) 0, rgb(18 9 3 / 0) 46%), linear-gradient(to bottom, rgb(30 14 4 / .4), transparent 18%); }
+}

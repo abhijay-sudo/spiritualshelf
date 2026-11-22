@@ -10,27 +10,8 @@ var local = /^(localhost|127\.|192\.168\.|10\.)/.test(location.hostname);
 function paragraphs(sec) {
 return [].slice.call(sec.querySelectorAll('.scene-text p[lang="' + lang + '"]')).map(function (p) { return norm(p.textContent); }).filter(Boolean);
 }
-function split(p, inside) {
-var out = [], cur = '', q = 0, n = p.length, i = 0, END = /[.!?\u0964]/;
-while (i < n) {
-var ch = p.charAt(i++); cur += ch;
-if (!inside) { if (ch === '\u201C') q = 1; else if (ch === '\u201D') q = 0; else if (ch === '"') q ^= 1; }
-if (!END.test(ch)) continue;
-while (i < n) {
-var c2 = p.charAt(i);
-if (END.test(c2) || c2 === '\u2019' || c2 === ')' || c2 === ']') cur += p.charAt(i++);
-else if (c2 === '\u201D' || (c2 === '"' && q)) { cur += c2; i++; q = 0; } else break;
-}
-if (!q && (i >= n || /\s/.test(p.charAt(i)))) { out.push(cur.trim()); cur = ''; }
-}
-if (cur.trim()) out.push(cur.trim());
-return out;
-}
-function sentences(paras) {
-var out = [], seen = {}, add = function (x) { if (x.length >= 12 && x.length <= 360 && !seen[x]) { seen[x] = 1; out.push(x); } };
-paras.forEach(function (p) { split(p, false).forEach(function (x) { if (x.length > 360) split(x, true).forEach(add); else add(x); }); });
-return out;
-}
+var SS = window.spritualShare;
+function sentences(paras) { return SS.sentences(paras); }
 function allWords() { return [].slice.call(d.querySelectorAll('.scene-text p[lang="' + lang + '"]')).map(function (p) { return norm(p.textContent); }).join(' ¶ '); }
 function sceneData(n) {
 var sec = d.getElementById('page-' + n); if (!sec) return null;
@@ -265,7 +246,7 @@ if (want && words.indexOf(want) >= 0) chosen = want;
 else if (!want && sel && sel.length >= 8 && sel.length <= 360 && pool.indexOf(sel) >= 0) chosen = sel;
 if (chosen && lines.indexOf(chosen) < 0) lines.unshift(chosen);
 if (!lines.length) return false;
-S.lines = lines; S.line = chosen || lines.filter(function (x) { return x.length >= 30 && x.length <= 200; })[0] || lines[0];
+S.lines = lines; S.line = chosen || SS.pick(lines) || lines[0];
 fillLines(); if (!dlg.open) { dlg.classList.remove('is-in'); dlg.showModal(); try { history.pushState({ shr: 1 }, '', location.href); pushed = true; } catch (e) {} }
 el.cv.setAttribute('aria-label', ''); el.toast.textContent = '';
 requestAnimationFrame(function () { requestAnimationFrame(function () { dlg.classList.add('is-in'); }); });

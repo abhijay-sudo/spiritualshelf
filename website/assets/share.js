@@ -34,8 +34,39 @@ function open(o) {
 o = o || {};
 return sheet().then(function () { return window.__spritualShareSheet.open({ scene: o.scene || current(), text: o.text || '', from: o.from }); }, function () { return false; });
 }
+function split(p, inside) {
+var out = [], cur = '', q = 0, n = p.length, i = 0, END = /[.!?\u0964]/;
+while (i < n) {
+var ch = p.charAt(i++); cur += ch;
+if (!inside) { if (ch === '\u201C') q = 1; else if (ch === '\u201D') q = 0; else if (ch === '"') q ^= 1; }
+if (!END.test(ch)) continue;
+while (i < n) {
+var c2 = p.charAt(i);
+if (END.test(c2) || c2 === '\u2019' || c2 === ')' || c2 === ']') cur += p.charAt(i++);
+else if (c2 === '\u201D' || (c2 === '"' && q)) { cur += c2; i++; q = 0; } else break;
+}
+if (!q && (i >= n || /\s/.test(p.charAt(i)))) { out.push(cur.trim()); cur = ''; }
+}
+if (cur.trim()) out.push(cur.trim());
+return out;
+}
+function sentences(paras) {
+var out = [], seen = {}, add = function (x) { if (x.length >= 12 && x.length <= 360 && !seen[x]) { seen[x] = 1; out.push(x); } };
+paras.forEach(function (p) { split(p, false).forEach(function (x) { if (x.length > 360) split(x, true).forEach(add); else add(x); }); });
+return out;
+}
+function pick(lines) {
+var ok = (lines || []).filter(function (x) { return x.length >= 35 && x.length <= 140; });
+if (ok.length) {
+var last = ok[ok.length - 1], long = ok.reduce(function (a, b) { return b.length >= a.length ? b : a; });
+return lines[lines.length - 1] === last && last.length >= 50 && last.length >= long.length * .8 ? last : long;
+}
+var mid = (lines || []).filter(function (x) { return x.length >= 30 && x.length <= 200; });
+return mid[0] || (lines || []).slice().sort(function (a, b) { return b.length - a.length; })[0] || '';
+}
 var api = function (o) { return open(o); };
 api.sceneLink = function (n) { return sheet().then(function () { return window.__spritualShareSheet.link(n); }); };
+api.sentences = sentences; api.pick = pick;
 window.spritualShare = api;
 d.addEventListener('click', function (e) {
 var b = e.target.closest && e.target.closest('[data-share-scene]');

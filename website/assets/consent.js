@@ -110,7 +110,7 @@
   var build = function () {
     status = el('p', { class: 'visually-hidden', role: 'status', 'data-consent-status': '' });
     bar = el('section', { class: 'cx-consent', 'aria-labelledby': 'cx-consent-h', 'data-consent': '', hidden: '' });
-    var h = el('h2', { id: 'cx-consent-h', class: 'cx-consent-h', tabindex: '-1' }, T.title);
+    var h = el('p', { id: 'cx-consent-h', class: 'cx-consent-h', tabindex: '-1' }, T.title);
     if (T.short) h.setAttribute('data-short', T.short);   // phones show this one-line form (cinema.css)
     var p = el('p', { class: 'cx-consent-text' }, T.text + ' ');
     var href = privacyHref(); if (href) p.appendChild(el('a', { href: href }, T.more));
@@ -135,14 +135,12 @@
   var reading = !!d.querySelector('[data-reader], [data-manas]');
   var away = false, lastY = 0, run = 0, footOn = false;
   var foot = d.querySelector('.cx-credits');
-  // On a wide screen the question is asked where it can cover nothing: in the room the page's own footer keeps for it (a
-  // fixed corner card lay over a map's pins, the home's ways to read, a button, wherever the reader stopped). It stands in
-  // the banner's own painting when the page opens on one (below), and at the end of the page otherwise.
-  var wide = window.matchMedia ? matchMedia('(min-width: 860px) and (min-height: 520.02px)') : null;
-  var deskFoot = !!foot && !!wide && wide.matches;
-  // On a phone every other page (a map, a list, the breathing ring) is also kept clear: the strip would lie over its
-  // text wherever the reader stops, so it waits and is asked at the foot of the page, in the room the footer keeps for it
-  var footOnly = !reading && !!foot && 'IntersectionObserver' in window && matchMedia('(max-width: 759px), (orientation: landscape) and (max-height: 520px)').matches;
+  // [A] One placement everywhere: fixed to the foot of the screen (a slim strip on a phone, a small card in the lower corner
+  // on a wide screen), seen on arrival and answered where it is, on every page. (It used to be parked at the very end of the
+  // page on a wide screen and on a phone's maps and lists, where nobody reached it and a Tab jumped the page thousands of
+  // pixels.) Only a phone on its side, with almost no height, still asks at the foot of the page, as a strip there would
+  // take a third of the screen. Pages the footer keeps room for it (--cx-consent-room), so it lies on no link.
+  var footOnly = !reading && !!foot && 'IntersectionObserver' in window && matchMedia('(orientation: landscape) and (max-height: 520px)').matches;
   if (footOnly) reading = true;
   var atTop = function () { return (window.scrollY || 0) < innerHeight * .5; };
   var clear = function () {
@@ -176,7 +174,7 @@
     root.setAttribute('data-consent-room', '');
   };
   var scrolled = function () {
-    if (!reading || deskFoot) return;
+    if (!reading) return;
     var y = window.scrollY || 0, dy = y - lastY; lastY = y;
     run = dy > 0 === run > 0 ? run + dy : dy;         // travel in one direction
     var was = away;
@@ -210,55 +208,17 @@
     // a keyboard reader tabbing into a stage gets it whole at once, before the browser scrolls the stop into view
     d.addEventListener('focusin', function (e) { var now = stages.some(function (st) { return st.contains(e.target); }); if (now !== inside) { inside = now; place(); } });
   };
-  // A page that opens on a painted banner (the Library, the People page, Today, a collection) is shorter than the screen,
-  // so on a wide screen the screen's own corner already lies on the page's first row: a search field, a tile, a button.
-  // There the card first sits in the banner's own lower corner, on the painting alone, and moves with the page; once the
-  // banner has gone by, it rests in the corner of the screen. It takes the banner's corner only where none of the
-  // banner's words stand, never while someone is answering it, and never when it was asked for ("Privacy choices").
-  var banner = d.querySelector('.ed-page-head'), head = d.querySelector('.ed-head');
-  var bannerTop = function () {
-    if (!banner || !wide || !wide.matches || !bar || bar.hidden || bar.hasAttribute('data-reopened')) return null;
-    var r = banner.getBoundingClientRect(), h = bar.offsetHeight, w = bar.offsetWidth, x = bar.getBoundingClientRect().left;
-    var y = r.bottom - h - 14, hb = head ? head.getBoundingClientRect().bottom : 0;
-    if (!h || r.bottom >= innerHeight || y < hb + 8 || y < r.top + 8) return null;     // the banner fills the screen, or the card would leave it
-    var words = banner.querySelectorAll('h1, h2, p, a, button, li');
-    for (var i = 0; i < words.length; i++) {
-      var rg = d.createRange(); rg.selectNodeContents(words[i]); var cs = rg.getClientRects();
-      for (var k = 0; k < cs.length; k++) if (cs[k].width > 0 && cs[k].right > x - 2 && cs[k].left < x + w + 2 && cs[k].bottom > y - 2 && cs[k].top < y + h + 2) return null;
-    }
-    return Math.round(y + (window.scrollY || 0));
-  };
-  var placeBanner = function () {
-    if (!bar || !banner) return;
-    var was = bar.classList.contains('is-banner');
-    if (bar.contains(d.activeElement)) return;
-    var top = bannerTop(), on = top !== null;
-    if (on) bar.style.setProperty('--cx-consent-top', top + 'px');
-    if (on === was) return;
-    bar.classList.toggle('is-banner', on);
-    // it arrives in its new place the way it first arrived (cinema.css: nothing moves under reduced motion)
-    bar.style.animation = 'none'; void bar.offsetWidth; bar.style.animation = '';
-  };
-  var placeFoot = function () {
-    if (!deskFoot || !bar || bar.hidden) return;
-    var on = !bar.classList.contains('is-banner') && !bar.hasAttribute('data-reopened');   // asked for ("Privacy choices"): in the corner, where the reader is
-    if (on) { var h = bar.offsetHeight; if (h) bar.style.setProperty('--cx-consent-top', Math.round(foot.getBoundingClientRect().bottom + (window.scrollY || 0) - h - 12) + 'px'); }
-    if (on === bar.classList.contains('is-foot')) return;
-    bar.classList.toggle('is-foot', on);
-    bar.style.animation = 'none'; void bar.offsetWidth; bar.style.animation = '';
-  };
   var watchDock = function () {
     if (watching) return; watching = true;
     watchStage();
     if (dock && window.MutationObserver) new MutationObserver(clear).observe(dock, { attributes: true, attributeFilter: ['class', 'style'] });
-    var both = function () { room(); clear(); placeBanner(); placeFoot(); };
-    if (deskFoot && window.ResizeObserver) new ResizeObserver(function () { placeFoot(); }).observe(d.body);
+    var both = function () { room(); clear(); };
     addEventListener('resize', both);
     if (d.fonts && d.fonts.ready) d.fonts.ready.then(both);
-    lastY = window.scrollY || 0; away = !deskFoot && (footOnly || (reading && !atTop()));     // arriving part-way down a page (a kept place): it waits out of the way
+    lastY = window.scrollY || 0; away = footOnly || (reading && !atTop());     // arriving part-way down a page (a kept place): it waits out of the way
     var tick = false;
-    addEventListener('scroll', function () { if (!tick) { tick = true; requestAnimationFrame(function () { tick = false; scrolled(); placeBanner(); placeFoot(); }); } }, { passive: true });
-    if (foot && !deskFoot && 'IntersectionObserver' in window) new IntersectionObserver(function (es) { footOn = es[es.length - 1].isIntersecting; var was = away; away = reading ? (footOnly ? !footOn : !(atTop() || footOn)) : away && !footOn; if (away !== was) clear(); }).observe(foot);
+    addEventListener('scroll', function () { if (!tick) { tick = true; requestAnimationFrame(function () { tick = false; scrolled(); }); } }, { passive: true });
+    if (foot && 'IntersectionObserver' in window) new IntersectionObserver(function (es) { footOn = es[es.length - 1].isIntersecting; var was = away; away = reading ? (footOnly ? !footOn : !(atTop() || footOn)) : away && !footOn; if (away !== was) clear(); }).observe(foot);
   };
   var show = function (focus) {
     if (!bar) build();
@@ -267,8 +227,8 @@
     var c = read(); bar.toggleAttribute('data-reopened', !!focus);
     bar.querySelector('[data-consent-yes]').setAttribute('aria-pressed', String(!!c && c.value === 'granted'));
     bar.querySelector('[data-consent-no]').setAttribute('aria-pressed', String(!!c && c.value === 'denied'));
-    room(); clear(); placeBanner(); placeFoot();
-    if (focus) bar.querySelector('h2').focus({ preventScroll: true });
+    room(); clear();
+    if (focus) bar.querySelector('.cx-consent-h').focus({ preventScroll: true });
   };
   var hide = function () {
     if (!bar) return;

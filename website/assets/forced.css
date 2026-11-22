@@ -1,0 +1,25 @@
+/* Windows High Contrast / forced colours (loaded on every page with media="(forced-colors: active)", so it costs nothing elsewhere).
+   The system paints a plain backing behind text that lies on a painting; what broke was our own effects under it: words that
+   are revealed through a mask or a gradient (invisible or half-cut), a hero title whose tight lines let each line's backing
+   cut the one above, glow and shadow that only add noise, and a title sequence that waits on animations. Everything here
+   only removes an effect or opens a little room; colours are left to the system. */
+@media (forced-colors: active) {
+  /* words revealed by a mask or coloured by a gradient show in the system's text colour, whole, at once */
+  .cx-film-title .wr, .cx-film-title .wr *, .cast-name-t, .cast-name .ep-l, .cast-name .ep-w, .cx-name, .cx-credits-name, [class*="ty-"] .wr {
+    -webkit-mask: none !important; mask: none !important; background: none !important; -webkit-background-clip: border-box !important; background-clip: border-box !important;
+    -webkit-text-fill-color: currentColor !important; color: CanvasText !important; animation: none !important; opacity: 1 !important; filter: none !important; text-shadow: none !important; }
+  /* the hero and the person's title: lines far enough apart that one line's backing does not cover the line above */
+  .cx-film-title, .cast-name, .ed-page-head h1, .cx-open-line, .cx-ol-a { line-height: 1.22 !important; }
+  /* glow, grain and decorative light layers add nothing to a high-contrast page and sit between the text and its backing */
+  .cast-name::before, .cast-name::after, .cast-title::before, .cast-title::after, .cx-ol-a::before, .cx-ol-a::after { display: none !important; }
+  /* the opening's own words are always on: no sequence to wait for */
+  .cx-home .cx-open-card, .cx-home .cx-open-foot, .cx-home .cx-open-line { opacity: 1 !important; animation: none !important; transform: none !important; visibility: visible !important; }
+  /* buttons and chips keep a real border (their fills are dropped) so they read as controls */
+  .cx-btn, .cx-consent-btn, .btn, .cx-credits-choice, .ed-menu-btn, .ed-icon, .fm-aa { border: 1px solid ButtonText !important; }
+  .cx-consent { border: 1px solid CanvasText !important; box-shadow: none !important; background: Canvas !important; }
+  .cx-consent-h, .cx-consent-h[data-short]::after { color: CanvasText !important; }
+  .cx-consent-text a { color: LinkText !important; }
+  /* the current tab or choice is not told by colour alone */
+  [aria-pressed="true"], [aria-current="page"], [aria-selected="true"] { outline: 2px solid Highlight; outline-offset: -2px; }
+  [aria-current="page"] { text-decoration: underline; text-decoration-thickness: 2px; }
+}

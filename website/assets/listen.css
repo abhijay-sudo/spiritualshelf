@@ -2,8 +2,8 @@
    over the foot of the story: pause, speed, sleep timer and a plain Stop. Transform and opacity only; reduced motion keeps
    the lit sentence and drops every movement. */
 :root { --ease-settle: cubic-bezier(.22, .8, .2, 1); --ease-lamp: cubic-bezier(.4, 0, .2, 1); --d1: 160ms; --d2: 320ms; --d3: 640ms; --d4: 1200ms;
-  --lst-line: #b97712; --lst-glow: transparent; --lst-tint: rgb(185 119 18 / .13); --lst-gold: #e9c98c; --lst-ink: #f6ecda; --lst-bg: rgb(17 11 8 / .93); }
-:root.fm, :root[data-theme="dark"], :root[data-room="theatre"]:not([data-theme="light"]) { --lst-line: #e9c98c; --lst-glow: rgb(233 201 140 / .5); --lst-tint: rgb(233 201 140 / .13); }
+  --lst-line: #b97712; --lst-glow: transparent; --lst-tint: rgb(185 119 18 / .12); --lst-gold: #e9c98c; --lst-ink: #f6ecda; --lst-bg: rgb(17 11 8 / .93); }
+:root.fm, :root[data-theme="dark"], :root[data-room="theatre"]:not([data-theme="light"]) { --lst-line: #e9c98c; --lst-glow: rgb(233 201 140 / .5); --lst-tint: rgb(233 201 140 / .12); }
 
 /* the sentence being spoken: a quiet gold underline and a little glow (no box, no bounce, nothing moves) */
 ::highlight(spritual-listen) { text-decoration-line: underline; text-decoration-color: var(--lst-line); text-decoration-thickness: 2px; text-underline-offset: .24em; text-decoration-skip-ink: none; text-shadow: 0 0 .7em var(--lst-glow); background-color: var(--lst-tint); }   /* (the tint keeps the lit sentence plain to see where WebKit breaks the underline at descenders) */

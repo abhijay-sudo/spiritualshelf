@@ -224,7 +224,11 @@
       const vw = `${Math.round(100 * (parseFloat(d.z) || 1))}vw`; const big = new Image(); big.sizes = vw; big.srcset = d.picset; big.src = d.pic;
       (big.decode ? big.decode() : Promise.resolve()).then(() => { if (my === token) { next.sizes = vw; next.srcset = d.picset; next.src = d.pic; } }).catch(() => {});
       if (!reduced()) { sel.classList.remove('is-swap'); void sel.offsetWidth; sel.classList.add('is-swap'); }
-      if (grid.scrollWidth > grid.clientWidth + 4) grid.scrollTo({ left: centreOf(t.parentElement), behavior: reduced() || byUser ? 'auto' : 'smooth' });
+      if (grid.scrollWidth > grid.clientWidth + 4) {
+        // [joyh] a hand on the strip (mouse over a tile, a key) only scrolls it when that tile is not wholly in view, so the strip does not slide under the pointer
+        const g = grid.getBoundingClientRect(), r = t.parentElement.getBoundingClientRect();
+        if (!byUser || r.left < g.left + 8 || r.right > g.right - 8) grid.scrollTo({ left: centreOf(t.parentElement), behavior: reduced() || byUser ? 'auto' : 'smooth' });
+      }
     };
     // left alone, the screen shows each story in turn; any choice by hand stops it, and the button starts it again
     // one fixed name ("Pause the showcase") with aria-pressed as its state: a toggle whose name also changes contradicts itself
@@ -471,7 +475,7 @@
         if (en.isIntersecting || en.boundingClientRect.bottom < 0) el.classList.add('is-seen');
         if (en.isIntersecting) live.add(el); else live.delete(el);
         // the next scene's painting is fetched while this one is on screen, so a reader never arrives at an empty frame
-        if (en.isIntersecting && !lowData && el.matches('.shot')) { const nx = shots[shots.indexOf(el) + 1]?.querySelector('img[loading="lazy"]'); if (nx) nx.loading = 'eager'; }
+        if (en.isIntersecting && !lowData && !root.classList.contains('fm') && el.matches('.shot')) { const nx = shots[shots.indexOf(el) + 1]?.querySelector('img[loading="lazy"]'); if (nx) nx.loading = 'eager'; }
         if (!el.matches('.shot')) el.classList.toggle('is-live', en.isIntersecting);
       }
       // at most two paintings drift at once (the first two on screen)

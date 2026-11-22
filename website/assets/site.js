@@ -37,6 +37,9 @@
     const sky = $('[data-stars]'); if (!sky || !sky.dataset.js) return;
     if (root.classList.contains('ep-lite')) return sky.classList.add('is-off');
     const js = document.createElement('script'); js.src = sky.dataset.js; js.async = true; js.onerror = () => sky.classList.add('is-off'); document.head.append(js);
+    // [perf] The script is on its way (boot.js has asked for it already): hold the sky's place for it, with the waiting title
+    // (stars.css), instead of closing the place after 10 s and moving the page. A weak signal gets 40 s before the place closes.
+    sky.classList.add('is-wait'); setTimeout(() => { if (!sky.classList.contains('is-on')) sky.classList.add('is-off'); }, 40000);
   })();
 
   /* ---------- Sound: synthesised, opt-in, remembered ---------- */
@@ -277,6 +280,7 @@
       const p = store.get('prefs', {});
       // [comfort] the saved choice is written now, not inside the view transition's later callback (it was saved before it was set)
       if (value) p[name] = value; else delete p[name];
+      if (name === 'size' && root.lang === 'hi' && p.hisize) { delete p.hisize; delete root.dataset.hisize; }   // [fixR] on a Hindi page there is one size group, so it is the whole size
       // [comfort] the last colour choice wins: a colour picked while Night Lamp is on puts the lamp out (the colour chips are also held while it is lit, below)
       if (name === 'theme' && p.lamp) { delete p.lamp; delete root.dataset.lamp; const lo = form.querySelector('input[name="lamp"][value=""]'); if (lo) lo.checked = true; }
       const apply = () => { if (value) root.dataset[name] = value; else delete root.dataset[name]; if (name === 'motion') osCalm();
@@ -338,7 +342,7 @@
     const id = el.dataset.fig; const sym = doc.getElementById('fig-' + id); if (!sym) return;
     el.classList.add('fig-live'); el.classList.remove('fig-use'); el.innerHTML = sym.innerHTML;
   };
-  const feature = (c) => { c.classList.add('card--feature'); const img = c.querySelector('img'); if (img) { img.removeAttribute('loading'); img.setAttribute('fetchpriority', 'high'); } const f = c.querySelector('.fig-use'); if (f) enliven(f); return c; };
+  const feature = (c) => { c.classList.add('card--feature'); c.querySelector('.card-title')?.setAttribute('aria-level', '2');   /* [A] under the page's h1 with nothing between */ const img = c.querySelector('img'); if (img) { img.removeAttribute('loading'); img.setAttribute('fetchpriority', 'high'); } const f = c.querySelector('.fig-use'); if (f) enliven(f); return c; };
 
   /* ---------- Greeting, plan, today's story, "what do you need" ---------- */
   const h = new Date().getHours();
@@ -555,42 +559,57 @@
     const countSr = $('[data-count-sr]'); let countRaf = 0, srTimer = 0;
     // Hindi is spelt both ways (सुन्दर / सुंदर, चाँद / चांद): a nasal consonant joined to the next one, or a chandrabindu,
     // reads as the anusvara; roman diacritics fold away (Rāma finds Rama). Both the query and what it searches are folded.
-    const norm = (s) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').normalize('NFC').replace(/[ङञणनम]्(?=[क-ह])/g, 'ं').replace(/ँ/g, 'ं');
+    // [fixC] assets/find-core.js (when it has arrived) makes the key phonetic: Raam, Laxman, Krishn, Hanumanji; themes (love, monkey) look for the pages' own words
+    const FD = window.SpritualFind;
+    const norm = FD ? FD.key : (s) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').normalize('NFC').replace(/[ङञणनम]्(?=[क-ह])/g, 'ं').replace(/ँ/g, 'ं');
+    if (FD) { try { FD.setSyn(JSON.parse($('#find-syn')?.textContent || '{}')); } catch {} }
     for (const el of [...cards, ...$$('[data-more] li')]) el.dataset.search = norm(el.dataset.search || '');
     const FILLER = new Set(('i im i\'m i’m am is are was were be been being a an the to of in on at for and or my me mine it its this that these those so do does you your we our with about some very really just how what why when who want wanna need like feel feeling please tell show find read story stories ' + 'मैं मुझे मुझको हूं हूँ हैं है था थी थे का की के को में से और या पर एक यह वह तो भी ही मेरा मेरी मेरे कि कुछ बहुत रहा रही रहे कैसे क्या क्यों चाहिए चाहता चाहती').split(' ').map((w) => norm(w.toLowerCase())).filter(Boolean));
     const apply = () => {
       const f = new FormData(filters);
-      const rawQ = String(f.get('q') || '').trim(); const q = norm(rawQ.toLowerCase()); const value = f.get('value') || ''; const coll = f.get('coll') || ''; const time = f.get('time') || '';
+      const rawQ = String(f.get('q') || '').trim(); const q = FD ? rawQ.toLowerCase() : norm(rawQ.toLowerCase()); const value = f.get('value') || ''; const coll = f.get('coll') || ''; const time = f.get('time') || '';
       let n = 0;
       let words = q ? q.split(/\s+/).filter((w) => w.length > 1 || /[^\x00-\x7f]/.test(w)) : [];
       // [joyB] filler words do not search ("I am angry" looks for "angry", not for every story with an "am" in it); a query made only of them searches for nothing
-      { const rest = words.filter((w) => !FILLER.has(w.replace(/^[^\p{L}\p{M}]+|[^\p{L}\p{M}]+$/gu, ''))); words = rest; }   // (a query of nothing but filler, "i am", "the", is not a search: the whole library stays)
-      const passes = (c, every) => { const m = +c.dataset.minutes; return (!words.length || words[every ? 'every' : 'some']((w) => c.dataset.search.includes(w))) && (!value || c.dataset.values.split(' ').includes(value)) && (!coll || c.dataset.c === coll)
+      { const rest = words.filter((w) => !FILLER.has(w.replace(/^[^\p{L}\p{M}]+|[^\p{L}\p{M}]+$/gu, ''))); words = FD ? FD.words(rest.join(' ')) : rest; }   // (a query of nothing but filler, "i am", "the", is not a search: the whole library stays)
+      let fz = false; const has = (hay, w) => (FD ? FD.find(hay, w, fz) > 0 : hay.includes(w));   // fz: a slip of a letter is forgiven, only once nothing matches as typed
+      const passes = (c, every) => { const m = +c.dataset.minutes; return (!words.length || words[every ? 'every' : 'some']((w) => has(c.dataset.search, w))) && (!value || c.dataset.values.split(' ').includes(value)) && (!coll || c.dataset.c === coll)
         && (!time || (time === '6' ? m <= 6 : time === '7' ? m === 7 : m >= 8)); };
-      for (const c of cards) { const ok = passes(c, true); c.hidden = !ok; if (ok) n++; }
-      // nothing matches every word: show the stories that match some, and say so
-      let some = false;
-      if (!n && words.length > 1) { for (const c of cards) { const ok = passes(c, false); c.hidden = !ok; if (ok) { n++; some = true; } } }
-      const someNote = $('[data-some]'); if (someNote) someNote.hidden = !some;
-      // the rest of Spritual (the Ramcharitmanas, the hymns, the characters, the festivals) answers the same search
-      const more = $('[data-more]'); let m2 = 0;
-      // only the best answers: those matching the most words ("Sundar Kand" finds the Sundar Kand, not every kand)
-      if (more) {
-        const lis = $$('li', more); const score = (li) => words.filter((w) => li.dataset.search.includes(w)).length;
-        const best = words.length ? Math.max(0, ...lis.map(score)) : 0;
-        for (const li of lis) { const ok = best > 0 && score(li) === best; li.hidden = !ok; if (ok) m2++; }
-        more.hidden = !m2;
-      }
+      let some = false; let m2 = 0;
+      const more = $('[data-more]'); const someNote = $('[data-some]');
+      const run = () => {
+        n = 0; some = false; m2 = 0;
+        for (const c of cards) { const ok = passes(c, true); c.hidden = !ok; if (ok) n++; }
+        // nothing matches every word: show the stories that match some, and say so
+        if (!n && words.length > 1) { for (const c of cards) { const ok = passes(c, false); c.hidden = !ok; if (ok) { n++; some = true; } } }
+        if (someNote) someNote.hidden = !some;
+        // the rest of Spritual (the Ramcharitmanas, the hymns, the characters, the festivals) answers the same search:
+        // only the best answers, those matching the most words ("Sundar Kand" finds the Sundar Kand, not every kand), the
+        // surest match first and, between equals, the person in the most stories ("kr": Krishna before Kritavarma)
+        if (more) {
+          const lis = $$('li', more); const hit = (li) => words.map((w) => (FD ? FD.find(li.dataset.search, w, fz) : li.dataset.search.includes(w) ? 3 : 0)); const sc = new Map();
+          for (const li of lis) { const h = hit(li); sc.set(li, [h.filter(Boolean).length, h.reduce((a, b) => a + b, 0), +li.dataset.n || 0]); }
+          const best = words.length ? Math.max(0, ...lis.map((li) => sc.get(li)[0])) : 0;
+          const shown = lis.filter((li) => best > 0 && sc.get(li)[0] === best).sort((a, b) => sc.get(b)[1] - sc.get(a)[1] || sc.get(b)[2] - sc.get(a)[2]).slice(0, 8);
+          for (const li of lis) li.hidden = !shown.includes(li);
+          if (best > 0) { const ul = more.querySelector('ul'); for (const li of shown) ul.append(li); }
+          m2 = shown.length; more.hidden = !m2;
+        }
+      };
+      run(); if (FD && words.length && !n && !m2) { fz = true; run(); }
       // the empty box: "not on Spritual yet" only when nothing anywhere has the words; if the reader's own filters hid the
       // matching stories it says to clear them; and the suggestions only show when there is nothing better below
       const emptyMsg = $('[data-empty-msg]'); const filtered = !!(value || coll || time);
-      const anyText = !!words.length && cards.some((c) => words.some((w) => c.dataset.search.includes(w)));
+      const clearBtn = $('[data-clear]'); if (clearBtn) clearBtn.hidden = !filtered && !q;   // [A] "Clear filters" shows only when something is filtered
+      const anyText = !!words.length && cards.some((c) => words.some((w) => has(c.dataset.search, w)));
       if (emptyMsg) {
         emptyMsg.dataset.base ??= emptyMsg.textContent;
         const none = q && !n && !m2 && !(filtered && anyText);
-        emptyMsg.textContent = none ? (empty.dataset.none || '').replace('{q}', () => rawQ) : !filtered && q && m2 ? (empty.dataset.below || emptyMsg.dataset.base).replace('{q}', () => rawQ) : emptyMsg.dataset.base;
+        const msg = (none ? (empty.dataset.none || '').replace('{q}', () => rawQ) : !filtered && q && m2 ? (empty.dataset.below || emptyMsg.dataset.base).replace('{q}', () => rawQ) : emptyMsg.dataset.base).replace(/ (\S+)$/, '\u00a0$1');
+        emptyMsg.textContent = msg;
         const tryRow = $$('.lib-try, .lib-try-links', empty); tryRow.forEach((x) => { x.hidden = !!m2; });
-        const reset = $('[data-reset]', empty); if (reset) reset.hidden = !filtered && !q;
+        // [fixC] the answer is said where the reader is typing (a polite live note right under the field), not only in a box far below the results
+        const note = $('[data-nomatch]'); if (note) { emptyMsg.hidden = true; if (n) { if (!note.hidden) { note.hidden = true; note.textContent = ''; } } else { note.hidden = false; if (note.textContent !== msg) note.textContent = msg; } }
       }
       const prev = +(count.dataset.n ?? cards.length); count.dataset.n = n;
       const res = (v) => fmt(v === 1 ? UI.results1 || UI.results : UI.results, { n: v, t: cards.length });
@@ -631,9 +650,11 @@
       const id = btn.dataset.term; const d = defs[id]; if (!d) return;
       // [type] the meaning opens inside the paragraph, between the lines (assets/type.js), wherever the lens rail is not in use.
       // A word touched before that script has arrived waits for it (0.4 s at most), so a word opens one way in a visit.
-      if (!railOn() && tyLoad && !window.SpritualTypeGloss && !btn._tyW) { btn._tyW = 1; tyLoad(); const t0 = performance.now(); const go = () => { if (window.SpritualTypeGloss || performance.now() - t0 > 400) { show(btn); btn._tyW = 0; } else setTimeout(go, 25); }; go(); return; }
-      if (!railOn() && window.SpritualTypeGloss?.(btn, d)) return;
+      const film = root.classList.contains('fm-live') && !railOn();   // [fixR] in the film the meaning is a card by the word (never a box cut into the sentence it explains)
+      if (!film && !railOn() && tyLoad && !window.SpritualTypeGloss && !btn._tyW) { btn._tyW = 1; tyLoad(); const t0 = performance.now(); const go = () => { if (window.SpritualTypeGloss || performance.now() - t0 > 400) { show(btn); btn._tyW = 0; } else setTimeout(go, 25); }; go(); return; }
+      if (!film && !railOn() && window.SpritualTypeGloss?.(btn, d)) return;
       $$('.term[aria-expanded="true"]').forEach((t) => t.setAttribute('aria-expanded', 'false')); btn.setAttribute('aria-expanded', 'true');
+      if (film) { pop(btn, d); return; }
       if (railOn()) {
         lit(id); const card = $(`[data-lens-card="${id}"]`);
         if (card) {
@@ -649,13 +670,20 @@
       pop(btn, d);
     };
     function pop(btn, d) {
-      head.textContent = d.term; body.textContent = d.def;
+      const film = root.classList.contains('fm-live');
+      head.textContent = d.term;
+      // [fixR] in the film the card carries the whole entry (the literal sense and where it is told), as the lens card does; elsewhere, the short meaning
+      body.textContent = d.def;
+      if (film) for (const [k, v] of [[UI.lensLiteral, d.literal], [d.ctxLabel, d.context]]) if (v) { const r = document.createElement('span'); r.className = 'gloss-row'; const kk = document.createElement('i'); kk.textContent = k; r.append(kk, ' ' + v); body.append(r); }
       const r = btn.getBoundingClientRect();
+      // the strip at the screen's edge keeps a clear gutter: the card never runs under it (the words end 46px from the edge on a phone)
+      const vw = document.documentElement.clientWidth || innerWidth, gut = film ? (vw < 700 ? 54 : 72) : 16;
+      gloss.style.maxWidth = Math.max(180, vw - 16 - gut) + 'px';
       try { gloss.showPopover(); } catch { gloss.hidden = false; }
       // placed by its own measured size (shown first, so the size is real; it is placed before the next paint): it keeps
-      // the screen's 16px gutter at every reading size, and opens above the word when there is no room below it
-      const vw = document.documentElement.clientWidth || innerWidth, w = gloss.offsetWidth || 292, h = gloss.offsetHeight || 120;
-      gloss.style.left = Math.max(16, Math.min(r.left, vw - w - 16)) + 'px';
+      // the screen's gutter at every reading size, and opens above the word when there is no room below it
+      const w = gloss.offsetWidth || 292, h = gloss.offsetHeight || 120;
+      gloss.style.left = Math.max(16, Math.min(r.left, vw - w - gut)) + 'px';
       gloss.style.top = (r.bottom + 8 + h > innerHeight - 16 ? Math.max(16, r.top - 8 - h) : r.bottom + 8) + 'px';
     }
     function openSheet(d, btn) {
@@ -925,9 +953,11 @@
     const copyText = async (text, okMsg, btn) => { try { await navigator.clipboard.writeText(text); toast.textContent = okMsg; } catch { toast.textContent = text; } Sound.bell(988, 0.1); haptic(); if (btn) { btn.classList.add('is-done'); setTimeout(() => btn.classList.remove('is-done'), 1200); } setTimeout(() => { toast.textContent = ''; }, 4000); };
     $('[data-copy]')?.addEventListener('click', (e) => copyText(location.href.split('#')[0] + '#page-' + current, UI.copied, e.currentTarget));
     $('[data-copy-line]')?.addEventListener('click', () => {
-      const p = visibleParas(scenes[current - 1]).map((x) => x.textContent).join(' ');
-      const line = (p.match(/[^.!?।]+[.!?।]/) || [p])[0].trim();
-      copyText(`“${line}”\n${document.title.replace(' | Spritual', '')} · Spritual\n${location.href.split('#')[0]}#page-${current}`, UI.quoteCopied, $('[data-copy-line]'));
+      const paras = visibleParas(scenes[current - 1]).map((x) => x.textContent.replace(/\s+/g, ' ').trim()).filter(Boolean); const p = paras.join(' ');
+      // [share] the line worth copying is a whole sentence of this scene (assets/share.js: pick), not its first fragment; a line that is already a quoted speech is not quoted twice
+      const SH = window.spritualShare; const best = SH && SH.pick && SH.pick(SH.sentences(paras));
+      const line = best || (p.match(/[^.!?।]+[.!?।]/) || [p])[0].trim(); const quoted = /^[“"‘]/.test(line) ? line : `“${line}”`;
+      copyText(`${quoted}\n${document.title.replace(' | Spritual', '')} · Spritual\n${location.href.split('#')[0]}#page-${current}`, UI.quoteCopied, $('[data-copy-line]'));
     });
 
     // Reflection
@@ -1214,13 +1244,27 @@
     begin.addEventListener('click', start); $('[data-again]').addEventListener('click', start); stop.addEventListener('click', () => { end(false); begin.focus(); });
   }
 
+  /* [perf] On a line the browser reports as slow or metered (Save-Data, 2g/3g), the paintings still waiting to be fetched are asked
+     for no wider than 1600 px: the largest candidate (2400) is a sharpness a weak line should not pay for. */
+  if (window.SpritualNet && window.SpritualNet.slow()) {
+    $$('img[loading="lazy"][srcset]').forEach((im) => {
+      if (im.complete) return;
+      const keep = im.getAttribute('srcset').split(',').filter((x) => (parseInt(x.trim().split(/\s+/)[1], 10) || 0) <= 1600);
+      if (keep.length) im.setAttribute('srcset', keep.join(','));
+    });
+  }
+
   /* ---------- The film clips: each frame's painting breathes as a rendered 2.5D camera move ----------
      Loaded only when the frame is near the viewport, at 720p on small screens or slow connections, never on
      data-saver or reduced motion. The still stays underneath; the clip fades in on its first real frame. */
   const clips = $$('video.frame-video[data-video]');
   const lowData = !!navigator.connection?.saveData || matchMedia('(prefers-reduced-data: reduce)').matches;
   if (clips.length && !reduced() && !lowData && !root.dataset.light) {   // [calm] never in Light mode
-    const slow = /\b(2g|3g)\b/.test(navigator.connection?.effectiveType || '');
+    const slow0 = /\b(2g|3g)\b/.test(navigator.connection?.effectiveType || '');
+    // [perf] "slow" is asked again when the clip is about to be fetched, and counts what this page's own files achieved (boot.js
+    // SpritualNet) where the browser reports no connection (Safari): the film is a nicety, never worth the wait on a weak line
+    const isSlow = () => slow0 || !!(window.SpritualNet && window.SpritualNet.slow());
+    const slow = slow0;
     // 1080p only for a wide screen (CSS width, not pixel density) on a connection that is not cellular; phones get 720p
     const wantHD = !slow && innerWidth >= 1000 && !/cellular/.test(navigator.connection?.type || '');
     // The opening film carries a ladder of sizes (data-ladder; data-portrait for phone-shaped screens). How much to send:
@@ -1247,7 +1291,8 @@
         return document.createElement('video').canPlayType(type) ? 2 : 0;
       } catch (e) { return codec === 'h264' ? 2 : 0; }
     };
-    const fileOf = (v, port, size, codec) => `${v.dataset.video}${port ? '-portrait' : ''}-${size}${codec === 'h264' ? '' : '-' + codec}.mp4`;
+    const verOf = (v) => (v.dataset.ver ? `?v=${v.dataset.ver}` : '');   // [perf] a versioned clip is kept a year
+    const fileOf = (v, port, size, codec) => `${v.dataset.video}${port ? '-portrait' : ''}-${size}${codec === 'h264' ? '' : '-' + codec}.mp4${verOf(v)}`;
     const ladder = async (v) => {
       // a soft, painted film needs far fewer pixels than text: density counts only up to 1.25, and the cut may be
       // upscaled by up to a fifth, so a 1440x900 retina laptop gets the ~1 MB 1080p cut, not the 4.5 MB 2160p one
@@ -1263,7 +1308,7 @@
         const has = (c) => (v.dataset[c] || '').split(',').includes(key);
         // an unreported connection on a phone: the big cut only in an efficient codec
         const bigOnPhone = !conn && phoneSized() && size >= 2160;
-        const options = [...['hevc', 'av1'].filter(has), ...(bigOnPhone ? [] : ['h264'])].filter((c) => !failed.has(fileOf(v, port, size, c).split('/').pop()));
+        const options = [...['hevc', 'av1'].filter(has), ...(bigOnPhone ? [] : ['h264'])].filter((c) => !failed.has(fileOf(v, port, size, c).split('?')[0].split('/').pop()));
         if (!options.length) continue;
         const scores = await Promise.all(options.map((c) => decodes(c, fw, size)));
         const best = Math.max(...scores);
@@ -1276,7 +1321,7 @@
     };
     const src = async (v) => {
       if (v.dataset.ladder) { const pick = await ladder(v); v.dataset.rung = pick.key; v.dataset.shape = pick.key[0] === 'p' ? 'p' : 'l'; return pick.url; }
-      return `${v.dataset.video}-${wantHD && (v.hasAttribute('data-hd') || v.closest('.act, .page-frame, .pause--framed')) ? 1080 : 720}.mp4`;
+      return `${v.dataset.video}-${wantHD && (v.hasAttribute('data-hd') || v.closest('.act, .page-frame, .pause--framed')) ? 1080 : 720}.mp4${verOf(v)}`;
     };
     // a phone turned on its side (or a window dragged from tall to wide) changes which cut fits: swap it at the same moment
     let turnT = 0;
@@ -1309,7 +1354,7 @@
         hide(v);
         // a 4K, portrait, HEVC or AV1 cut that will not load or decode is remembered, and the film falls back once to the
         // plain 1080p H.264 cut (decided by the file that failed, not by its size label)
-        const bad = v.currentSrc || v.getAttribute('src') || ''; const plain = `${v.dataset.video}-1080.mp4`;
+        const bad = v.currentSrc || v.getAttribute('src') || ''; const plain = `${v.dataset.video}-1080.mp4${verOf(v)}`;
         const base = (u) => u.split('?')[0].split('/').pop();
         if (v.dataset.ladder && bad) failed.add(base(bad));
         if (v.dataset.ladder && !v.dataset.fellBack && base(bad) !== base(plain)) { v.dataset.fellBack = '1'; v.dataset.rung = '1080'; v.dataset.shape = 'l'; v.src = plain; v.load(); if (v.dataset.near) v.play().catch(() => {}); return; }
@@ -1327,14 +1372,14 @@
     // a 2g/3g connection keeps the poster alone: the film is a nicety, never worth the reader's data on a slow line.
     const pocket = matchMedia('(max-width: 759px), (orientation: landscape) and (max-height: 520px)').matches;
     const titlesOn = !!document.querySelector('.cx-home .cx-spark') && root.classList.contains('cx-js') && !root.classList.contains('cx-seen');
-    const watch = () => clips.forEach((v) => {
+    const watch = () => { if (isSlow()) return; clips.forEach((v) => {
       if (pocket && v.closest('.cx-open')) {
         if (slow) return;
         const wait = titlesOn ? 2300 - performance.now() : 0;
         if (wait > 0) { setTimeout(() => io.observe(v), wait); return; }
       }
       io.observe(v);
-    });
+    }); };
     const idle = () => ('requestIdleCallback' in window ? requestIdleCallback(watch, { timeout: 1500 }) : setTimeout(watch, 300));
     // [calm] The clips (the opening's portrait cut, 0.5 MB; a day's film, 0.8 MB) are not asked for while the page is still
     // arriving. On a phone-sized screen or a slow or metered line they wait for the reader's first touch, key or scroll (or,

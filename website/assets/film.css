@@ -138,17 +138,17 @@ html[lang="hi"] .fm .fm-about { letter-spacing: .02em; font-size: .95rem; text-t
 /* ---------- The strip at the edge: the lamp (sound), a tick for each scene, and the way back to paper ---------- */
 /* It shows while the page moves or is touched and leaves the painting clear when the page rests (film.js, .is-in); it is
    always there for the keyboard, and shows itself when anything in it has the focus. */
-.fm-live .fm-rail { display: flex; flex-direction: column; align-items: center; gap: 6px; position: fixed; z-index: 5; right: max(0px, env(safe-area-inset-right, 0px)); top: 40%; translate: 0 -50%; opacity: 0; pointer-events: none; transition: opacity .7s ease; }
+.fm-live .fm-rail { display: flex; flex-direction: column; align-items: center; gap: 6px; position: fixed; z-index: 5; right: max(0px, env(safe-area-inset-right, 0px)); top: var(--fm-rt, 40%); translate: 0 -50%; opacity: 0; pointer-events: none; transition: opacity .7s ease; }
 .fm-live .fm-rail:is(.is-in, :focus-within, :hover) { opacity: 1; pointer-events: auto; transition-duration: .35s; }
 .fm-live .fm-rail.is-off { visibility: hidden; }
 /* the mala: a hairline gold thread with one bead for each scene. The thread is gold as far as the story has been read;
    the bead of the scene on screen is the one full bead (the rest are pale dots, so they never read as marks on a face);
    a bead shows its painting and title beside it; a mouse or a pen can drag the thread, a finger never (it scrolls). */
 .fm-rail ol { position: relative; display: flex; flex-direction: column; gap: 0; margin: 4px 0; padding: 0; list-style: none; touch-action: pan-y; -webkit-user-select: none; user-select: none; }
-.fm-rail ol::before, .fm-rail ol::after { content: ""; position: absolute; right: 12px; top: 14px; bottom: 14px; width: 1px; pointer-events: none; }
+.fm-rail ol::before, .fm-rail ol::after { content: ""; position: absolute; right: 12px; top: calc(var(--fm-bead, 28px) / 2); bottom: calc(var(--fm-bead, 28px) / 2); width: 1px; pointer-events: none; }
 .fm-rail ol::before { background: rgb(246 236 218 / .34); box-shadow: 0 0 3px rgb(0 0 0 / .6); }
 .fm-rail ol::after { background: linear-gradient(to bottom, #b98a3c, var(--fm-gold) 30%, #fff1c9); box-shadow: 0 0 6px rgb(255 205 120 / .5); transform: scaleY(var(--p, 0)); transform-origin: top; }
-.fm-rail a { display: block; position: relative; z-index: 1; width: 36px; height: 28px; -webkit-tap-highlight-color: transparent; -webkit-touch-callout: none; }
+.fm-rail a { display: block; position: relative; z-index: 1; width: 36px; height: var(--fm-bead, 28px); -webkit-tap-highlight-color: transparent; -webkit-touch-callout: none; }
 .fm-rail a i { position: absolute; right: 10px; top: 50%; width: 5px; height: 5px; margin-top: -2.5px; border-radius: 50%; background: rgb(246 236 218 / .5); box-shadow: 0 0 2px rgb(0 0 0 / .5); transition: scale .45s cubic-bezier(.2, .8, .2, 1), box-shadow .45s ease; }
 .fm-rail a i::after { content: ""; position: absolute; inset: 0; border-radius: 50%; background: radial-gradient(circle at 36% 30%, #fff6da 0, var(--fm-gold) 52%, #b3823a 100%); opacity: var(--f, 0); }
 .fm-rail a[aria-current] i { scale: 2.2; box-shadow: 0 0 0 .5px #f3dca8, 0 0 4.5px 1px rgb(255 200 110 / .5); }
@@ -183,7 +183,7 @@ html[lang="hi"] .fm-peek b { line-height: 1.45; }
 .fm-rail .fm-lang { font: 600 .95rem/1 var(--cx-ui); letter-spacing: .02em; border: 1px solid rgb(246 236 218 / .45); width: 40px; height: 40px; margin: 4px 0; background: rgb(10 6 3 / .45); }
 html[lang="hi"] .fm-rail .fm-lang, .fm-rail .fm-lang[lang="hi"] { font-family: "Mukta", var(--cx-ui); }
 /* a bead is touched over a wider strip than it is drawn (the touch area reaches past the strip's own edge) */
-.fm-rail a::before { content: ""; position: absolute; inset: 0 -8px 0 -4px; }
+.fm-rail a::before { content: ""; position: absolute; inset: -2px -8px -2px -8px; }   /* [fixR] a touch strip 52px wide; the beads are 24 to 28px apart, so no two touch areas differ by more than a few pixels */
 .fm-rail :focus-visible, .fm-door :focus-visible, .fm .fm-about:focus-visible { outline: 2px solid var(--fm-gold); outline-offset: 2px; }
 .fm-rail svg { width: 22px; height: 22px; display: block; }
 .fm-ic { fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
@@ -286,3 +286,32 @@ html[lang="hi"] .fm-door button { font-size: 1.08rem; }
 .fm .scene[data-tempo="quiet"] { --fm-pin: 74svh; --fm-pin-t: 62svh; }
 .fm .scene[data-tempo="fall"] { --fm-pin: 50svh; --fm-pin-t: 40svh; }
 .fm .scene[data-tempo="arrival"] { --fm-pin-t: 60svh; }
+
+/* ---------- [fixR] the strip is legible over any painting, and never over the words ----------
+   A soft dark gathers behind the whole strip (gone at its edges, like the peek's), each tool sits on a small plate, and the words keep a
+   gutter beside it on a phone. The strip leaves when the closing beat's words rise (film.js closing()). */
+.fm-live .fm-rail::before { content: ""; position: absolute; z-index: -1; inset: -18px 0 -18px -22px; pointer-events: none; background: radial-gradient(ellipse 100% 62% at 100% 50%, rgb(10 6 3 / .5), rgb(10 6 3 / .28) 55%, rgb(10 6 3 / 0) 100%); -webkit-mask: linear-gradient(to bottom, transparent, #000 9%, #000 91%, transparent); mask: linear-gradient(to bottom, transparent, #000 9%, #000 91%, transparent); }
+.fm-live .fm-rail button:not(.fm-lang) { width: 40px; height: 40px; margin: 4px 0; background: rgb(10 6 3 / .5); box-shadow: 0 0 0 1px rgb(233 201 140 / .22); opacity: .92; filter: none; }
+.fm-live .fm-rail button:not(.fm-lang):is(:hover, :focus-visible) { opacity: 1; box-shadow: 0 0 0 1px rgb(233 201 140 / .6); }
+.fm-live .fm-rail .fm-lang { opacity: .95; }
+.fm-live .fm-rail a i { background: rgb(246 236 218 / .62); }
+@media (max-width: 699.98px) { .fm { --fm-xr: 46px; } }   /* the words end before the strip's glyphs (they stand 13px to 35px from the edge) */
+.fm-live .fm-rail.is-gone:not(:focus-within) { opacity: 0; pointer-events: none; }   /* over the closing beat even a resting pointer does not hold the strip up */
+
+/* ---------- [fixR] a word's meaning in the film: a small dark card by the word, in the film's own light ---------- */
+.fm #gloss { background: rgb(18 11 7 / .96); color: var(--fm-ink); border-color: rgb(233 201 140 / .4); border-radius: 14px; box-shadow: 0 14px 40px rgb(0 0 0 / .55), 0 0 0 1px rgb(0 0 0 / .4); font-size: .95rem; line-height: 1.5; width: min(21rem, calc(100vw - 70px)); }
+.fm #gloss strong { color: var(--fm-gold); }
+.fm #gloss .gloss-row { display: block; margin-top: .45rem; font-size: .9em; opacity: .9; }
+.fm #gloss .gloss-row i { display: block; font-style: normal; font-size: .76em; letter-spacing: .08em; text-transform: uppercase; opacity: .72; }
+html[lang="hi"] .fm #gloss .gloss-row i { letter-spacing: 0; text-transform: none; font-size: .86em; }
+/* [perf] A shared scene link (#page-N, boot.js): the reader's words wait, unseen, until the painting of that scene is up, then
+   come in together with it. Before this the page showed its plain layout over an empty stage, then jumped into the film's. */
+.fm-deep:not(.fm-live) [data-reader] .scenes { visibility: hidden; }
+.fm-deep.fm-live [data-reader] .scenes { animation: fm-deep-in var(--d3, 640ms) var(--ease-settle, cubic-bezier(.22, .8, .2, 1)) both; }
+@keyframes fm-deep-in { from { opacity: 0; } to { opacity: 1; } }
+:root[data-motion="reduce"] .fm-deep.fm-live [data-reader] .scenes { animation: none; }
+@media (prefers-reduced-motion: reduce) { .fm-deep.fm-live [data-reader] .scenes { animation: none; } }
+/* [perf] the opening painting fades up once it is decoded (film.js adds is-ready); boot.js lifts the wait after 6 s whatever happens */
+.fm:not(.hero-ok) .cx-film-open-pic:not(.is-ready) { opacity: 0; }
+.fm .cx-film-open-pic { transition: opacity var(--d3, 640ms) var(--ease-settle, cubic-bezier(.22, .8, .2, 1)); }
+:root[data-motion="reduce"] .fm .cx-film-open-pic { transition: none; }

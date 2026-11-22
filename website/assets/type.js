@@ -180,6 +180,7 @@ return true;
 };
 const gloss = () => {
 if (!$('.term')) return;
+const seenTerm = {}; $$('.term').forEach((t) => { const k = t.dataset.term; if (seenTerm[k]) t.setAttribute('tabindex', '-1'); else seenTerm[k] = 1; });
 css.then(() => { window.SpritualTypeGloss = glossFn; });
 d.addEventListener('click', (e) => {
 if (!open) return; const t = e.target;
@@ -232,9 +233,10 @@ return { el, off, go: () => scrollTo({ top: Math.max(0, scrollY + off), behavior
 const t0 = performance.now();
 let shown = false;
 let yT = null, fixes = 0;
-const place = () => { if (mine || shown) return; try { aim().go(); yT = scrollY; } catch {} };
+let shownAt = 0;
+const place = (again) => { if (mine || (shown && !again)) return; try { aim().go(); yT = scrollY; } catch {} };
 window.SpritualTypePlace = place;
-const guard = () => { if (mine || shown || fixes > 12) return removeEventListener('scroll', guard); if (yT != null && Math.abs(scrollY - yT) > 8) { fixes++; place(); } };
+const guard = () => { if (mine || fixes > 12 || (shown && performance.now() - shownAt > 1500)) return removeEventListener('scroll', guard); if (yT != null && Math.abs(scrollY - yT) > 8) { fixes++; place(true); } };
 addEventListener('scroll', guard, { passive: true });
 if (!mine && !root.classList.contains('fm')) sc.scrollIntoView({ block: 'start', behavior: 'instant' });
 const settled = () => !root.classList.contains('fm') || $$('.fm-stage .on img').length < 2;
@@ -242,9 +244,9 @@ const ready = () => new Promise((res) => { const go = () => { if (!root.classLis
 Promise.all([ready(), css]).then(() => {
 let calm = 0, n = 0;
 const show = () => {
-if (shown) return; shown = true; const el = aim().el;
+if (shown) return; shown = true; shownAt = performance.now(); const el = aim().el;
 if (el && !still() && !late()) { const cls = 'ty-form-o'; el.classList.add(cls); const off = () => el.classList.remove(cls); el.addEventListener('animationend', off, { once: true }); setTimeout(off, 1400); }
-release();
+release(); window.SpritualFilmWake?.(2600);
 };
 const hold = () => {
 if (mine) return show();

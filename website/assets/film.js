@@ -41,6 +41,8 @@ const { UI, store, scenes } = ctx, F = UI.f || {}, N = scenes.length;
 const reader = $('[data-reader]'), hero = $('.cx-film-open'), heroImg = $('.cx-film-open-pic img'), wrap = $('.scenes', reader);
 const head = $('.story-head', reader), intro = head && $('.story-intro', head), endP = $('.cx-the-end', reader), closeEl = $('[data-closing]', reader), endSec = $('.story-end', reader);
 if (!reader || !hero || !heroImg || !wrap || !head || !intro || !N) return;
+{ const pic = heroImg.parentNode, rdy = () => pic.classList.add('is-ready'); heroImg.addEventListener('error', rdy, { once: true });
+if (heroImg.complete && heroImg.naturalWidth) (heroImg.decode ? heroImg.decode().then(rdy, rdy) : rdy()); else heroImg.addEventListener('load', () => (heroImg.decode ? heroImg.decode().then(rdy, rdy) : rdy()), { once: true }); }
 const title = hero.querySelector('h1')?.getAttribute('aria-label') || d.title, kicker = $$('.cx-film-k span', hero).map((s) => s.textContent).join(' · ');
 const prefs = () => store.get('prefs', {});
 let printing = false;
@@ -110,6 +112,11 @@ clearTimeout(peekT); if (ptr === 'touch') showPeek(i); peekT = setTimeout(() => 
 const acts = $('.story-actions', head);
 if (acts) for (const [v, t, c] of [['off', F.fPaper, ' fm-only'], ['on', F.fFilm, '']]) { const b = d.createElement('button'); b.type = 'button'; b.className = 'btn btn-quiet fm-switch' + c; b.dataset.fm = v; b.textContent = t || ''; acts.append(b); }
 };
+const fitRail = () => {
+if (!rail || !rail.offsetHeight) return; rail.style.setProperty('--fm-bead', '28px');
+const rest = rail.offsetHeight - links.length * 28, H = innerHeight, bead = clamp(Math.floor((H - 76 - rest) / links.length), 24, 28), rh = rest + links.length * bead;
+rail.style.setProperty('--fm-bead', bead + 'px'); rail.style.setProperty('--fm-rt', Math.round(clamp(H * .4, 64 + rh / 2, Math.max(64 + rh / 2, H - 12 - rh / 2))) + 'px');
+};
 const measure = () => {
 const vh = innerHeight, sv = $('.fm-sv', stage).offsetHeight || vh; SV = sv;
 vw = stage.clientWidth; VH = stage.clientHeight;
@@ -153,6 +160,7 @@ const tb = beats.filter((b) => b.type === 'title');
 cut = [sv, ...tb.map((b) => b.a - sv * .07)]; const last = beats[beats.length - 1]; cut.push(last.b + sv * .2);
 tb.forEach((b) => { const sc = scenes[b.k - 1]; sc.style.scrollMarginTop = Math.round(sc.getBoundingClientRect().top + y1 - (b.a - vh + 3) - pad) + 'px'; });
 heroH = hero.offsetHeight;
+fitRail();
 stageEnd = endSec ? endSec.getBoundingClientRect().top + y1 : Infinity; wrapH = wrap.offsetHeight; lastH = vh;
 layers.forEach((l) => { if (l.k >= 0) pose(l, poseOf(l.k), false); if (l.deep) l.lv.size(); });
 };
@@ -161,6 +169,7 @@ if (!k) return heroImg.currentSrc || heroImg.src;
 const im = $('.shot > img', scenes[k - 1]); if (!im) return heroImg.currentSrc || heroImg.src;
 const set = (im.getAttribute('srcset') || '').split(',').map((x) => x.trim().split(/\s+/)).filter((x) => x[0]).map(([u, w]) => [u, parseInt(w, 10) || 0]).sort((a, b) => a[1] - b[1]);
 if (!set.length) return im.getAttribute('src');
+if (window.SpritualNet) return window.SpritualNet.pick(set, cw, vw < 900);   // [perf] the same choice boot.js preloads; a width softer on a slow line
 const need = cw * Math.min(devicePixelRatio || 1, vw < 900 ? 1 : 1.5) * .93;
 return (set.find((x) => x[1] >= need) || set[set.length - 1])[0];
 };
@@ -219,7 +228,7 @@ Promise.race([Promise.all(ready), wait(4000)]).then(() => {
 loading = false; if (!active) return;
 pose(inc, poseOf(k), false); if (dzT) deepen(inc); inc.el.style.zIndex = 2; out.el.style.zIndex = 1; inc.el.style.setProperty('--dis', dis + 'ms'); inc.el.classList.toggle('fade', !was); inc.el.classList.add('on'); top ^= 1;
 const done = () => { out.el.classList.remove('on', 'fade'); out.k = -1; flat(out); busy = false; if (pending != null) { const p = pending; pending = null; cutTo(p); } };
-if (was) { first = false; live = true; root.classList.add('fm-live'); done(); kick(); }
+if (was) { first = false; live = true; root.classList.add('fm-live'); fitRail(); done(); kick(); }
 else { busy = true; if (ctx.sound.on()) ctx.sound.swell?.(); setTimeout(done, dis + 40); }
 pre(k + 1);
 });
@@ -237,7 +246,10 @@ if (nb.type === 'close') { clearTimeout(cbT); cbT = setTimeout(() => { if (onBea
 if (nb.type === 'title' && ctx.sound.on() && performance.now() - lastBell > 5000) { lastBell = performance.now(); ctx.sound.bell?.(528, .05); }
 };
 const wake = (ms = 1700) => { clearTimeout(sleepT); sleepT = setTimeout(() => { awake = false; railSync(); }, ms); if (!awake) { awake = true; railSync(); } };
-const railSync = () => { if (!rail) return; const on = awake && live && !off && scrollY > heroH * .55 && scrollY + innerHeight * .6 < stageEnd; if (on !== railIn) { railIn = on; rail.classList.toggle('is-in', on); } };
+const closing = () => !!closeEl && closeEl.getBoundingClientRect().top < innerHeight * .78;   // [fixR] the closing beat's words are rising: the strip and the whisper step aside
+const railSync = () => { if (!rail) return; const on = awake && live && !off && scrollY > heroH * .55 && scrollY + innerHeight * .6 < stageEnd && !closing(); if (on !== railIn) { railIn = on; rail.classList.toggle('is-in', on); } const gone = closing(); if (gone !== railGone) { railGone = gone; rail.classList.toggle('is-gone', gone); } };
+let railGone = false;
+window.SpritualFilmWake = (ms) => { if (active && live) wake(ms); };   // [offline-lang] type.js: after a language switch the rail shows for a moment, so the reader sees where the controls are
 let litKey = '';
 const draw = (now) => {
 raf = 0; if (!active) return;
@@ -314,7 +326,7 @@ if (!b || !b.k) return null;
 return { n: b.k, j: b.type === 'title' ? -1 : b.type === 'end' ? 9999 : beats.filter((x) => x.k === b.k && x.type === 'p').indexOf(b) };
 };
 window.SpritualFilmMeasure = () => remeasure();
-window.SpritualFilmNow = () => (active && live ? { n: N, at: cur, ended: off } : null);
+window.SpritualFilmNow = () => (active && live ? { n: N, at: cur, ended: off, closing: closing() } : null);
 new MutationObserver(() => {
 if (!active || !built) return; const t = tier(); if (t === dzT) return;
 if (!t) { dzT = 1; lower(); } else { dzT = t; layers.forEach((l) => { if (l.k >= 0) deepen(l); }); kick(); }

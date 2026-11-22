@@ -1134,6 +1134,176 @@
       "statusCode": 308
     },
     {
+      "source": "/collections{/}?",
+      "destination": "/library/",
+      "statusCode": 308
+    },
+    {
+      "source": "/characters/valmikia{/}?",
+      "destination": "/characters/valmiki/",
+      "statusCode": 308
+    },
+    {
+      "source": "/characters/hanumana{/}?",
+      "destination": "/characters/hanuman/",
+      "statusCode": 308
+    },
+    {
+      "source": "/characters/shabaria{/}?",
+      "destination": "/characters/shabari/",
+      "statusCode": 308
+    },
+    {
+      "source": "/characters/jatayua{/}?",
+      "destination": "/characters/jatayu/",
+      "statusCode": 308
+    },
+    {
+      "source": "/characters/vishnua{/}?",
+      "destination": "/characters/vishnu/",
+      "statusCode": 308
+    },
+    {
+      "source": "/characters/devia{/}?",
+      "destination": "/characters/devi/",
+      "statusCode": 308
+    },
+    {
+      "source": "/characters/samadhia{/}?",
+      "destination": "/characters/samadhi/",
+      "statusCode": 308
+    },
+    {
+      "source": "/characters/parvatia{/}?",
+      "destination": "/characters/parvati/",
+      "statusCode": 308
+    },
+    {
+      "source": "/characters/kaikeyia{/}?",
+      "destination": "/characters/kaikeyi/",
+      "statusCode": 308
+    },
+    {
+      "source": "/characters/shantanua{/}?",
+      "destination": "/characters/shantanu/",
+      "statusCode": 308
+    },
+    {
+      "source": "/characters/satyavatia{/}?",
+      "destination": "/characters/satyavati/",
+      "statusCode": 308
+    },
+    {
+      "source": "/characters/shakunia{/}?",
+      "destination": "/characters/shakuni/",
+      "statusCode": 308
+    },
+    {
+      "source": "/characters/draupadia{/}?",
+      "destination": "/characters/draupadi/",
+      "statusCode": 308
+    },
+    {
+      "source": "/characters/kuntia{/}?",
+      "destination": "/characters/kunti/",
+      "statusCode": 308
+    },
+    {
+      "source": "/characters/hiranyakashipua{/}?",
+      "destination": "/characters/hiranyakashipu/",
+      "statusCode": 308
+    },
+    {
+      "source": "/characters/angada{/}?",
+      "destination": "/characters/angad/",
+      "statusCode": 308
+    },
+    {
+      "source": "/characters/valia{/}?",
+      "destination": "/characters/vali/",
+      "statusCode": 308
+    },
+    {
+      "source": "/characters/jambavana{/}?",
+      "destination": "/characters/jambavan/",
+      "statusCode": 308
+    },
+    {
+      "source": "/characters/sunitia{/}?",
+      "destination": "/characters/suniti/",
+      "statusCode": 308
+    },
+    {
+      "source": "/characters/abhimanyua{/}?",
+      "destination": "/characters/abhimanyu/",
+      "statusCode": 308
+    },
+    {
+      "source": "/characters/savitria{/}?",
+      "destination": "/characters/savitri/",
+      "statusCode": 308
+    },
+    {
+      "source": "/characters/satyavana{/}?",
+      "destination": "/characters/satyavan/",
+      "statusCode": 308
+    },
+    {
+      "source": "/characters/balia{/}?",
+      "destination": "/characters/bali/",
+      "statusCode": 308
+    },
+    {
+      "source": "/characters/devakia{/}?",
+      "destination": "/characters/devaki/",
+      "statusCode": 308
+    },
+    {
+      "source": "/characters/lakshmia{/}?",
+      "destination": "/characters/lakshmi/",
+      "statusCode": 308
+    },
+    {
+      "source": "/characters/rukminia{/}?",
+      "destination": "/characters/rukmini/",
+      "statusCode": 308
+    },
+    {
+      "source": "/characters/vayua{/}?",
+      "destination": "/characters/vayu/",
+      "statusCode": 308
+    },
+    {
+      "source": "/characters/shikhandia{/}?",
+      "destination": "/characters/shikhandi/",
+      "statusCode": 308
+    },
+    {
+      "source": "/characters/himavana{/}?",
+      "destination": "/characters/himavan/",
+      "statusCode": 308
+    },
+    {
+      "source": "/characters/surapadmana{/}?",
+      "destination": "/characters/surapadman/",
+      "statusCode": 308
+    },
+    {
+      "source": "/characters/satia{/}?",
+      "destination": "/characters/sati/",
+      "statusCode": 308
+    },
+    {
+      "source": "/characters/nandia{/}?",
+      "destination": "/characters/nandi/",
+      "statusCode": 308
+    },
+    {
+      "source": "/characters/agnia{/}?",
+      "destination": "/characters/agni/",
+      "statusCode": 308
+    },
+    {
       "source": "/characters/medhas{/}?",
       "destination": "/characters/",
       "statusCode": 308
@@ -1261,6 +1431,176 @@
     {
       "source": "/hi/characters/constellation{/}?",
       "destination": "/hi/characters/",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/collections{/}?",
+      "destination": "/hi/library/",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/characters/valmikia{/}?",
+      "destination": "/hi/characters/valmiki/",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/characters/hanumana{/}?",
+      "destination": "/hi/characters/hanuman/",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/characters/shabaria{/}?",
+      "destination": "/hi/characters/shabari/",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/characters/jatayua{/}?",
+      "destination": "/hi/characters/jatayu/",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/characters/vishnua{/}?",
+      "destination": "/hi/characters/vishnu/",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/characters/devia{/}?",
+      "destination": "/hi/characters/devi/",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/characters/samadhia{/}?",
+      "destination": "/hi/characters/samadhi/",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/characters/parvatia{/}?",
+      "destination": "/hi/characters/parvati/",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/characters/kaikeyia{/}?",
+      "destination": "/hi/characters/kaikeyi/",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/characters/shantanua{/}?",
+      "destination": "/hi/characters/shantanu/",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/characters/satyavatia{/}?",
+      "destination": "/hi/characters/satyavati/",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/characters/shakunia{/}?",
+      "destination": "/hi/characters/shakuni/",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/characters/draupadia{/}?",
+      "destination": "/hi/characters/draupadi/",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/characters/kuntia{/}?",
+      "destination": "/hi/characters/kunti/",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/characters/hiranyakashipua{/}?",
+      "destination": "/hi/characters/hiranyakashipu/",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/characters/angada{/}?",
+      "destination": "/hi/characters/angad/",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/characters/valia{/}?",
+      "destination": "/hi/characters/vali/",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/characters/jambavana{/}?",
+      "destination": "/hi/characters/jambavan/",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/characters/sunitia{/}?",
+      "destination": "/hi/characters/suniti/",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/characters/abhimanyua{/}?",
+      "destination": "/hi/characters/abhimanyu/",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/characters/savitria{/}?",
+      "destination": "/hi/characters/savitri/",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/characters/satyavana{/}?",
+      "destination": "/hi/characters/satyavan/",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/characters/balia{/}?",
+      "destination": "/hi/characters/bali/",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/characters/devakia{/}?",
+      "destination": "/hi/characters/devaki/",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/characters/lakshmia{/}?",
+      "destination": "/hi/characters/lakshmi/",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/characters/rukminia{/}?",
+      "destination": "/hi/characters/rukmini/",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/characters/vayua{/}?",
+      "destination": "/hi/characters/vayu/",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/characters/shikhandia{/}?",
+      "destination": "/hi/characters/shikhandi/",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/characters/himavana{/}?",
+      "destination": "/hi/characters/himavan/",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/characters/surapadmana{/}?",
+      "destination": "/hi/characters/surapadman/",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/characters/satia{/}?",
+      "destination": "/hi/characters/sati/",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/characters/nandia{/}?",
+      "destination": "/hi/characters/nandi/",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/characters/agnia{/}?",
+      "destination": "/hi/characters/agni/",
       "statusCode": 308
     },
     {

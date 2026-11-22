@@ -1249,7 +1249,7 @@ html[lang="hi"] .cast-row-l { font-family: "Mukta", var(--cx-ui); font-size: .98
    of the dark above it, letter by letter, and the black parts like a curtain to the width of a cinema screen, then away,
    leaving the name standing over the river at dawn. The rest of the page arrives after the name. About five seconds;
    any key, click, tap or scroll skips it; reduced motion never sees it. */
-@font-face { font-family: "Cinzel"; src: url("fonts/cinzel-latin.woff2") format("woff2"); font-weight: 400 900; font-style: normal; font-display: block; }
+@font-face { font-family: "Cinzel"; src: url("fonts/cinzel-latin.woff2?v=97f503ba") format("woff2"); font-weight: 400 900; font-style: normal; font-display: block; }
 .cx-home .cx-open-card { position: relative; z-index: 4; }
 .cx-home .cx-open .cx-wm { font: 500 min(14.5vw, 13rem, 19svh)/1 "Cinzel", var(--cx-title); letter-spacing: .14em; margin-right: -.14em; text-transform: uppercase; padding-bottom: .24em; }
 .cx-home .cx-open .cx-wm-letters { filter: drop-shadow(0 6px 26px rgb(40 16 0 / .6)) drop-shadow(0 0 2px rgb(40 16 0 / .5)); }
@@ -2109,6 +2109,12 @@ html[lang="hi"] .fest-list li.next strong::after { content: "  ·  आने व
 
 /* the library: the rest of Spritual answers a search too, and an empty search always offers a way on */
 .lib-some { margin: 1rem 0 0; color: var(--cx-ink-2); font-style: italic; }
+/* [fixC] the answer to a search with no result, said right under the field */
+.lib-nomatch { margin: .6rem 0 0; padding-left: .75rem; border-left: 2px solid var(--cx-marigold, #e8913a); color: var(--cx-ink, inherit); font-size: .98rem; line-height: 1.5; text-wrap: pretty; }
+.lib-nomatch[hidden] { display: none; }
+:root:not([data-motion="reduce"]) .lib-nomatch:not([hidden]) { animation: lib-note-in .32s var(--cx-ease, cubic-bezier(.22, .8, .2, 1)) both; }
+@keyframes lib-note-in { from { opacity: 0; translate: 0 6px; } }
+@media (prefers-reduced-motion: reduce) { .lib-nomatch { animation: none !important; } }
 .lib-more { margin: clamp(1.5rem, 1rem + 2vw, 2.5rem) 0 0; }
 .lib-more-h { margin: 0 0 .9rem; font: 500 clamp(1.2rem, 1rem + .7vw, 1.6rem)/1.2 var(--cx-title); color: var(--cx-ink); }
 .lib-more-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 1fr)); gap: .6rem; }
@@ -2244,12 +2250,8 @@ html[lang="hi"] .cx-consent-btn { font-family: "Mukta", var(--cx-ui); }
     background: color-mix(in srgb, var(--cx-dusk) 94%, transparent); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
   .cx-consent-h { flex: 1 0 100%; }
   .cx-consent-btns { flex: 1 1 auto; }
-  .cx-consent-btn { min-width: 0; min-height: 40px; padding: 0 .9rem; }
+  .cx-consent-btn { min-width: 0; min-height: 44px; padding: 0 .9rem; }
   .cx-consent-text a { padding: .75rem .35rem .75rem .3rem; }
-  /* a page that opens on a painted banner shorter than the screen: the card first sits in the banner's own lower corner,
-     where there is only painting, and moves with the page (consent.js sets where; it rests in the screen's corner after) */
-  .cx-consent.is-banner, .cx-consent.is-foot { position: absolute; top: var(--cx-consent-top, auto); bottom: auto; }
-  /* and otherwise at the end of the page, in the room its footer keeps for it (consent.js, placeFoot), so it lies on nothing */
 }
 /* stories: consent.js measures the reader dock (--cx-dock-clear: its height plus its gap from the bottom) while it is on
    screen, so the bar sits just above it, and lets the bar settle down when the dock tucks away or steps aside */
@@ -2262,7 +2264,7 @@ html[lang="hi"] .cx-consent-btn { font-family: "Mukta", var(--cx-ui); }
   html[lang="hi"] .cx-consent-h[data-short]::after { font-size: .88rem; }
   .cx-consent-text a, html[lang="hi"] .cx-consent-text a { font-size: .8rem; padding: .7rem .2rem; }
   .cx-consent-btns { gap: .4rem; }
-  .cx-consent-btn { min-width: 0; min-height: 40px; padding: 0 .7rem; font-size: .86rem; }
+  .cx-consent-btn { min-width: 0; min-height: 44px; padding: 0 .7rem; font-size: .86rem; }
   html[lang="hi"] .cx-consent-btn { padding: 0 .55rem; font-size: .84rem; }
 }
 @media (max-width: 400px) { .cx-consent-btn { padding: 0 .5rem; } html[lang="hi"] .cx-consent-btn { padding: 0 .4rem; } .cx-consent-btns { gap: .3rem; } }
@@ -2444,3 +2446,9 @@ html[lang="hi"] .cx-consent-btn { font-family: "Mukta", var(--cx-ui); }
    sets the text as before. */
 p, li, dd, figcaption, blockquote { text-wrap: pretty; }
 .cx-sel-sum, .cx-sel-facts, .story-sum, .card-sum, .card-text, .cx-open-sub, .cx-sub-t, .wt-cap p, .ed-card-s, .ed-lede, .cast-about, .at-lead, .at-sec-lead, .at-route-lead, .sheet-sum, .fm-peek, .cx-text, .cx-lede, [class*="-sum"], [class*="-lede"], [class*="-intro"] { text-wrap: balance; }
+
+/* [A] the analytics question: one placement on every page (fixed at the foot, consent.js), out of sight while the breathing
+   screen runs (it is a still, dark stage: dusk.js sets .dusk-lock on the page), and the footer and the pages' ends keep its
+   room (--cx-consent-room) so it lies on no link. Forced colours: borders stay (cinema.css). */
+:root.dusk-lock .cx-consent { opacity: 0; visibility: hidden; pointer-events: none; transition: opacity .3s var(--cx-ease), visibility 0s .3s; }
+.cx-consent-text a { min-height: 44px; display: inline-flex; align-items: center; box-sizing: border-box; }

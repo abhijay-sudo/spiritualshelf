@@ -194,3 +194,10 @@ html[lang="hi"] .wl-out { font-size: 1.05rem; }
 /* a borrowed painting names the story it comes from, at the foot of the words it sits behind */
 .wl-text .wl-credit { margin: .35rem 0 0; font-size: .78rem; line-height: 1.4; font-style: italic; color: rgb(243 231 215 / .72); }
 html[lang="hi"] .wl-text .wl-credit { font-size: .86rem; line-height: 1.55; font-style: normal; }
+
+/* [A] the leap's two measures (Hanuman, Surasa's mouth): their names were a default "small" inside a small line (about 10px, dim);
+   now a readable label on its own dark plate, over any water */
+.wl-m small { font-size: .95rem; line-height: 1.25; font-weight: 500; letter-spacing: 0; color: #fff6e8; padding: .12rem .5rem; border-radius: 999px; background: rgb(6 10 20 / .62); text-shadow: none; }
+html[lang="hi"] .wl-m small { font-family: "Mukta", var(--cx-ui); font-size: 1.02rem; }
+/* [A] the descent's thread runs in the dark margin where the Library link stands: the link is a solid chip, so the line passes behind it, not through its words */
+.wl-on .wl--ganga .wl-out { background: rgb(13 8 6 / .97); border: 1px solid rgb(231 194 122 / .28); }
