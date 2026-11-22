@@ -25,7 +25,7 @@ const coarse = matchMedia('(pointer: coarse)').matches;
 const mem = navigator.deviceMemory || 8; const cores = navigator.hardwareConcurrency || 8;
 let Q = mem <= 2 || cores <= 2 ? 2 : coarse || mem <= 4 || cores <= 4 ? 1 : 0;
 const QP = [{ dpr: 2, dust: 1, comets: 34, neb: 3, fps: 0, wide: 1, px: 8e6 }, { dpr: 1.5, dust: 0.6, comets: 20, neb: 2, fps: 0, wide: 0, px: 4e6 }, { dpr: 1.25, dust: 0.32, comets: 10, neb: 1, fps: 30, wide: 0, px: 2.5e6 }, { dpr: 1, dust: 0.18, comets: 5, neb: 1, fps: 30, wide: 0, px: 1.2e6 }];
-const realms = [...document.querySelectorAll('.st-realm')].map((el, i) => ({ id: el.dataset.realm, i, hw: +el.dataset.hw, hh: +el.dataset.hh, name: el.querySelector('.st-h3').firstChild.textContent.trim(), cx: 0, cy: 0, a: 1 }));
+const realms = [...document.querySelectorAll('.st-realm')].map((el, i) => ({ id: el.dataset.realm, i, hw: +el.dataset.hw, hh: +el.dataset.hh, name: el.querySelector('.st-h3').firstChild.textContent.trim(), cx: 0, cy: 0, a: 1, m: 0, sx: 0, sy: 0 }));
 const nodes = []; const byId = {};
 for (const el of document.querySelectorAll('.st-p')) {
 const d = el.dataset; const a = el.querySelector('.st-p-a'); const i = nodes.length;
@@ -33,7 +33,7 @@ const n = { id: d.id, el, i, realm: realms.find((r) => r.id === el.closest('.st-
 name: el.querySelector('.st-p-n').textContent, other: d.o, en: d.en, href: a.getAttribute('href'), title: el.querySelector('.st-p-k')?.textContent || '', line: el.querySelector('.st-p-l').textContent,
 ties: [...el.querySelectorAll('.st-ties > li')].map((li) => ({ k: li.dataset.k, ph: li.dataset.ph, fl: li.dataset.fl || '', ev: li.dataset.ev || '' })), withs: [...el.querySelectorAll('.st-with a')].map((x) => ({ k: x.dataset.k, n: +x.dataset.n })),
 x: 0, y: 0, px: 0, py: 0, pr: 0, vis: false, ph: (i * 2.399) % TAU, sp: 0.36 + ((i * 7) % 11) * 0.02, near: null, kin: null, lab: null,
-in: 0, dr: 0, bt: 0, sm: null, under: 1, pulseAt: 0, wd: -1, dim: 1, hot: 0, glow: 0, pulse: -1e9, la: 0, spr: null, halo: null, rgb: null, rank: 0 };
+in: 0, dr: 0, bt: 0, sm: null, under: 1, pulseAt: 0, wd: -1, dim: 1, hot: 0, glow: 0, pulse: -1e9, la: 0, bu: 0, lci: 0, spr: null, halo: null, rgb: null, rank: 0 };
 nodes.push(n); byId[n.id] = n;
 }
 if (!nodes.length) return off();
@@ -41,7 +41,7 @@ const short = (n) => n.name.replace(/\s*\(.*\)$/, '');
 const rgbOf = (c) => { let m = /^#([0-9a-f]{6})$/i.exec(c || ''); if (m) { const v = parseInt(m[1], 16); return [v >> 16, (v >> 8) & 255, v & 255]; } m = /^#([0-9a-f])([0-9a-f])([0-9a-f])$/i.exec(c || ''); if (m) return [17 * parseInt(m[1], 16), 17 * parseInt(m[2], 16), 17 * parseInt(m[3], 16)]; m = /(\d+)\D+(\d+)\D+(\d+)/.exec(c || ''); return m ? [+m[1], +m[2], +m[3]] : [243, 196, 126]; };
 const TIER = { legend: 0, lead: 1, cast: 2 };
 nodes.forEach((n) => { n.rgb = rgbOf(n.light); n.rank = TIER[n.tier] ?? 2; });
-const FLOOR = { legend: 8.5, lead: 7.5, cast: 6.5 };   // a face is never drawn smaller than this, so a far sky is still faces, not blobs of light
+const FLOORS = { wide: { legend: 12, lead: 11, cast: 10 }, narrow: { legend: 13, lead: 12, cast: 11 } }; let FLOOR = FLOORS.wide;   // a face is never drawn smaller than this, so a far sky is still faces, not blobs of light
 for (const r of realms) { let hub = null; for (const n of nodes) if (n.realm === r && (!hub || n.rank < hub.rank || (n.rank === hub.rank && n.ties.length > hub.ties.length))) hub = n; r.hub = hub; }
 nodes.forEach((n) => { const h = n.realm.hub; n.bt = 1.2 + n.realm.i * 0.3 + Math.hypot(n.lx - h.lx, n.ly - h.ly) / Math.max(n.realm.hw, 1) * 1.15 + (n.i % 5) * 0.025; });
 const easeBack = (x) => { const c1 = 1.70158; const c3 = c1 + 1; return 1 + c3 * Math.pow(x - 1, 3) + c1 * Math.pow(x - 1, 2); };
@@ -60,27 +60,103 @@ edges.push(e); withE.push(e); edgeAt[key(n, m)] = e;
 edges.forEach((e, i) => { const ra = e.a.realm.i * 0.35 + e.a.rank * 0.45; const rb = e.b.realm.i * 0.35 + e.b.rank * 0.45; e.fb = rb < ra; e.t0 = 1.9 + Math.min(ra, rb) * 0.6 + (e.named ? 0 : 0.6) + (i % 17) * 0.03; });
 for (const n of nodes) { n.near = new Set([...n.ties.map((t) => t.k), ...n.withs.map((t) => t.k)]); n.kin = new Set(n.ties.map((t) => t.k)); n.edges = []; n.namedE = []; }
 for (const e of edges) { e.a.edges.push(e); e.b.edges.push(e); if (e.named) { e.a.namedE.push(e); e.b.namedE.push(e); } }
-let W = 0; let H = 0; let dpr = 1; let wide = null; let narrow = false; let box = { x0: 0, y0: 0, x1: 1, y1: 1 }; let topH = 80; let first = true; let atHome = true; let panel = 'none';
-const cam = { x: 0, y: 0, k: 1 }; const to = { x: 0, y: 0, k: 1 }; let ease = 0.22; let kMin = 0.2; const K_MAX = 2; const home = { x: 0, y: 0, k: 1 };
+let boxHpx = 0; let W = 0; let H = 0; let dpr = 1; let wide = null; let narrow = false; let box = { x0: 0, y0: 0, x1: 1, y1: 1 }; let arrangeInfo = null; let topH = 80; let first = true; let atHome = true; let homeSel = 'rest'; let restRealm = null; let lastKey = ''; const rest = { x: 0, y: 0, k: 1 }; let panel = 'none';
+const cam = { x: 0, y: 0, k: 1 }; const to = { x: 0, y: 0, k: 1 }; let ease = 0.22; let kMin = 0.2; const K_MAX = 4; const home = { x: 0, y: 0, k: 1 };
 let flight = null; const vel = { x: 0, y: 0 };
+const WALL = 7; let GX = 14; let GY = 17; let TITLE = 50; const packs = new Map();
+const pack = (r, asp) => {
+const key = r.id + asp.toFixed(2) + GX; const got = packs.get(key); if (got) return got;
+const P = nodes.filter((n) => n.realm === r); const m = P.length; const ix = new Map(P.map((n, i) => [n, i]));
+let mx = 1; let my = 1; for (const n of P) { mx = Math.max(mx, Math.abs(n.lx)); my = Math.max(my, Math.abs(n.ly)); }
+let A = 0; for (const n of P) A += Math.PI * (n.r + GX / 2) * (n.r + GY / 2);
+let a = Math.sqrt(A / (0.62 * asp)) * 0.75; let b = a * asp; const x = P.map((n) => n.lx / mx * a * 0.9); const y = P.map((n) => n.ly / my * b * 0.9);
+const rr = P.map((n) => n.r); const sp = []; for (const n of P) for (const e of n.namedE) if (e.a === n && ix.has(e.b)) sp.push([ix.get(n), ix.get(e.b)]);
+const sx0 = []; const sy0 = []; for (let i = 0; i < m; i++) { sx0[i] = []; sy0[i] = []; for (let j = 0; j < m; j++) { sx0[i][j] = rr[i] + rr[j] + GX; sy0[i][j] = rr[i] + rr[j] + GY; } }
+let good = null; const snap = () => ({ x: x.slice(), y: y.slice(), a, b });
+const relax = (rounds) => {
+let worst = 0;
+for (let rd = 0; rd < rounds; rd++) {
+for (let pass = 0; pass < 8; pass++) {
+if (pass === 0) for (const [i, j] of sp) { const dx = x[j] - x[i]; const dy = y[j] - y[i]; const d = Math.hypot(dx, dy) || 1; const want = rr[i] + rr[j] + GX + 30; if (d > want) { const k = (d - want) * 0.006; x[i] += dx / d * k; y[i] += dy / d * k; x[j] -= dx / d * k; y[j] -= dy / d * k; } }
+worst = 0;
+for (let i = 0; i < m; i++) for (let j = i + 1; j < m; j++) {
+let dx = x[j] - x[i]; let dy = y[j] - y[i]; if (!dx && !dy) { dx = 0.3 * (i - j); dy = 0.2; }
+const sx = sx0[i][j]; const sy = sy0[i][j]; if (Math.abs(dx) >= sx || Math.abs(dy) >= sy) continue; const d = Math.hypot(dx / sx, dy / sy); if (d >= 1) continue;
+const g = (1 - d) * Math.min(sx, sy); if (g > worst) worst = g; const k = (1 / d - 1) * 0.52; x[i] -= dx * k; y[i] -= dy * k; x[j] += dx * k; y[j] += dy * k;
+}
+for (let i = 0; i < m; i++) { const ax = Math.max(8, a - rr[i]); const ay = Math.max(8, b - rr[i]); const q = Math.pow(Math.abs(x[i]) / ax, WALL) + Math.pow(Math.abs(y[i]) / ay, WALL); if (q > 1) { const c = Math.pow(q, -1 / WALL); x[i] *= c; y[i] *= c; } }
+}
+if (worst < 3) break;
+}
+return worst;
+};
+relax(14); good = snap();
+for (let it = 0; it < 120; it++) {
+const f = 0.99; a *= f; b *= f; for (let i = 0; i < m; i++) { x[i] *= f; y[i] *= f; }
+const w2 = relax(it < 8 ? 6 : 10); if (w2 > 3) break; good = snap();
+}
+const S = good || snap(); let x0 = 1e9; let x1 = -1e9; let y0 = 1e9; let y1 = -1e9;
+for (let i = 0; i < m; i++) { x0 = Math.min(x0, S.x[i] - rr[i]); x1 = Math.max(x1, S.x[i] + rr[i]); y0 = Math.min(y0, S.y[i] - rr[i]); y1 = Math.max(y1, S.y[i] + rr[i] + 10); }
+const cx = (x0 + x1) / 2; const cy = (y0 + y1) / 2; const pos = new Map(P.map((n, i) => [n, [S.x[i] - cx, S.y[i] - cy]]));
+const res = { hw: Math.ceil((x1 - x0) / 2) + 4, hh: Math.ceil((y1 - y0) / 2) + 2, pos }; packs.set(key, res); return res;
+};
+const ASPS = [0.3, 0.4, 0.52, 0.66, 0.82, 1, 1.2, 1.45, 1.75, 2.1]; const ARRS = [[[0, 1, 2]], [[0], [1], [2]], [[0, 1], [2]], [[0], [1, 2]], [[0, 2], [1]]];
+const RGAP = 22; const VGAP = 20;
+const place = (arr, pk) => {
+const cl = []; let tw = 0; let ty = 0; const rows = arr.map((row) => { const w = row.reduce((s2, i) => s2 + pk[i].hw * 2, 0) + RGAP * (row.length - 1); const h = Math.max(...row.map((i) => pk[i].hh * 2)) + TITLE; tw = Math.max(tw, w); return { row, w, h }; });
+for (const o of rows) ty += o.h; ty += VGAP * (rows.length - 1); let y = -ty / 2;
+for (const o of rows) { let x = -o.w / 2; for (const i of o.row) { cl[i] = { cx: x + pk[i].hw, cy: y + TITLE + pk[i].hh }; x += pk[i].hw * 2 + RGAP; } y += o.h + VGAP; }
+return { cl, w: tw, h: ty };
+};
+let layoutKey = '';
+const padOf = () => (narrow ? 9 : 14);
 const arrange = () => {
-const gap = wide ? 40 : 30; let c = 0;
-if (wide) { const tot = realms.reduce((s, r) => s + r.hw * 2, 0) + gap * (realms.length - 1); c = -tot / 2; realms.forEach((r, i) => { r.cx = c + r.hw; r.cy = i === 1 ? -50 : 20; c += r.hw * 2 + gap; }); }
-else { const tot = realms.reduce((s, r) => s + r.hh * 2 + 50, 0) + gap * (realms.length - 1); c = -tot / 2; realms.forEach((r, i) => { r.cx = (i - 1) * 46; r.cy = c + 50 + r.hh; c += r.hh * 2 + 50 + gap; }); }
-for (const n of nodes) { n.x = n.realm.cx + n.lx; n.y = n.realm.cy + n.ly; }
-box = { x0: Math.min(...realms.map((r) => r.cx - r.hw)), x1: Math.max(...realms.map((r) => r.cx + r.hw)), y0: Math.min(...realms.map((r) => r.cy - r.hh - 50)), y1: Math.max(...realms.map((r) => r.cy + r.hh)) };
+const dense = narrow || W <= 900; GX = dense ? 11 : 14; GY = dense ? 13 : 17; TITLE = dense ? 40 : 44;
+const rf = freeRect('none'); const pd = padOf(); const FW = rf.x1 - rf.x0 - pd * 2; const FH = rf.y1 - rf.y0 - pd * 2; let best = null;
+const nA = ASPS.length; const CAP = 3;
+const kr = realms.map((r) => ASPS.map((asp) => { const p = pack(r, asp); return Math.min(CAP, FW / (p.hw * 2), FH / (p.hh * 2 + TITLE + 10)); }));
+const cands = []; let kTop = 0;
+for (const arr of ARRS) for (let a0 = 0; a0 < nA; a0++) for (let a1 = 0; a1 < nA; a1++) for (let a2 = 0; a2 < nA; a2++) {
+const ix = [a0, a1, a2]; const pl = place(arr, realms.map((r, i) => pack(r, ASPS[ix[i]]))); const k = Math.min(FW / pl.w, FH / pl.h); if (k > kTop) kTop = k;
+cands.push({ arr, ix, k, kg: Math.pow(kr[0][a0] * kr[1][a1] * kr[2][a2], 1 / 3) });
+}
+for (const c of cands) { if (c.k < kTop * 0.985) continue; const sc = c.k + c.kg * 0.02; if (!best || sc > best.sc) best = { sc, k: c.k, kg: c.kg, ix: c.ix, arr: c.arr }; }
+const pk = realms.map((r, i) => pack(r, ASPS[best.ix[i]])); const pl = place(best.arr, pk);
+const rix = realms.map((r, i) => { let bi = 0; for (let a = 1; a < nA; a++) if (kr[i][a] > kr[i][bi]) bi = a; return bi; });
+layoutKey = best.ix.join('/') + ':' + JSON.stringify(best.arr) + ':' + rix.join('/'); arrangeInfo = { asp: best.ix.map((a) => ASPS[a]).join('/'), arr: best.arr, k: best.k, kr: best.kg, realmAsp: rix.map((a) => ASPS[a]).join('/'), realmK: rix.map((a, i) => +kr[i][a].toFixed(2)) };
+realms.forEach((r, i) => { r.ov = { cx: pl.cl[i].cx, cy: pl.cl[i].cy, hw: pk[i].hw, hh: pk[i].hh }; const q = pack(r, ASPS[rix[i]]); r.rl = { hw: q.hw, hh: q.hh, pos: q.pos }; });
+for (const n of nodes) { const p = pk[n.realm.i].pos.get(n); n.ox = p[0]; n.oy = p[1]; const q = n.realm.rl.pos.get(n); n.rx = q[0]; n.ry = q[1]; }
+ovBox = { x0: Math.min(...realms.map((r) => r.ov.cx - r.ov.hw)), x1: Math.max(...realms.map((r) => r.ov.cx + r.ov.hw)), y0: Math.min(...realms.map((r) => r.ov.cy - r.ov.hh - TITLE)), y1: Math.max(...realms.map((r) => r.ov.cy + r.ov.hh)) };
+morph();
+};
+let unf = null; let ovBox = { x0: 0, y0: 0, x1: 1, y1: 1 };
+const pushOf = (j, u) => {
+const dx = j.ov.cx - u.ov.cx; const dy = j.ov.cy - u.ov.cy; const nx = u.rl.hw + j.ov.hw + 150; const ny = u.rl.hh + j.ov.hh + TITLE + 110;
+if (Math.abs(dx) / (u.ov.hw + j.ov.hw) >= Math.abs(dy) / (u.ov.hh + j.ov.hh)) return [(dx < 0 ? -1 : 1) * Math.max(Math.abs(dx), nx) - dx, 0];
+return [0, (dy < 0 ? -1 : 1) * Math.max(Math.abs(dy), ny) - dy];
+};
+const morph = () => {
+for (const r of realms) { r.sx = 0; r.sy = 0; }
+for (const u of realms) { if (u.m < 0.001) continue; const e = ss(u.m); for (const j of realms) if (j !== u) { const o = pushOf(j, u); j.sx += o[0] * e; j.sy += o[1] * e; } }
+for (const r of realms) { const e = ss(r.m); r.cx = r.ov.cx + r.sx; r.cy = r.ov.cy + r.sy; r.hw = lerp(r.ov.hw, r.rl.hw, e); r.hh = lerp(r.ov.hh, r.rl.hh, e); }
+for (const n of nodes) { const r = n.realm; const e = ss(r.m); n.x = r.cx + lerp(n.ox, n.rx, e); n.y = r.cy + lerp(n.oy, n.ry, e); }
+for (const b of blobs) { b.rx = b.fx * b.r.hw; b.ry = b.fy * b.r.hh; b.rad = Math.max(b.r.hw, b.r.hh) * b.rf; }
+box = { x0: Math.min(...realms.map((r) => r.cx - r.hw)), x1: Math.max(...realms.map((r) => r.cx + r.hw)), y0: Math.min(...realms.map((r) => r.cy - r.hh - TITLE)), y1: Math.max(...realms.map((r) => r.cy + r.hh)) };
 for (const e of edges) e.len = Math.hypot(e.a.x - e.b.x, e.a.y - e.b.y) || 1;
 };
+const morphBusy = () => realms.some((r) => r.m !== (r === unf ? 1 : 0));
+const setUnf = (r, now) => { unf = r || null; if (now || calm() || !W) { for (const x of realms) x.m = x === unf ? 1 : 0; morph(); } wake(); };
 const freeRect = (mode) => {
-const top = Math.min(H * 0.36, topH + 14); const bot = narrow ? 56 : 120; const r = { x0: 12, x1: W - (narrow ? 12 : 64), y0: top, y1: H - bot };
-if (mode === 'cap' || mode === 'card') { if (narrow) r.y1 = H - (mode === 'card' ? H * 0.56 : Math.max(250, H * 0.4)) - 6; else r.x0 = Math.min(W * 0.42, 540); }
+const top = Math.min(H * 0.36, topH + (narrow ? 14 : 4)); const bot = narrow ? 56 : H < 560 ? 64 : mode === 'cap' || mode === 'card' ? 138 : 78; const r = { x0: 12, x1: W - (narrow ? 12 : 44), y0: top, y1: H - bot };
+if (mode === 'cap' || mode === 'card') { if (narrow) { if (mode === 'card') { r.y1 = boxHpx * 0.52 - 8; r.y0 += 10; } else r.y1 = H - Math.max(250, H * 0.4) - 6; } else r.x0 = Math.min(W * 0.42, 540); }
 if (r.y1 - r.y0 < 140) r.y1 = r.y0 + 140;
 return r;
 };
 const camFor = (px, py, k, r) => ({ x: px - ((r.x0 + r.x1) / 2 - W / 2) / k, y: py - ((r.y0 + r.y1) / 2 - H / 2) / k, k });
 const fitK = (b, r, pad) => Math.min(K_MAX, (r.x1 - r.x0 - pad * 2) / (b.x1 - b.x0), (r.y1 - r.y0 - pad * 2) / (b.y1 - b.y0));
 const fitBox = (b, r, pad) => camFor((b.x0 + b.x1) / 2, (b.y0 + b.y1) / 2, fitK(b, r, pad), r);
-const realmBox = (r) => ({ x0: r.cx - r.hw, x1: r.cx + r.hw, y0: r.cy - r.hh - 50, y1: r.cy + r.hh + 10 });
+const realmBox = (r) => ({ x0: r.ov.cx - r.rl.hw, x1: r.ov.cx + r.rl.hw, y0: r.ov.cy - r.rl.hh - TITLE, y1: r.ov.cy + r.rl.hh + 10 });
+const camOfRealm = (r) => { const rr = freeRect('none'); const b = realmBox(r); return camFor((b.x0 + b.x1) / 2, (b.y0 + b.y1) / 2, clamp(Math.max(fitK(b, rr, padOf()), narrow ? 0.62 : 0.5), kMin, K_MAX), rr); };
 const clampCam = (c) => {
 c.k = clamp(c.k, kMin, K_MAX); const mx = W / 2 / c.k * 0.35; const my = H / 2 / c.k * 0.35;
 c.x = clamp(c.x, box.x0 - mx, box.x1 + mx); c.y = clamp(c.y, box.y0 - my, box.y1 + my); return c;
@@ -94,17 +170,18 @@ flight = { t0: performance.now(), dur: (sec || clamp(0.9 + d / 900, 1.1, 2.6)) *
 vel.x = vel.y = 0; wake();
 };
 const stopFlight = () => { if (flight) { flight = null; Object.assign(to, cam); } };
-let faces = null; let cell = 0; const cols = +sky.dataset.cols || 10; let hd = !sky.dataset.atlasHd;
+let faces = null; let cell = 0; const cols = +sky.dataset.cols || 10; let hd = !sky.dataset.atlasHd; let xl = !sky.dataset.atlasXl;
 const loadFaces = (src) => {
 if (!src) return; const ok = (pic) => { if (faces && faces.width >= pic.width) return; faces = pic; cell = pic.width / cols; bakeAll(); };
 const plain = () => { const im = new Image(); im.decoding = 'async'; im.onload = () => ok(im); im.src = src; };
 if (window.createImageBitmap && window.fetch) fetch(src).then((r) => (r.ok ? r.blob() : Promise.reject())).then((bl) => createImageBitmap(bl)).then(ok, plain); else plain();
 };
 const wantHd = () => { if (hd) return; hd = true; setTimeout(() => (window.requestIdleCallback || setTimeout)(() => loadFaces(sky.dataset.atlasHd)), 400); };
+const wantXl = () => { if (xl) return; xl = true; (window.requestIdleCallback || setTimeout)(() => loadFaces(sky.dataset.atlasXl)); };
 on(sky, 'pointerup', wantHd, { capture: true, passive: true }); on(sky, 'keyup', wantHd, { capture: true, passive: true });
-const SPR = { legend: 184, lead: 144, cast: 116 };
+const SPR = { legend: 256, lead: 224, cast: 192 };
 let baking = 0;
-const bake = (n) => { n.spr = paint(n, Math.round(SPR[n.tier] * (dpr >= 1.75 ? 1 : 0.8)), n.spr); n.sm = paint(n, 44, n.sm); };
+const sprD = (n) => (Q >= 1 && dpr < 1.75 ? 136 : Math.round(SPR[n.tier] * (dpr >= 1.75 ? 1 : 0.8))); const bake = (n) => { n.spr = paint(n, sprD(n), n.spr); n.sm = paint(n, 44, n.sm); };
 const paint = (n, D, old) => {
 const c = old && old.width === D ? old : document.createElement('canvas'); c.width = c.height = D; const g = c.getContext('2d'); g.clearRect(0, 0, D, D); g.imageSmoothingQuality = 'high';
 const r = D / 2 - 1; const rw = Math.max(1.6, D * 0.016, D < 60 ? 3 : 0);
@@ -113,7 +190,14 @@ if (faces && n.cell >= 0) g.drawImage(faces, (n.cell % cols) * cell, Math.floor(
 const gr = g.createRadialGradient(D / 2, D / 2, r * 0.6, D / 2, D / 2, r); gr.addColorStop(0, 'rgba(8,4,12,0)'); gr.addColorStop(1, 'rgba(8,4,12,.42)'); g.fillStyle = gr; g.fillRect(0, 0, D, D); g.restore();
 g.beginPath(); g.arc(D / 2, D / 2, r - rw * 0.5, 0, TAU); g.strokeStyle = n.light; g.globalAlpha = 0.9; g.lineWidth = rw; g.stroke(); return c;
 };
+const bigs = []; let bigTick = 0;
+const bigOf = (n, need) => {
+if (!faces) return null; n.bu = bigTick; if (n.big && n.big.width >= need) return n.big;
+const D = Math.min(640, Math.ceil(need * 1.12 / 64) * 64); if (!n.big) { bigs.push(n); if (bigs.length > 14) { let o = bigs[0]; for (const q of bigs) if (q.bu < o.bu) o = q; bigs.splice(bigs.indexOf(o), 1); if (o.big) o.big.width = 0; o.big = null; } }
+n.big = paint(n, D, n.big); return n.big;
+};
 const bakeAll = () => {
+for (const o of bigs) { if (o.big) o.big.width = 0; o.big = null; } bigs.length = 0;
 const job = ++baking; let i = 0; const some = () => { if (job !== baking) return; for (const end = Math.min(nodes.length, i + 12); i < end; i++) bake(nodes[i]); wake(); if (i < nodes.length) requestAnimationFrame(some); };
 some();
 };
@@ -130,11 +214,11 @@ const NEB = { ramayana: [[255, 140, 52], [208, 54, 38]], mahabharata: [[74, 92, 
 const blobCache = {};
 const blobOf = (rgb) => { const k = rgb.join(','); return blobCache[k] || (blobCache[k] = sprite(256, 256, (g) => { for (const [x, y, rr, a] of [[128, 128, 128, 0.9], [92, 104, 90, 0.55], [168, 150, 80, 0.5]]) { const gr = g.createRadialGradient(x, y, 0, x, y, rr); gr.addColorStop(0, `rgba(${k},${a})`); gr.addColorStop(0.5, `rgba(${k},${a * 0.38})`); gr.addColorStop(1, `rgba(${k},0)`); g.fillStyle = gr; g.fillRect(0, 0, 256, 256); } })); };
 const blobs = [];
-{ const R = rng(7); for (const r of realms) { const tn = NEB[r.id] || NEB.gods; for (let j = 0; j < 3; j++) blobs.push({ r, tint: tn[j % 2], rx: (R() - 0.5) * r.hw * (j ? 1.3 : 0.5), ry: (R() - 0.5) * r.hh * (j ? 1.1 : 0.4), rad: Math.max(r.hw, r.hh) * (j === 0 ? 1.28 : j === 1 ? 0.95 : 0.72), asp: 0.7 + R() * 0.3, rot: R() * TAU, rv: (R() - 0.5) * 0.012, a: j === 0 ? 0.2 : 0.15, ds: 0.03 + R() * 0.03, ph: R() * TAU }); } }
-const font = getComputedStyle(sky.querySelector('.st-h1')).fontFamily; const SIZE = { legend: hi ? 16.5 : 15.5, lead: hi ? 15 : 14, cast: hi ? 14 : 13 };
+{ const R = rng(7); for (const r of realms) { const tn = NEB[r.id] || NEB.gods; for (let j = 0; j < 3; j++) blobs.push({ r, tint: tn[j % 2], fx: (R() - 0.5) * (j ? 1.3 : 0.5), fy: (R() - 0.5) * (j ? 1.1 : 0.4), rx: 0, ry: 0, rf: j === 0 ? 1.28 : j === 1 ? 0.95 : 0.72, rad: 1, asp: 0.7 + R() * 0.3, rot: R() * TAU, rv: (R() - 0.5) * 0.012, a: j === 0 ? 0.2 : 0.15, ds: 0.03 + R() * 0.03, ph: R() * TAU }); } }
+const font = getComputedStyle(sky.querySelector('.st-h1')).fontFamily; const SIZE = { legend: hi ? 17.5 : 15.5, lead: hi ? 16 : 14, cast: hi ? 15 : 13 };
 let labels = null; let labelJob = 0; let labelDpr = 0;
 const makeLabels = () => {
-const job = ++labelJob; const s = Math.min(2, dpr); labelDpr = dpr; const rowH = hi ? 30 : 24; const SH = 1024 / s; const c = document.createElement('canvas'); c.width = 1024; c.height = Math.ceil(rowH * s * 20); const g = c.getContext('2d');
+const job = ++labelJob; const s = Math.min(2, dpr); labelDpr = dpr; const rowH = hi ? 32 : 24; const SH = 1024 / s; const c = document.createElement('canvas'); c.width = 1024; c.height = Math.ceil(rowH * s * 28); const g = c.getContext('2d');
 g.scale(s, s); g.textBaseline = 'middle'; g.textAlign = 'center'; g.lineJoin = 'round'; g.lineWidth = 3.5; g.strokeStyle = 'rgba(8,5,12,.85)'; g.fillStyle = '#f6ead9'; let x = 0; let y = 0; let i = 0; const lab = [];
 const some = () => {
 if (job !== labelJob) return;
@@ -169,6 +253,7 @@ if (p >= 0.999) return ctx.quadraticCurveTo(e.mx, e.my, x1, y1);
 const u = 1 - p; ctx.quadraticCurveTo(x0 + (e.mx - x0) * p, y0 + (e.my - y0) * p, u * u * x0 + 2 * u * p * e.mx + p * p * x1, u * u * y0 + 2 * u * p * e.my + p * p * y1);
 };
 const QP4 = [0, 0, 0, 0]; const qpt = (e, t) => { const u = 1 - t; QP4[0] = u * u * e.ax + 2 * u * t * e.mx + t * t * e.bx; QP4[1] = u * u * e.ay + 2 * u * t * e.my + t * t * e.by; QP4[2] = 2 * u * (e.mx - e.ax) + 2 * t * (e.bx - e.mx); QP4[3] = 2 * u * (e.my - e.ay) + 2 * t * (e.by - e.my); return QP4; };
+const labAt = (n, ci, f) => { const L = n.lab; const r = n.dr * (n === f ? 1.1 : 1); return ci === 0 ? [n.px - L.w / 2, n.py + r + 5] : ci === 1 ? [n.px - L.w / 2, n.py - r - 5 - L.h] : ci === 2 ? [n.px + r - 5, n.py - L.h / 2] : [n.px - r + 5 - L.w, n.py - L.h / 2]; };
 const edgeA = (x0, x1) => { const g = Math.min(W * 0.05, 36); return clamp01((Math.min(x0, W - x1) - g * 0.4) / g); };
 const byRank = [...nodes].sort((a, b) => b.r - a.r || a.i - b.i); const titles = []; const placed = [];
 const glow = document.createElement('canvas'); const gx = glow.getContext('2d'); let glowS = 3; let capR = null; let capF = 0; let introT = 0; let introDone = false; let introFast = false; let introHold = 0; let comets = []; let ripples = []; let shoot = null; let shootAt = 0;
@@ -176,12 +261,13 @@ const ptr = { x: 0, y: 0, tx: 0, ty: 0 }; const rwid = {};
 const rnd = rng(5); const rndr = Math.random;
 const draw = (now, dt, still) => {
 const t = still ? 0 : now / 1000; const k = cam.k; const f = focusOf(); const d = dpr;
-ctx.setTransform(d, 0, 0, d, 0, 0); ctx.clearRect(0, 0, W, H); ctx.imageSmoothingQuality = 'medium';
+bigTick++; ctx.setTransform(d, 0, 0, d, 0, 0); ctx.clearRect(0, 0, W, H); ctx.imageSmoothingQuality = Q >= 1 ? 'low' : 'medium';
 const intro = still || introDone ? 1 : clamp01(introT / 6.2); const neb = still || introDone ? 1 : clamp01((introT - 0.9) / 3.2); const ia = still || introDone ? 1 : clamp01((introT - 1.6) / 1.2); const capA = cap.classList.contains('is-in') && capR ? 1 : 0; capF += (capA - capF) * (still ? 1 : Math.min(1, dt * 3));
 for (const n of nodes) {
 const fl = still ? 0 : 3 / k * 0.85; const dx = Math.sin(t * n.sp + n.ph) * fl; const dy = Math.cos(t * n.sp * 0.8 + n.ph * 1.7) * fl;
 n.px = sx(n.x + dx); n.py = sy(n.y + dy); n.pr = n.r * k; n.dr = Math.max(n.pr, FLOOR[n.tier]); n.vis = n.px > -n.dr * 3 - 40 && n.px < W + n.dr * 3 + 40 && n.py > -n.dr * 3 - 40 && n.py < H + n.dr * 3 + 40;
 n.under = capF > 0.01 && capR && n.px > capR[0] - n.dr && n.px < capR[0] + capR[2] + n.dr && n.py > capR[1] - n.dr && n.py < capR[1] + capR[3] + n.dr ? 1 - 0.7 * capF : 1;
+if (narrow && sel && n !== sel && n.py - n.dr * 0.7 < topH) n.under *= 0.2;   // a phone's card: nobody half under the chips
 n.in = still || introDone ? 1 : clamp01((introT - n.bt) / 0.75);
 }
 for (const e of edges) {
@@ -245,10 +331,10 @@ if (pr > 12) { const rr = pr * (1.14 + 0.04 * br) * (1 + 0.1 * n.glow); ctx.glob
 if (!still) { for (const n of nodes) { const u = (now - n.pulse) / 1500; if (u < 0 || u > 1 || !n.vis) continue; ctx.globalAlpha = 0.5 * Math.pow(1 - u, 1.6) * n.dim; ctx.lineWidth = 1.5 * (1 - u) + 0.5; ctx.strokeStyle = `rgb(${n.rgb[0]},${n.rgb[1]},${n.rgb[2]})`; ctx.beginPath(); ctx.arc(n.px, n.py, n.dr * (1.08 + 0.85 * easeOut(u)), 0, TAU); ctx.stroke(); } }
 ctx.globalCompositeOperation = 'source-over';
 for (let pass = 0; pass < 2; pass++) for (const n of nodes) {
-if (!n.vis || n.in <= 0.01 || (pass === 0) === (f ? n === f || f.near.has(n.id) : false)) continue;
-const a = n.in * n.dim * n.under * (0.4 + 0.6 * n.realm.a); if (a <= 0.01) continue;
+if (!n.vis || n.px < -n.dr * 1.3 || n.px > W + n.dr * 1.3 || n.py < -n.dr * 1.3 || n.py > H + n.dr * 1.3 || n.in <= 0.01 || (pass === 0) === (f ? n === f || f.near.has(n.id) : false)) continue;
+const a = n.in * n.dim * n.under * (0.3 + 0.7 * n.realm.a); if (a <= 0.01) continue;
 const br = still ? 0 : Math.sin(t * 0.8 + n.ph); const r = n.dr * (1 + 0.012 * br + 0.07 * n.hot + 0.04 * n.glow) * (0.6 + 0.4 * easeBack(n.in));
-const sp = r * 2 * dpr < 76 && n.sm ? n.sm : n.spr; ctx.globalAlpha = a; if (sp) ctx.drawImage(sp, n.px - r, n.py - r, r * 2, r * 2); else { ctx.fillStyle = '#2a1b11'; ctx.beginPath(); ctx.arc(n.px, n.py, r, 0, TAU); ctx.fill(); }
+let sp = r * 2 * dpr < 76 && n.sm ? n.sm : n.spr; if (n === f && sp === n.spr && sp && r * 2 * dpr > sp.width * 1.12) sp = bigOf(n, r * 2 * dpr) || sp; ctx.globalAlpha = a; if (sp) ctx.drawImage(sp, n.px - r, n.py - r, r * 2, r * 2); else { ctx.fillStyle = '#2a1b11'; ctx.beginPath(); ctx.arc(n.px, n.py, r, 0, TAU); ctx.fill(); }
 if (r < 16) { ctx.globalAlpha = a * 0.85; ctx.lineWidth = 1; ctx.strokeStyle = n.light; ctx.beginPath(); ctx.arc(n.px, n.py, r, 0, TAU); ctx.stroke(); }
 }
 if (f && f.vis) { ctx.globalCompositeOperation = 'lighter'; const r = f.dr * 1.1; ctx.globalAlpha = 0.5 + (still ? 0 : 0.2 * Math.sin(t * 1.6)); ctx.lineWidth = 1.6; ctx.strokeStyle = `rgb(${f.rgb[0]},${f.rgb[1]},${f.rgb[2]})`; ctx.beginPath(); ctx.arc(f.px, f.py, r * 1.07, 0, TAU); ctx.stroke(); ctx.globalCompositeOperation = 'source-over'; }
@@ -267,27 +353,34 @@ ctx.beginPath(); ctx.moveTo(bx + dx * 9, by + dy * 9); ctx.lineTo(bx - dx * 5 - 
 }
 }
 titles.length = 0; placed.length = 0;
-const far = clamp01((home.k * 1.5 - k) / (home.k * 0.5)); const ta = far * 0.5 * (f ? 0.3 : 1) * clamp01(intro * 3 - 1.4);
+const far = clamp01((rest.k * 1.5 - k) / (rest.k * 0.5)); const ta = far * 0.5 * (f ? 0.3 : 1) * clamp01(intro * 3 - 1.4);
 if (ta > 0.01) {
 const base = Math.max(13, Math.min(narrow ? 21 : 30, 40 * k)); ctx.fillStyle = `rgb(${GOLD})`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.font = `500 ${base.toFixed(1)}px ${font}`; try { ctx.letterSpacing = hi ? '0px' : '0.16em'; } catch (e) {}
-for (const r of realms) { const s = hi ? r.name : r.name.toUpperCase(); const ck = s + base.toFixed(1); const w = (rwid[ck] || (rwid[ck] = ctx.measureText(s).width)) + 10; const x = sx(r.cx); const y = sy(r.cy - r.hh - 30); const a = ta * r.a * edgeA(x - w / 2, x + w / 2) * clamp01((y - base - topH) / 12) * clamp01((H - 80 - y) / 12); if (a < 0.02) continue; ctx.globalAlpha = a; ctx.lineJoin = 'round'; ctx.lineWidth = 6; ctx.strokeStyle = 'rgba(8,5,16,.88)'; ctx.strokeText(s, x, y); ctx.fillText(s, x, y); titles.push([x - w / 2, y - base / 2, w, base]); }
+for (const r of realms) { const s = hi ? r.name : r.name.toUpperCase(); const ck = s + base.toFixed(1); const w = (rwid[ck] || (rwid[ck] = ctx.measureText(s).width)) + 10; const x0 = sx(r.cx); const xc = clamp(x0, w / 2 + 10, W - w / 2 - 10); const x = Math.abs(xc - x0) < w * 0.7 ? xc : x0; const y = sy(r.cy - r.hh - (TITLE - 20)); const a = ta * r.a * edgeA(x - w / 2, x + w / 2) * clamp01((y - base - topH) / 12) * clamp01((H - 80 - y) / 12); if (a < 0.02) continue; ctx.globalAlpha = a; ctx.lineJoin = 'round'; ctx.lineWidth = 6; ctx.strokeStyle = 'rgba(8,5,16,.88)'; ctx.strokeText(s, x, y); ctx.fillText(s, x, y); titles.push([x - w / 2, y - base / 2, w, base]); }
 try { ctx.letterSpacing = '0px'; } catch (e) {}
 }
 if (labels) {
 for (const p of titles) placed.push(p);
+if (narrow && sel) placed.push([0, boxHpx * 0.52 - 6, W, 400]);   // a phone's card holds the lower half: no name is set across its edge
 for (const q of ctlRects) placed.push(q); if (capR && capF > 0.01) placed.push(capR);
 const order = f ? [f, ...f.kinL, ...f.nearL] : byRank; const sfar = 1;
-for (const n of nodes) n.want = 0;
+for (const n of nodes) n.want = 0; let nl = 0; const lmax = f || !narrow ? 99 : k < home.k * 1.35 ? 8 : 12;   // (a phone's whole sky names only the few best known; a realm, a dozen)
 for (const n of order) {
-if (!n.vis || n.in < 0.5) continue; if (!f && n.tier === 'cast' && n.pr < 15) continue; if (!f && n.tier === 'lead' && n.pr < 13) continue; if (!f && n.pr < 12) continue; if (f && n !== f && (n.pr < 9 || n.dim < 0.4)) continue;
-const L = n.lab; if (!L) continue; const r = n.dr * (n === f ? 1.1 : 1); const lx = n.px - L.w / 2; const ly = n.py + r + 5;
-const la = (f ? 1 : n.realm.a) * edgeA(lx + 4, lx + L.w - 4) * clamp01((ly + 4 - topH) / 8) * clamp01((H - 60 - ly - L.h + 4) / 8); if (la < 0.05) continue;
-const ty = ly + L.h / 2 - 7; let ok = true; for (const p of placed) if (hit(lx, ty, L.w, 14, p[0], p[1], p[2], p[3])) { ok = false; break; }
-if (ok && n !== f) for (const m of nodes) if (m !== n && m.vis && m.in > 0.3 && hit(lx + 6, ty + 1, L.w - 12, 12, m.px - m.dr * 0.9, m.py - m.dr * 0.9, m.dr * 1.8, m.dr * 1.8)) { ok = false; break; }
-if (!ok) continue; placed.push([lx, ty, L.w, 14]); n.want = la;
+if (nl >= lmax) break; if (!n.vis || n.in < 0.5) continue; if (!f && n.tier === 'cast' && n.pr < 15) continue; if (!f && n.tier === 'lead' && n.pr < 13) continue; if (!f && n.pr < 12) continue; if (f && n !== f && (n.pr < 9 || n.dim < 0.4)) continue;
+const L = n.lab; if (!L) continue; let done = false;
+const seq = n.lci > 0 ? [n.lci, 0, 1, 2, 3] : [0, 1, 2, 3];
+for (let pas = 0; pas < 2 && !done; pas++) for (const ci of seq) {
+const cp = labAt(n, ci, f); const lx = cp[0]; const ly = cp[1];
+const la = (f ? 1 : n.realm.a) * edgeA(lx + 4, lx + L.w - 4) * clamp01((ly + 4 - topH) / 8) * clamp01((H - 60 - ly - L.h + 4) / 8); if (la < (pas ? 0.5 * (f ? 1 : n.realm.a) : 0.9 * (f ? 1 : n.realm.a))) continue;
+const ty = ly + L.h / 2 - 7; let ok = true; for (const p of placed) if (hit(lx - 3, ty - 3, L.w + 6, 20, p[0], p[1], p[2], p[3])) { ok = false; break; }
+const mg = ci === 0 ? 0 : ci === 1 ? 4 : 10;
+if (ok && n !== f) for (const m of nodes) if (m !== n && m.vis && m.in > 0.3 && hit(lx + 6 - mg, ty + 1 - mg, L.w - 12 + mg * 2, 12 + mg * 2, m.px - m.dr * 0.9, m.py - m.dr * 0.9, m.dr * 1.8, m.dr * 1.8)) { ok = false; break; }
+if (!ok) continue; placed.push([lx, ty, L.w, 14]); n.want = la; n.lci = ci; done = true; nl++; break;
+}
+if (!done) n.lci = 0;
 }
 for (const n of nodes) {
-n.la += (n.want - n.la) * (still ? 1 : Math.min(1, dt * 7)); if (n.la < 0.03 || !n.vis) continue; const L = n.lab; const r = n.dr * (n === f ? 1.1 : 1); const lx = n.px - L.w / 2; const ly = n.py + r + 5;
+n.la += (n.want - n.la) * (still ? 1 : Math.min(1, dt * 7)); if (n.la < 0.03 || !n.vis) continue; const L = n.lab; const cp = labAt(n, n.lci, f); const lx = cp[0]; const ly = cp[1];
 ctx.globalAlpha = n.la * n.in * (f ? (n === f || f.kin.has(n.id) ? 1 : 0.72) : 1) * Math.max(0.5, n.dim); ctx.drawImage(labels.c, L.x * labels.s, L.y * labels.s, L.w * labels.s, L.h * labels.s, lx, ly, L.w, L.h);
 }
 }
@@ -341,11 +434,12 @@ let raf = 0; let last = 0; let shown = true; let dirty = true; let ema = 16; let
 const wake = () => { dirty = true; if (!raf && shown) raf = requestAnimationFrame(frame); };
 const ctlRects = [];
 const update = (now, dt, still) => {
+if (morphBusy()) { const step = still ? 1 : dt / 1.1; for (const r of realms) { const tg = r === unf ? 1 : 0; r.m = r.m < tg ? Math.min(tg, r.m + step) : Math.max(tg, r.m - step * 1.2); } morph(); }
 if (!introDone) {
 const hold = !faces && introT > 1.05 && introHold < 3.5 && !introFast; if (hold) introHold += dt; else introT += dt * (introFast ? 6 : 1);
 if (introT >= 5.7 || still) { introDone = true; introT = 7; }
 }
-if (!hd && cam.k > 1.3) wantHd();
+if (!hd && cam.k > 1.3) wantHd(); if (!xl && introDone && (cam.k > 1.4 || sel || wander.run)) wantXl();
 if (flight) {
 let s = clamp01((now - flight.t0) / flight.dur); const e = flight.out ? easeOut(s) : ss(s); const F = flight; const k = Math.exp(lerp(Math.log(F.from.k), Math.log(F.to.k), e)) * (1 - F.bump * Math.sin(PI * e));
 if (F.edge) { const p = bez(F.edge, F.rev ? 1 - e : e); const c = camFor(p.x, p.y, k, F.r || freeRect(panel)); cam.x = c.x; cam.y = c.y; cam.k = c.k; }
@@ -360,12 +454,12 @@ if (Math.abs(dx) * cam.k > 0.15 || Math.abs(dy) * cam.k > 0.15 || Math.abs(dk) >
 const f = focusOf(); const tf = f ? 1 : 0; const tour = wander.run && wander.nxt && f === wander.fnode; fs += (tf - fs) * (still ? 1 : Math.min(1, dt * 2.4));
 const rate = still ? 1 : Math.min(1, dt * 3);
 for (const n of nodes) { const lit = !f || n === f || f.near.has(n.id); const tg = !lit ? 0.25 : tour && n !== f && n !== wander.nxt ? 0.55 : 1; n.dim += (tg - n.dim) * (tg > n.dim ? rate : rate * 0.6); n.hot += ((n === f ? 1 : 0) - n.hot) * (n === f ? rate * 1.2 : rate * 0.7); n.glow = still ? 0 : n.glow * Math.exp(-dt * 1.5); if (Math.abs(n.dim - tg) < 0.004) n.dim = tg; if (n.hot < 0.003 && n !== f) n.hot = 0; }
-for (const r of realms) { const tg = !fr || r === fr ? 1 : 0.3; r.a += (tg - r.a) * (still ? 1 : Math.min(1, dt * 4)); if (Math.abs(r.a - tg) < 0.004) r.a = tg; }
+for (const r of realms) { const tg = !fr || r === fr ? 1 : 0.16; r.a += (tg - r.a) * (still ? 1 : Math.min(1, dt * 4)); if (Math.abs(r.a - tg) < 0.004) r.a = tg; }
 if (!still && !coarse) { ptr.x += (ptr.tx - ptr.x) * Math.min(1, dt * 2.2); ptr.y += (ptr.ty - ptr.y) * Math.min(1, dt * 2.2); } else { ptr.x = ptr.y = 0; }
 if (!still && introDone) { if (!nextWave) nextWave = now + 12000; else if (now > nextWave) { wave(now); nextWave = now + 26000 + rndr() * 18000; } wavePulse(now); }
 wTick(now, still);
 };
-const moving = () => flight || vel.x * vel.x + vel.y * vel.y > 4 || Math.abs(to.x - cam.x) * cam.k > 0.15 || Math.abs(to.y - cam.y) * cam.k > 0.15 || Math.abs(to.k - cam.k) > 0.0004;
+const moving = () => flight || morphBusy() || vel.x * vel.x + vel.y * vel.y > 4 || Math.abs(to.x - cam.x) * cam.k > 0.15 || Math.abs(to.y - cam.y) * cam.k > 0.15 || Math.abs(to.k - cam.k) > 0.0004;
 const frame = (now) => {
 raf = 0; if (!shown) return;
 const q = QP[Q]; const gap = now - last;
@@ -376,7 +470,7 @@ const dt = Math.min(0.05, Math.max(0.001, (last ? gap : 16) / 1000)); last = now
 const still = calm(); if (still !== wasCalm) calmChanged(still);
 update(now, dt, still);
 if (!still || dirty || moving()) { draw(now, dt, still); dirty = false; }
-if (!still && introT > 1.5 && gap < 250) { ema += (gap - ema) * 0.08; if (ema > (fcap ? 1000 / fcap * 1.7 : 24)) slow++; else slow = Math.max(0, slow - 2); if (slow > 24 && Q < QP.length - 1 && now - lastQ > 2500) { Q++; lastQ = now; slow = 0; ema = 16; applyQ(); } }
+if (!still && introT > 1.5 && gap < 250) { ema += (gap - ema) * 0.08; if (ema > (fcap ? 1000 / fcap * 1.25 : 24)) slow++; else slow = Math.max(0, slow - 2); if (slow > 24 && Q < QP.length - 1 && now - lastQ > 2500) { Q++; lastQ = now; slow = 0; ema = 16; applyQ(); } }
 if (shown && !raf && (!still || dirty || moving())) raf = requestAnimationFrame(frame);
 };
 const applyQ = () => { size(true); dustInit(); comets.length = 0; };
@@ -397,22 +491,24 @@ const size = (force) => {
 const r = stage.getBoundingClientRect(); if (!r.width || !r.height) return;
 const d0 = Math.min(QP[Q].dpr, window.devicePixelRatio || 1); const d = Math.min(d0, Math.sqrt(QP[Q].px / (r.width * r.height)));
 if (!force && r.width === W && r.height === H && d === dpr) return;
-const was = W; W = r.width; H = r.height; dpr = d; cv.width = Math.round(W * d); cv.height = Math.round(H * d); narrow = W <= 700; glowS = Q >= 2 ? 4 : 3; glow.width = Math.ceil(W / glowS); glow.height = Math.ceil(H / glowS); gx.imageSmoothingQuality = 'low';
+const was = W; boxHpx = boxEl.getBoundingClientRect().height || r.height; W = r.width; H = r.height; dpr = d; cv.width = Math.round(W * d); cv.height = Math.round(H * d); narrow = W <= 700; FLOOR = narrow ? FLOORS.narrow : FLOORS.wide; glowS = Q >= 2 ? 4 : 3; glow.width = Math.ceil(W / glowS); glow.height = Math.ceil(H / glowS); gx.imageSmoothingQuality = 'low';
 { const tr = topEl.getBoundingClientRect(); const br = boxEl.getBoundingClientRect(); topH = Math.max(56, Math.round(tr.top - br.top + [...topEl.children].reduce((m, c) => Math.max(m, c.getBoundingClientRect().bottom - tr.top), 0) + 6)); }
 ctlRects.length = 0; for (const el of sky.querySelectorAll('.st-ctl, .st-wander, .st-cue')) { const z = el.getBoundingClientRect(); const s = stage.getBoundingClientRect(); ctlRects.push([z.left - s.left - 6, z.top - s.top - 6, z.width + 12, z.height + 12]); }
-const w = W > H * 1.15; const rearr = w !== wide;
-if (rearr) { wide = w; arrange(); }
-kMin = fitK(box, freeRect('none'), 12) * 0.9; const hm = fitBox(box, freeRect('none'), 14); hm.k = Math.min(hm.k, narrow ? 0.9 : 1.1); Object.assign(home, camFor((box.x0 + box.x1) / 2, (box.y0 + box.y1) / 2, hm.k, freeRect('none')));
+wide = W > H * 1.15; arrange(); const rearr = layoutKey !== lastKey; lastKey = layoutKey;
+kMin = fitK(ovBox, freeRect('none'), padOf()) * 0.9; const hm = fitBox(ovBox, freeRect('none'), padOf()); hm.k = Math.min(hm.k, narrow ? 1.3 : 1.6); Object.assign(home, camFor((ovBox.x0 + ovBox.x1) / 2, (ovBox.y0 + ovBox.y1) / 2, hm.k, freeRect('none')));
+{ const rr = freeRect('none'); const b = realmBox(realms[0]); const kr = clamp(fitK(b, rr, padOf()), kMin, K_MAX); restRealm = !wide && home.k * 54 < 46 && kr > home.k * 1.2 ? realms[0] : null;
+Object.assign(rest, restRealm ? camFor((b.x0 + b.x1) / 2, (b.y0 + b.y1) / 2, kr, rr) : home); }
+if (first || (atHome && homeSel !== 'sky')) setUnf(restRealm, true); else if (atHome) setUnf(null, true); else setUnf(unf, true);
 if (first) {
 first = false; const calmNow = calm(); sky.classList.toggle('is-calm', calmNow); wasCalm = calmNow;
-Object.assign(cam, home); Object.assign(to, home); if (!calmNow) { cam.k = home.k * 0.82; flight = { t0: performance.now(), dur: 4600, from: { x: cam.x, y: cam.y, k: cam.k }, to: { x: home.x, y: home.y, k: home.k }, bump: 0, edge: null, rev: false, out: true, done: null, r: null }; }
+Object.assign(cam, rest); Object.assign(to, rest); if (restRealm) quietRealm(restRealm); if (!calmNow) { cam.k = rest.k * 0.82; flight = { t0: performance.now(), dur: 4600, from: { x: cam.x, y: cam.y, k: cam.k }, to: { x: rest.x, y: rest.y, k: rest.k }, bump: 0, edge: null, rev: false, out: true, done: null, r: null }; }
 else { introDone = true; introT = 7; }
 if (document.fonts && document.fonts.status !== 'loaded') document.fonts.ready.then(makeLabels); else makeLabels();
 dustInit(); bakeAll();
-loadFaces(sky.dataset.atlas); if (Q < 2 && !coarse) (window.requestIdleCallback || setTimeout)(wantHd);
+loadFaces(sky.dataset.atlas); if (Q < 2) (window.requestIdleCallback || setTimeout)(wantHd);
 } else {
-if (rearr || atHome) { stopFlight(); Object.assign(to, home); Object.assign(cam, home); } else if (sel) { fly(nodeCam(sel), 0.6); } else clampCam(to);
-dustInit(); if (labelDpr !== dpr) makeLabels(); if (nodes[0].spr && nodes[0].spr.width !== Math.round(SPR[nodes[0].tier] * (dpr >= 1.75 ? 1 : 0.8))) bakeAll();
+if (rearr || atHome) { stopFlight(); const g = !atHome && unf ? camOfRealm(unf) : homeSel === 'sky' ? home : rest; Object.assign(to, g); Object.assign(cam, g); } else if (sel) { fly(nodeCam(sel), 0.6); } else clampCam(to);
+dustInit(); if (labelDpr !== dpr) makeLabels(); if (nodes[0].spr && nodes[0].spr.width !== sprD(nodes[0])) bakeAll();
 }
 wake();
 };
@@ -452,26 +548,31 @@ card.append(el('span', 'st-card-fade')); moreCheck();
 const moreCheck = () => { card.classList.toggle('is-more', card.scrollHeight - card.clientHeight - card.scrollTop > 6); };
 on(card, 'scroll', moreCheck, { passive: true }); on(window, 'resize', moreCheck);
 const say = (s) => { live.textContent = ''; setTimeout(() => { live.textContent = s; }, 60); };
+const TPX = { legend: 96, lead: 84, cast: 74 }; const scOf = () => clamp(Math.min(W, H) / 780, 0.75, 1.15);
 const nodeK = (n, nxt, r) => {
-const px = (n.tier === 'legend' ? 66 : n.tier === 'lead' ? 56 : 48) * clamp(Math.min(W, H) / 780, 0.72, 1.12); let k = Math.min(K_MAX, px / n.r);
-if (nxt) { const dx = Math.abs(nxt.x - n.x) || 1; const dy = Math.abs(nxt.y - n.y) || 1; const kf = Math.min(0.42 * (r.x1 - r.x0) / dx, 0.42 * (r.y1 - r.y0) / dy); k = Math.min(k, Math.max(kf, 0.9 * clamp(Math.min(W, H) / 780, 0.72, 1.12))); }
+let px = TPX[n.tier] * (narrow ? clamp(Math.min(W, H) / 780, 0.92, 1.15) : scOf()); if (narrow && r && !nxt) px = Math.min(px, 0.41 * (r.y1 - r.y0)); let k = Math.min(K_MAX, px / n.r);
+if (nxt) { const dx = Math.abs(nxt.x - n.x) || 1; const dy = Math.abs(nxt.y - n.y) || 1; const kf = Math.min(0.42 * (r.x1 - r.x0) / dx, 0.42 * (r.y1 - r.y0) / dy); k = Math.min(k, Math.max(kf, 0.78 * px / n.r)); }
 return Math.max(k, kMin);
 };
 const nodeCam = (n, nxt, mode, hopNo) => {
 const r = freeRect(mode || panel);
 if (!nxt || mode !== 'cap') return camFor(n.x, n.y, nodeK(n, nxt, r), r);
-const sc = clamp(Math.min(W, H) / 780, 0.72, 1.12); const pad = (n.tier === 'legend' ? 78 : 66) * sc;
-const dx = Math.abs(nxt.x - n.x) || 1; const dy = Math.abs(nxt.y - n.y) || 1; const kfit = Math.min((r.x1 - r.x0 - 2 * pad) / dx, (r.y1 - r.y0 - 2 * pad) / dy);
-const wide = (hopNo | 0) % 3 === 0; const kc = (n.tier === 'legend' ? 66 : n.tier === 'lead' ? 56 : 48) * sc / n.r;
-const k = Math.max(kMin, Math.min(K_MAX, wide ? Math.max(kfit * 0.7, 0.5 * sc) : Math.max(Math.min(kfit, kc * 1.15), 0.62 * sc)));
-return camFor(lerp(n.x, nxt.x, 0.5), lerp(n.y, nxt.y, 0.5), k, r);
+const sc = scOf(); const kc = TPX[n.tier] * sc / n.r; const m = 18; const hw = (r.x1 - r.x0) / 2; const hh = (r.y1 - r.y0) / 2;
+const dx = Math.abs(nxt.x - n.x) || 1; const dy = Math.abs(nxt.y - n.y) || 1; const re = Math.max(n.r, nxt.r);
+const kfit = Math.min((2 * hw - 2 * m) / (dx + 2 * re), (2 * hh - 2 * m) / (dy + 2 * re));
+const wide = (hopNo | 0) % 3 === 0;
+const k = Math.max(kMin, Math.min(K_MAX, wide ? clamp(kfit * 0.75, 0.58 * kc, 0.9 * kc) : clamp(kfit, (narrow ? 0.78 : 0.7) * kc, 1.1 * kc)));
+const tx = (hw - n.r * k - m) / (dx * k); const ty = (hh - n.r * k - m) / (dy * k); const t = clamp(Math.min(0.5, tx, ty), 0, 0.5);
+return camFor(lerp(n.x, nxt.x, t), lerp(n.y, nxt.y, t), k, r);
 };
 const pressRealm = (id) => { pressed = id; fr = realms.find((r) => r.id === id) || null; remember(); for (const b of sky.querySelectorAll('[data-st-go]')) b.setAttribute('aria-pressed', String(b.dataset.stGo === id)); wake(); };
+const quietRealm = (r) => { pressed = r.id; fr = r; for (const b of sky.querySelectorAll('[data-st-go]')) b.setAttribute('aria-pressed', String(b.dataset.stGo === r.id)); };
 const free = () => { if (pressed) pressRealm(''); };
 const setPanel = (m) => { panel = m; };
-const goHome = () => { pick(null); setPanel('none'); atHome = true; fly(home, 1.8); pressRealm('all'); sky.classList.add('is-used'); };
+const goHome = () => { pick(null); setPanel('none'); setUnf(null); atHome = true; homeSel = 'sky'; fly(home, 1.8); pressRealm('all'); sky.classList.add('is-used'); };
+const goRest = () => { if (restRealm) goRealm(restRealm); else goHome(); };
 const goRealm = (r) => {
-userInput(); pick(null); setPanel('none'); atHome = false; const rr = freeRect('none'); const b = realmBox(r); fly(camFor((b.x0 + b.x1) / 2, (b.y0 + b.y1) / 2, clamp(Math.max(fitK(b, rr, 12), narrow ? 0.62 : 0.5), kMin, K_MAX), rr), 1.7); pressRealm(r.id); sky.classList.add('is-used');
+userInput(); pick(null); setPanel('none'); atHome = false; setUnf(r); fly(camOfRealm(r), 1.7); pressRealm(r.id); sky.classList.add('is-used');
 };
 const remember = () => { try { const u = new URL(location.href); if (sel) u.searchParams.set('p', sel.id); else u.searchParams.delete('p'); if (pressed && pressed !== 'all') u.searchParams.set('r', pressed); else u.searchParams.delete('r'); history.replaceState(history.state, '', u); } catch (e) {} };
 const ripple = (n) => { n.pulse = performance.now(); n.glow = Math.min(1, n.glow + 0.6); };
@@ -561,9 +662,12 @@ if (still) return wStop();
 if (w.mode === 'hold' && w.e && w.cur && now > w.nextC && now - w.t0 < w.hold - 600) { launch(w.e, w.cur, 0, true); w.nextC = now + 1200; }
 if (w.mode === 'hold' && now - w.t0 > w.hold) travel();
 };
+let wDelay = 0;
 const wSoon = () => { wanderBusy = performance.now() + 1200; };
 const wStart = (resume) => {
-const w = wander; if (calm()) return; w.run = true; w.started = true; w.user = false;
+const w = wander; if (calm()) return;
+if (unf) { if (!wDelay) { const li = lastInput; setUnf(null); wDelay = setTimeout(() => { wDelay = 0; if (lastInput === li && !sel && !hover && !pts.size && !wander.run) wStart(resume); }, 850); } return; }
+w.run = true; w.started = true; w.user = false;
 if (sel) { w.cur = sel; pick(null); }
 if (!w.cur && !w.toured) { w.script = ['dasharatha', 'rama', 'sita', 'hanuman'].filter((id) => byId[id]); w.toured = true; }
 const n = w.script && w.script.length ? byId[w.script[0]] : (w.cur || byRank[0]); w.mode = 'fly'; w.fnode = n; setPanel('cap'); pressRealm('all'); atHome = false;
@@ -596,7 +700,7 @@ if (pts.size) { drag = { moved: true, t: performance.now() }; vel.x = vel.y = 0;
 const d = drag; drag = null; if (!d) return;
 if (!d.moved && e.type === 'pointerup') {
 vel.x = vel.y = 0; const n = at(e.clientX, e.clientY, d.touch ? 12 : 4); const now = performance.now();
-if (!n && d.touch && now - tapAt < 330 && Math.hypot(e.clientX - tapX, e.clientY - tapY) < 36) { tapAt = 0; goHome(); }
+if (!n && d.touch && now - tapAt < 330 && Math.hypot(e.clientX - tapX, e.clientY - tapY) < 36) { tapAt = 0; goRest(); }
 else if (n) { tapAt = 0; pick(n); } else { tapAt = now; tapX = e.clientX; tapY = e.clientY; if (sel) pick(null); }
 } else if (performance.now() - d.t > 90 || calm()) vel.x = vel.y = 0;
 ease = 0.22; wake();
@@ -608,7 +712,7 @@ const zoomIn = e.deltaY < 0; const atFar = to.k <= home.k * 1.02 && !flight;
 if (!zoomIn && atFar && !e.ctrlKey && !e.metaKey) return;
 e.preventDefault(); userInput(); const r = stage.getBoundingClientRect(); const dy = e.deltaMode === 1 ? e.deltaY * 16 : e.deltaY; zoomAt(e.clientX - r.left, e.clientY - r.top, Math.exp(-dy * (e.ctrlKey ? 0.011 : 0.0017)), 0.13); sky.classList.add('is-used');
 }, { passive: false });
-on(stage, 'dblclick', (e) => { if (e.pointerType === 'touch') return; if (!at(e.clientX, e.clientY, 4)) goHome(); });
+on(stage, 'dblclick', (e) => { if (e.pointerType === 'touch') return; if (!at(e.clientX, e.clientY, 4)) goRest(); });
 on(stage, 'keydown', (e) => {
 if (e.altKey || e.ctrlKey || e.metaKey || e.key === 'w' || e.key === 'W') return; userInput();
 const dir = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1] }[e.key];
@@ -630,7 +734,7 @@ on(sky, 'click', (e) => {
 const g = e.target.closest('[data-st-go]'); const z = e.target.closest('[data-st-zoom]'); const h = e.target.closest('[data-st-home]'); const v = e.target.closest('[data-st-view]'); const cue = e.target.closest('[data-st-cue]'); const fb = e.target.closest('[data-st-findbtn]');
 if (g) { if (g.dataset.stGo === 'all') { userInput(); goHome(); } else goRealm(realms.find((x) => x.id === g.dataset.stGo)); }
 if (z) { userInput(); zoomAt(W / 2, H / 2, +z.dataset.stZoom > 0 ? 1.4 : 1 / 1.4, 0.3); sky.classList.add('is-used'); }
-if (h) { userInput(); goHome(); }
+if (h) { userInput(); goRest(); }
 if (v) scrollTo(v.dataset.stView === 'wall' ? document.getElementById('cast-wall') : null);
 if (cue) { e.preventDefault(); scrollTo(document.getElementById('cast-wall')); }
 if (fb) { const f2 = fb.closest('.st-find'); f2.classList.add('is-open'); fb.setAttribute('aria-expanded', 'true'); q.focus(); }
@@ -650,11 +754,12 @@ on(window, 'pageshow', (e) => { if (e.persisted) { shown = !document.hidden; las
 try { new MutationObserver(() => wake()).observe(root, { attributes: true, attributeFilter: ['data-motion'] }); } catch (e) {}
 for (const n of nodes) { n.kinL = [...n.kin].map((k) => byId[k]).filter(Boolean); n.nearL = [...n.near].filter((k) => !n.kin.has(k)).map((k) => byId[k]).filter(Boolean); n.want = 0; }
 for (const b of sky.querySelectorAll('[data-st-go]')) b.setAttribute('aria-pressed', String(b.dataset.stGo === 'all')); pressed = 'all';
+sky.stProbe = () => ({ arr: arrangeInfo, restRealm: restRealm && restRealm.id, restK: rest.k, W, H, k: cam.k, home: home.k, wander: wander.run && wander.mode, fnode: wander.fnode && wander.fnode.id, nodes: nodes.map((n) => ({ id: n.id, tier: n.tier, x: n.px, y: n.py, d: n.dr * 2, vis: n.vis, in: n.in })) });
 size(false); wLabel();
 { let pid = null; let rid = null; try { const u = new URL(location.href); pid = u.searchParams.get('p'); rid = u.searchParams.get('r'); } catch (e) {}
 if ((pid && byId[pid]) || (rid && realms.some((r) => r.id === rid))) sky.classList.add('is-quick');
 if (pid && byId[pid]) { introDone = true; introT = 7; flight = null; wander.started = true; pick(byId[pid], { by: 'link', travel: false }); setCam(nodeCam(byId[pid], null, 'card')); }
-else if (rid && realms.some((r) => r.id === rid)) { introDone = true; introT = 7; flight = null; wander.started = true; goRealm(realms.find((r) => r.id === rid)); const rr = freeRect('none'); const b = realmBox(realms.find((r) => r.id === rid)); setCam(camFor((b.x0 + b.x1) / 2, (b.y0 + b.y1) / 2, clamp(Math.max(fitK(b, rr, 12), narrow ? 0.62 : 0.5), kMin, K_MAX), rr)); }
+else if (rid && realms.some((r) => r.id === rid)) { introDone = true; introT = 7; flight = null; wander.started = true; const rl0 = realms.find((r) => r.id === rid); setUnf(rl0, true); goRealm(rl0); setCam(camOfRealm(rl0)); }
 else wanderBusy = performance.now() + 5800; }
 if (calm()) { sky.classList.add('is-calm'); }
 wLabel(); wake();
