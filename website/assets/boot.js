@@ -45,6 +45,8 @@
   // [type] a language switch that carries the reader's paragraph across (assets/type.js): the story's words wait unseen
   // until they are in place (cinema.css, .ty-arr and .ty-arw, which also show them by themselves if that script never arrives)
   try { var ty = me && me.hasAttribute('data-read') && d.classList.contains('cx-js') && JSON.parse(sessionStorage.getItem('spritual:ty-lang') || 'null'); if (ty && Date.now() - ty.t < 20000 && /#page-\d+$/.test(location.hash)) d.classList.add('ty-arr', 'ty-arw'); } catch (e) {}
+  // ...and whatever happens, neither waits past about 1.2 s from the start of the page: a slow phone never shows a bare painting for long
+  try { if (d.classList.contains('ty-arw')) setTimeout(function () { d.classList.remove('ty-arr', 'ty-arw'); }, Math.max(0, 1200 - performance.now())); } catch (e) {}
   try { if ((navigator.connection && navigator.connection.saveData) || matchMedia('(prefers-reduced-data: reduce)').matches) d.classList.add('ep-lite'); } catch (e) {}
   // The Unbroken Shot (film.js, film.css): a story page is laid out as a film from its first paint, so a reader arriving
   // in the middle of a story never sees the page change under them. Its styles are fetched here, off the critical path.

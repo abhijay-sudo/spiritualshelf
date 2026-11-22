@@ -1138,3 +1138,8 @@ html[lang="hi"] .intertitle span { font-style: normal; font-family: var(--font-h
 .kp-can .kp--hero { display: block; visibility: hidden; box-sizing: border-box; width: min(100%, 17.5rem); min-height: 44px; margin: .95rem auto 0; }
 .kp-can .kp--hero.is-live { visibility: visible; }
 @media (max-width: 759px) { .kp-can .kp--hero { margin-top: .8rem; } }
+/* [comfort] the one line that says why Colour is held while Night Lamp is lit (every page's sheet carries it) */
+.cmf-wait { display: none; margin: .4rem 0 0; font-size: .86rem; }
+:root[data-lamp="on"] .cmf-wait { display: block; }
+.cmf-lamp-note { margin: .45rem 0 0; font-size: .86rem; }
+.chip.is-wait { opacity: .45; }

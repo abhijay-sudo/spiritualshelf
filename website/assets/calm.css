@@ -13,9 +13,11 @@
 .ed-lang:focus-visible { outline: 2px solid var(--cx-gold, #f3c47e); outline-offset: 2px; border-radius: 999px; }
 .ed-lang .l-l { display: none; }
 @media (min-width: 760px) { .ed-lang .l-l { display: inline; } .ed-lang .l-s { display: none; } .ed-lang-opt[lang="hi"] { min-width: 3.4rem; } }
+/* on a phone the pill gives up a little width, so the Menu button always stays in the bar (measured at 320, 360, 375) */
+@media (max-width: 420px) { .ed-lang { padding: 0; } .ed-lang-opt { min-width: 1.7rem; padding: 0 .4rem; font-size: .8rem; } .ed-lang-opt[lang="hi"] { font-size: .86rem; } }
 html[lang="hi"] .ed-lang-opt { font-size: .86rem; } html[lang="hi"] .ed-lang-opt[lang="hi"] { font-size: .95rem; }
 /* ...and the same two words on the film's edge strip, stacked */
-.fm-rail .fm-lang { width: 44px; height: auto; min-height: 56px; border-radius: 22px; display: grid; gap: 1px; padding: 5px 0; font: 600 .72rem/1 var(--cx-ui); }
+.fm-rail .fm-lang.fm-lang { box-sizing: border-box; width: 44px; min-width: 44px; height: auto; min-height: 56px; border-radius: 22px; display: grid; gap: 1px; padding: 5px 0; font: 600 .72rem/1 var(--cx-ui); }
 .fm-lang-o { display: block; padding: 4px 0; margin: 0 4px; border-radius: 10px; opacity: .72; text-align: center; transition: background-color var(--d2) var(--ease-lamp), color var(--d2) var(--ease-lamp), opacity var(--d2) var(--ease-lamp); }
 .fm-lang-o[lang="hi"] { font: 600 .84rem/1 "Mukta", var(--cx-ui); }
 .fm-lang-o.is-cur { opacity: 1; background: var(--fm-gold, #e9c98c); color: #1d1007; }

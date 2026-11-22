@@ -2,13 +2,16 @@
 // step with the Reading comfort switch, and is the automatic governor.
 //
 // The governor, last and gentlest: only after the page has loaded, only while the reader is scrolling, and only when
-// three stretches of scrolling in a row (thirty frames each) drop many frames. Then the motion rests for this tab (Light mode, data-light="auto") and a kind
+// two stretches of scrolling in a row (thirty frames each) drop many frames. Then the motion rests for this tab (Light mode, data-light="auto") and a kind
 // note says so, with one touch to bring it back. What is kept: the single word "rest" or "back" in this tab's
 // sessionStorage, so the next page of the tab starts as this one ended. The measurement itself is never stored, sent or
 // compared with anything, and it reads nothing about the device: it is only how this page felt, a moment ago.
 (() => {
   const root = document.documentElement, d = document;
   const hi = root.lang === 'hi';
+  // the language switch reads as two segments: a touch on the one you are already reading in changes nothing (the link
+  // itself, by keyboard or with scripts off, still switches)
+  d.addEventListener('click', (e) => { const c = e.target && e.target.closest && e.target.closest('.ed-lang-cur, .fm-lang-o.is-cur'); if (c) { e.preventDefault(); e.stopImmediatePropagation(); } }, true);
   const nb = (s) => s.replace(/\s+(\S+)$/, '\u00a0$1');   // the last two words never part
   const WORDS = hi ? { note: 'बैटरी बचाने के लिए गति को आराम दे रहे हैं।', back: 'गति वापस लाएँ' } : { note: 'Resting the motion to save your battery.', back: 'Bring it back' };
   const ss = { get: () => { try { return sessionStorage.getItem('spritual:calm'); } catch { return null; } }, set: (v) => { try { sessionStorage.setItem('spritual:calm', v); } catch {} } };
@@ -38,17 +41,17 @@
   const rest = () => { if (root.dataset.light || reduced() || lite()) return; root.dataset.light = 'auto'; ss.set('rest'); show(); };
 
   if (root.dataset.light || reduced() || lite() || ss.get() === 'back' || !('requestAnimationFrame' in window)) return;
-  // The frames that come while the reader is scrolling are counted in windows of 30. A window is bad when a third of its
-  // frames took over 40 ms (under 25 a second), or its frames averaged over 38 ms. Three bad windows in a row rest the
+  // The frames that come while the reader is scrolling are counted in windows of 30. A window is bad when a quarter of its
+  // frames took over 45 ms (under 22 a second), or its frames averaged over 34 ms. Two bad windows in a row rest the
   // motion; a good one (under one frame in eight slow) starts the count again. Frames that come while the page is
   // still, or while the tab is hidden, are never counted.
   let on = false, n = 0, slow = 0, sum = 0, prev = 0, last = 0, lastDt = 16, bad = 0, raf = 0, armed = false;
   const reset = () => { n = slow = sum = 0; };
-  const judge = () => { if (slow / n >= .34 || sum / n > 38) { if (++bad >= 3) rest(); } else if (slow / n < .125) bad = 0; reset(); };
+  const judge = () => { if (slow / n >= .25 || sum / n > 34) { if (++bad >= 2) rest(); } else if (slow / n < .125) bad = 0; reset(); };
   const frame = (t) => {
     raf = 0; if (!on) return;
     if (d.hidden) { on = false; prev = 0; reset(); return; }
-    if (prev) { const dt = t - prev; if (dt < 1000) { lastDt = dt; n++; sum += dt; if (dt > 40) slow++; if (n === 30) judge(); } }
+    if (prev) { const dt = t - prev; if (dt < 1000) { lastDt = dt; n++; sum += dt; if (dt > 45) slow++; if (n === 30) judge(); } }
     prev = t;
     if (performance.now() - last > 170 + Math.min(400, 2 * lastDt)) { on = false; prev = 0; return; }
     raf = requestAnimationFrame(frame);

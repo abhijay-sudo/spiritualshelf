@@ -19,7 +19,7 @@ html[lang="hi"] .path-lede { font-family: "Mukta", var(--cx-text); line-height: 
 .path-pic { display: block; position: relative; aspect-ratio: 16 / 9; overflow: hidden; border-radius: 12px; background: var(--cx-dusk-2); box-shadow: 0 10px 26px -12px rgb(0 0 0 / .65), inset 0 0 0 1px rgb(255 238 210 / .12); transition: transform var(--d3) var(--ease-settle), box-shadow var(--d3) var(--ease-settle); }
 .path-pic img { display: block; width: 100%; height: 100%; object-fit: cover; }
 .path-pic::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 55%, rgb(12 7 4 / .45)); pointer-events: none; }
-.path-kick { margin-top: .45rem; font: 500 .82rem/1.3 var(--cx-ui); letter-spacing: .04em; color: color-mix(in srgb, var(--ep-a, #f3c47e) 70%, var(--cx-ink-2)); text-transform: uppercase; }
+.path-kick { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden; margin-top: .45rem; font: 500 .82rem/1.3 var(--cx-ui); letter-spacing: .04em; color: color-mix(in srgb, var(--ep-a, #f3c47e) 70%, var(--cx-ink-2)); text-transform: uppercase; }
 html[lang="hi"] .path-kick { text-transform: none; letter-spacing: 0; font: 500 .92rem/1.4 "Mukta", var(--cx-ui); }
 .path-t { font: 500 1.28rem/1.22 var(--cx-title); color: var(--cx-ink); text-wrap: balance; }
 html[lang="hi"] .path-t { font-size: 1.3rem; line-height: 1.4; }
@@ -46,8 +46,9 @@ html[lang="hi"] .path-else-h, html[lang="hi"] .path-else-h small { font-family: 
 @media (hover: hover) and (pointer: fine) { .path-rail-wrap:hover .path-arr.is-on, .path-arr.is-on:focus-visible { opacity: 1; pointer-events: auto; } }
 .path-rail-wrap { position: relative; }
 /* arrival: with scripts and motion, the thread draws and the cards settle, one after another */
-:root.cx-js .cast-path[data-path]:not(.is-in) .path-stop { opacity: 0; transform: translate3d(0, 14px, 0); }
-:root.cx-js .cast-path[data-path]:not(.is-in) .path-stop::before { transform: scaleX(0); }
+/* (hidden only once paths.js has armed it: if that script never arrives, the road simply stands there) */
+:root.cx-js .cast-path.path-armed:not(.is-in) .path-stop { opacity: 0; transform: translate3d(0, 14px, 0); }
+:root.cx-js .cast-path.path-armed:not(.is-in) .path-stop::before { transform: scaleX(0); }
 :root.cx-js .cast-path[data-path] .path-stop { transition: opacity var(--d3) var(--ease-settle), transform var(--d3) var(--ease-settle); transition-delay: calc(var(--i, 0) * 60ms); }
 :root.cx-js .cast-path[data-path] .path-stop::before { transition: transform var(--d4) var(--ease-settle); transition-delay: calc(var(--i, 0) * 60ms + 160ms); }
 @media print { .cast-path { display: none; } }

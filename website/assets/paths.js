@@ -6,7 +6,7 @@
   const rail = $('.path-rail', sec);
   if (root.classList.contains('cx-js') && 'IntersectionObserver' in window) {
     const io = new IntersectionObserver((es) => { if (es.some((e) => e.isIntersecting)) { sec.classList.add('is-in'); io.disconnect(); } }, { rootMargin: '0px 0px -12% 0px', threshold: .08 });
-    io.observe(sec); setTimeout(() => sec.classList.add('is-in'), 6000);   // (a safety: never leave it unseen)
+    sec.classList.add('path-armed'); io.observe(sec); setTimeout(() => sec.classList.add('is-in'), 6000);   // (a safety: never leave it unseen)
   }
   if (!rail || !matchMedia('(hover: hover) and (pointer: fine)').matches) return;
   const lang = root.lang === 'hi', arr = (dir) => { const b = document.createElement('button'); b.type = 'button'; b.className = 'path-arr path-arr--' + (dir < 0 ? 'l' : 'r'); b.setAttribute('aria-label', dir < 0 ? (lang ? 'पिछली कथाएँ' : 'Earlier stories') : (lang ? 'अगली कथाएँ' : 'Later stories')); b.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>'; b.addEventListener('click', () => { const w = $('.path-stop', rail)?.offsetWidth || 300; rail.scrollBy({ left: dir * w * 1.6, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches || root.dataset.motion === 'reduce' ? 'auto' : 'smooth' }); }); return b; };

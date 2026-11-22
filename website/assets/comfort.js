@@ -15,7 +15,8 @@
     const hero = reader.querySelector('.cx-film-open'), endSec = reader.querySelector('.story-end');
     const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
     let lastS = '', lastL = '', on = false, raf = 0, tail = 0;
-    // words from the reader's place to the end, in the minutes a reader of about 170 words a minute would take
+    // One figure everywhere: the story's own minutes (the hero, the page rail) are the total; the whisper shares them out by the words still ahead
+    const mins = +w.dataset.mins || 0, totalW = W.reduce((a, b) => a + b, 0) || 1;
     const leftWords = (k, frac) => { let n = W[k - 1] * (1 - frac); for (let j = k; j < N; j++) n += W[j]; return n; };
     const place = () => {
       raf = 0; const y = scrollY, vh = innerHeight; let k = 1, frac = 0, show = false;
@@ -32,7 +33,7 @@
       }
       if (show !== on) { on = show; w.classList.toggle('is-on', on); }
       if (!show) return;
-      const m = leftWords(k, frac) / 170;
+      const m = mins ? mins * leftWords(k, frac) / totalW : leftWords(k, frac) / 170;
       const s = fmt(w.dataset.fmt, { n: k, t: N }), l = m < .75 ? w.dataset.under : fmt(w.dataset.left, { n: Math.max(1, Math.round(m)) });
       if (s !== lastS) { lastS = s; ws.textContent = s; }
       if (l !== lastL) { lastL = l; wl.textContent = l; }
@@ -45,8 +46,12 @@
     new MutationObserver(kick).observe(root, { attributes: true, attributeFilter: ['class', 'data-read', 'data-mode'] });
     place();
   }
-  // Night Lamp is a dark theme of its own: while it is on, the colour choice waits (it is given back when the Lamp goes out)
-  const form = d.querySelector('[data-comfort]');
-  const sync = () => { const lamp = root.dataset.lamp === 'on'; for (const i of d.querySelectorAll('[data-comfort] input[name="theme"]')) { i.disabled = lamp; i.closest('.chip')?.classList.toggle('is-wait', lamp); } };
-  if (form) { sync(); new MutationObserver(sync).observe(root, { attributes: true, attributeFilter: ['data-lamp'] }); }
+  // "Read it as a page" works before the film has finished starting: the choice is saved and the page starts again as a page
+  const pr = d.querySelector('.cx-pageread');
+  if (pr) pr.addEventListener('click', (e) => {
+    if (root.classList.contains('fm-live') || !root.classList.contains('fm')) return;
+    e.stopImmediatePropagation(); e.preventDefault();
+    try { const p = JSON.parse(localStorage.getItem('spritual:prefs') || '{}'); p.film = 'off'; localStorage.setItem('spritual:prefs', JSON.stringify(p)); } catch (x) {}
+    location.reload();
+  }, true);
 })();

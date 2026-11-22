@@ -36,7 +36,7 @@
     }
 
     let run = null, lock = null;   // run: { a, b, c, cyc, total, acc, seg, cur, timer }
-    const setState = (s) => { el.dataset.state = s; };
+    const setState = (s) => { el.dataset.state = s; root.classList.toggle('dusk-lock', s === 'live' || s === 'paused'); };   // (the page itself is still while you breathe)
     const setCue = (txt) => { cue.textContent = txt; cue.classList.remove('is-new'); void cue.offsetWidth; cue.classList.add('is-new'); };
     const phase = (ph) => {
       run.cur = ph; el.dataset.phase = ph; setCue(W[ph]);
@@ -81,6 +81,8 @@
     begin.addEventListener('click', start); again?.addEventListener('click', start);
     stop.addEventListener('click', () => end(false));
     d.addEventListener('keydown', (e) => { if (e.key === 'Escape' && run && !d.querySelector('dialog[open]')) { e.preventDefault(); end(false); } });
-    addEventListener('pagehide', () => { if (run) rest(); });
+    // leaving (or the page put away for the back button) ends it cleanly: coming back never shows a frozen cue
+    addEventListener('pagehide', () => { if (run) end(false); });
+    addEventListener('pageshow', (e) => { if (e.persisted && run) end(false); });
   };
 })();

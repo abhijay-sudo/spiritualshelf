@@ -276,6 +276,8 @@
       const p = store.get('prefs', {});
       // [comfort] the saved choice is written now, not inside the view transition's later callback (it was saved before it was set)
       if (value) p[name] = value; else delete p[name];
+      // [comfort] the last colour choice wins: a colour picked while Night Lamp is on puts the lamp out (the colour chips are also held while it is lit, below)
+      if (name === 'theme' && p.lamp) { delete p.lamp; delete root.dataset.lamp; const lo = form.querySelector('input[name="lamp"][value=""]'); if (lo) lo.checked = true; }
       const apply = () => { if (value) root.dataset[name] = value; else delete root.dataset[name]; if (name === 'motion') osCalm();
         // [comfort] Night Lamp is the dark theme with amber ink; turning it off gives the reader's own colour choice back
         if (name === 'lamp') { if (value === 'on') root.dataset.theme = 'sanctum'; else if (p.theme) root.dataset.theme = p.theme; else delete root.dataset.theme; } };
@@ -287,8 +289,11 @@
         vt.ready.then(() => root.animate({ clipPath: [`circle(0 at ${x}px ${y}px)`, `circle(${r}px at ${x}px ${y}px)`] }, { duration: 600, easing: 'cubic-bezier(.4, 0, .2, 1)', pseudoElement: '::view-transition-new(root)' })).catch(() => {});
         vt.finished.finally(() => root.classList.remove('vt-wave'));
       } else if (name === 'size' && window.__keepPlace) window.__keepPlace(apply); else apply();
-      store.set('prefs', p); haptic();
+      store.set('prefs', p); haptic(); lampHold(name === 'lamp' ? value === 'on' : undefined);
     });
+    // [comfort] Night Lamp is a dark theme of its own: while it is lit the colour chips wait (comfort.css shows the one-line reason)
+    const lampHold = (now) => { const on = now ?? root.dataset.lamp === 'on'; for (const i of form.querySelectorAll('input[name="theme"]')) { i.disabled = on; i.closest('.chip')?.classList.toggle('is-wait', on); } };
+    lampHold();
   }
 
   /* ---------- Scroll reveal fallback (CSS view() timelines where supported) ---------- */
@@ -518,6 +523,7 @@
     for (const k of ['size', 'theme', 'motion', 'lead', 'measure', 'hisize', 'lamp', 'aa'/* [comfort] */]) delete root.dataset[k];
     osCalm();
     for (const r of $$('[data-comfort] input[value=""]')) r.checked = true;
+    for (const r of $$('[data-comfort] input[name="theme"]')) { r.disabled = false; r.closest('.chip')?.classList.remove('is-wait'); }
     Sound.droneStop(); Sound.riverStop(); paintSound();
     lastRemoved = null; const undo = $('[data-journal-undo]'); if (undo) undo.hidden = true; const jm = $('[data-journal-msg]'); if (jm) jm.textContent = '';
     renderSaved(); renderJournal(); paintStreak();

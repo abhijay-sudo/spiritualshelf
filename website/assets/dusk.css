@@ -3,9 +3,9 @@
    Transform and opacity only. With less motion the light only brightens and dims; nothing moves. */
 :root { --ease-settle: cubic-bezier(.22, .8, .2, 1); --ease-lamp: cubic-bezier(.4, 0, .2, 1); --ease-breath: cubic-bezier(.45, 0, .35, 1); --d1: 160ms; --d2: 320ms; --d3: 640ms; --d4: 1200ms; }
 :root { --dk-glow: 255 188 112; }
-:root[data-hour="dawn"] { --dk-glow: 255 170 150; }
-:root[data-hour="day"] { --dk-glow: 255 214 150; }
-:root[data-hour="night"] { --dk-glow: 236 200 150; }
+:root[data-hour="dawn"] { --dk-glow: 255 160 150; }
+:root[data-hour="day"] { --dk-glow: 255 226 170; }
+:root[data-hour="night"] { --dk-glow: 226 176 120; }
 .is-dusk { background: #0a0610; }
 .dusk { --gw: min(118vmin, 1040px); --sy: 44%; position: relative; overflow-x: clip; color: #f6ecda; min-height: 100vh; min-height: 100svh; }
 /* ---- the stage: the painting, the hour's wash, the light ---- */
@@ -14,10 +14,10 @@
 .dusk-pic img { object-fit: cover; object-position: 50% var(--sy); transform-origin: 50% var(--sy); transform: scale(1.02); opacity: 0; animation: dusk-rise 1.6s var(--ease-lamp) .1s both; transition: transform var(--d-out) var(--ease-breath); will-change: transform; }
 @keyframes dusk-rise { from { opacity: 0; } to { opacity: 1; } }
 .dusk-wash i { position: absolute; inset: 0; opacity: 0; transition: opacity var(--d4) var(--ease-lamp); }
-.dusk-wash i[data-h="dawn"] { background: linear-gradient(180deg, rgb(74 34 84 / .52) 0%, rgb(60 24 62 / .2) 46%, rgb(22 9 24 / .5) 72%, rgb(10 4 12 / .86) 100%); }
-.dusk-wash i[data-h="day"] { background: linear-gradient(180deg, rgb(24 40 74 / .46) 0%, rgb(20 30 56 / .18) 46%, rgb(10 14 26 / .5) 72%, rgb(5 7 14 / .86) 100%); }
-.dusk-wash i[data-h="dusk"] { background: linear-gradient(180deg, rgb(62 20 54 / .52) 0%, rgb(44 12 36 / .22) 46%, rgb(16 5 16 / .5) 72%, rgb(8 3 10 / .88) 100%); }
-.dusk-wash i[data-h="night"] { background: linear-gradient(180deg, rgb(8 12 42 / .78) 0%, rgb(6 8 30 / .6) 46%, rgb(4 5 18 / .8) 72%, rgb(2 3 9 / .92) 100%); }
+.dusk-wash i[data-h="dawn"] { background: linear-gradient(180deg, rgb(168 70 104 / .66) 0%, rgb(138 58 92 / .4) 38%, rgb(70 26 54 / .42) 66%, rgb(20 8 22 / .84) 100%); }
+.dusk-wash i[data-h="day"] { background: linear-gradient(180deg, rgb(232 186 112 / .5) 0%, rgb(214 164 98 / .3) 38%, rgb(96 72 52 / .3) 66%, rgb(14 10 10 / .8) 100%); }
+.dusk-wash i[data-h="dusk"] { background: linear-gradient(180deg, rgb(104 34 84 / .64) 0%, rgb(78 22 62 / .38) 40%, rgb(30 8 28 / .5) 68%, rgb(10 4 12 / .88) 100%); }
+.dusk-wash i[data-h="night"] { background: linear-gradient(180deg, rgb(12 18 64 / .84) 0%, rgb(8 12 44 / .66) 46%, rgb(4 6 22 / .84) 72%, rgb(2 3 9 / .94) 100%); }
 :root:not([data-hour]) .dusk-wash i[data-h="dusk"], :root[data-hour="dusk"] .dusk-wash i[data-h="dusk"], :root[data-hour="dawn"] .dusk-wash i[data-h="dawn"], :root[data-hour="day"] .dusk-wash i[data-h="day"], :root[data-hour="night"] .dusk-wash i[data-h="night"] { opacity: 1; }
 /* the light on the water: a sun-sized glow behind the horizon, and the ring that keeps time with it */
 .dusk-glow, .dusk-ring { position: absolute; left: 50%; top: var(--sy); border-radius: 50%; pointer-events: none; }
@@ -26,6 +26,8 @@
 @keyframes dusk-halo { from { opacity: .45; } to { opacity: 1; } }
 .dusk-ring { --rw: calc(var(--gw) * .3); width: var(--rw); height: var(--rw); margin: calc(var(--rw) / -2) 0 0 calc(var(--rw) / -2); border: 1px solid rgb(var(--dk-glow) / .5); box-shadow: 0 0 34px rgb(var(--dk-glow) / .22), inset 0 0 28px rgb(var(--dk-glow) / .14); transform: scale(.7); opacity: 0; will-change: transform, opacity; }
 .dusk-vig { position: absolute; inset: 0; background: linear-gradient(180deg, rgb(8 4 12 / .86) 0%, rgb(8 4 12 / .66) 26%, rgb(8 4 12 / .3) 44%, transparent 58%), linear-gradient(0deg, rgb(8 4 12 / .94) 0, rgb(8 4 12 / .82) 26%, rgb(8 4 12 / .52) 46%, transparent 66%); }
+:root[data-hour="day"] .dusk-vig { background: linear-gradient(180deg, rgb(8 4 12 / .78) 0%, rgb(8 4 12 / .6) 26%, rgb(8 4 12 / .24) 44%, transparent 58%), linear-gradient(0deg, rgb(8 4 12 / .94) 0, rgb(8 4 12 / .82) 26%, rgb(8 4 12 / .52) 46%, transparent 66%); }
+:root[data-hour="dawn"] .dusk-vig { background: linear-gradient(180deg, rgb(8 4 12 / .82) 0%, rgb(8 4 12 / .62) 26%, rgb(8 4 12 / .26) 44%, transparent 58%), linear-gradient(0deg, rgb(8 4 12 / .94) 0, rgb(8 4 12 / .82) 26%, rgb(8 4 12 / .52) 46%, transparent 66%); }
 /* the breath */
 .dusk[data-phase="in"] .dusk-glow { transform: scale(1.12); opacity: 1; transition: transform var(--d-in) var(--ease-breath), opacity var(--d-in) var(--ease-breath); }
 .dusk[data-phase="hold"] .dusk-glow { transform: scale(1.12); opacity: 1; animation: dusk-hold var(--d-hold) ease-in-out both; }
@@ -50,6 +52,8 @@
 /* ---- the words ---- */
 .dusk-in { position: relative; box-sizing: border-box; min-height: 100vh; min-height: 100svh; display: grid; grid-template-rows: auto 1fr auto; padding: calc(var(--ed-head-h, 68px) + clamp(1rem, 3svh, 2.4rem)) var(--cx-gut-r) calc(1.4rem + env(safe-area-inset-bottom, 0px)) var(--cx-gut); max-width: 44rem; margin-inline: auto; text-align: center; }
 .dusk-intro { display: grid; gap: .55rem; justify-items: center; }
+.dusk-intro { position: relative; isolation: isolate; }
+.dusk-intro::before { content: ""; position: absolute; z-index: -1; inset: -1.6rem -1.6rem -1.2rem; background: radial-gradient(ellipse closest-side at 50% 50%, rgb(6 3 10 / .5), rgb(6 3 10 / .3) 62%, transparent 100%); pointer-events: none; }
 .dusk-k { margin: 0; display: inline-flex; align-items: center; gap: .6rem; font: 500 .98rem/1.3 var(--cx-ui); letter-spacing: .03em; color: #ffd99a; text-shadow: 0 1px 12px rgb(0 0 0 / .6); }
 html[lang="hi"] .dusk-k { font-family: "Mukta", var(--cx-ui); font-size: 1.04rem; letter-spacing: 0; }
 .dusk-k-ic { display: grid; place-items: center; width: 1.9rem; height: 1.9rem; border-radius: 50%; background: rgb(243 196 126 / .16); box-shadow: inset 0 0 0 1px rgb(243 196 126 / .4); }
@@ -61,18 +65,24 @@ html[lang="hi"] .dusk-lead { font-style: normal; font-family: "Mukta", var(--cx-
 .dusk-body { margin: 0 auto; max-width: 27rem; font: 400 1.02rem/1.6 var(--cx-text); color: #fff6e6; text-wrap: pretty; text-shadow: 0 1px 14px rgb(0 0 0 / .7); }
 html[lang="hi"] .dusk-body { font-family: "Mukta", var(--cx-text); font-size: 1.06rem; line-height: 1.8; }
 /* while you breathe */
-.dusk-live { position: absolute; left: 0; right: 0; top: calc(var(--sy) + min(28vmin, 15rem)); display: grid; gap: .3rem; justify-items: center; pointer-events: none; opacity: 0; transition: opacity var(--d3) var(--ease-lamp); }
+.dusk-live { position: fixed; left: 0; right: 0; top: calc(var(--sy) + min(28vmin, 15rem)); display: grid; gap: .3rem; justify-items: center; pointer-events: none; opacity: 0; transition: opacity var(--d3) var(--ease-lamp); }
 .dusk-live::before { content: ""; position: absolute; left: 50%; top: -2.2rem; width: min(100%, 44rem); height: calc(100% + 4.4rem); translate: -50% 0; background: radial-gradient(ellipse closest-side at center, rgb(6 3 10 / .6), rgb(6 3 10 / .32) 55%, transparent 100%); pointer-events: none; z-index: -1; }
 .dusk-cue { margin: 0; min-height: 1.4em; font: 500 clamp(1.7rem, 1.3rem + 1.6vw, 2.3rem)/1.2 var(--cx-title); color: #fff4de; text-shadow: 0 2px 22px rgb(0 0 0 / .75), 0 0 2px rgb(0 0 0 / .5); }
 html[lang="hi"] .dusk-cue { line-height: 1.5; }
 .dusk-cue.is-new { animation: dusk-cue var(--d3) var(--ease-settle) both; }
+@keyframes dusk-cue-fade { from { opacity: 0; } to { opacity: 1; } }
+:root[data-motion="reduce"] .dusk-cue.is-new, :root[data-light] .dusk-cue.is-new { animation: dusk-cue-fade var(--d3) linear both; }
+@media (prefers-reduced-motion: reduce) { .dusk-cue.is-new { animation: dusk-cue-fade var(--d3) linear both; } }
 @keyframes dusk-cue { from { opacity: 0; transform: translate3d(0, 8px, 0); } to { opacity: 1; transform: none; } }
 .dusk-time { margin: 0; font: 500 1.05rem/1 var(--cx-ui); font-variant-numeric: tabular-nums; color: rgb(250 240 222 / .78); text-shadow: 0 1px 12px rgb(0 0 0 / .8); }
 .dusk[data-state="live"] .dusk-live, .dusk[data-state="paused"] .dusk-live { opacity: 1; }
 .dusk[data-state="paused"] .dusk-live { pointer-events: auto; }
 /* the controls */
-.dusk-bottom { grid-row: 3; display: grid; gap: 1.1rem; justify-items: center; align-self: end; }
+.dusk-bottom { grid-row: 3; display: grid; gap: 1.1rem; justify-items: center; align-self: end; position: relative; isolation: isolate; }
+/* a soft scrim of the night behind the words, so they hold against the sun's glow at every hour */
+.dusk-bottom::before { content: ""; position: absolute; z-index: -1; inset: -3.2rem -1.6rem -1.2rem; background: radial-gradient(ellipse closest-side at 50% 52%, rgb(6 3 10 / .58), rgb(6 3 10 / .36) 62%, transparent 100%); pointer-events: none; }
 .dusk-ui { display: grid; gap: 1.1rem; justify-items: center; width: 100%; }
+.dusk-ui[hidden] { display: none; }   /* with scripts off the controls are not shown: nothing here would answer */
 .dusk-opts { display: grid; gap: .9rem; width: 100%; justify-items: center; }
 .dusk-set { margin: 0; padding: 0; border: 0; min-width: 0; display: grid; gap: .45rem; justify-items: center; }
 .dusk-set legend { padding: 0; margin: 0 auto .45rem; font: 600 .78rem/1.2 var(--cx-ui); letter-spacing: .1em; text-transform: uppercase; color: #ffd99a; text-shadow: 0 1px 10px rgb(0 0 0 / .7); }
@@ -116,6 +126,18 @@ html[lang="hi"] .dusk-done p { font-family: "Mukta", var(--cx-text); }
 :root.cx-js .dusk-intro > :nth-child(1) { animation-delay: .5s; } :root.cx-js .dusk-intro > :nth-child(2) { animation-delay: .58s; } :root.cx-js .dusk-intro > :nth-child(3) { animation-delay: .66s; }
 :root.cx-js .dusk-body { animation-delay: .8s; } :root.cx-js .dusk-ui { animation-delay: .9s; }
 @keyframes dusk-in { from { opacity: 0; transform: translate3d(0, 14px, 0); } to { opacity: 1; transform: none; } }
+/* the one-time analytics question stands along the foot of the screen: the way in stays above it */
+:root[data-consent-ask] .dusk-in { padding-bottom: calc(5.6rem + env(safe-area-inset-bottom, 0px)); }
+/* a short screen (a phone turned sideways): the intro is made compact so Begin is in view, and the page is still while you breathe */
+@media (max-height: 520px) {
+  .dusk-body, .dusk-note { display: none; }
+  .dusk-in { padding-top: calc(var(--ed-head-h, 68px) + .4rem); padding-bottom: .9rem; }
+  .dusk-intro { gap: .3rem; } .dusk h1 { font-size: clamp(1.9rem, 5vw, 2.6rem); } .dusk-lead { font-size: 1.05rem; line-height: 1.35; }
+  .dusk-live { top: calc(var(--sy) + 9vmin); }
+  .dusk-bottom { gap: .7rem; } .dusk-ui { gap: .7rem; } .dusk-opts { grid-auto-flow: column; gap: 1.6rem; align-items: start; } .dusk-btn { min-height: 48px; }
+  :root[data-consent-ask] .dusk-in { padding-bottom: 4.6rem; }
+}
+:root.dusk-lock, :root.dusk-lock body { overflow: hidden; }
 @media (max-height: 700px) { .dusk-in { padding-top: calc(var(--ed-head-h, 68px) + .6rem); } .dusk-opts { gap: .6rem; } .dusk-btn { min-height: 48px; } }
 @media (max-width: 400px) { .dusk-opt > span { min-width: 4.4rem; padding-inline: .85rem; } }
 @media print { .dusk-stage { display: none; } .dusk { color: #222; } }
