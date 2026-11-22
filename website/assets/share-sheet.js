@@ -77,13 +77,31 @@ var lo = maxW * .5, hi2 = maxW;   // the narrowest measure that still takes the 
 for (var i = 0; i < 14; i++) { var mid = (lo + hi2) / 2; if (greedy(mid).length <= g.length) hi2 = mid; else lo = mid; }
 return greedy(hi2);
 }
+function clearFaces(sx, cw, iw, fs, take) {
+var lo = 0, hi = iw - cw, i, r0 = function (f) { return f.r / 1.15; };
+for (i = 0; i < take; i++) { lo = Math.max(lo, fs[i].x + r0(fs[i]) - cw); hi = Math.min(hi, fs[i].x - r0(fs[i])); }
+if (lo > hi) return sx;
+sx = clamp(sx, lo, hi);
+for (var pass = 0; pass < 3; pass++) {
+var moved = false;
+for (i = 0; i < fs.length; i++) {
+var a = fs[i].x - r0(fs[i]), b = fs[i].x + r0(fs[i]);
+if (!(b > sx + 1 && a < sx + cw - 1 && (a < sx - 1 || b > sx + cw + 1))) continue;
+var best = null, opts = [[b - cw, a], [b, hi], [lo, a - cw]];
+opts.forEach(function (o) { var l = Math.max(o[0], lo), h2 = Math.min(o[1], hi); if (l > h2) return; var c2 = clamp(sx, l, h2); if (best === null || Math.abs(c2 - sx) < Math.abs(best - sx)) best = c2; });
+if (best !== null && Math.abs(best - sx) > .5) { sx = best; moved = true; }
+}
+if (!moved) break;
+}
+return sx;
+}
 function place(c, pic, w, h) {
 var im = pic.img, iw = im.naturalWidth, ih = im.naturalHeight, s0 = Math.max(w / iw, h / ih), cw0 = w / s0, F = pic.faces, MG = .08;
 var cap = Math.min(iw, w * ih / (.72 * h));   // pulled back no further than the picture keeping 72% of its height; the rest is the gradient
-var cw = cw0, cx = pic.x * iw, cy = pic.y * ih, lo = 0, hi2 = 0;
+var cw = cw0, cx = pic.x * iw, cy = pic.y * ih, lo = 0, hi2 = 0, fs = null, take = 0;
 if (F && F.length) {
-var fs = F.map(function (f) { var r = f[2] / 200 * iw * 1.15; return { x: f[0] / 100 * iw, y: f[1] / 100 * ih, r: r, z: f[2] }; }).sort(function (a, b) { return b.z - a.z; });
-var take = fs.length, span, mnx, mxx;
+fs = F.map(function (f) { var r = f[2] / 200 * iw * 1.15; return { x: f[0] / 100 * iw, y: f[1] / 100 * ih, r: r, z: f[2] }; }).sort(function (a, b) { return b.z - a.z; });
+take = fs.length; var span, mnx, mxx;
 for (; take >= 1; take--) {
 var use = fs.slice(0, take); mnx = Math.min.apply(0, use.map(function (f) { return f.x - f.r; })); mxx = Math.max.apply(0, use.map(function (f) { return f.x + f.r; }));
 span = (mxx - mnx) / (1 - 2 * MG);
@@ -94,10 +112,12 @@ cw = Math.min(iw, Math.max(cw0, span)); cx = (mnx + mxx) / 2;
 var ys = use.map(function (f) { return f.y; }); cy = (Math.min.apply(0, ys) + Math.max.apply(0, ys)) / 2;
 }
 var s = w / cw, ch = Math.min(ih, h / s), sx = clamp(cx - cw / 2, 0, iw - cw), sy = clamp(cy - ch * .42, 0, ih - ch);
+if (F && F.length) sx = clearFaces(sx, cw, iw, fs, take);
 var dh = ch * s;   // shorter than the window when the painting was pulled back: the card's dark takes the rest,
 var dy = Math.round(Math.max(0, h - dh) * .5);   // shared above and below so the picture floats in it, not hangs from the top
 c.drawImage(im, sx, sy, cw, ch, 0, dy, w, dh);
-return { top: dy, bottom: dy + dh, pulled: cw > cw0 + 1 };
+var fb = F && F.length ? (fs[0].y + fs[0].r / 1.15 - sy) * s + dy : -1;
+return { top: dy, bottom: dy + dh, pulled: cw > cw0 + 1, fb: fb };
 }
 function fontsFor(list) {
 if (!d.fonts || !d.fonts.load) return Promise.resolve();
@@ -133,7 +153,9 @@ cv.width = W; cv.height = H; c = cv.getContext('2d');
 c.fillStyle = tint; c.fillRect(0, 0, W, H);
 if (st.pic) {
 var pl = place(c, st.pic, W, paintH), edge = Math.min(paintH, Math.round(pl.bottom));
-var gH = Math.min(edge - pl.top, Math.round(H * .24)), g = c.createLinearGradient(0, edge - gH, 0, edge), rgb = sc.tint.join(',');
+var gH = Math.min(edge - pl.top, Math.round(H * .24)), rgb = sc.tint.join(',');
+if (pl.fb > 0) gH = Math.max(Math.round(H * .07), Math.min(gH, Math.round((edge - pl.fb) * 1.5)));
+var g = c.createLinearGradient(0, edge - gH, 0, edge);
 [[0, 0], [.3, .2], [.58, .58], [.82, .9], [1, 1]].forEach(function (s) { g.addColorStop(s[0], 'rgba(' + rgb + ',' + s[1] + ')'); });
 c.fillStyle = g; c.fillRect(0, edge - gH, W, gH + 1);
 var tt = pl.top, tl = tt ? 240 : 150, tg = c.createLinearGradient(0, tt, 0, tt + tl); tg.addColorStop(0, 'rgba(' + rgb + ',' + (tt ? 1 : .38) + ')'); if (tt) { tg.addColorStop(.4, 'rgba(' + rgb + ',.6)'); tg.addColorStop(.75, 'rgba(' + rgb + ',.18)'); } tg.addColorStop(1, 'rgba(' + rgb + ',0)'); c.fillStyle = tg; c.fillRect(0, tt, W, tl);

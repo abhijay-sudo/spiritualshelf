@@ -36,6 +36,7 @@
   // [keep] a browser that can keep a story for offline reading (the Cache API on a secure page): the hero's quiet keep control
   // holds its place from the first paint (site.css .kp-can), so it never moves the story's buttons when it appears
   if (window.caches && window.fetch && window.isSecureContext) d.classList.add('kp-can');
+  d.classList.add('lst-js');   // [lane F] script is running: the Listen buttons may show
   if (!calm && !mq.matches) d.classList.add('cx-js');
   // [calm] Light mode (assets/calm.js, calm.css): the reader's own choice (Reading comfort > Motion), or this tab's own
   // "resting the motion" after the device struggled (calm.js keeps only that word, for this tab: never a measurement).

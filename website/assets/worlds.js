@@ -33,6 +33,7 @@
   // a stage marked "same" keeps the painting before it, and the camera simply travels on across both
   var G = [];
   for (i = 0; i < N; i++) { if (S[i].pic) G.push({ first: i, last: i, pic: S[i].pic, img: S[i].img, y: S[i].y, held: false, shown: -1 }); else if (G.length) G[G.length - 1].last = i; }
+  var fall = kind === 'lokas';
   var F = 0.15;                       // half the length of a cross-fade, in stages
   var pxU = 0;                        // stage lengths per pixel of scroll (progress()): the hand-over between words is measured in pixels
   var stageAt = function (p) { var k = 0; while (k < N - 1 && p >= B[k + 1]) k++; return k; };
@@ -85,8 +86,8 @@
       s = clamp(stageAt(clamp(p, a, e - 1e-6)), g.first, g.last); st = S[s];
       t = clamp((p - B[s]) / st.w, 0, 1); if (p < a) { s = g.first; st = S[s]; t = 0; }
       x = portrait && st.xp ? st.xp : st.x; fx = lerp(x[0], x[1], sm(t)) / 100;
-      u = clamp((p - (a - F)) / (e - a + 2 * F), 0, 1); sc = 1 + 0.07 * u;
-      g.img.style.transform = 'translate3d(' + ((pw - iw * sc) * fx).toFixed(2) + 'px,' + ((ph - ih * sc) * g.y / 100).toFixed(2) + 'px,0) scale(' + sc.toFixed(4) + ')';
+      u = clamp((p - (a - F)) / (e - a + 2 * F), 0, 1); sc = fall ? 1.04 + 0.1 * u : 1 + 0.07 * u;   // the fall: the painting is drawn up past the reader and comes a little nearer
+      g.img.style.transform = 'translate3d(' + ((pw - iw * sc) * fx).toFixed(2) + 'px,' + ((ph - ih * sc) * (fall ? lerp(6, 94, sm(u)) : g.y) / 100).toFixed(2) + 'px,0) scale(' + sc.toFixed(4) + ')';
     }
     for (j = 0; j < N; j++) {
       st = S[j]; if (!st.text) continue;
@@ -312,31 +313,43 @@
 
   // The fourteen lokas: one column of light; its colour, where the light comes from and how the motes drift all change with depth
   PAINT.lokas = function () {
-    var rail = q('[data-wl-rail]'), ticks = rail ? [].slice.call(rail.children) : [], motes = [], cnt = 0, lastP = null, atTick = -1;
+    var rail = q('[data-wl-rail]'), ticks = rail ? [].slice.call(rail.children).filter(function (n) { return n.tagName === 'LI'; }) : [], motes = [], cnt = 0, lastP = null, atTick = -1, vel = 0, mid = [], bead = null, veil = 1, hasPaint = G.some(function (g) { return g.img; });
+    // the depth gauge: a bead rides the rail of fourteen marks, between them as the reader is between the worlds
+    if (rail) { bead = d.createElement('i'); bead.className = 'wl-rail-bead'; bead.setAttribute('aria-hidden', 'true'); rail.appendChild(bead); }
     var earth = 0; S.forEach(function (st, j) { if (st.loka === 7) earth = B[j + 1]; });
     for (var n = 0; n < 90; n++) motes.push({ x: Math.random(), y: Math.random(), z: 0.35 + Math.random() * 0.65, ph: Math.random() * 6.28, r: 0.5 + Math.random() * 1.2 });
     var c3 = function (c, kf, add) { return 'rgb(' + Math.round(clamp(c[0] * kf + add, 0, 255)) + ',' + Math.round(clamp(c[1] * kf + add, 0, 255)) + ',' + Math.round(clamp(c[2] * kf + add, 0, 255)) + ')'; };
+    // a light is added as colour at a strength (the alpha), so over a painting it brightens without hiding it
+    var c4 = function (c, kf, add, a) { return 'rgba(' + Math.round(clamp(c[0] * kf + add, 0, 255)) + ',' + Math.round(clamp(c[1] * kf + add, 0, 255)) + ',' + Math.round(clamp(c[2] * kf + add, 0, 255)) + ',' + clamp(a, 0, 1).toFixed(3) + ')'; };
     return {
-      size: function () { cnt = portrait ? 44 : motes.length; },
-      off: function () { ticks.forEach(function (li) { li.classList.remove('is-at'); }); },
+      size: function () { cnt = portrait ? 44 : motes.length; mid = ticks.map(function (li) { return li.offsetTop + li.offsetHeight / 2; }); },
+      off: function () { ticks.forEach(function (li) { li.classList.remove('is-at'); }); if (bead) bead.style.transform = ''; },
       draw: function (p, k, t, now, dt) {
         var a = S[k].tone, b = S[Math.min(N - 1, k + 1)].tone, f = sm((t - 0.62) / 0.38), c = [lerp(a[0], b[0], f), lerp(a[1], b[1], f), lerp(a[2], b[2], f)], m, g;
         var depth = p / total, below = sm((p - earth + 0.4) / 1.2), glow = lerp(S[k].glow ? 1 : 0, S[Math.min(N - 1, k + 1)].glow ? 1 : 0, f);
         g = ctx.createLinearGradient(0, 0, 0, vh); g.addColorStop(0, c3(c, 0.5, 4)); g.addColorStop(0.55, c3(c, 0.3, 4)); g.addColorStop(1, c3(c, 0.12, 6));
-        ctx.globalCompositeOperation = 'source-over'; ctx.fillStyle = g; ctx.fillRect(0, 0, vw, vh);
+        // behind a painting the colour of the world is a thin wash over it; with no painting it is the whole backdrop
+        var cover = 0, gj; for (gj = 0; gj < G.length; gj++) if (G[gj].img && G[gj].shown > cover) cover = G[gj].shown;
+        veil += (lerp(1, 0.24, hasPaint ? cover : 0) - veil) * Math.min(1, dt * 6);
+        ctx.globalCompositeOperation = 'source-over'; ctx.clearRect(0, 0, vw, vh); ctx.globalAlpha = veil; ctx.fillStyle = g; ctx.fillRect(0, 0, vw, vh); ctx.globalAlpha = 1;
         ctx.globalCompositeOperation = 'lighter';
         // above the earth the light comes from above and thins as you go down; below it, from beneath, where the jewels are
         var up = (1 - below) * lerp(0.55, 0.16, clamp(p / Math.max(1, earth), 0, 1)), dn = below * lerp(0.1, 0.3, clamp((p - earth) / Math.max(1, total - earth), 0, 1)) + glow * 0.35, rad = Math.max(vw, vh) * 0.85;
-        if (up > 0.01) { g = ctx.createRadialGradient(vw * 0.5, -vh * 0.12, 0, vw * 0.5, -vh * 0.12, rad); g.addColorStop(0, c3(c, 0.9 * up, 60 * up)); g.addColorStop(1, 'rgb(0,0,0)'); ctx.fillStyle = g; ctx.fillRect(0, 0, vw, vh); }
-        if (dn > 0.01) { g = ctx.createRadialGradient(vw * 0.5, vh * 1.1, 0, vw * 0.5, vh * 1.1, rad); g.addColorStop(0, c3(c, 0.9 * dn, 70 * dn)); g.addColorStop(1, 'rgb(0,0,0)'); ctx.fillStyle = g; ctx.fillRect(0, 0, vw, vh); }
+        up *= veil; dn *= veil;
+        if (up > 0.01) { g = ctx.createRadialGradient(vw * 0.5, -vh * 0.12, 0, vw * 0.5, -vh * 0.12, rad); g.addColorStop(0, c4(c, 0.9, 60, up)); g.addColorStop(1, c4(c, 0.9, 60, 0)); ctx.fillStyle = g; ctx.fillRect(0, 0, vw, vh); }
+        if (dn > 0.01) { g = ctx.createRadialGradient(vw * 0.5, vh * 1.1, 0, vw * 0.5, vh * 1.1, rad); g.addColorStop(0, c4(c, 0.9, 70, dn)); g.addColorStop(1, c4(c, 0.9, 70, 0)); ctx.fillStyle = g; ctx.fillRect(0, 0, vw, vh); }
         // the motes: weightless and rising in the high worlds, sinking the deeper you go; they pass you as you descend
         var vy = lerp(-0.018, 0.05, sm(depth)), dp = lastP == null ? 0 : p - lastP; lastP = p;
+        vel += ((dt > 0 ? Math.abs(dp) / dt : 0) - vel) * Math.min(1, dt * 8); var streak = clamp(vel * 26, 0, 46) * (portrait ? 0.7 : 1);
         for (m = 0; m < cnt; m++) {
           var mo = motes[m]; mo.y += (vy * dt - dp * unit * 0.22) * mo.z; mo.y = mo.y - Math.floor(mo.y);
           var x = (mo.x + Math.sin(now * 0.25 + mo.ph) * 0.012) * vw, al = (0.16 + 0.34 * mo.z) * (0.75 + 0.25 * Math.sin(now * 1.1 + mo.ph));
           ctx.fillStyle = 'rgba(255,246,226,' + al.toFixed(3) + ')'; ctx.beginPath(); ctx.arc(x, mo.y * vh, mo.r * mo.z, 0, 6.2832); ctx.fill();
+          if (streak > 3 && mo.z > 0.55) { ctx.strokeStyle = 'rgba(255,246,226,' + (al * 0.55).toFixed(3) + ')'; ctx.lineWidth = mo.r * mo.z; ctx.beginPath(); ctx.moveTo(x, mo.y * vh); ctx.lineTo(x, mo.y * vh + (dp > 0 ? -1 : 1) * streak * mo.z); ctx.stroke(); }
         }
         ctx.globalCompositeOperation = 'source-over';
+        if (bead && mid.length) { var ix = S[k].loka ? S[k].loka - 1 + t * 0.9 : (k === 0 ? -0.6 + t * 0.6 : k === N - 1 ? 13 + t : (S[k - 1].loka || 0) - 1 + 0.5 + t * 0.5);   // between two marks, then on to the next
+          ix = clamp(ix, 0, mid.length - 1); var lo = Math.floor(ix), y0 = mid[lo], y1 = mid[Math.min(mid.length - 1, lo + 1)]; bead.style.transform = 'translate3d(0,' + (y0 + (y1 - y0) * (ix - lo) - 3.5).toFixed(1) + 'px,0)'; }
         var tick = S[k].loka ? S[k].loka - 1 : -1;
         if (tick !== atTick) { if (ticks[atTick]) ticks[atTick].classList.remove('is-at'); if (ticks[tick]) ticks[tick].classList.add('is-at'); atTick = tick; }
       }

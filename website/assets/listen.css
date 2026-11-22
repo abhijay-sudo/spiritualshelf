@@ -1,0 +1,102 @@
+/* Spritual (lane F): Listening that follows (listen.js). A sentence lit softly while it is spoken, and a small bar that rises
+   over the foot of the story: pause, speed, sleep timer and a plain Stop. Transform and opacity only; reduced motion keeps
+   the lit sentence and drops every movement. */
+:root { --ease-settle: cubic-bezier(.22, .8, .2, 1); --ease-lamp: cubic-bezier(.4, 0, .2, 1); --d1: 160ms; --d2: 320ms; --d3: 640ms; --d4: 1200ms;
+  --lst-line: #b97712; --lst-glow: transparent; --lst-tint: rgb(185 119 18 / .13); --lst-gold: #e9c98c; --lst-ink: #f6ecda; --lst-bg: rgb(17 11 8 / .93); }
+:root.fm, :root[data-theme="dark"], :root[data-room="theatre"]:not([data-theme="light"]) { --lst-line: #e9c98c; --lst-glow: rgb(233 201 140 / .5); --lst-tint: rgb(233 201 140 / .13); }
+
+/* the sentence being spoken: a quiet gold underline and a little glow (no box, no bounce, nothing moves) */
+::highlight(spritual-listen) { text-decoration-line: underline; text-decoration-color: var(--lst-line); text-decoration-thickness: 2px; text-underline-offset: .24em; text-decoration-skip-ink: none; text-shadow: 0 0 .7em var(--lst-glow); background-color: var(--lst-tint); }   /* (the tint keeps the lit sentence plain to see where WebKit breaks the underline at descenders) */
+
+/* the bar */
+.lst { position: fixed; z-index: 70; left: 50%; bottom: calc(.7rem + env(safe-area-inset-bottom, 0px)); width: min(30rem, calc(100vw - 24px)); box-sizing: border-box; padding: .45rem .5rem .55rem; border-radius: 20px; color: var(--lst-ink);
+  background: var(--lst-bg); box-shadow: 0 0 0 1px rgb(233 201 140 / .26), 0 18px 44px rgb(0 0 0 / .5), 0 0 50px rgb(233 168 80 / .08); translate: -50% 0; opacity: 0; transform: translateY(18px);
+  transition: opacity var(--d2) var(--ease-lamp), transform var(--d3) var(--ease-settle); font: 500 .92rem/1.25 var(--font-ui, system-ui, sans-serif); -webkit-tap-highlight-color: transparent; }
+.lst[hidden] { display: none; }
+.lst.is-in { opacity: 1; transform: none; }
+.lst button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+.lst button:focus-visible { outline: 2px solid var(--lst-gold); outline-offset: 3px; }
+.lst svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+.lst-row { display: flex; align-items: center; gap: .4rem; min-height: 48px; }
+.lst .lst-play { flex: none; display: grid; place-items: center; width: 48px; height: 48px; border-radius: 50%; background: var(--lst-gold) !important; color: #20130a !important; transition: transform var(--d1) var(--ease-settle), box-shadow var(--d2); box-shadow: 0 0 0 0 rgb(233 201 140 / .3); }
+.lst-play svg { fill: currentColor; stroke: currentColor; stroke-width: 2.2; width: 22px; height: 22px; }
+.lst[data-state="playing"] .lst-play svg { fill: none; }
+.lst-play:active, .lst-chip:active, .lst-off:active { transform: scale(.95); }
+@media (hover: hover) { .lst-play:hover { box-shadow: 0 0 0 6px rgb(233 201 140 / .18); } .lst-chip:hover, .lst-off:hover { background: rgb(233 201 140 / .14) !important; } }
+.lst-mid { flex: 1 1 auto; min-width: 0; margin: 0; display: grid; gap: .1rem; }
+.lst-st { font-variant-numeric: tabular-nums; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.lst-mid:has(.lst-sub:not([hidden])) .lst-st { display: none; }
+.lst-sub { font-size: .82rem; line-height: 1.3; color: rgb(246 236 218 / .78); }
+.lst-chip { flex: none; min-width: 48px; height: 44px; padding: 0 .55rem !important; border-radius: 14px; display: inline-flex; align-items: center; justify-content: center; gap: .25rem; font-variant-numeric: tabular-nums; transition: transform var(--d1) var(--ease-settle), background-color var(--d2); }
+.lst-chip.is-on { background: rgb(233 201 140 / .16) !important; color: var(--lst-gold); }
+.lst-sleep svg { width: 20px; height: 20px; }
+.lst-off { flex: none; display: inline-flex; align-items: center; gap: .3rem; height: 44px; padding: 0 .8rem 0 .6rem !important; border-radius: 22px; box-shadow: inset 0 0 0 1.5px rgb(233 201 140 / .75); font-weight: 600; transition: transform var(--d1) var(--ease-settle), background-color var(--d2); }
+.lst-off svg { width: 18px; height: 18px; }
+.lst-prog { position: absolute; left: 16px; right: 16px; bottom: 0; height: 2px; border-radius: 2px; background: var(--lst-gold); opacity: .8; transform-origin: 0 50%; transform: scaleX(var(--lst-p, 0)); transition: transform var(--d4) var(--ease-lamp); }
+.lst[data-state="novoice"] { background: rgb(17 11 8 / .98); }
+.lst[data-state="novoice"] .lst-prog, .lst[data-state="note"] .lst-prog { display: none; }
+/* a short note after the sleep timer: only the words */
+.lst[data-state="note"] :is(.lst-play, .lst-chip, .lst-off) { display: none; }
+.lst[data-state="note"] .lst-st:empty { display: none; }
+.lst[data-state="note"] .lst-sub { font-size: .9rem; color: var(--lst-ink); padding: .5rem .6rem; }
+
+/* speed and sleep: a row of choices that rises over the bar */
+.lst-pop { position: absolute; left: 0; right: 0; bottom: calc(100% + .5rem); display: flex; flex-wrap: wrap; gap: .3rem; padding: .35rem; border-radius: 18px; background: var(--lst-bg); box-shadow: 0 0 0 1px rgb(233 201 140 / .26), 0 12px 30px rgb(0 0 0 / .45); opacity: 0; transform: translateY(10px); transition: opacity var(--d2) var(--ease-lamp), transform var(--d2) var(--ease-settle); }
+.lst-pop[hidden] { display: none; }
+.lst-pn { flex: 0 0 100%; margin: .1rem .45rem .25rem; font-size: .8rem; line-height: 1.45; color: rgb(246 236 218 / .8); text-wrap: pretty; }
+.lst-pop.is-in { opacity: 1; transform: none; }
+.lst-pop button { flex: 1 1 0; min-height: 44px; border-radius: 13px; font-variant-numeric: tabular-nums; white-space: nowrap; transition: background-color var(--d1); }
+.lst .lst-pop button[aria-pressed="true"] { background: var(--lst-gold) !important; color: #20130a; font-weight: 600; }
+@media (hover: hover) { .lst-pop button[aria-pressed="false"]:hover { background: rgb(233 201 140 / .16) !important; } }
+
+/* no voice for this language: a kind card, and a way to read instead */
+.lst-nv { padding: .35rem .5rem .2rem; display: grid; gap: .45rem; }
+.lst-nv[hidden], .lst-row[hidden] { display: none; }
+.lst-nt { margin: 0; font-size: 1.02rem; font-weight: 600; line-height: 1.3; padding-right: 2.5rem; }
+.lst-nn { margin: 0; font-size: .86rem; line-height: 1.5; color: rgb(246 236 218 / .84); text-wrap: pretty; }
+.lst-nb { display: flex; gap: .5rem; align-items: center; }
+.lst .lst-read { min-height: 44px; padding: 0 1.1rem !important; border-radius: 22px; background: var(--lst-gold) !important; color: #20130a !important; font-weight: 600; }
+.lst-x { position: absolute; right: .35rem; top: .35rem; display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; }
+.lst-x svg { width: 18px; height: 18px; }
+
+/* the film keeps its words clear of the bar, as it does for the dock; the dock itself steps aside */
+:root.fm.lst-on { --fm-b: calc(7svh + 4.5rem + env(safe-area-inset-bottom, 0px)); }
+.lst-on .reader-bar { display: none !important; }
+:root.lst-on .fm-whisper, :root.lst-on .keep-card { opacity: 0; pointer-events: none; }
+
+/* a phone: Listen comes back to the film's opening, a quiet line beside "Read it as a page" */
+@media (max-width: 759px) {
+  .fm .cx-film-btns [data-listen], .fm .cx-film-btns .cx-pageread { flex: 1 1 calc(50% - .4rem); min-width: 0; }
+  .fm .cx-film-btns [data-listen] { display: inline-flex; align-items: center; justify-content: center; gap: .5rem; min-height: 44px; border: 0; background: none; padding-inline: .3rem; text-decoration: underline; text-decoration-color: rgb(246 236 218 / .45); text-underline-offset: .28em; font-size: .92rem; order: 3; }
+  .fm .cx-film-btns .cx-pageread { order: 4; padding-inline: .3rem; }
+  .fm .cx-film-btns [data-listen] .ic { width: 1.05em; height: 1.05em; flex: none; }
+}
+@media (max-width: 380px) { .lst { width: calc(100vw - 16px); padding-inline: .35rem; } .lst-row { gap: .25rem; } .lst-chip { min-width: 44px; padding: 0 .4rem !important; } .lst-off { padding: 0 .65rem 0 .5rem !important; } }
+@media (max-height: 460px) and (orientation: landscape) { .lst { bottom: calc(.3rem + env(safe-area-inset-bottom, 0px)); } }
+
+@media (prefers-reduced-motion: reduce) { .lst, .lst-pop, .lst-play, .lst-chip, .lst-off, .lst-prog { transition: none !important; transform: none; } .lst-pop { transform: none; } }
+:root[data-motion="reduce"] :is(.lst, .lst-pop, .lst-play, .lst-chip, .lst-off, .lst-prog) { transition: none !important; transform: none; }
+@media print { .lst { display: none; } }
+
+/* Paths at the end of a story (lane F): the Closing Beat's fourth, quiet door, "Next on <figure>'s path". Lighter than the
+   three before it (a smaller name, tighter), so that a phone's last screen stays calm and the doors stay a short list. */
+.cb-door--path { min-height: 48px; padding-block: .5rem; }
+.cb-door--path .cb-dn { font-size: clamp(1rem, .94rem + .3vw, 1.14rem); margin-top: .05rem; }
+.cb-door--path .cb-dk { opacity: .9; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; letter-spacing: .1em; max-width: 100%; }
+html[lang="hi"] .cb-door--path .cb-dk { letter-spacing: .04em; }
+@media (max-width: 699px) { .fm .cb-door--path { min-height: 46px; padding-block: .38rem; } }
+@media (max-height: 700px) { .fm .cb-door--path { min-height: 44px; padding-block: .3rem; } .fm .cb-door--path .cb-dn { font-size: 1rem; } }
+
+/* Without script the Listen buttons would do nothing: they appear once boot.js has set .lst-js */
+html:not(.lst-js) [data-listen] { display: none !important; }
+
+/* Listen, inside the reading-comfort sheet (the way to it while the film is on) */
+.lst-entry { display: grid; gap: .35rem; margin: .2rem 0 .9rem; }
+.lst-entry button { justify-self: start; display: inline-flex; align-items: center; gap: .55rem; min-height: 44px; padding: 0 1.1rem; border-radius: 22px; border: 1.5px solid var(--lst-line); background: none; color: inherit; font: inherit; font-weight: 600; cursor: pointer; transition: transform var(--d1) var(--ease-settle), background-color var(--d2); touch-action: manipulation; }
+.lst-entry button:active { transform: scale(.97); }
+.lst-entry button:focus-visible { outline: 2px solid var(--lst-line); outline-offset: 3px; }
+.lst-entry .ic { width: 1.1em; height: 1.1em; flex: none; }
+.lst-entry-n { margin: 0; font-size: .84rem; line-height: 1.45; opacity: .75; }
+@media (hover: hover) { .lst-entry button:hover { background: rgb(185 119 18 / .1); } }
+@media (prefers-reduced-motion: reduce) { .lst-entry button { transition: none; } }
+:root[data-motion="reduce"] .lst-entry button { transition: none; }

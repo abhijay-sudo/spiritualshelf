@@ -23,6 +23,7 @@
   var txt = function (n) { return n ? n.textContent.replace(/\s+/g, ' ').trim() : ''; };
 
   function init(sec) {
+    if (sec.__bl) return; sec.__bl = 1;   /* [joyG] the glint's sheet may load this script too: a section is only ever set up once */
     var stage = sec.querySelector('[data-bl-stage]'), list = sec.querySelector('[data-bl-list]'), fig = stage && stage.parentNode, pic = stage && stage.querySelector('img');
     var edge = sec.getAttribute('data-edge');
     if (!stage || !list || !pic || !edge) return;

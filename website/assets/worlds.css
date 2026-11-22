@@ -179,7 +179,18 @@ html[lang="hi"] .wl-out { font-size: 1.05rem; }
 /* [comfort] a phone held upright: the dark strip that holds the way out no longer ends in a hard edge. It is solid to the strip's foot and
    then lets the painting come up out of the dark over a short rise (one static layer; nothing is redrawn while the painting moves). */
 @media (max-aspect-ratio: 4/5) {
-  .wl-on .wl-view::after { background: linear-gradient(to top, rgb(13 8 6) 30%, rgb(13 8 6 / .9) 40%, rgb(13 8 6 / .45) 54%, rgb(13 8 6 / 0) 68%), linear-gradient(to bottom, var(--wl-base) 0, var(--wl-base) calc(var(--wl-strip) - 2px), rgb(13 8 6 / .6) calc(var(--wl-strip) + 28px), rgb(13 8 6 / 0) calc(var(--wl-strip) + 92px)); }
+  .wl-on .wl-view::after { background: linear-gradient(to top, rgb(13 8 6) 30%, rgb(13 8 6 / .9) 40%, rgb(13 8 6 / .45) 54%, rgb(13 8 6 / 0) 68%), linear-gradient(to bottom, var(--wl-base) 0, var(--wl-base) calc(var(--wl-strip) - 2px), rgb(13 8 6 / .6) calc(var(--wl-strip) + 40px), rgb(13 8 6 / 0) calc(var(--wl-strip) + 132px)); }
   /* (the Fourteen Lokas draws its own colour on the canvas, which stands above that layer: the same rise is a static mask on the canvas) */
   .wl-on .wl--lokas .wl-canvas { -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 76px); mask-image: linear-gradient(to bottom, transparent 0, #000 76px); }
 }
+
+/* Fourteen Lokas as a painted fall: the depth gauge's bead, and a still page whose bands carry their painting */
+.wl-rail-bead { position: absolute; right: -3px; top: 0; width: 7px; height: 7px; border-radius: 50%; background: #ffe6b0; box-shadow: 0 0 10px 2px rgb(255 214 140 / .7); will-change: transform; pointer-events: none; }
+.wl--lokas .wl-pic--bare { display: none; }
+.wl--lokas .wl-stage .wl-pic { margin-bottom: .6rem; }
+.wl-on .wl--lokas .wl-pic img { image-rendering: auto; }
+.wl-on .wl--lokas .wl-canvas { mix-blend-mode: normal; }
+
+/* a borrowed painting names the story it comes from, at the foot of the words it sits behind */
+.wl-text .wl-credit { margin: .35rem 0 0; font-size: .78rem; line-height: 1.4; font-style: italic; color: rgb(243 231 215 / .72); }
+html[lang="hi"] .wl-text .wl-credit { font-size: .86rem; line-height: 1.55; font-style: normal; }

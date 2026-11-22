@@ -195,3 +195,66 @@ html[lang="hi"] .at-card p { line-height: 1.65; }
 .at-pin a { scroll-margin-bottom: 9rem; scroll-margin-top: 6rem; }
 .at-skip:not(:focus-visible) { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 .at-skip:focus-visible { position: relative; display: inline-block; z-index: 5; margin: .5rem 0; padding: .7rem 1rem; background: var(--cx-gold, #e7c27a); color: #1b140f; font: 500 .95rem/1 var(--cx-ui); border-radius: 2px; }
+
+/* ---- the flight along Rama's road (assets/atlas.js) ----
+   The painting rises from the foot of the sheet with its line and source, holds, and sinks; transform and opacity only. */
+.at-fly-layer, .at-fly-bar, .at-fly-sheet { display: none; }
+.at-live .at-fly-layer { display: block; position: absolute; left: 0; right: 0; top: 0; aspect-ratio: 4 / 5; overflow: hidden; pointer-events: none; z-index: 5; }
+.at-live .at-fly-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; position: absolute; left: 10px; right: 10px; top: 10px; }
+.at-fly-bar > * { pointer-events: auto; }
+.at-fly-main, .at-fly-sm { display: inline-flex; align-items: center; justify-content: center; gap: .5rem; min-height: 44px; min-width: 44px; padding: 0; border-radius: 999px; cursor: pointer; font: 600 .92rem/1 var(--cx-ui); -webkit-tap-highlight-color: transparent;
+  transition: transform var(--dur-2, 320ms) var(--ease-settle, cubic-bezier(.22, .8, .2, 1)), background-color var(--dur-2, 320ms) var(--ease-lamp, ease), color var(--dur-2, 320ms) var(--ease-lamp, ease), box-shadow var(--dur-2, 320ms) var(--ease-lamp, ease); }
+html[lang="hi"] .at-fly-main, html[lang="hi"] .at-fly-sm { font-family: "Mukta", var(--cx-ui); font-size: 1rem; }
+.at-fly-main svg, .at-fly-sm svg { width: 20px; height: 20px; flex: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; fill: none; }
+.at-fly-main { padding: 0 1.05rem 0 .85rem; border: 1px solid rgb(233 171 51 / .55); background: rgb(24 14 7 / .84); color: #fff3df; box-shadow: 0 4px 16px rgb(0 0 0 / .4); }
+.at-fly-main svg { fill: currentColor; stroke-width: 1.6; }
+.at-fly-main.is-idle { border-color: rgb(90 55 16 / .8); background: radial-gradient(circle at 30% 20%, #f8e3a8, #d6a23e 62%, #a06f1c); color: #2f1b07; box-shadow: 0 6px 18px rgb(0 0 0 / .42), 0 0 0 4px rgb(233 171 51 / .16), inset 0 1px 0 rgb(255 255 255 / .55); }
+.at-fly-sm { width: 44px; border: 1px solid rgb(233 171 51 / .4); background: rgb(24 14 7 / .8); color: #f3e7d7; box-shadow: 0 3px 12px rgb(0 0 0 / .35); }
+.at-fly-sm[hidden] { display: none; }
+.at-fly-tags { display: none; position: absolute; left: 10px; top: 62px; max-width: calc(100% - 20px); flex-direction: column; align-items: flex-start; gap: 4px; pointer-events: none; }
+.at-live .at-fly-tags { display: flex; }
+.at-fly-tag { margin: 0; max-width: 100%; padding: .3rem .65rem; border-radius: 999px; background: rgb(24 14 7 / .9); border: 1px solid rgb(233 171 51 / .22); color: #f0dcb8; font: 500 .72rem/1.3 var(--cx-ui); letter-spacing: .03em; opacity: 0; transform: translateY(-4px); transition: opacity var(--dur-3, 640ms) var(--ease-lamp, ease), transform var(--dur-3, 640ms) var(--ease-settle, ease); }
+.at-fly-off { display: none; color: #ffe2a6; }
+.at-fly-off.is-on { display: block; }
+.at-flying .at-pin { pointer-events: none; }
+html[lang="hi"] .at-fly-tag { font: 500 .82rem/1.5 "Mukta", var(--cx-ui); letter-spacing: 0; }
+.at-flying .at-fly-tag { opacity: 1; transform: none; }
+@media (hover: hover) { .at-fly-main:hover, .at-fly-sm:hover { transform: translateY(-1px); } .at-fly-main.is-idle:hover { box-shadow: 0 8px 22px rgb(0 0 0 / .45), 0 0 0 5px rgb(233 171 51 / .22), inset 0 1px 0 rgb(255 255 255 / .55); } .at-fly-sm:hover { color: #fff; border-color: rgb(233 171 51 / .8); } }
+.at-fly-main:active, .at-fly-sm:active { transform: scale(.96); }
+.at-fly-main:focus-visible, .at-fly-sm:focus-visible { outline: 3px solid #fff1c4; outline-offset: 3px; box-shadow: 0 0 0 6px rgb(233 171 51 / .55), 0 4px 16px rgb(0 0 0 / .4); }
+.at-flying .at-tools { opacity: 0; visibility: hidden; }
+.at-flying .at-view { cursor: grab; }
+
+/* the painting that rises: its own picture behind, a dark foot under the words */
+.at-live .at-fly-sheet { display: block; position: absolute; left: 8px; right: 8px; bottom: 8px; max-height: 70%; overflow: hidden; border-radius: 6px; border: 1px solid rgb(233 171 51 / .38); background: #1a100a; color: #f3e7d7; box-shadow: 0 18px 44px rgb(0 0 0 / .55); pointer-events: auto;
+  opacity: 0; visibility: hidden; transform: translateY(calc(100% + 14px)); transition: transform var(--dur-3, 640ms) var(--ease-settle, cubic-bezier(.22, .8, .2, 1)), opacity var(--dur-2, 320ms) var(--ease-lamp, ease), visibility 0s linear var(--dur-3, 640ms); }
+.at-live .at-fly-sheet.is-up { opacity: 1; visibility: visible; transform: none; transition: transform var(--dur-3, 640ms) var(--ease-settle, cubic-bezier(.22, .8, .2, 1)), opacity var(--dur-2, 320ms) var(--ease-lamp, ease), visibility 0s; }
+.at-fly-pic { position: absolute; inset: 0; background: #2a1a0e; }
+.at-fly-pic img { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; opacity: 0; mask-image: none; -webkit-mask-image: none; transform: scale(1.08); transition: opacity var(--dur-4, 1200ms) var(--ease-lamp, ease); will-change: transform; }
+.at-fly-pic img.is-in { opacity: 1; }
+.at-fly-sheet.is-up .at-fly-pic img { animation: at-kb 11s var(--ease-lamp, ease) both; }
+@keyframes at-kb { from { transform: scale(1.09) translate3d(0, 1.5%, 0); } to { transform: scale(1) translate3d(0, 0, 0); } }
+.at-fly-pic::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to top, rgb(20 11 6 / .96) 0, rgb(20 11 6 / .88) 40%, rgb(20 11 6 / .4) 62%, rgb(20 11 6 / 0) 86%); }
+.at-fly-txt { position: relative; display: grid; gap: .4rem; margin-top: clamp(5.4rem, 30%, 9rem); padding: 0 1rem .95rem; }
+.at-fly-txt > * { opacity: 0; transform: translateY(10px); transition: opacity var(--dur-3, 640ms) var(--ease-lamp, ease), transform var(--dur-3, 640ms) var(--ease-settle, ease); }
+.at-fly-sheet.is-up .at-fly-txt > * { opacity: 1; transform: none; }
+.at-fly-sheet.is-up .at-fly-txt > :nth-child(1) { transition-delay: .16s; } .at-fly-sheet.is-up .at-fly-txt > :nth-child(2) { transition-delay: .24s; } .at-fly-sheet.is-up .at-fly-txt > :nth-child(3) { transition-delay: .34s; } .at-fly-sheet.is-up .at-fly-txt > :nth-child(4) { transition-delay: .44s; }
+.at-fly-txt .at-stop-k { color: #e9ab33; }
+.at-fly-txt .at-stop-h { font-size: clamp(1.25rem, 1.1rem + .5vw, 1.5rem); color: #fff3df; }
+.at-fly-txt .at-nopin { color: #d9c7b0; }
+.at-fly-txt .at-stop-q p { font-size: clamp(.98rem, .94rem + .2vw, 1.08rem); line-height: 1.48; color: #f3e7d7; }
+html[lang="hi"] .at-fly-txt .at-stop-q p { line-height: 1.7; }
+.at-fly-txt .at-stop-a { font-size: .86rem; }
+.at-fly-txt a { display: inline-flex; align-items: center; min-height: 44px; margin-block: -.5rem; color: #f5b565; }
+.at-fly-txt a:focus-visible { outline: 3px solid #fff1c4; outline-offset: 2px; }
+
+/* reduced motion: no flight; the stops stand together as a stepped list, the one the thread is at marked */
+.at-still .at-fly-layer { display: none !important; }
+.at-live.at-still .at-stops { gap: 2.25rem; }
+.at-live.at-still .at-stop { grid-area: auto; opacity: 1; visibility: visible; transition: none; padding-left: .9rem; border-left: 2px solid transparent; }
+.at-live.at-still .at-stop.is-on { border-left-color: #e9ab33; }
+@media (prefers-reduced-motion: reduce) { .at-fly-main, .at-fly-sm, .at-fly-tag, .at-fly-sheet, .at-fly-txt > *, .at-fly-pic img { transition: none !important; animation: none !important; } }
+@media print { .at-fly-layer { display: none !important; } }
+
+/* reduced motion on a wide screen: the map stays beside the list of stops as it is read, so the left of the page is never empty */
+@media (min-width: 900px) { .at-live.at-still .at-map { position: sticky; top: 5.5rem; } }

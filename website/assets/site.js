@@ -997,7 +997,10 @@
         });
       });
     };
+    // [listen] assets/listen.js (loaded after this file) takes the Listen buttons over: sentence-by-sentence voice, a lit sentence, speed, sleep timer
+    window.SpritualReader = { UI, scenes, total, store, root, reduced, haptic, readLang, visibleParas, goTo, current: () => current };
     listenBtns.forEach((b) => b.addEventListener('click', () => {
+      if (window.SpritualListen?.owns) return;
       if (!synth) { toast.textContent = UI.listenNA; return; } haptic();
       if (state === 'idle') {
         // say so plainly when this device has no voice for the language being read, instead of reading it wrongly or not at all
@@ -1024,7 +1027,7 @@
       const ctx = {
         UI, store, reduced, haptic, slug, total, scenes,
         speak: (text, onend, onerr, onstart) => {
-          if (!synth) return false; const L = UI.lang; const v = voice(L);
+          if (!synth) return false; const L = UI.lang; const v = window.SpritualListen?.pick ? window.SpritualListen.pick(L) : voice(L);   // [listen] the best voice this device runs itself
           const u = new SpeechSynthesisUtterance(clean(text)); u.lang = L === 'hi' ? 'hi-IN' : 'en-IN'; if (v) u.voice = v; u.rate = 0.95;
           u.onend = onend; u.onerror = onerr; u.onstart = onstart; synth.speak(u); return true;
         },
@@ -1038,6 +1041,7 @@
         land: (n) => { if (!n) return false; if (root.dataset.mode === 'leaf') goTo(n); else scenes[n - 1].scrollIntoView({ block: 'start', behavior: 'instant' }); focusScene(n); return true; },
       };
       const open = (btn) => {
+        window.SpritualListen?.stop();
         if (state !== 'idle') { state = 'idle'; synth?.cancel(); mark(null); progress(0); dockBar?.classList.remove('is-listening'); label(UI.listen); }
         load().then((W) => W(ctx, btn)).catch(() => {});
       };

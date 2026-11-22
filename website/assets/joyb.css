@@ -136,7 +136,7 @@ html[lang="hi"] .pk { font-size: 1.06rem; line-height: 1.6; }
 :root[data-motion="reduce"] .cx-open .cx-continue, :root[data-motion="reduce"] .cx-open .cx-continue .continue-pic img { transition: none !important; }
 :root[data-motion="reduce"] .cx-open .cx-continue .continue-pic img { opacity: .95; }
 
-/* short screens (a laptop with its chrome, a phone turned on its side): the three doors still fit under the line */
-@media (max-height: 700px) { .fm .cb-in.fm-t { gap: .55rem; } .fm .cb-doors { margin-top: 0; } .fm .cb-door { min-height: 44px; padding: .4rem .2rem; } .fm .cb-ds { display: none; } .fm .cb-note { margin-bottom: 0; } }
+/* short screens (a laptop with its chrome, a phone turned on its side): the doors still fit under the line. [joyG] up to 780 px tall (a 360x740 phone), so the fourth door, "Look closer", is in the first screen too */
+@media (max-height: 780px) { .fm .cb-in.fm-t { gap: .55rem; } .fm .cb-doors { margin-top: 0; } .fm .cb-door { min-height: 44px; padding: .4rem .2rem; } .fm .cb-ds { display: none; } .fm .cb-note { margin-bottom: 0; } }
 
 .cx-open .cx-continue:not([hidden]):not(:has(.continue-pic[hidden])) small { text-shadow: 0 1px 2px rgb(0 0 0 / .85), 0 0 8px rgb(0 0 0 / .5); }
