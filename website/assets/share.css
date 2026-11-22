@@ -1,0 +1,101 @@
+/* Spritual: Send this moment. The glyph in each scene's caption, the button on the film's rail, and the sheet. Loaded on
+   story pages a moment after the page is ready (share.js). Motion: transform and opacity only, on the shared tokens. */
+:root {
+  --ease-settle: cubic-bezier(.22, .8, .2, 1);
+  --ease-lamp: cubic-bezier(.3, .05, .2, 1);
+  --dur-1: 160ms; --dur-2: 320ms; --dur-3: 640ms; --dur-4: 1200ms;
+}
+
+/* ---------- the glyph beside a scene's title ---------- */
+.scene-no { position: relative; }
+/* the glyph hangs just after "Scene 4 of 10", out of the flow: it never moves the title */
+.sh-glyph { position: absolute; left: calc(100% + 1rem); top: 50%; translate: 0 -50%; z-index: 2; display: grid; place-items: center; width: 44px; height: 44px; margin: 0; padding: 0; border: 1px solid rgb(233 201 140 / .5); border-radius: 50%; background: rgb(14 8 4 / .42); color: #f6ecda; font-size: 1rem; letter-spacing: 0; text-transform: none; cursor: pointer; -webkit-tap-highlight-color: transparent; pointer-events: auto; transition: transform var(--dur-2) var(--ease-settle), background-color var(--dur-2) var(--ease-settle), border-color var(--dur-2) var(--ease-settle), opacity var(--dur-2) var(--ease-settle); }
+.sh-glyph[hidden] { display: none; }
+.sh-glyph svg, .sh-rail svg { width: 22px; height: 22px; display: block; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+@media (hover: hover) { .sh-glyph:hover { transform: translateY(-2px); background: rgb(14 8 4 / .62); border-color: rgb(233 201 140 / .9); } }
+.sh-glyph:active { transform: scale(.93); transition-duration: var(--dur-1); }
+.sh-glyph:focus-visible, .sh-rail:focus-visible, .shr button:focus-visible { outline: 3px solid rgb(233 201 140 / .95); outline-offset: 3px; }
+.sh-rail { display: grid; place-items: center; }
+.reader-bar .sh-bar { display: grid; place-items: center; min-width: 44px; min-height: 44px; padding: 0; }
+.reader-bar .sh-bar svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+html:not(.sh-on) .sh-glyph { display: none; }
+
+/* ---------- the sheet ---------- */
+dialog.shr:focus { outline: 0; }
+dialog.shr { box-sizing: border-box; width: 100%; max-width: 100%; max-height: min(94dvh, 56rem); margin: auto auto 0; padding: 0; border: 0; border-radius: 22px 22px 0 0; overflow: hidden; overscroll-behavior: contain;
+  background: radial-gradient(120% 60% at 50% 0%, #2a1a0e 0%, #17100a 46%, #0f0906 100%); color: #f6ecda; font-family: var(--cx-ui, Newsreader, Georgia, serif);
+  box-shadow: 0 -1px 0 rgb(233 201 140 / .4), 0 -30px 80px rgb(0 0 0 / .55);
+  opacity: 0; transform: translateY(32px); transition: transform var(--dur-3) var(--ease-settle), opacity var(--dur-2) var(--ease-settle); }
+dialog.shr.is-in { opacity: 1; transform: none; }
+dialog.shr::backdrop { background: rgb(8 4 2 / .7); opacity: 0; transition: opacity var(--dur-3) var(--ease-lamp); }
+dialog.shr.is-in::backdrop { opacity: 1; }
+.shr-in { display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: auto auto minmax(0, 1fr) auto; grid-template-areas: "head" "stage" "ctl" "act"; max-height: min(94dvh, 56rem); }
+.shr-head { grid-area: head; display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: .7rem .8rem .2rem 1.4rem; }
+.shr-head h2 { margin: 0; font: 500 1.5rem/1.2 var(--cx-ui, Newsreader, Georgia, serif); color: #fff3dc; }
+.shr-note { margin: .1rem 0 0; font: 400 .8rem/1.45 var(--cx-ui, Newsreader, Georgia, serif); color: #a8927d; text-align: center; text-wrap: balance; }
+html[lang="hi"] .shr-head h2 { font-family: "Mukta", var(--cx-ui, sans-serif); font-weight: 600; font-size: 1.45rem; line-height: 1.4; }
+html[lang="hi"] .shr-note { font-family: "Mukta", var(--cx-ui, sans-serif); line-height: 1.6; }
+.shr-x { flex: none; display: grid; place-items: center; width: 44px; height: 44px; margin: 0; padding: 0; border: 0; border-radius: 50%; background: transparent; color: #f6ecda; cursor: pointer; transition: background-color var(--dur-1) ease, transform var(--dur-1) var(--ease-settle); }
+.shr-x svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; }
+@media (hover: hover) { .shr-x:hover { background: rgb(233 201 140 / .12); } }
+.shr-x:active { transform: scale(.92); }
+.shr-stage { grid-area: stage; position: relative; display: grid; place-items: center; padding: .4rem 1.25rem .9rem; }
+.shr-cv { display: block; width: auto; height: auto; max-width: 100%; max-height: min(34dvh, 22rem); border-radius: 3px; box-shadow: 0 0 0 1px rgb(233 201 140 / .28), 0 18px 46px rgb(0 0 0 / .55), 0 0 60px rgb(233 170 80 / .1); }
+.shr-cv.is-new { animation: shr-in var(--dur-3) var(--ease-settle) both; }
+@keyframes shr-in { from { opacity: .0; transform: scale(.985); } to { opacity: 1; transform: none; } }
+.shr-busy { position: absolute; left: 0; right: 0; bottom: .25rem; margin: 0; text-align: center; font: 400 .8rem/1.2 var(--cx-ui, serif); color: #a8927d; opacity: 0; transition: opacity var(--dur-2) ease; }
+.is-busy .shr-busy { opacity: 1; }
+.shr-ctl { grid-area: ctl; min-height: 0; overflow: auto; overscroll-behavior: contain; padding: .2rem 1.25rem .8rem; -webkit-overflow-scrolling: touch; scrollbar-width: thin; scrollbar-color: rgb(233 201 140 / .4) transparent; }
+.shr-seg { display: grid; grid-template-columns: 1fr 1fr; gap: 0; border: 1px solid rgb(233 201 140 / .4); border-radius: 3px; overflow: hidden; }
+.shr-seg button { min-height: 46px; display: flex; align-items: center; justify-content: center; gap: .5em; margin: 0; padding: 0 .8rem; border: 0; background: transparent; color: #cdbba3; font: 500 1rem/1 var(--cx-ui, serif); cursor: pointer; transition: background-color var(--dur-2) var(--ease-settle), color var(--dur-2) var(--ease-settle); }
+.shr-seg button + button { border-left: 1px solid rgb(233 201 140 / .4); }
+.shr-seg button small { font-size: .78rem; opacity: .7; letter-spacing: .04em; }
+.shr-seg button[aria-pressed="true"] { background: rgb(233 201 140 / .16); color: #fff3dc; }
+html[lang="hi"] .shr-seg button { font-family: "Mukta", var(--cx-ui, sans-serif); font-weight: 600; }
+.shr-k { margin: 1.1rem 0 .4rem; font: 500 .74rem/1.2 var(--cx-ui, serif); letter-spacing: .24em; text-transform: uppercase; color: #e9c98c; }
+html[lang="hi"] .shr-k { letter-spacing: .04em; font: 600 .95rem/1.2 "Mukta", var(--cx-ui, sans-serif); text-transform: none; }
+.shr-lines { display: grid; gap: 2px; }
+.shr-line { display: block; width: 100%; min-height: 44px; margin: 0; padding: .65rem .8rem .65rem 1rem; border: 0; border-left: 2px solid transparent; border-radius: 0 3px 3px 0; background: transparent; color: #bda98f; text-align: left; font: 400 1.02rem/1.45 var(--cx-ui, serif); cursor: pointer; -webkit-tap-highlight-color: transparent; transition: background-color var(--dur-2) var(--ease-settle), color var(--dur-2) var(--ease-settle), border-color var(--dur-2) var(--ease-settle); }
+.shr-line span { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden; text-wrap: pretty; }
+html[lang="hi"] .shr-line { font-family: var(--cx-ui, serif); line-height: 1.7; }
+@media (hover: hover) { .shr-line:hover { color: #f1e4cc; background: rgb(233 201 140 / .06); } }
+.shr-line[aria-checked="true"] { color: #fff3dc; border-left-color: #e9c98c; background: rgb(233 201 140 / .1); }
+.shr-line:active { background: rgb(233 201 140 / .14); }
+.shr-act { grid-area: act; padding: .8rem 1.25rem calc(.7rem + env(safe-area-inset-bottom, 0px)); border-top: 1px solid rgb(233 201 140 / .22); background: linear-gradient(to bottom, rgb(15 9 6 / .0), rgb(15 9 6 / .9) 30%); }
+.shr-btns { display: flex; flex-wrap: wrap; gap: .6rem; align-items: center; }
+.shr-go { flex: 1 1 100%; order: 0; min-height: 50px; margin: 0; padding: 0 1.4rem; border: 0; border-radius: 3px; background: linear-gradient(180deg, #f7e2b4, #e6c27c); color: #1d130b; font: 600 1.05rem/1 var(--cx-ui, serif); letter-spacing: .02em; cursor: pointer; box-shadow: 0 6px 22px rgb(233 170 80 / .22); transition: transform var(--dur-2) var(--ease-settle), box-shadow var(--dur-2) var(--ease-settle), opacity var(--dur-2) ease; }
+html[lang="hi"] .shr-go { font-family: "Mukta", var(--cx-ui, sans-serif); font-size: 1.1rem; }
+@media (hover: hover) { .shr-go:not(:disabled):hover { transform: translateY(-1px); box-shadow: 0 10px 28px rgb(233 170 80 / .32); } }
+.shr-go:not(:disabled):active { transform: scale(.985); transition-duration: var(--dur-1); }
+.shr-go:disabled { opacity: .5; cursor: progress; }
+.shr-btns[data-mode="save"] .shr-go { flex-basis: calc(56% - .3rem); }
+.shr-btns[data-mode="save"] .shr-alt { flex: 1 1 calc(38% - .3rem); }
+.shr-alt { flex: 1 1 0; min-height: 44px; margin: 0; padding: 0 1rem; border: 1px solid rgb(233 201 140 / .45); border-radius: 3px; background: transparent; color: #f1e4cc; font: 500 .95rem/1 var(--cx-ui, serif); cursor: pointer; white-space: nowrap; transition: background-color var(--dur-2) var(--ease-settle), border-color var(--dur-2) var(--ease-settle), transform var(--dur-1) var(--ease-settle); }
+html[lang="hi"] .shr-alt { font-family: "Mukta", var(--cx-ui, sans-serif); font-weight: 600; }
+.shr-alt[hidden] { display: none; }
+@media (hover: hover) { .shr-alt:hover { background: rgb(233 201 140 / .1); border-color: rgb(233 201 140 / .8); } }
+.shr-alt:active { transform: scale(.97); }
+.shr-alt:disabled { opacity: .5; }
+.shr-toast { min-height: 1.3em; margin: .45rem 0 0; font: 400 .92rem/1.4 var(--cx-ui, serif); color: #e9c98c; text-align: center; }
+html[lang="hi"] .shr-toast { font-family: "Mukta", var(--cx-ui, sans-serif); }
+
+/* a screen wide enough to see the card and the words side by side */
+@media (min-width: 860px) {
+  dialog.shr { width: min(56rem, calc(100% - 64px)); margin: auto; border-radius: 18px; transform: translateY(18px) scale(.985); box-shadow: 0 0 0 1px rgb(233 201 140 / .3), 0 40px 100px rgb(0 0 0 / .6); }
+  dialog.shr.is-in { transform: none; }
+  .shr-in { grid-template-columns: minmax(0, 23rem) minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr) auto; grid-template-areas: "stage head" "stage ctl" "stage act"; height: min(40rem, 90dvh); }
+  .shr-stage { padding: 1.6rem 1rem 1.6rem 1.6rem; place-items: center; background: radial-gradient(80% 60% at 50% 45%, rgb(233 170 80 / .1), transparent 70%); }
+  .shr-cv { max-height: min(33rem, calc(90dvh - 4rem)); }
+  .shr-head { padding: 1.2rem 1.2rem .4rem 1rem; }
+  .shr-ctl { padding: .2rem 1.4rem .6rem 1rem; }
+  .shr-act { margin: 0 1.4rem 0 1rem; padding: .9rem 0 1.2rem; background: none; border-top: 1px solid rgb(233 201 140 / .22); }
+}
+@media (max-height: 640px) and (max-width: 859px) { .shr-note { display: none; } .shr-cv { max-height: 28dvh; } }
+@media (max-width: 380px) { .shr-alt { flex-basis: 100%; } }
+
+/* motion that rests: nothing moves, everything is still where it should be */
+@media (prefers-reduced-motion: reduce) { dialog.shr, dialog.shr::backdrop, .shr *, .sh-glyph { transition: none !important; animation: none !important; } dialog.shr { opacity: 1; transform: none; } dialog.shr::backdrop { opacity: 1; } }
+:root[data-motion="reduce"] dialog.shr, :root[data-motion="reduce"] dialog.shr::backdrop, :root[data-motion="reduce"] .shr *, :root[data-motion="reduce"] .sh-glyph { transition: none !important; animation: none !important; }
+:root[data-motion="reduce"] dialog.shr { opacity: 1; transform: none; }
+:root[data-motion="reduce"] dialog.shr::backdrop { opacity: 1; }
+@media print { dialog.shr, .sh-glyph, .sh-rail { display: none !important; } }

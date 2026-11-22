@@ -312,5 +312,16 @@
 
   var c = read();
   if (c && c.value === 'granted') start();
-  else if (!c) { try { localStorage.removeItem(KEY); } catch (e) {} dropCookies(); show(false); }
+  else if (!c) {
+    try { localStorage.removeItem(KEY); } catch (e) {} dropCookies();
+    // [joyB] the first visit's title sequence (the home page's titles, or the opening screen) is not asked over: the question
+    // comes once it has finished. A safety timer asks anyway if the opening never reports its end.
+    var titles = root.classList.contains('cx-js') && !root.classList.contains('cx-seen') && d.querySelector('.cx-spark');
+    if (root.dataset.opening === 'live' || titles) {
+      var asked = false, ask = function () { if (asked) return; asked = true; d.removeEventListener('spritual:enter', onEnter); if (!read()) show(false); };
+      var onEnter = function () { setTimeout(ask, 900); };
+      if (root.dataset.opening === 'live') d.addEventListener('spritual:enter', onEnter);
+      setTimeout(ask, titles ? Math.max(1200, 7600 - (window.performance ? performance.now() : 0)) : 16000);
+    } else show(false);
+  }
 })();

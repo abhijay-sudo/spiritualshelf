@@ -1,0 +1,49 @@
+/* The calm tier (calm.js, boot.js, film.js): Light mode, the dark still film for reduced motion, the kind note when the
+   device struggles, and the language switch that shows both of its words. Transform and opacity only. */
+:root { --ease-settle: cubic-bezier(.22, .8, .2, 1); --ease-lamp: cubic-bezier(.4, 0, .2, 1); --d1: 160ms; --d2: 320ms; --d3: 640ms; --d4: 1200ms; }
+
+/* ---- the language switch: both words, always in the same places; the one you are reading in is solid ---- */
+.ed-lang { gap: 0; padding: 0 .3rem; }
+.ed-lang > .ed-lang-pill.ed-lang-pill { opacity: 1; display: inline-flex; align-items: center; padding: 2px; border-radius: 999px; box-shadow: inset 0 0 0 1px color-mix(in srgb, currentColor 34%, transparent); }
+.ed-lang-opt { display: inline-grid; place-items: center; min-width: 2.1rem; height: 1.85rem; padding: 0 .5rem; border-radius: 999px; font: 600 .84rem/1 var(--cx-ui, inherit); letter-spacing: .02em; opacity: .74; transition: background-color var(--d2) var(--ease-lamp), color var(--d2) var(--ease-lamp), opacity var(--d2) var(--ease-lamp); }
+.ed-lang-opt[lang="hi"] { font-family: "Mukta", var(--cx-ui, inherit); font-size: .92rem; letter-spacing: 0; }
+.ed-lang .ed-lang-opt.ed-lang-cur { opacity: 1; background: var(--cx-gold, #f3c47e); color: #1d1007; box-shadow: 0 0 14px -2px rgb(243 196 126 / .55); }
+.ed-lang:hover .ed-lang-opt:not(.ed-lang-cur) { opacity: 1; }
+.ed-lang:active .ed-lang-pill { transform: scale(.97); }
+.ed-lang:focus-visible { outline: 2px solid var(--cx-gold, #f3c47e); outline-offset: 2px; border-radius: 999px; }
+.ed-lang .l-l { display: none; }
+@media (min-width: 760px) { .ed-lang .l-l { display: inline; } .ed-lang .l-s { display: none; } .ed-lang-opt[lang="hi"] { min-width: 3.4rem; } }
+html[lang="hi"] .ed-lang-opt { font-size: .86rem; } html[lang="hi"] .ed-lang-opt[lang="hi"] { font-size: .95rem; }
+/* ...and the same two words on the film's edge strip, stacked */
+.fm-rail .fm-lang { width: 44px; height: auto; min-height: 56px; border-radius: 22px; display: grid; gap: 1px; padding: 5px 0; font: 600 .72rem/1 var(--cx-ui); }
+.fm-lang-o { display: block; padding: 4px 0; margin: 0 4px; border-radius: 10px; opacity: .72; text-align: center; transition: background-color var(--d2) var(--ease-lamp), color var(--d2) var(--ease-lamp), opacity var(--d2) var(--ease-lamp); }
+.fm-lang-o[lang="hi"] { font: 600 .84rem/1 "Mukta", var(--cx-ui); }
+.fm-lang-o.is-cur { opacity: 1; background: var(--fm-gold, #e9c98c); color: #1d1007; }
+
+/* ---- Light mode: still paintings with one slow push, nothing deeper ---- */
+@keyframes fm-push { from { scale: 1; } to { scale: 1.075; } }
+:root[data-light]:not([data-motion="reduce"]) .fm-ly.on .fm-cam img { animation: fm-push 56s var(--ease-lamp) both; }
+:root[data-light] .fm-stage.is-off .fm-cam img { animation-play-state: paused; }
+:root[data-light] .fm-cam img { transition: transform var(--d3) var(--ease-settle); }
+:root[data-light] video.frame-video, :root[data-light] .th-lamp { display: none !important; }
+
+/* ---- reduced motion keeps the dark film: paintings rest, and only dissolve (opacity); the words come and go the same way ---- */
+:root[data-motion="reduce"].fm .fm-cam { transition: none !important; }
+:root[data-motion="reduce"].fm .fm-ly.fade { transition-duration: .9s; }
+:root[data-motion="reduce"].fm .fm-rail, :root[data-motion="reduce"].fm .fm-peek { transition-duration: .01s; }
+
+/* ---- the note: the device is struggling, so the motion rests; one touch brings it back ---- */
+.calm-note { position: fixed; z-index: 60; left: 50%; bottom: max(18px, env(safe-area-inset-bottom, 0px)); width: min(calc(100vw - 32px), 26rem); box-sizing: border-box; display: flex; align-items: center; gap: .9rem; padding: .7rem .7rem .7rem 1.1rem; border-radius: 18px; color: #f6ecda; background: rgb(24 15 9 / .96); box-shadow: 0 18px 40px -12px rgb(0 0 0 / .7), inset 0 0 0 1px rgb(243 196 126 / .38); translate: -50% 0; opacity: 0; transform: translate3d(0, 14px, 0); transition: opacity var(--d3) var(--ease-settle), transform var(--d3) var(--ease-settle); pointer-events: none; }
+/* in the film the words stand in the lower third, so the note comes from the top, clear of them */
+:root.fm-live .calm-note { bottom: auto; top: max(12px, env(safe-area-inset-top, 0px)); transform: translate3d(0, -14px, 0); }
+:root.fm-live .calm-note.is-in { transform: none; }
+.calm-note.is-in { opacity: 1; transform: none; pointer-events: auto; }
+.calm-note p { margin: 0; flex: 1; font: 500 .98rem/1.4 var(--cx-ui, Georgia, serif); text-wrap: pretty; }
+html[lang="hi"] .calm-note p { font-family: "Mukta", var(--cx-ui, Georgia, serif); font-size: 1.02rem; line-height: 1.55; }
+.calm-note button { flex: none; min-height: 44px; padding: 0 1rem; border: 0; border-radius: 999px; background: var(--cx-gold, #f3c47e); color: #1d1007; font: 700 .92rem/1 var(--cx-ui, Georgia, serif); cursor: pointer; transition: transform var(--d1) var(--ease-settle), box-shadow var(--d2) var(--ease-lamp); }
+html[lang="hi"] .calm-note button { font-family: "Mukta", var(--cx-ui, Georgia, serif); font-size: 1rem; }
+.calm-note button:active { transform: scale(.96); }
+.calm-note button:focus-visible { outline: 2px solid #fff3d6; outline-offset: 3px; }
+@media (hover: hover) and (pointer: fine) { .calm-note button:hover { box-shadow: 0 0 18px rgb(243 196 126 / .6); } }
+@media (prefers-reduced-motion: reduce) { .calm-note { transition-duration: .01s; transform: none; } }
+:root[data-motion="reduce"] .calm-note { transition-duration: .01s; transform: none; }

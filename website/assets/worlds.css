@@ -11,7 +11,7 @@
 .wl-pic img { display: block; width: 100%; height: 100%; max-width: none; object-fit: cover; }
 .wl-text { display: grid; gap: .7rem; max-width: 40rem; }
 .wl-text > * { margin: 0; }
-.wl-text p { font: 400 clamp(1.08rem, 1rem + .45vw, 1.32rem)/1.58 var(--cx-text); color: var(--wl-ink); text-shadow: 0 1px 12px rgb(10 5 0 / .8); text-wrap: pretty; }
+.wl-text p { font: 400 clamp(1.18rem, 1.08rem + .45vw, 1.4rem)/1.58 var(--cx-text);   /* [comfort] a size larger: 18.8 to 20 px on a phone, 22.4 to 23.8 px on a desktop */ color: var(--wl-ink); text-shadow: 0 1px 12px rgb(10 5 0 / .8); text-wrap: pretty; }
 .wl-h2 { font: 500 clamp(1.55rem, 1.2rem + 1.5vw, 2.4rem)/1.14 var(--cx-title); letter-spacing: -.012em; color: var(--wl-gold); text-shadow: 0 1px 16px rgb(10 5 0 / .8); text-wrap: balance; }
 .wl-n { font: 500 .8rem/1 var(--cx-ui); letter-spacing: .08em; color: var(--wl-dim); font-variant-numeric: tabular-nums; }
 html[lang="hi"] .wl-text p { font-family: "Tiro Devanagari Hindi", var(--cx-text); line-height: 1.75; }

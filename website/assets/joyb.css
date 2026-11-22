@@ -1,0 +1,142 @@
+/* Spritual: the Closing Beat, "Pick up where you left off", and the quiet marks on the library cards (lane B).
+   One motion language for the new surfaces: things rise and settle (transform and opacity only), state changes cross-fade,
+   focus is gold and generous, nothing blocks reading. Reduced motion: the same things, still. */
+:root { --ease-settle: cubic-bezier(.22, .8, .2, 1); --ease-lamp: cubic-bezier(.3, .1, .2, 1); --d1: 160ms; --d2: 320ms; --d3: 640ms; --d4: 1200ms; }
+
+/* ---------- The closing beat: on the reading page (no film) it is a quiet section under "The end" ---------- */
+.cb { margin: clamp(1.5rem, 1rem + 2vw, 3rem) auto; padding: 0 var(--gutter, 20px); max-width: 38rem; color: var(--cx-ink, var(--ink, #2a1e15)); }
+.cb-in { display: grid; gap: 1.1rem; justify-items: center; text-align: center; }
+.cb-fig { margin: 0; display: grid; gap: .7rem; justify-items: center; }
+.cb-line { margin: 0; }
+.cb-line p { margin: 0; font: italic 500 clamp(1.35rem, 1.1rem + 1.2vw, 1.9rem)/1.4 var(--cx-title, Georgia, serif); text-wrap: balance; }
+.cb-line:lang(hi) p, html[lang="hi"] .cb-line p { font-style: normal; font-weight: 500; line-height: 1.7; }
+.cb-src { margin: 0; font: 400 .86rem/1.5 var(--cx-ui, inherit); color: var(--cx-ink-2, #5c4838); text-wrap: balance; }
+html[lang="hi"] .cb-src { font-size: .96rem; line-height: 1.7; }
+.cb-src a { color: inherit; text-decoration-color: currentColor; text-underline-offset: .18em; }
+.cb-keepwrap { margin: 0; display: grid; justify-items: center; gap: .15rem; }
+.cb-keep { display: inline-flex; align-items: center; gap: .6rem; min-height: 44px; padding: 0 .9rem 0 .5rem; background: none; border: 1px solid transparent; border-radius: 999px; color: var(--cx-saffron, #a54d0d); font: 500 .95rem/1 var(--cx-ui, inherit); letter-spacing: .02em; cursor: pointer; position: relative; transition: transform var(--d1) var(--ease-settle), border-color var(--d2); -webkit-tap-highlight-color: transparent; }
+.cb-keep[hidden] { display: none; }
+.cb-keep:active { transform: scale(.97); }
+.cb-keep::before { content: ""; position: absolute; left: .1rem; top: 50%; width: 52px; height: 52px; margin-top: -26px; border-radius: 50%; background: radial-gradient(circle, rgb(255 190 100 / .5), rgb(255 150 60 / 0) 68%); opacity: 0; transform: scale(.6); transition: opacity var(--d3) var(--ease-lamp), transform var(--d3) var(--ease-lamp); pointer-events: none; }
+.cb-keep[aria-pressed="true"]::before { opacity: 1; transform: scale(1); }
+.cb-lamp { position: relative; width: 34px; height: 34px; flex: none; overflow: visible; }
+.cb-bw { fill: #c9a36a; stroke: none; } .cb-wk { stroke: #7a5426; stroke-width: 2; fill: none; stroke-linecap: round; }
+/* unlit: the flame is only drawn, a thin line, waiting; kept: it fills and stands */
+.cb-fl { fill: rgb(255 199 102 / 0); stroke: currentColor; stroke-width: 1.5; stroke-linejoin: round; opacity: .6; transform-box: fill-box; transform-origin: 50% 100%; transform: scale(.82); transition: opacity var(--d2) var(--ease-lamp), transform var(--d3) var(--ease-lamp), fill var(--d3) var(--ease-lamp), stroke-width var(--d3); }
+.cb-keep[aria-pressed="true"] .cb-fl { opacity: 1; transform: scale(1); fill: #ffc766; stroke-width: 0; }
+.cb-note { min-height: 1.3em; margin-bottom: .4rem; font: 400 .8rem/1.3 var(--cx-ui, inherit); color: var(--cx-ink-3, #6f5a49); opacity: 0; transition: opacity var(--d3) var(--ease-settle); }
+html[lang="hi"] .cb-note { font-size: .9rem; }
+.cb-note.is-on { opacity: 1; }
+.cb-doors { display: grid; width: 100%; max-width: 32rem; margin-top: .4rem; border-top: 1px solid var(--cx-line-2, rgb(42 30 21 / .22)); text-align: left; }
+.cb-door { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: 1rem; align-items: center; min-height: 56px; padding: .75rem .2rem; color: inherit; text-decoration: none; border-bottom: 1px solid var(--cx-line-2, rgb(42 30 21 / .22)); transition: transform var(--d2) var(--ease-settle), background-color var(--d2); -webkit-tap-highlight-color: transparent; }
+.cb-dk { grid-column: 1; font: 500 .7rem/1.2 var(--cx-ui, inherit); letter-spacing: .2em; text-transform: uppercase; color: var(--cx-saffron, #a54d0d); }
+html[lang="hi"] .cb-dk { letter-spacing: .04em; font-size: .86rem; text-transform: none; }
+.cb-dn { grid-column: 1; margin-top: .15rem; font: 500 clamp(1.08rem, 1rem + .4vw, 1.3rem)/1.25 var(--cx-title, Georgia, serif); text-wrap: balance; }
+.cb-ds { grid-column: 1; margin-top: .15rem; font: 400 .84rem/1.4 var(--cx-ui, inherit); color: var(--cx-ink-2, #5c4838); }
+html[lang="hi"] .cb-ds { font-size: .94rem; }
+.cb-da { grid-column: 2; grid-row: 1 / span 3; width: 22px; height: 22px; fill: none; stroke: var(--cx-saffron, #a54d0d); stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; transition: transform var(--d2) var(--ease-settle); }
+.cb-door:active { transform: scale(.992); }
+@media (hover: hover) { .cb-door:hover .cb-da { transform: translateX(4px); } .cb-door:hover .cb-dn { text-decoration: underline; text-decoration-color: rgb(165 77 13 / .45); text-underline-offset: .2em; } }
+.cb :is(a, button):focus-visible { outline: 2px solid var(--cx-saffron, #a54d0d); outline-offset: 4px; border-radius: 6px; }
+.cb-door:focus-visible { outline-offset: -2px; }
+/* the reading page, still: the section settles in once, a screen's width before it is reached is not needed */
+@media (prefers-reduced-motion: no-preference) { html:not([data-motion="reduce"]):not(.fm) .cb-i { animation: cb-rise var(--d3) var(--ease-settle) both; animation-timeline: view(); animation-range: entry 0% entry 55%; } }
+@keyframes cb-rise { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+
+/* ---------- Inside the film: the last painting holds; then the line, its source, the lamp, the doors ---------- */
+.fm .cb { margin: 0; padding: 0; max-width: none; color: var(--fm-ink); }
+/* (film.js gives the beat class `cb fm-beat`; it is held for a long dwell and never cut: it stays lit until the reader scrolls back above it) */
+.fm .cb.fm-beat { --fm-pin: 100svh; }
+/* (the room after the doors is as tall as the afterword's dark that rises over the foot of the last scene (34svh, film.css), so the doors are never under it while they are being read) */
+.fm .cb.fm-beat::after { content: ""; display: block; height: 38svh; }
+.fm .cb-in.fm-t { justify-items: start; text-align: left; gap: .85rem; max-width: calc(var(--fm-w) + var(--fm-x) + var(--fm-xr)); }
+.fm .cb-fig { justify-items: start; }
+.fm .cb-line p { font-size: clamp(1.18rem, 1rem + 1vw, 1.75rem); color: #fff8ee; }
+.fm .cb-src { color: var(--fm-gold); text-shadow: 0 1px 2px rgb(0 0 0 / .9); }
+.fm .cb-src a { text-decoration-color: rgb(233 201 140 / .55); }
+.fm .cb-keepwrap { justify-items: start; }
+.fm .cb-keep { color: var(--fm-gold); margin-left: -.5rem; }
+.fm .cb-note { color: #d9c9ac; }
+.fm .cb-doors { border-top: 0; margin-top: .1rem; }
+.fm .cb-door:first-child { border-top: 1px solid rgb(233 201 140 / .3); }
+.fm .cb-door { border-bottom-color: rgb(233 201 140 / .22); }
+.fm .cb-dk { color: var(--fm-gold); text-shadow: 0 1px 2px rgb(0 0 0 / .9); }
+.fm .cb-dn { color: #fff8ee; text-shadow: 0 1px 2px rgb(0 0 0 / .85); }
+.fm .cb-ds { color: #e6d6bb; text-shadow: 0 1px 2px rgb(0 0 0 / .85); }
+.fm .cb-da { stroke: var(--fm-gold); }
+.fm .cb :is(a, button):focus-visible { outline-color: var(--fm-gold); }
+@media (hover: hover) { .fm .cb-door:hover { transform: translateY(-2px); } .fm .cb-door:hover .cb-dn { text-decoration-color: rgb(233 201 140 / .6); } }
+@media (max-width: 699px) { .fm .cb-ds { display: none; } .fm .cb-door { min-height: 52px; padding: .55rem .2rem; } .fm .cb-door--next .cb-ds { display: block; } }
+/* the timing: the painting is held for a moment, then the line settles in, then its source, the lamp, the doors one by one */
+.fm-live .cb-i { opacity: 0; transform: translateY(14px); transition: opacity var(--d2) linear, transform var(--d2) var(--ease-settle); }
+.fm-live .fm-beat.on > .cb-in .cb-i { opacity: 1; transform: none; transition: opacity var(--d4) var(--ease-settle) var(--cb-d, 1500ms), transform var(--d4) var(--ease-settle) var(--cb-d, 1500ms); }
+.fm-live .cb-fig { --cb-d: 700ms; } .fm-live .cb-keepwrap { --cb-d: 1300ms; }
+.fm-live .cb-door:nth-child(1) { --cb-d: 1700ms; } .fm-live .cb-door:nth-child(2) { --cb-d: 1780ms; } .fm-live .cb-door:nth-child(3) { --cb-d: 1860ms; }
+/* whoever arrives by keyboard (or a screen reader) is never left on something unseen */
+.fm-live .cb-in:focus-within .cb-i { --cb-d: 0ms; opacity: 1; transform: none; transition-delay: 0ms; }
+.fm-live .fm-beat.gone .cb-i { transition: none; }
+@media (hover: hover) { .fm-live .fm-beat.on > .cb-in .cb-door:hover { transition: transform var(--d2) var(--ease-settle), background-color var(--d2); } }
+/* the page leaves for the next story: the dark closes over the last painting, the next opening takes it from there */
+.cb-veil { position: fixed; inset: 0; z-index: 90; background: radial-gradient(ellipse at 50% 64%, rgb(255 190 110 / .16), transparent 55%), #0b0706; opacity: 0; pointer-events: none; transition: opacity 560ms var(--ease-settle); }
+.cb-veil.is-on { opacity: 1; pointer-events: auto; }
+
+/* ---------- Pick up where you left off: one quiet line under the opening's buttons, gone after a few seconds ---------- */
+.cx-film-btns { position: relative; }
+.pk { position: absolute; left: 0; right: 0; top: calc(100% + .55rem); z-index: 3; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: .1rem .9rem; margin: 0; font: 400 .98rem/1.3 var(--cx-ui, inherit); color: #f3e7d7; text-shadow: 0 1px 3px rgb(0 0 0 / .9); opacity: 0; transform: translateY(8px); transition: opacity var(--d3) var(--ease-settle), transform var(--d3) var(--ease-settle); pointer-events: none; }
+html[lang="hi"] .pk { font-size: 1.06rem; line-height: 1.6; }
+.pk.is-on { opacity: 1; transform: none; pointer-events: auto; }
+.pk.is-off { opacity: 0; transform: none; transition-duration: var(--d3); pointer-events: none; }
+.pk a, .pk button { display: inline-flex; align-items: center; min-height: 44px; padding: 0 .35rem; background: none; border: 0; color: inherit; font: inherit; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.pk a { color: #ffe3b0; text-decoration: underline; text-decoration-color: rgb(255 227 176 / .5); text-underline-offset: .22em; }
+.pk button { color: #efe3cf; }
+.pk :is(a, button):active { opacity: .75; }
+.pk :is(a, button):focus-visible { outline: 2px solid #e9c98c; outline-offset: 2px; border-radius: 6px; }
+@media (hover: hover) { .pk :is(a, button):hover { color: #fff; } }
+
+/* ---------- Library cards: a thin arc for a story part read, a small lit lamp for one finished (on this device only) ---------- */
+.card-art { position: relative; }
+.pl-mark { position: absolute; top: .7rem; left: .7rem; z-index: 2; display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: rgb(14 8 4 / .62); box-shadow: 0 0 0 1px rgb(233 201 140 / .18); pointer-events: none; opacity: 0; transform: scale(.85); animation: pl-in var(--d3) var(--ease-settle) .2s forwards; }
+.pl-mark svg { width: 30px; height: 30px; overflow: visible; }
+.pl-arc-bg { fill: none; stroke: rgb(233 201 140 / .22); stroke-width: 2; } .pl-arc { fill: none; stroke: #f3c47e; stroke-width: 2.4; stroke-linecap: round; }
+.pl-mark .cb-bw { fill: #c9a36a; } .pl-mark .cb-wk { stroke: #3b2616; } .pl-mark .cb-fl { opacity: 1; transform: none; fill: #ffc766; stroke: none; transition: none; }
+.pl-mark--lamp::after { content: ""; position: absolute; inset: -8px; border-radius: 50%; background: radial-gradient(circle, rgb(255 190 100 / .32), transparent 66%); z-index: -1; }
+@keyframes pl-in { to { opacity: 1; transform: none; } }
+
+/* ---------- My reading: lines kept on this device, and the way to forget where you stopped ---------- */
+.kept-lines { list-style: none; margin: 0; padding: 0; display: grid; gap: 1rem; }
+.kept-line { padding: 1rem 1.1rem; border: 1px solid var(--cx-line, rgb(42 30 21 / .16)); border-radius: 12px; background: var(--cx-surface, #fff); display: grid; gap: .4rem; }
+.kept-line q { quotes: none; font: italic 500 1.2rem/1.45 var(--cx-title, Georgia, serif); } .kept-line q:lang(hi) { font-style: normal; line-height: 1.7; }
+.kept-line .note { margin: 0; }
+.kept-line button { justify-self: start; min-height: 44px; min-width: 44px; padding: 0 .6rem; margin-left: -.6rem; background: none; border: 0; color: var(--cx-saffron, #a54d0d); font: inherit; text-decoration: underline; cursor: pointer; }
+.pl-forget { display: grid; gap: .3rem; justify-items: start; margin-top: 1.25rem; }
+.pl-forget .note { margin: 0; max-width: 34rem; }
+
+@media (prefers-reduced-motion: reduce) { .cb-i, .pk, .pl-mark, .cb-keep, .cb-door, .cb-da, .cb-fl, .cb-note, .cb-veil { transition: none !important; animation: none !important; } .pl-mark { opacity: 1; transform: none; } }
+:root[data-motion="reduce"] :is(.cb-i, .pk, .pl-mark, .cb-keep, .cb-door, .cb-da, .cb-fl, .cb-note, .cb-veil) { transition: none !important; animation: none !important; }
+:root[data-motion="reduce"] .pl-mark { opacity: 1; transform: none; }
+
+/* the last painting is held clear for a moment before the dark gathers under the closing line */
+.fm-stage.cb-on .fm-scrim { transition: opacity var(--d4) var(--ease-settle) .5s; }
+
+/* ---------- Home, for someone who has a place in a story: the Continue slot is that story's own painting, with the place on it.
+   (The plain card in cinema.css stays underneath: without script nothing shows here at all, and nothing is fetched early.) ---------- */
+.cx-open .cx-continue:not([hidden]):not(:has(.continue-pic[hidden])) { position: relative; isolation: isolate; overflow: hidden; display: grid; align-items: end; min-height: 104px; padding: 0; border-radius: 10px; background: #1a0f08; backdrop-filter: none; -webkit-backdrop-filter: none; transition: transform var(--d2) var(--ease-settle); -webkit-tap-highlight-color: transparent; }
+.cx-open .cx-continue:not([hidden]):not(:has(.continue-pic[hidden])) .continue-pic { display: block; position: absolute; inset: 0; z-index: -2; width: auto; aspect-ratio: auto; border-radius: 0; background: none; }
+.cx-open .cx-continue:not([hidden]) .continue-pic img { opacity: 0; transition: opacity var(--d4) var(--ease-settle); object-position: 50% 40%; }
+.cx-open .cx-continue .continue-pic img.is-in { opacity: .95; }
+.cx-open .cx-continue:not([hidden]):not(:has(.continue-pic[hidden]))::before { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(to top, rgb(18 9 3 / .94) 0, rgb(18 9 3 / .78) 52%, rgb(18 9 3 / .3) 100%); }
+.cx-open .cx-continue:not([hidden]):not(:has(.continue-pic[hidden])) .continue-txt { display: grid; gap: .18rem; padding: .7rem .95rem .8rem; }
+.cx-open .cx-continue:not([hidden]):not(:has(.continue-pic[hidden])) strong { white-space: normal; overflow: visible; text-overflow: clip; font-size: 1.12rem; line-height: 1.2; text-shadow: 0 1px 2px rgb(0 0 0 / .7); }
+.cx-open .cx-continue:not([hidden]):not(:has(.continue-pic[hidden])) .continue-scene { display: block; text-shadow: 0 1px 2px rgb(0 0 0 / .7); }
+.cx-open .cx-continue:not([hidden]):not(:has(.continue-pic[hidden])) .continue-bar { display: block; margin-top: .35rem; }
+.cx-open .cx-continue:active { transform: scale(.99); }
+@media (hover: hover) { .cx-open .cx-continue:hover { transform: translateY(-2px); } }
+@media (max-width: 599px) { .cx-open .cx-continue:not([hidden]):not(:has(.continue-pic[hidden])) { min-height: 92px; } .cx-open .cx-continue:not([hidden]):not(:has(.continue-pic[hidden])) strong { font-size: 1.05rem; } }
+@media (prefers-reduced-motion: reduce) { .cx-open .cx-continue, .cx-open .cx-continue .continue-pic img { transition: none !important; } .cx-open .cx-continue .continue-pic img { opacity: .95; } }
+:root[data-motion="reduce"] .cx-open .cx-continue, :root[data-motion="reduce"] .cx-open .cx-continue .continue-pic img { transition: none !important; }
+:root[data-motion="reduce"] .cx-open .cx-continue .continue-pic img { opacity: .95; }
+
+/* short screens (a laptop with its chrome, a phone turned on its side): the three doors still fit under the line */
+@media (max-height: 700px) { .fm .cb-in.fm-t { gap: .55rem; } .fm .cb-doors { margin-top: 0; } .fm .cb-door { min-height: 44px; padding: .4rem .2rem; } .fm .cb-ds { display: none; } .fm .cb-note { margin-bottom: 0; } }
+
+.cx-open .cx-continue:not([hidden]):not(:has(.continue-pic[hidden])) small { text-shadow: 0 1px 2px rgb(0 0 0 / .85), 0 0 8px rgb(0 0 0 / .5); }

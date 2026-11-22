@@ -1,0 +1,79 @@
+/* Spritual: Keep this story on this phone, and the one install card. Loaded by keep.js a moment after a story page is ready.
+   Motion: transform and opacity only, on the shared tokens. */
+:root {
+  --ease-settle: cubic-bezier(.22, .8, .2, 1);
+  --ease-lamp: cubic-bezier(.3, .05, .2, 1);
+  --dur-1: 160ms; --dur-2: 320ms; --dur-3: 640ms; --dur-4: 1200ms;
+}
+/* ---------- the control ---------- */
+.kp { position: relative; margin: .95rem 0 0; max-width: 100%; color: #f6ecda; }
+.kp[hidden] { display: none; }
+.kp--hero { min-height: 44px; }
+.kp--hero .kp-note { display: none; }
+.kp--end { margin: 1rem 0 0; color: inherit; }
+.kp-row { display: flex; flex-wrap: wrap; align-items: center; gap: .15rem .9rem; }
+.kp-btn { position: relative; display: inline-flex; align-items: center; gap: .6rem; min-height: 44px; margin: 0; padding: 0 1.05rem 0 .8rem; border: 1px solid rgb(233 201 140 / .5); border-radius: 2px; background: rgb(14 8 4 / .34); color: inherit; font: 500 .98rem/1.2 var(--cx-ui, Newsreader, Georgia, serif); letter-spacing: .01em; text-align: left; cursor: pointer; -webkit-tap-highlight-color: transparent; transition: transform var(--dur-2) var(--ease-settle), background-color var(--dur-2) var(--ease-settle), border-color var(--dur-2) var(--ease-settle); }
+.kp--end .kp-btn { background: transparent; border-color: currentColor; border-color: color-mix(in srgb, currentColor 45%, transparent); }
+html[lang="hi"] .kp-btn, html[lang="hi"] .kp-rm { font-family: "Mukta", var(--cx-ui, sans-serif); font-weight: 500; line-height: 1.4; }
+@media (hover: hover) { .kp-btn:not(:disabled):not([aria-disabled="true"]):hover { transform: translateY(-1px); background: rgb(14 8 4 / .55); border-color: rgb(233 201 140 / .9); } }
+.kp-btn:not(:disabled):not([aria-disabled="true"]):active { transform: scale(.975); transition-duration: var(--dur-1); }
+.kp-btn:disabled { cursor: progress; }
+.kp-btn[aria-disabled="true"] { cursor: default; }
+.kp-btn:focus-visible, .kp-rm:focus-visible, .kp-install button:focus-visible { outline: 3px solid rgb(233 201 140 / .95); outline-offset: 3px; }
+.kp-ic { position: relative; display: grid; place-items: center; width: 22px; height: 22px; flex: none; }
+.kp-ic > span { grid-area: 1 / 1; display: grid; place-items: center; transition: opacity var(--dur-2) var(--ease-settle), transform var(--dur-3) var(--ease-settle); }
+.kp-ic .ic { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.kp-ic .kp-tick { stroke: #e9c98c; stroke-width: 2.2; }
+[data-keep-tick] { opacity: 0; transform: scale(.55); }
+.kp[data-state="kept"] [data-keep-tick] { opacity: 1; transform: none; }
+.kp[data-state="kept"] [data-keep-ic] { opacity: 0; transform: scale(.7); }
+.kp[data-state="working"] [data-keep-ic] { animation: kp-breathe var(--dur-4) var(--ease-lamp) infinite alternate; }
+@keyframes kp-breathe { from { opacity: .45; } to { opacity: 1; } }
+.kp-t { transition: opacity var(--dur-1) ease; }
+.kp-t.is-swap { opacity: 0; }
+.kp-s { font-size: .86em; opacity: .72; white-space: nowrap; }
+.kp-rm { min-height: 44px; margin: 0; padding: 0 .35rem; border: 0; background: none; color: inherit; font: 400 .92rem/1.2 var(--cx-ui, Newsreader, Georgia, serif); text-decoration: underline; text-underline-offset: .25em; text-decoration-color: rgb(233 201 140 / .6); opacity: .85; cursor: pointer; }
+.kp-rm[hidden] { display: none; }
+@media (hover: hover) { .kp-rm:hover { opacity: 1; } }
+.kp-bar { display: block; position: relative; height: 2px; margin: .1rem 0 0; overflow: hidden; background: rgb(233 201 140 / .22); opacity: 0; transition: opacity var(--dur-2) var(--ease-settle); }
+.kp[data-state="working"] .kp-bar { opacity: 1; }
+.kp-bar b { position: absolute; inset: 0; background: linear-gradient(90deg, #b98a3c, #e9c98c 60%, #fff1c9); transform: scaleX(var(--kp, 0)); transform-origin: 0 50%; transition: transform var(--dur-2) var(--ease-lamp); }
+.kp-note { margin: .45rem 0 0; max-width: 28rem; font: 400 .84rem/1.5 var(--cx-ui, Newsreader, Georgia, serif); opacity: .82; text-wrap: pretty; min-height: 0; }
+html[lang="hi"] .kp-note { font-family: "Mukta", var(--cx-ui, sans-serif); line-height: 1.65; }
+.kp-note:empty { display: none; }
+.kp--hero .kp-note { text-shadow: 0 1px 8px rgb(0 0 0 / .7); }
+.kp--hero .kp-btn { text-shadow: 0 1px 6px rgb(0 0 0 / .5); }
+@media (max-width: 759px) { .kp--hero { margin-top: .8rem; } }
+/* The hero control never changes its size or its place: one fixed frame, centred. "Remove" lives inside the frame's right end,
+   revealed in place once the story is kept, so the buttons above it and the words below it do not move by a pixel. */
+.kp--hero .kp-row { position: relative; display: block; width: 100%; }
+.kp--hero .kp-btn { width: 100%; justify-content: center; padding-inline: .8rem; transition: transform var(--dur-2) var(--ease-settle), background-color var(--dur-2) var(--ease-settle), border-color var(--dur-2) var(--ease-settle), padding-right var(--dur-2) var(--ease-settle); }
+.kp--hero[data-state="kept"] .kp-btn { padding-right: 5.6rem; justify-content: flex-start; }
+.kp--hero .kp-rm:not([hidden]) { position: absolute; right: 0; top: 0; height: 44px; display: grid; place-items: center; width: 5rem; min-height: 0; padding: 0; border-left: 1px solid rgb(233 201 140 / .4); border-radius: 0 2px 2px 0; text-decoration: none; font-size: .92rem; opacity: 1; animation: kp-rm-in var(--dur-2) var(--ease-settle) both; text-shadow: 0 1px 6px rgb(0 0 0 / .5); }
+.kp--hero .kp-rm:focus-visible { outline-offset: -3px; }
+@keyframes kp-rm-in { from { opacity: 0; } to { opacity: 1; } }
+@media (hover: hover) { .kp--hero .kp-rm:not([hidden]):hover { background: rgb(233 201 140 / .14); } }
+
+/* ---------- the one install card ---------- */
+.kp-install { position: fixed; z-index: 58; left: max(12px, env(safe-area-inset-left, 0px)); right: max(12px, env(safe-area-inset-right, 0px)); bottom: calc(12px + env(safe-area-inset-bottom, 0px) + var(--kp-lift, 0px)); width: min(27rem, calc(100% - 24px)); margin-inline: auto; box-sizing: border-box; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: .5rem 1rem; padding: 1.1rem 1.15rem 1rem; border-radius: 16px; border: 1px solid rgb(233 201 140 / .45); background: radial-gradient(120% 90% at 0% 0%, #34210f 0%, #1b120a 55%, #120a06 100%); color: #f6ecda; font-family: var(--cx-ui, Newsreader, Georgia, serif); box-shadow: 0 0 0 1px rgb(0 0 0 / .4), 0 18px 50px rgb(0 0 0 / .55), 0 0 44px rgb(233 170 80 / .14);
+  opacity: 0; transform: translateY(26px); transition: transform var(--dur-3) var(--ease-settle), opacity var(--dur-2) var(--ease-settle); }
+.kp-install.is-in { opacity: 1; transform: none; }
+.kp-i-ic { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; border: 1px solid rgb(233 201 140 / .5); background: radial-gradient(circle at 50% 60%, rgb(255 200 110 / .22), rgb(255 200 110 / 0) 70%); color: #f3d79b; }
+.kp-i-ic .ic { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.kp-i-tx h2 { margin: .1rem 0 .25rem; font: 500 1.2rem/1.25 var(--cx-ui, Newsreader, Georgia, serif); color: #fff3dc; }
+html[lang="hi"] .kp-i-tx h2 { font-family: "Mukta", var(--cx-ui, sans-serif); font-weight: 600; line-height: 1.45; font-size: 1.15rem; }
+.kp-i-p { margin: 0; font: 400 .95rem/1.5 var(--cx-ui, Newsreader, Georgia, serif); color: #d7c6ad; text-wrap: pretty; }
+html[lang="hi"] .kp-i-p { font-family: "Mukta", var(--cx-ui, sans-serif); line-height: 1.65; }
+.kp-i-btns { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: .6rem; margin-top: .35rem; }
+.kp-i-go, .kp-i-no { min-height: 46px; margin: 0; padding: 0 1.2rem; border-radius: 3px; font: 600 .98rem/1 var(--cx-ui, Newsreader, Georgia, serif); cursor: pointer; transition: transform var(--dur-1) var(--ease-settle), background-color var(--dur-2) var(--ease-settle); }
+html[lang="hi"] .kp-i-go, html[lang="hi"] .kp-i-no { font-family: "Mukta", var(--cx-ui, sans-serif); }
+.kp-i-go { flex: 1 1 auto; border: 0; background: linear-gradient(180deg, #f7e2b4, #e6c27c); color: #1d130b; box-shadow: 0 6px 20px rgb(233 170 80 / .22); }
+.kp-i-no { flex: 0 1 auto; border: 1px solid rgb(233 201 140 / .45); background: transparent; color: #f1e4cc; font-weight: 500; }
+.kp-i-go:active, .kp-i-no:active { transform: scale(.97); }
+@media (hover: hover) { .kp-i-no:hover { background: rgb(233 201 140 / .1); } }
+@media (min-width: 760px) { .kp-install { left: auto; right: 24px; margin: 0; bottom: calc(24px + var(--kp-lift, 0px)); } }
+
+@media (prefers-reduced-motion: reduce) { .kp *, .kp-install { transition: none !important; animation: none !important; } .kp-install { opacity: 1; transform: none; } }
+:root[data-motion="reduce"] .kp *, :root[data-motion="reduce"] .kp-install { transition: none !important; animation: none !important; }
+:root[data-motion="reduce"] .kp-install { opacity: 1; transform: none; }
+@media print { .kp, .kp-install { display: none !important; } }

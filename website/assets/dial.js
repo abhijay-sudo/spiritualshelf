@@ -5,7 +5,7 @@
 (() => {
   if (window.SpritualDial) return;
   const root = document.documentElement; const NS = 'http://www.w3.org/2000/svg';
-  const still = () => root.dataset.motion === 'reduce' || root.classList.contains('ep-lite') || matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const still = () => root.dataset.motion === 'reduce' || !!root.dataset.light || root.classList.contains('ep-lite') || matchMedia('(prefers-reduced-motion: reduce)').matches;
   const clamp = (v, a, b) => Math.min(b, Math.max(a, v)); const mod = (a, n) => ((a % n) + n) % n;
   const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
   const UI = (() => { try { return JSON.parse(document.getElementById('ui').textContent); } catch (e) { return {}; } })();

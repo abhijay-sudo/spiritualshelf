@@ -3,7 +3,7 @@
 // It stops drawing when off-screen, when the tab is hidden, and when motion is reduced (one still frame).
 (() => {
   const root = document.documentElement;
-  const reduced = () => root.dataset.motion === 'reduce' || matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const reduced = () => root.dataset.motion === 'reduce' || !!root.dataset.light || matchMedia('(prefers-reduced-motion: reduce)').matches;
   const isDark = () => root.dataset.theme === 'dark' || (!root.dataset.theme && matchMedia('(prefers-color-scheme: dark)').matches);
 
   // Palettes by hour. Night palettes are used in the dark theme whatever the hour.

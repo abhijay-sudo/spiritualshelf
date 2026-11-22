@@ -1,0 +1,121 @@
+/* Dusk: the quiet moment as a dark painting that breathes with you (dusk.js). The painting is the home's own painted lake;
+   the hour of the day tints it. The sun's light swells as you breathe in, holds, and settles as you breathe out.
+   Transform and opacity only. With less motion the light only brightens and dims; nothing moves. */
+:root { --ease-settle: cubic-bezier(.22, .8, .2, 1); --ease-lamp: cubic-bezier(.4, 0, .2, 1); --ease-breath: cubic-bezier(.45, 0, .35, 1); --d1: 160ms; --d2: 320ms; --d3: 640ms; --d4: 1200ms; }
+:root { --dk-glow: 255 188 112; }
+:root[data-hour="dawn"] { --dk-glow: 255 170 150; }
+:root[data-hour="day"] { --dk-glow: 255 214 150; }
+:root[data-hour="night"] { --dk-glow: 236 200 150; }
+.is-dusk { background: #0a0610; }
+.dusk { --gw: min(118vmin, 1040px); --sy: 44%; position: relative; overflow-x: clip; color: #f6ecda; min-height: 100vh; min-height: 100svh; }
+/* ---- the stage: the painting, the hour's wash, the light ---- */
+.dusk-stage { position: fixed; inset: 0; z-index: -1; overflow: hidden; background: #0a0610; contain: strict; }
+.dusk-pic, .dusk-pic img { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.dusk-pic img { object-fit: cover; object-position: 50% var(--sy); transform-origin: 50% var(--sy); transform: scale(1.02); opacity: 0; animation: dusk-rise 1.6s var(--ease-lamp) .1s both; transition: transform var(--d-out) var(--ease-breath); will-change: transform; }
+@keyframes dusk-rise { from { opacity: 0; } to { opacity: 1; } }
+.dusk-wash i { position: absolute; inset: 0; opacity: 0; transition: opacity var(--d4) var(--ease-lamp); }
+.dusk-wash i[data-h="dawn"] { background: linear-gradient(180deg, rgb(74 34 84 / .52) 0%, rgb(60 24 62 / .2) 46%, rgb(22 9 24 / .5) 72%, rgb(10 4 12 / .86) 100%); }
+.dusk-wash i[data-h="day"] { background: linear-gradient(180deg, rgb(24 40 74 / .46) 0%, rgb(20 30 56 / .18) 46%, rgb(10 14 26 / .5) 72%, rgb(5 7 14 / .86) 100%); }
+.dusk-wash i[data-h="dusk"] { background: linear-gradient(180deg, rgb(62 20 54 / .52) 0%, rgb(44 12 36 / .22) 46%, rgb(16 5 16 / .5) 72%, rgb(8 3 10 / .88) 100%); }
+.dusk-wash i[data-h="night"] { background: linear-gradient(180deg, rgb(8 12 42 / .78) 0%, rgb(6 8 30 / .6) 46%, rgb(4 5 18 / .8) 72%, rgb(2 3 9 / .92) 100%); }
+:root:not([data-hour]) .dusk-wash i[data-h="dusk"], :root[data-hour="dusk"] .dusk-wash i[data-h="dusk"], :root[data-hour="dawn"] .dusk-wash i[data-h="dawn"], :root[data-hour="day"] .dusk-wash i[data-h="day"], :root[data-hour="night"] .dusk-wash i[data-h="night"] { opacity: 1; }
+/* the light on the water: a sun-sized glow behind the horizon, and the ring that keeps time with it */
+.dusk-glow, .dusk-ring { position: absolute; left: 50%; top: var(--sy); border-radius: 50%; pointer-events: none; }
+.dusk-glow { width: var(--gw); height: var(--gw); margin: calc(var(--gw) / -2) 0 0 calc(var(--gw) / -2); background: radial-gradient(circle, rgb(var(--dk-glow) / 1) 0, rgb(var(--dk-glow) / .62) 10%, rgb(var(--dk-glow) / .26) 28%, rgb(var(--dk-glow) / .08) 46%, transparent 66%); transform: scale(.78); opacity: .6; will-change: transform, opacity; }
+.dusk-glow::after { content: ""; position: absolute; inset: 0; border-radius: 50%; background: radial-gradient(circle, rgb(255 246 228 / .9) 0, rgb(255 240 214 / .4) 6%, transparent 13%); animation: dusk-halo 7s var(--ease-lamp) infinite alternate; }
+@keyframes dusk-halo { from { opacity: .45; } to { opacity: 1; } }
+.dusk-ring { --rw: calc(var(--gw) * .3); width: var(--rw); height: var(--rw); margin: calc(var(--rw) / -2) 0 0 calc(var(--rw) / -2); border: 1px solid rgb(var(--dk-glow) / .5); box-shadow: 0 0 34px rgb(var(--dk-glow) / .22), inset 0 0 28px rgb(var(--dk-glow) / .14); transform: scale(.7); opacity: 0; will-change: transform, opacity; }
+.dusk-vig { position: absolute; inset: 0; background: linear-gradient(180deg, rgb(8 4 12 / .86) 0%, rgb(8 4 12 / .66) 26%, rgb(8 4 12 / .3) 44%, transparent 58%), linear-gradient(0deg, rgb(8 4 12 / .94) 0, rgb(8 4 12 / .82) 26%, rgb(8 4 12 / .52) 46%, transparent 66%); }
+/* the breath */
+.dusk[data-phase="in"] .dusk-glow { transform: scale(1.12); opacity: 1; transition: transform var(--d-in) var(--ease-breath), opacity var(--d-in) var(--ease-breath); }
+.dusk[data-phase="hold"] .dusk-glow { transform: scale(1.12); opacity: 1; animation: dusk-hold var(--d-hold) ease-in-out both; }
+.dusk[data-phase="out"] .dusk-glow { transform: scale(.74); opacity: .46; transition: transform var(--d-out) var(--ease-breath), opacity var(--d-out) var(--ease-breath); }
+@keyframes dusk-hold { 0%, 100% { transform: scale(1.12); } 50% { transform: scale(1.14); } }
+.dusk[data-phase="in"] .dusk-ring { transform: scale(1.5); opacity: .9; transition: transform var(--d-in) var(--ease-breath), opacity var(--d-in) var(--ease-breath); }
+.dusk[data-phase="hold"] .dusk-ring { transform: scale(1.5); opacity: .9; }
+.dusk[data-phase="out"] .dusk-ring { transform: scale(.7); opacity: .0; transition: transform var(--d-out) var(--ease-breath), opacity var(--d-out) var(--ease-breath); }
+.dusk[data-phase="in"] .dusk-pic img, .dusk[data-phase="hold"] .dusk-pic img { transform: scale(1.06); transition-duration: var(--d-in); }
+.dusk:not([data-phase]) .dusk-glow { transition: transform var(--d3) var(--ease-settle), opacity var(--d3) var(--ease-settle); }
+.dusk:not([data-phase]) .dusk-ring { transition: transform var(--d3) var(--ease-settle), opacity var(--d3) var(--ease-settle); }
+/* the closing bell: one ring of light goes out over the water and fades */
+.dusk-ring.is-bell { animation: dusk-bell 3.4s var(--ease-settle) both; }
+@keyframes dusk-bell { 0% { transform: scale(.8); opacity: .95; } 100% { transform: scale(3.4); opacity: 0; } }
+/* less motion, or Light mode: the light only brightens and dims */
+:root[data-motion="reduce"] .dusk-glow, :root[data-light] .dusk-glow { transform: scale(1) !important; animation: none !important; }
+:root[data-motion="reduce"] .dusk-ring, :root[data-light] .dusk-ring, :root[data-motion="reduce"] .dusk-pic img, :root[data-light] .dusk-pic img { transform: none !important; }
+:root[data-motion="reduce"] .dusk-glow::after, :root[data-light] .dusk-glow::after { animation: none; }
+:root[data-motion="reduce"] .dusk-ring.is-bell, :root[data-light] .dusk-ring.is-bell { animation: dusk-bell-still 3.4s linear both; }
+@keyframes dusk-bell-still { 0% { opacity: .9; } 100% { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .dusk-pic img { animation-duration: .01s; } }
+/* ---- the words ---- */
+.dusk-in { position: relative; box-sizing: border-box; min-height: 100vh; min-height: 100svh; display: grid; grid-template-rows: auto 1fr auto; padding: calc(var(--ed-head-h, 68px) + clamp(1rem, 3svh, 2.4rem)) var(--cx-gut-r) calc(1.4rem + env(safe-area-inset-bottom, 0px)) var(--cx-gut); max-width: 44rem; margin-inline: auto; text-align: center; }
+.dusk-intro { display: grid; gap: .55rem; justify-items: center; }
+.dusk-k { margin: 0; display: inline-flex; align-items: center; gap: .6rem; font: 500 .98rem/1.3 var(--cx-ui); letter-spacing: .03em; color: #ffd99a; text-shadow: 0 1px 12px rgb(0 0 0 / .6); }
+html[lang="hi"] .dusk-k { font-family: "Mukta", var(--cx-ui); font-size: 1.04rem; letter-spacing: 0; }
+.dusk-k-ic { display: grid; place-items: center; width: 1.9rem; height: 1.9rem; border-radius: 50%; background: rgb(243 196 126 / .16); box-shadow: inset 0 0 0 1px rgb(243 196 126 / .4); }
+.dusk-k-ic .ic { width: 1.05rem; height: 1.05rem; stroke: #f3c47e; fill: none; } .dusk-k-ic .ic-fill { fill: #f3c47e; }
+.dusk h1 { margin: 0; font: 500 clamp(2.5rem, 1.7rem + 3.8vw, 4.6rem)/1.05 var(--cx-title); letter-spacing: -.02em; color: #fff4de; text-wrap: balance; text-shadow: 0 2px 28px rgb(0 0 0 / .6); }
+html[lang="hi"] .dusk h1 { letter-spacing: 0; line-height: 1.2; }
+.dusk-lead { margin: 0; max-width: 28rem; font: italic 400 clamp(1.2rem, 1.05rem + .7vw, 1.55rem)/1.4 var(--cx-text); color: #fff0d4; text-wrap: balance; text-shadow: 0 1px 16px rgb(0 0 0 / .65); }
+html[lang="hi"] .dusk-lead { font-style: normal; font-family: "Mukta", var(--cx-text); line-height: 1.65; }
+.dusk-body { margin: 0 auto; max-width: 27rem; font: 400 1.02rem/1.6 var(--cx-text); color: #fff6e6; text-wrap: pretty; text-shadow: 0 1px 14px rgb(0 0 0 / .7); }
+html[lang="hi"] .dusk-body { font-family: "Mukta", var(--cx-text); font-size: 1.06rem; line-height: 1.8; }
+/* while you breathe */
+.dusk-live { position: absolute; left: 0; right: 0; top: calc(var(--sy) + min(28vmin, 15rem)); display: grid; gap: .3rem; justify-items: center; pointer-events: none; opacity: 0; transition: opacity var(--d3) var(--ease-lamp); }
+.dusk-live::before { content: ""; position: absolute; left: 50%; top: -2.2rem; width: min(100%, 44rem); height: calc(100% + 4.4rem); translate: -50% 0; background: radial-gradient(ellipse closest-side at center, rgb(6 3 10 / .6), rgb(6 3 10 / .32) 55%, transparent 100%); pointer-events: none; z-index: -1; }
+.dusk-cue { margin: 0; min-height: 1.4em; font: 500 clamp(1.7rem, 1.3rem + 1.6vw, 2.3rem)/1.2 var(--cx-title); color: #fff4de; text-shadow: 0 2px 22px rgb(0 0 0 / .75), 0 0 2px rgb(0 0 0 / .5); }
+html[lang="hi"] .dusk-cue { line-height: 1.5; }
+.dusk-cue.is-new { animation: dusk-cue var(--d3) var(--ease-settle) both; }
+@keyframes dusk-cue { from { opacity: 0; transform: translate3d(0, 8px, 0); } to { opacity: 1; transform: none; } }
+.dusk-time { margin: 0; font: 500 1.05rem/1 var(--cx-ui); font-variant-numeric: tabular-nums; color: rgb(250 240 222 / .78); text-shadow: 0 1px 12px rgb(0 0 0 / .8); }
+.dusk[data-state="live"] .dusk-live, .dusk[data-state="paused"] .dusk-live { opacity: 1; }
+.dusk[data-state="paused"] .dusk-live { pointer-events: auto; }
+/* the controls */
+.dusk-bottom { grid-row: 3; display: grid; gap: 1.1rem; justify-items: center; align-self: end; }
+.dusk-ui { display: grid; gap: 1.1rem; justify-items: center; width: 100%; }
+.dusk-opts { display: grid; gap: .9rem; width: 100%; justify-items: center; }
+.dusk-set { margin: 0; padding: 0; border: 0; min-width: 0; display: grid; gap: .45rem; justify-items: center; }
+.dusk-set legend { padding: 0; margin: 0 auto .45rem; font: 600 .78rem/1.2 var(--cx-ui); letter-spacing: .1em; text-transform: uppercase; color: #ffd99a; text-shadow: 0 1px 10px rgb(0 0 0 / .7); }
+html[lang="hi"] .dusk-set legend { font-family: "Mukta", var(--cx-ui); font-size: .92rem; letter-spacing: 0; text-transform: none; }
+.dusk-row { display: flex; flex-wrap: wrap; gap: .5rem; justify-content: center; }
+.dusk-row > span { display: contents; }
+.dusk-row > span[hidden] { display: none; }
+.dusk-opt { position: relative; display: block; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.dusk-opt input { position: absolute; opacity: 0; inset: 0; width: 100%; height: 100%; margin: 0; cursor: pointer; }
+.dusk-opt > span { display: grid; place-items: center; gap: .1rem; min-height: 44px; min-width: 5.2rem; box-sizing: border-box; padding: .45rem 1.05rem; border-radius: 999px; background: rgb(14 8 14 / .58); box-shadow: inset 0 0 0 1px rgb(246 236 218 / .34); color: #f6ecda; transition: background-color var(--d2) var(--ease-lamp), color var(--d2) var(--ease-lamp), box-shadow var(--d2) var(--ease-lamp), transform var(--d1) var(--ease-settle); }
+.dusk-opt b { font: 600 .98rem/1.15 var(--cx-ui); } html[lang="hi"] .dusk-opt b { font-family: "Mukta", var(--cx-ui); font-size: 1.04rem; }
+.dusk-opt small { font: 400 .78rem/1.2 var(--cx-ui); opacity: .82; } html[lang="hi"] .dusk-opt small { font-family: "Mukta", var(--cx-ui); font-size: .84rem; }
+.dusk-opt input:checked + span { background: var(--cx-gold, #f3c47e); color: #1d1007; box-shadow: 0 0 22px -4px rgb(243 196 126 / .6); }
+.dusk-opt input:focus-visible + span { outline: 2px solid #fff3d6; outline-offset: 3px; }
+.dusk-opt:active > span { transform: scale(.97); }
+@media (hover: hover) and (pointer: fine) { .dusk-opt:hover input:not(:checked) + span { box-shadow: inset 0 0 0 1px rgb(246 236 218 / .7); } }
+.dusk-acts { display: flex; flex-wrap: wrap; gap: .6rem; justify-content: center; }
+.dusk-btn { display: inline-grid; place-items: center; min-height: 52px; padding: 0 1.7rem; box-sizing: border-box; border: 0; border-radius: 999px; font: 700 1.05rem/1 var(--cx-ui); text-decoration: none; cursor: pointer; -webkit-tap-highlight-color: transparent; transition: transform var(--d1) var(--ease-settle), box-shadow var(--d3) var(--ease-settle), background-color var(--d2) var(--ease-lamp); }
+html[lang="hi"] .dusk-btn { font-family: "Mukta", var(--cx-ui); font-size: 1.08rem; }
+.dusk-btn[hidden] { display: none; }
+.dusk-btn--go { background: var(--cx-gold, #f3c47e); color: #1d1007; box-shadow: 0 0 0 0 rgb(243 196 126 / .0), 0 10px 28px -8px rgb(0 0 0 / .7); }
+.dusk-btn--quiet { background: rgb(14 8 14 / .55); color: #f6ecda; box-shadow: inset 0 0 0 1px rgb(246 236 218 / .4); font-weight: 600; }
+.dusk-btn:active { transform: scale(.96); }
+.dusk-btn:focus-visible { outline: 2px solid #fff3d6; outline-offset: 3px; }
+@media (hover: hover) and (pointer: fine) { .dusk-btn--go:hover { transform: translateY(-2px); box-shadow: 0 0 30px 0 rgb(243 196 126 / .5), 0 14px 30px -8px rgb(0 0 0 / .7); } .dusk-btn--quiet:hover { background: rgb(14 8 14 / .75); } }
+.dusk-note { margin: 0; font: 400 .88rem/1.4 var(--cx-ui); color: rgb(250 240 222 / .72); text-shadow: 0 1px 10px rgb(0 0 0 / .8); }
+html[lang="hi"] .dusk-note { font-family: "Mukta", var(--cx-ui); font-size: .94rem; }
+.dusk .paused-from { width: 100%; max-width: 26rem; box-sizing: border-box; padding: .7rem 1rem; border-radius: 14px; background: rgb(14 8 14 / .6); box-shadow: inset 0 0 0 1px rgb(246 236 218 / .22); text-align: left; }
+.dusk .paused-from .rail-kicker { color: #f3c47e; } .dusk .paused-title { margin: .1rem 0 0; font-weight: 600; color: #fff4de; } .dusk .paused-q { margin: .15rem 0 0; color: rgb(250 240 222 / .85); font-style: italic; }
+.dusk-done { display: grid; gap: .8rem; justify-items: center; }
+.dusk-done[hidden] { display: none; }
+.dusk-done h2:focus { outline: none; }
+.dusk-done h2 { margin: 0; font: 500 clamp(1.7rem, 1.3rem + 1.6vw, 2.3rem)/1.2 var(--cx-title); color: #fff4de; text-shadow: 0 2px 22px rgb(0 0 0 / .7); }
+.dusk-done p { margin: 0; max-width: 26rem; font: 400 1.05rem/1.55 var(--cx-text); color: rgb(250 240 222 / .92); text-shadow: 0 1px 12px rgb(0 0 0 / .7); }
+html[lang="hi"] .dusk-done p { font-family: "Mukta", var(--cx-text); }
+/* the chrome steps back while you breathe, and returns when you stop */
+.dusk-intro, .dusk-body, .dusk-opts, .dusk-note, .dusk .paused-from { transition: opacity var(--d3) var(--ease-lamp), visibility 0s linear 0s; }
+.dusk[data-state="live"] :is(.dusk-intro, .dusk-body, .dusk-opts, .dusk-note, .paused-from), .dusk[data-state="done"] :is(.dusk-intro, .dusk-body, .dusk-opts, .dusk-note, .paused-from), .dusk[data-state="paused"] :is(.dusk-intro, .dusk-body, .dusk-opts, .dusk-note, .paused-from) { opacity: 0; visibility: hidden; transition: opacity var(--d3) var(--ease-lamp), visibility 0s linear var(--d3); }
+/* arrival (with scripts and motion): the words rise out of the dark, one after another */
+:root.cx-js .dusk-intro > *, :root.cx-js .dusk-body, :root.cx-js .dusk-ui { animation: dusk-in var(--d4) var(--ease-settle) both; }
+:root.cx-js .dusk-intro > :nth-child(1) { animation-delay: .5s; } :root.cx-js .dusk-intro > :nth-child(2) { animation-delay: .58s; } :root.cx-js .dusk-intro > :nth-child(3) { animation-delay: .66s; }
+:root.cx-js .dusk-body { animation-delay: .8s; } :root.cx-js .dusk-ui { animation-delay: .9s; }
+@keyframes dusk-in { from { opacity: 0; transform: translate3d(0, 14px, 0); } to { opacity: 1; transform: none; } }
+@media (max-height: 700px) { .dusk-in { padding-top: calc(var(--ed-head-h, 68px) + .6rem); } .dusk-opts { gap: .6rem; } .dusk-btn { min-height: 48px; } }
+@media (max-width: 400px) { .dusk-opt > span { min-width: 4.4rem; padding-inline: .85rem; } }
+@media print { .dusk-stage { display: none; } .dusk { color: #222; } }

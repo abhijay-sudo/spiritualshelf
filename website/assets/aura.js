@@ -5,7 +5,7 @@ const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
 const ease = (t) => -(Math.cos(Math.PI * t) - 1) / 2;
 const weak = (navigator.hardwareConcurrency || 4) <= 2 || (navigator.deviceMemory || 4) <= 1;
 window.SpritualAura = ({ UI, reduced, Sound }) => {
-const still = () => reduced() || root.classList.contains('ep-lite');
+const still = () => reduced() || !!root.dataset.light || root.classList.contains('ep-lite');
 const wire = (b) => {
 if (b.master._au) return; b.master._au = 1;
 const L = b.ctx.createDynamicsCompressor(), post = b.ctx.createGain(); L.threshold.value = -6; L.knee.value = 3; L.ratio.value = 20; L.attack.value = .004; L.release.value = .22; post.gain.value = .715;

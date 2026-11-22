@@ -2,7 +2,7 @@
    words, the camera travels across it with the reading, the words sit low in the frame, and each painting dissolves into
    the next. Everything here hangs off .fm on <html> (set by boot.js before the first paint, when motion and data allow)
    and .fm-live (set by film.js once the stage is built). Without them the page is the stacked reading page. */
-.fm { --fm-ink: #f6ecda; --fm-gold: #e9c98c; --fm-night: #0b0706; --fm-b: calc(7svh + env(safe-area-inset-bottom, 0px)); --fm-x: 22px; --fm-xr: 34px; --fm-w: 34rem; --fm-pin: 60svh; --fm-pin-t: 50svh; --t: 18 10 7; }
+.fm { --fm-ink: #f6ecda; --fm-gold: #e9c98c; --fm-night: #0b0706; --fm-b: calc(7svh + env(safe-area-inset-bottom, 0px)); --fm-x: 22px; --fm-xr: 34px; --fm-w: 34rem; --fm-fs: clamp(1.18rem, 1.08rem + .5vw, 1.34rem); --fm-pin: 60svh; --fm-pin-t: 50svh; --t: 18 10 7; }
 .fm:has(.reader-bar.is-listening) { --fm-b: calc(7svh + 4.5rem + env(safe-area-inset-bottom, 0px)); }
 
 /* ---------- The stage: two layers at most, moved by transform and crossed by opacity ---------- */
@@ -13,7 +13,7 @@
 .fm-stage.is-off { visibility: hidden; }
 .fm-ly { position: absolute; inset: 0; opacity: 0; }
 .fm-ly.on { opacity: 1; }
-.fm-ly.fade { transition: opacity .9s cubic-bezier(.4, 0, .3, 1); }
+.fm-ly.fade { transition: opacity var(--dis, .9s) cubic-bezier(.4, 0, .3, 1); }   /* [comfort] film.js sets --dis from the scene's tempo and Night Lamp */
 .fm-cam { position: absolute; left: 0; top: 0; transform-origin: 0 0; will-change: transform; transition: transform 1.3s cubic-bezier(.45, 0, .15, 1); }
 .fm-cam img, .fm-cam canvas { position: absolute; inset: 0; display: block; width: 100%; height: 100%; max-width: none; }
 /* the picture's own dark, risen only as high as the words on screen need, and lifted between paragraphs: never a box */
@@ -60,7 +60,8 @@
 .fm .scenes { padding: 0 0 6svh; }
 .fm .scene { display: block; padding: 0; }
 .fm .scene-text { display: block; opacity: 1 !important; animation: none !important; transform: none !important; translate: none !important; }
-.fm .scene-text p.fm-t { font-size: clamp(1.06rem, 1rem + .5vw, 1.32rem); line-height: 1.52; }
+.fm .scene-text p.fm-t { font-size: var(--fm-fs); line-height: 1.52; text-wrap: pretty; }   /* [comfort] a touch larger on a phone (19 to 20.4 px at 360); --hi-m is the Hindi size choice */
+.fm .scene-text p.fm-t:lang(hi) { font-size: calc(var(--fm-fs) * var(--hi-m, 1)); }
 .fm .scene-text p.fm-t:lang(hi), html[lang="hi"] .fm .scene-text p.fm-t { line-height: 1.8; }
 .fm .scene-text p.fm-t::first-letter { float: none !important; font: inherit !important; color: inherit !important; padding: 0 !important; }
 .fm .shot.fm-beat { --fm-pin: var(--fm-pin-t); aspect-ratio: auto; }
@@ -251,7 +252,8 @@ html[lang="hi"] .fm-door button { font-size: 1.08rem; }
   /* a wide screen shows the whole painting: the dark gathers under the words on the left and leaves the rest clear */
   .fm-scrim { -webkit-mask-image: linear-gradient(to right, #000 0, #000 38%, rgb(0 0 0 / .25) 72%, rgb(0 0 0 / .12) 100%); mask-image: linear-gradient(to right, #000 0, #000 38%, rgb(0 0 0 / .25) 72%, rgb(0 0 0 / .12) 100%); }
   .fm-live .fm-rail { right: 14px; top: 50%; }
-  .fm .scene-text p.fm-t { font-size: clamp(1.3rem, .9rem + .75vw, 1.7rem); line-height: 1.5; }
+  .fm { --fm-fs: clamp(1.3rem, .9rem + .75vw, 1.7rem); }
+  .fm .scene-text p.fm-t { line-height: 1.5; }
   .fm-door .fm-lampx { width: 190px; height: 190px; }
   .fm .fm-end-lamp { width: 128px; height: 128px; }
   .fm .shot-card .scene-no { font-size: .84rem; }
@@ -278,3 +280,9 @@ html[lang="hi"] .fm-door button { font-size: 1.08rem; }
 .fm .shot-card .scene-no::after { background: linear-gradient(90deg, var(--fm-gold) calc(var(--lx, -40%) - 45%), #fffaf0 var(--lx, -40%), var(--fm-gold) calc(var(--lx, -40%) + 45%)); }
 .fm-rail ol::before { background: linear-gradient(to bottom, rgb(246 236 218 / .34) calc(var(--ly, -40%) - 24%), #fff6dc var(--ly, -40%), rgb(246 236 218 / .34) calc(var(--ly, -40%) + 24%)); }
 :root:not(.fm) .cx-film .scene:first-child .scene-text > .pair:first-child > p[lang="en"]::first-letter { text-shadow: calc(var(--ln, 0) * -5px) calc(var(--lm, 0) * -4px) 18px rgb(255 186 96 / var(--la, 0)); }
+
+/* [comfort] Scene tempo: how long a scene's words and painting are held (the scroll each beat is lit for). Quiet lingers, fall moves;
+   an arrival lets its title stand a little longer over the wide painting. The dissolve and the camera are film.js's (data-tempo). */
+.fm .scene[data-tempo="quiet"] { --fm-pin: 74svh; --fm-pin-t: 62svh; }
+.fm .scene[data-tempo="fall"] { --fm-pin: 50svh; --fm-pin-t: 40svh; }
+.fm .scene[data-tempo="arrival"] { --fm-pin-t: 60svh; }

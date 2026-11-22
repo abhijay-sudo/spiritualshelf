@@ -3,7 +3,7 @@ const d = document, root = d.documentElement;
 const $ = (s, r = d) => r.querySelector(s), $$ = (s, r = d) => [...r.querySelectorAll(s)];
 const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
 const weak = (navigator.deviceMemory || 8) < 2 || (navigator.hardwareConcurrency || 8) < 3;
-const still = () => weak || root.dataset.motion === 'reduce' || root.classList.contains('ep-lite') || matchMedia('(prefers-reduced-motion: reduce)').matches;
+const still = () => weak || root.dataset.motion === 'reduce' || !!root.dataset.light || root.classList.contains('ep-lite') || matchMedia('(prefers-reduced-motion: reduce)').matches;
 const KEY = 'spritual:ty-lang';
 window.SpritualType = ({ UI = {}, say = () => {} } = {}) => {
 if (window.SpritualType.on) return; window.SpritualType.on = true;
@@ -197,10 +197,12 @@ for (const ev of ['wheel', 'touchstart', 'keydown', 'pointerdown']) addEventList
 addEventListener('pageshow', () => root.classList.remove('ty-leave'));
 if (UI.samePath) $$('[data-lang-switch]').forEach((a) => a.addEventListener('click', (e) => {
 if (e.defaultPrevented || e.button || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
-const href = a.href, m = href.match(/#page-(\d+)$/); if (!m) return;
+const at = filmOn() ? window.SpritualFilmAt?.() : null;
+let href = a.href; if (at) { href = href.split('#')[0] + '#page-' + at.n; a.href = href; }
+const m = href.match(/#page-(\d+)$/); if (!m) return;
 const n = +m[1], sc = scenes[n - 1]; if (!sc) return;
 let j = -1, y = 0; const pairs = $$('.scene-text > .pair', sc);
-if (filmOn()) { const on = $('.fm-beat.on', sc); j = on ? pairs.indexOf(on) : -1; }
+if (filmOn()) { if (at) j = Math.min(at.j, pairs.length - 1); else { const on = $('.fm-beat.on', sc); j = on ? pairs.indexOf(on) : -1; } }
 else {
 const line = innerHeight * .3; j = pairs.findIndex((p) => p.getBoundingClientRect().bottom > line);
 if (j < 0) j = pairs.length - 1; else if (j === 0 && pairs[0].getBoundingClientRect().top > innerHeight * .62) j = -1;

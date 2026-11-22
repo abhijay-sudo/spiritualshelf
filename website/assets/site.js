@@ -41,8 +41,9 @@
 
   /* ---------- Sound: synthesised, opt-in, remembered ---------- */
   const Sound = (() => {
-    let ctx, master, drone, want = 1;   // want: how loud the drone sits (Watch lowers it under the narration)
-    const on = () => store.get('sound', false);
+    let ctx, master, drone, want = 1, forced = null;   // want: how loud the drone sits (Watch lowers it under the narration)
+    // [dusk] forced: the quiet moment's own choice (tanpura or not) stands in for the lamp while it lasts; null gives the lamp back
+    const on = () => (forced == null ? store.get('sound', false) : forced);
     const ensure = () => {
       if (!ctx) { ctx = new (window.AudioContext || window.webkitAudioContext)(); master = ctx.createGain(); master.gain.value = 0.6; master.connect(ctx.destination); }
       if (ctx.state === 'suspended') ctx.resume();
@@ -129,7 +130,7 @@
     const duck = (v) => { want = v; if (!drone || drone.pending || !ctx) return; const g = drone.g.gain; const t = ctx.currentTime; g.cancelScheduledValues(t); g.setValueAtTime(g.value, t); g.linearRampToValueAtTime((drone.level || 0.07) * v, t + 1.5); };
     /* aura: the page's one audio context and its master gain, for assets/aura.js (bus(false) never creates one) */
     const bus = (make = true) => { if (make) ensure(); return ctx ? { ctx, master } : null; };
-    return { on, bell, whisper, breath, droneStart, droneStop, swell, duck, river: riverStart, riverStop, bus };
+    return { on, bell, whisper, breath, droneStart, droneStop, swell, duck, river: riverStart, riverStop, bus, force: (v) => { forced = v; } };
   })();
   const paintSound = () => {
     const on = Sound.on();
@@ -266,16 +267,20 @@
   const form = $('[data-comfort]');
   if (form) {
     const prefs = store.get('prefs', {});
-    for (const k of ['size', 'theme', 'motion']) {
+    for (const k of ['size', 'theme', 'motion', 'lead', 'measure', 'hisize', 'lamp', 'aa'/* [comfort] */]) {
       const input = form.querySelector(`input[name="${k}"][value="${prefs[k] || ''}"]`);
       if (input) input.checked = true;
     }
     form.addEventListener('change', (e) => {
       const { name, value } = e.target;
       const p = store.get('prefs', {});
-      const apply = () => { if (value) { root.dataset[name] = value; p[name] = value; } else { delete root.dataset[name]; delete p[name]; } if (name === 'motion') osCalm(); };
+      // [comfort] the saved choice is written now, not inside the view transition's later callback (it was saved before it was set)
+      if (value) p[name] = value; else delete p[name];
+      const apply = () => { if (value) root.dataset[name] = value; else delete root.dataset[name]; if (name === 'motion') osCalm();
+        // [comfort] Night Lamp is the dark theme with amber ink; turning it off gives the reader's own colour choice back
+        if (name === 'lamp') { if (value === 'on') root.dataset.theme = 'sanctum'; else if (p.theme) root.dataset.theme = p.theme; else delete root.dataset.theme; } };
       // a new text size re-flows the whole story: the paragraph being read stays where it is on the screen
-      if (name === 'theme' && document.startViewTransition && !reduced()) {
+      if ((name === 'theme' || name === 'lamp') && document.startViewTransition && !reduced()) {
         // the new light spreads from the switch that was touched, as a lamp's would
         const b = (e.target.closest('label') || e.target).getBoundingClientRect(), x = Math.round(b.left + b.width / 2), y = Math.round(b.top + b.height / 2), r = Math.ceil(Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y)));
         root.classList.add('vt-wave'); const vt = document.startViewTransition(apply);
@@ -510,7 +515,7 @@
     return ok;
   };
   const afterErase = () => {
-    for (const k of ['size', 'theme', 'motion']) delete root.dataset[k];
+    for (const k of ['size', 'theme', 'motion', 'lead', 'measure', 'hisize', 'lamp', 'aa'/* [comfort] */]) delete root.dataset[k];
     osCalm();
     for (const r of $$('[data-comfort] input[value=""]')) r.checked = true;
     Sound.droneStop(); Sound.riverStop(); paintSound();
@@ -545,11 +550,14 @@
     // reads as the anusvara; roman diacritics fold away (Rāma finds Rama). Both the query and what it searches are folded.
     const norm = (s) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').normalize('NFC').replace(/[ङञणनम]्(?=[क-ह])/g, 'ं').replace(/ँ/g, 'ं');
     for (const el of [...cards, ...$$('[data-more] li')]) el.dataset.search = norm(el.dataset.search || '');
+    const FILLER = new Set(('i im i\'m i’m am is are was were be been being a an the to of in on at for and or my me mine it its this that these those so do does you your we our with about some very really just how what why when who want wanna need like feel feeling please tell show find read story stories ' + 'मैं मुझे मुझको हूं हूँ हैं है था थी थे का की के को में से और या पर एक यह वह तो भी ही मेरा मेरी मेरे कि कुछ बहुत रहा रही रहे कैसे क्या क्यों चाहिए चाहता चाहती').split(' ').map((w) => norm(w.toLowerCase())).filter(Boolean));
     const apply = () => {
       const f = new FormData(filters);
       const rawQ = String(f.get('q') || '').trim(); const q = norm(rawQ.toLowerCase()); const value = f.get('value') || ''; const coll = f.get('coll') || ''; const time = f.get('time') || '';
       let n = 0;
-      const words = q ? q.split(/\s+/).filter((w) => w.length > 1 || /[^\x00-\x7f]/.test(w)) : [];
+      let words = q ? q.split(/\s+/).filter((w) => w.length > 1 || /[^\x00-\x7f]/.test(w)) : [];
+      // [joyB] filler words do not search ("I am angry" looks for "angry", not for every story with an "am" in it); a query made only of them searches for nothing
+      { const rest = words.filter((w) => !FILLER.has(w.replace(/^[^\p{L}\p{M}]+|[^\p{L}\p{M}]+$/gu, ''))); words = rest; }   // (a query of nothing but filler, "i am", "the", is not a search: the whole library stays)
       const passes = (c, every) => { const m = +c.dataset.minutes; return (!words.length || words[every ? 'every' : 'some']((w) => c.dataset.search.includes(w))) && (!value || c.dataset.values.split(' ').includes(value)) && (!coll || c.dataset.c === coll)
         && (!time || (time === '6' ? m <= 6 : time === '7' ? m === 7 : m >= 8)); };
       for (const c of cards) { const ok = passes(c, true); c.hidden = !ok; if (ok) n++; }
@@ -821,6 +829,8 @@
     }));
     const markDay = () => { const days = store.get('days', []); if (!days.includes(dayKey())) { days.push(dayKey()); store.set('days', days.slice(-120)); } };
     // real: the reader is actually in the scenes (not just looking at the title card), so their place is worth keeping
+    // [joyB] has the reader moved the page themselves since arriving (or since choosing "Pick up at scene N")? See setCurrent
+    let moved = false; ['wheel', 'touchmove', 'keydown'].forEach((ev) => addEventListener(ev, () => { moved = true; }, { passive: true, capture: true })); document.addEventListener('spritual:pickup', () => { moved = false; });
     const setCurrent = (n, scrollInto, real = true) => {
       current = n; maxSeen = Math.max(maxSeen, n);
       if (nowLabel) nowLabel.textContent = fmt(UI.sceneOf, { n, t: total });
@@ -834,7 +844,14 @@
       // the language switch carries the scene across (only when the other language has this story)
       if (UI.samePath) langLinks.forEach((a) => { a.href = a.getAttribute('href').split('#')[0] + (entered ? '#page-' + n : ''); });
       if (!real) return;
-      store.set('last', { slug, scene: n, total, at: Date.now() });
+      // [joyB] a place for each story (the library's arcs and lamps, "Pick up at scene N"), on this device only; the old single place is carried over once (assets/joyb.js)
+      let placed = n;
+      { let pl = store.get('places', null); const old = store.get('last', null);
+        if (!pl) { pl = {}; if (old && old.slug && old.slug !== slug) pl[old.slug] = { s: +old.scene || 1, t: +old.total || 1, d: +old.scene >= +old.total ? 1 : 0, at: old.at || 0 }; }
+        // (jumping to a saved place lands a scene short of it, and that must not walk the place back each time: only the reader's own scrolling lowers it)
+        const prev = pl[slug], keep = prev && !prev.d && n < prev.s && !moved ? prev.s : n;
+        pl[slug] = { s: keep, t: total, d: (prev && prev.d) || (n === total ? 1 : 0), at: Date.now() }; store.set('places', pl); placed = keep; }
+      store.set('last', { slug, scene: placed, total, at: Date.now() });
       if (n >= Math.ceil(total / 2)) markDay();
       if (n === total && !reader.dataset.done) { reader.dataset.done = '1'; document.dispatchEvent(new CustomEvent('spritual:story', { detail: { kind: 'complete', slug } })); Sound.bell(523, 0.2); const d = $('[data-done-line]'); if (d) d.textContent = UI.doneLine; const f = $('[data-story-fig] .fig, [data-story-fig] .art'); if (f) { f.classList.add('is-bowing'); f.addEventListener('animationend', () => f.classList.remove('is-bowing'), { once: true }); } }
       if (scrollInto) scenes[n - 1].scrollIntoView({ behavior: reduced() ? 'auto' : 'smooth', block: 'start' });
@@ -1150,7 +1167,10 @@
 
   /* ---------- Quiet moment: 70 s, five rounds of 4 s in, 4 s hold, 6 s out ---------- */
   const pause = $('[data-pause]');
-  if (pause) {
+  // [dusk] the quiet moment as a dark breathing painting (assets/dusk.js, fetched here, on this page only)
+  if (pause && pause.hasAttribute('data-dusk') && UI.dusk) {
+    const js = document.createElement('script'); js.src = UI.dusk.js; js.async = true; js.onload = () => window.SpritualDusk?.({ UI, store, reduced, Sound, haptic, pad }); document.head.append(js);
+  } else if (pause) {
     const breath = $('[data-breath]'); const cue = $('[data-cue]'); const left = $('[data-left]'); const begin = $('[data-begin]'); const stop = $('[data-stop]'); const done = $('[data-done]'); const bead = $('[data-ring-bead]');
     const TOTAL = 70, CYCLE = 14; let timer = null; let lock = null; let t0 = 0; let raf = 0;
     const clock = (s) => `${Math.floor(s / 60)}:${pad(s % 60)}`;
@@ -1188,7 +1208,7 @@
      data-saver or reduced motion. The still stays underneath; the clip fades in on its first real frame. */
   const clips = $$('video.frame-video[data-video]');
   const lowData = !!navigator.connection?.saveData || matchMedia('(prefers-reduced-data: reduce)').matches;
-  if (clips.length && !reduced() && !lowData) {
+  if (clips.length && !reduced() && !lowData && !root.dataset.light) {   // [calm] never in Light mode
     const slow = /\b(2g|3g)\b/.test(navigator.connection?.effectiveType || '');
     // 1080p only for a wide screen (CSS width, not pixel density) on a connection that is not cellular; phones get 720p
     const wantHD = !slow && innerWidth >= 1000 && !/cellular/.test(navigator.connection?.type || '');
@@ -1305,7 +1325,16 @@
       io.observe(v);
     });
     const idle = () => ('requestIdleCallback' in window ? requestIdleCallback(watch, { timeout: 1500 }) : setTimeout(watch, 300));
-    if (document.readyState === 'complete') idle(); else addEventListener('load', idle, { once: true });
+    // [calm] The clips (the opening's portrait cut, 0.5 MB; a day's film, 0.8 MB) are not asked for while the page is still
+    // arriving. On a phone-sized screen or a slow or metered line they wait for the reader's first touch, key or scroll (or,
+    // on a line that is not slow, six quiet seconds); elsewhere for the page to be loaded and idle. Never on Save-Data.
+    const patient = pocket || slow || /cellular/.test(navigator.connection?.type || '');
+    const go = () => { if (document.readyState === 'complete') idle(); else addEventListener('load', idle, { once: true }); };
+    if (patient) {
+      const EV = ['pointerdown', 'touchstart', 'keydown', 'wheel', 'scroll']; let t = 0;
+      const once = (e) => { if (e && e.type === 'scroll' && performance.now() < 2500) return; clearTimeout(t); EV.forEach((e) => removeEventListener(e, once)); go(); };
+      EV.forEach((e) => addEventListener(e, once, { passive: true })); if (!slow) t = setTimeout(once, 6000);
+    } else go();
     document.addEventListener('visibilitychange', () => clips.forEach((v) => { if (document.hidden) { if (!v.paused) v.pause(); } else if (v.getAttribute('src') && !v.dataset.hold && host(v)?.classList.contains('is-live')) v.play().catch(() => {}); }));
   }
 

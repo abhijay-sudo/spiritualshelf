@@ -13,7 +13,7 @@
   var mq = matchMedia('(prefers-reduced-motion: reduce)');
   var calm = function () {
     var c = navigator.connection;
-    return mq.matches || root.dataset.motion === 'reduce' || root.classList.contains('ep-lite') || !!(c && c.saveData) ||
+    return mq.matches || root.dataset.motion === 'reduce' || !!root.dataset.light || root.classList.contains('ep-lite') || !!(c && c.saveData) ||
       (navigator.deviceMemory && navigator.deviceMemory <= 2) || (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 2);
   };
   var clamp = function (v, a, b) { return v < a ? a : v > b ? b : v; };

@@ -4,7 +4,7 @@
   const root = document.documentElement; const map = document.querySelector('[data-at-map]'); const dataEl = document.getElementById('atlas-data');
   if (!map || !dataEl) return;
   const D = JSON.parse(dataEl.textContent); const view = map.querySelector('[data-at-view]'); const sheet = map.querySelector('[data-at-sheet]');
-  const still = () => root.dataset.motion === 'reduce' || root.classList.contains('ep-lite') || matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const still = () => root.dataset.motion === 'reduce' || !!root.dataset.light || root.classList.contains('ep-lite') || matchMedia('(prefers-reduced-motion: reduce)').matches;
   const clamp = (v, a, b) => Math.min(b, Math.max(a, v)); const fill = (s, v) => s.replace(/\{(\w+)\}/g, (m, k) => v[k]);
   const el = (tag, cls, html) => { const e = document.createElement(tag); if (cls) e.className = cls; if (html) e.innerHTML = html; return e; };
   root.classList.add('at-live'); if (!still()) { root.classList.add('at-draw'); setTimeout(() => root.classList.remove('at-draw'), 3200); }

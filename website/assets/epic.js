@@ -8,7 +8,7 @@
 (function () {
   'use strict';
   var d = document, root = d.documentElement;
-  var reduced = function () { return root.dataset.motion === 'reduce' || matchMedia('(prefers-reduced-motion: reduce)').matches; };
+  var reduced = function () { return root.dataset.motion === 'reduce' || !!root.dataset.light || matchMedia('(prefers-reduced-motion: reduce)').matches; };
   var lowData = !!(navigator.connection && navigator.connection.saveData) || matchMedia('(prefers-reduced-data: reduce)').matches;
   // Save-Data: every page is still (epic.css stops the entrances; nothing below starts)
   if (lowData) root.classList.add('ep-lite');

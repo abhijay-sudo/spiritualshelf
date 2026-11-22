@@ -1,0 +1,200 @@
+/* Spritual UI motion system (lane E). Loaded last on every page (after epic.css), with ui-motion.js.
+   One motion language for the chrome of the site: page transitions, the header, the menu, buttons, cards, sheets, entrances,
+   empty and loading states. It animates transform (translate, scale) and opacity only, never layout, and it never touches the
+   reading surfaces (the film reader, a story's text): those stay still so nothing competes with the words.
+   The tokens below are the shared vocabulary; other layers may read them. */
+
+/* ---------- Tokens ---------- */
+:root {
+  --ease-settle: cubic-bezier(.22, .8, .2, 1);      /* things arriving: quick start, long gentle landing */
+  --ease-lamp: cubic-bezier(.45, .05, .25, 1);      /* light rising and falling: slow in, slow out */
+  --ease-leave: cubic-bezier(.4, 0, 1, 1);          /* things leaving: they go quickly and do not linger */
+  --dur-1: 160ms; --dur-2: 320ms; --dur-3: 640ms; --dur-4: 1200ms;
+  --stagger: 60ms;                                  /* 40 to 80 ms between neighbours */
+  --ui-rise: 16px;                                  /* how far a thing rises as it settles */
+  --ui-ring: #a8620a; --ui-ring-soft: rgb(168 98 10 / .26);   /* focus: deep gold on paper */
+  --ui-glow: rgb(243 196 126 / .2);                 /* the lamp that follows a pointer */
+  --ui-dawn: url("art/act1-1200.webp");             /* a quiet painted dawn for pages that have no painting of their own */
+  --ui-wash: linear-gradient(rgb(251 248 243 / .7), rgb(251 248 243 / .9) 55%);
+  --ui-wash-empty: linear-gradient(rgb(251 248 243 / .84), rgb(251 248 243 / .93));
+  --ui-wash-dark: linear-gradient(rgb(24 16 11 / .64), rgb(24 16 11 / .87) 52%, rgb(24 16 11 / .92));
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --ui-ring: #f3c47e; --ui-ring-soft: rgb(243 196 126 / .3); --ui-wash: var(--ui-wash-dark); --ui-wash-empty: linear-gradient(rgb(24 16 11 / .8), rgb(24 16 11 / .92)); } }
+:root[data-theme="dark"], :root[data-theme="sanctum"], :root[data-room="theatre"]:not([data-theme="light"]) { --ui-ring: #f3c47e; --ui-ring-soft: rgb(243 196 126 / .3); --ui-wash: var(--ui-wash-dark); --ui-wash-empty: linear-gradient(rgb(24 16 11 / .8), rgb(24 16 11 / .92)); }
+
+@keyframes ui-rise { from { opacity: 0; translate: 0 var(--ui-rise); } }
+@keyframes ui-fade { from { opacity: 0; } }
+@keyframes ui-draw { from { scale: 0 1; opacity: 0; } }
+@keyframes ui-lens { from { opacity: .55; scale: 1.045; } }
+@keyframes ui-vt-in { from { opacity: 0; translate: 0 10px; } }
+@keyframes ui-vt-fade { from { opacity: 0; } }
+@keyframes ui-shimmer { from { translate: -100% 0; } to { translate: 100% 0; } }
+
+/* ---------- Page transitions ----------
+   The page being left holds still, whole; the next one comes up over it (so there is never a pale or dark frame between two
+   pages): it dissolves and rises a hair. Going back or forward just dissolves. The header is its own layer, so it stays put
+   while the page changes under it. The painting that opens into a story (cx-hero) and a person's tile (data-vt="who") keep
+   their shared-element morph, retuned to the same easing. */
+::view-transition-old(root) { animation: none; mix-blend-mode: normal; }
+::view-transition-new(root) { animation: ui-vt-in var(--dur-3) var(--ease-settle) both; mix-blend-mode: normal; }
+:root[data-nav="back"]::view-transition-new(root) { animation: ui-vt-fade var(--dur-2) var(--ease-lamp) both; }
+::view-transition-group(cx-hero) { animation-duration: 760ms; animation-timing-function: var(--ease-settle); }
+::view-transition-group(ui-head) { animation-duration: var(--dur-2); animation-timing-function: var(--ease-lamp); }
+.ed-head { view-transition-name: ui-head; }
+:root[data-motion="reduce"]::view-transition-group(*), :root[data-motion="reduce"]::view-transition-old(*), :root[data-motion="reduce"]::view-transition-new(*) { animation: none !important; }
+
+/* ---------- Header: clear over a painting, glass over text ----------
+   Three layers that only change opacity: the dark-to-clear gradient over art, and the glass over text. Nothing about the
+   bar's size or position changes, so the page never shifts. */
+.ed-head { background: transparent; isolation: isolate; border-bottom-color: transparent;
+  transition: translate .45s var(--ed-ease, var(--ease-settle)), color var(--dur-2) var(--ease-lamp), border-color var(--dur-2) var(--ease-lamp), text-shadow var(--dur-2) var(--ease-lamp); }
+.ed-head::before, .ed-head::after { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none; transition: opacity var(--dur-2) var(--ease-lamp); }
+.ed-head::after { background: color-mix(in srgb, var(--cx-paper, #fbf8f3) 94%, transparent); opacity: 1; }
+.ed-head.is-solid, .ed-head.is-open { border-bottom-color: var(--cx-line, rgb(90 55 25 / .16)); }
+.has-hero .ed-head, .has-hero .ed-head:not(.is-solid):not(.is-open) { background: transparent; border-bottom-color: transparent; }
+.has-hero .ed-head::before { background: linear-gradient(to bottom, rgb(24 10 2 / .66), rgb(24 10 2 / .5) 55%, rgb(24 10 2 / .12) 92%, rgb(24 10 2 / 0)); opacity: 1; }
+.has-hero .ed-head::after { opacity: 0; }
+.has-hero .ed-head.is-solid, .has-hero .ed-head.is-open { background: transparent; }
+.has-hero .ed-head.is-solid::before, .has-hero .ed-head.is-open::before { opacity: 0; }
+.has-hero .ed-head.is-solid::after, .has-hero .ed-head.is-open::after { opacity: 1; }
+.is-cast.has-hero .ed-head:not(.is-solid):not(.is-open)::before { opacity: 0; }
+@media (hover: hover) and (min-width: 900px) {
+  .ed-head.is-solid::after { background: color-mix(in srgb, var(--cx-paper, #fbf8f3) 96%, transparent); }
+}
+@media (prefers-reduced-motion: reduce) { .ed-head, .ed-head::before, .ed-head::after { transition: none; } }
+:root[data-motion="reduce"] :is(.ed-head, .ed-head::before, .ed-head::after) { transition: none; }
+:root:not(.cx-cine) .ed-head { transition: color var(--dur-2), border-color var(--dur-2); }
+
+/* pages with no painting of their own (plain pages, the Atlas): the dawn runs up behind the bar, which is clear at the top of the page
+   and takes its glass only once the page has moved (editorial.js sets .is-solid) */
+body:has(> main:is(.cx-plain, .at)) .ed-head:not(.is-solid):not(.is-open) { border-bottom-color: transparent; }
+body:has(> main:is(.cx-plain, .at)) .ed-head:not(.is-solid):not(.is-open)::after { opacity: 0; }
+
+/* ---------- The menu opens like a sheet of warm light ---------- */
+.ed-menu { overflow-x: clip; }
+.ed-menu::before { content: ""; position: fixed; z-index: 0; left: 50%; top: -30vh; width: 150vmax; height: 90vmax; margin-left: -75vmax; pointer-events: none;
+  background: radial-gradient(closest-side, rgb(243 170 80 / .22), rgb(232 145 58 / .08) 55%, transparent); opacity: 0; scale: .6; transform-origin: 50% 20%;
+  transition: opacity var(--dur-4) var(--ease-lamp), scale var(--dur-4) var(--ease-settle); }
+.ed-menu[open]::before { opacity: 1; scale: 1; }
+.ed-menu-in { position: relative; z-index: 1; }
+.ed-menu::backdrop { background: rgb(12 6 2 / .55); }
+:root:not([data-motion="reduce"]) .ed-menu {
+  animation: none; transition: opacity var(--dur-3) var(--ease-settle), translate var(--dur-3) var(--ease-settle), scale var(--dur-3) var(--ease-settle), display var(--dur-3) allow-discrete, overlay var(--dur-3) allow-discrete; }
+:root:not([data-motion="reduce"]) .ed-menu:not([open]) { opacity: 0; translate: 0 -1.25rem; scale: .985; transition-duration: var(--dur-2); transition-timing-function: var(--ease-leave); }
+@starting-style { :root:not([data-motion="reduce"]) .ed-menu[open] { opacity: 0; translate: 0 -1.25rem; scale: .985; } }
+:root:not([data-motion="reduce"]) .ed-menu[open] :is(.ed-menu-links, .ed-menu-colls) > li { animation-duration: var(--dur-3); animation-timing-function: var(--ease-settle); }
+:root:not([data-motion="reduce"]) .ed-menu[open] .ed-menu-foot { animation: ui-rise var(--dur-3) var(--ease-settle) 420ms both; }
+.ed-menu-links a { transition: color var(--dur-2) var(--ease-lamp), translate var(--dur-2) var(--ease-settle); }
+@media (hover: hover) and (pointer: fine) { .ed-menu-links a:hover { color: var(--cx-gold, #f3c47e); translate: .35rem 0; } }
+.ed-mega { transition: opacity var(--dur-2) var(--ease-settle), translate var(--dur-2) var(--ease-settle); }
+:root:not([data-motion="reduce"]) .ed-mega:not([hidden]) { animation: ui-rise var(--dur-2) var(--ease-settle) both; --ui-rise: 8px; }
+
+/* ---------- Focus: gold, generous, always visible ---------- */
+:where(a, button, input, select, textarea, summary, [tabindex]:not([tabindex="-1"]), [role="button"]):focus-visible {
+  outline: 2px solid var(--ui-ring); outline-offset: 3px; box-shadow: 0 0 0 6px var(--ui-ring-soft); }
+.chip input:focus-visible + span { outline: 2px solid var(--ui-ring); outline-offset: 3px; box-shadow: 0 0 0 6px var(--ui-ring-soft); }
+
+/* ---------- Buttons, chips, cards: pressed everywhere; lift and light only for a pointer ---------- */
+:where(.cx-btn, .ed-btn, .btn, .save, .chip span, .ed-menu-btn, .ed-icon, .cx-round, .dial-fab, .cx-sound, .ed-lang, .ed-saved, .ed-nav-btn, .link-btn, .chip-link) {
+  transition: translate var(--dur-1) var(--ease-settle), scale var(--dur-1) var(--ease-settle), background-color var(--dur-2) var(--ease-lamp), border-color var(--dur-2) var(--ease-lamp), color var(--dur-2) var(--ease-lamp), box-shadow var(--dur-2) var(--ease-lamp), opacity var(--dur-2); }
+:where(.cx-btn, .ed-btn, .btn, .save, .chip, .ed-menu-btn, .ed-icon, .cx-round, .dial-fab, .cx-sound, .link-btn):active { scale: .965; }
+.chip:active span { scale: .965; transform: none; }
+@media (hover: hover) and (pointer: fine) {
+  :where(.cx-btn, .ed-btn, .btn-primary):not(.reader-bar *, :disabled):hover { translate: 0 -2px; box-shadow: 0 10px 24px -10px rgb(243 170 80 / .55); }
+  :where(.cx-btn, .ed-btn, .btn-primary):not(:disabled):active { translate: 0 0; box-shadow: none; }
+  .chip:hover span { translate: 0 -1px; }
+  /* a card rises a little; its painting leans in; a soft gold lamp follows the pointer across the painting (ui-motion.js) */
+  .grid .card { transition: translate var(--dur-3) var(--ease-settle), opacity .35s var(--ease-settle), transform .35s var(--ease-settle), box-shadow .35s var(--ease-settle), border-color .3s, display .35s allow-discrete; }
+  .cx-poster { transition: translate var(--dur-3) var(--ease-settle); }
+  .grid .card:hover, .cx-poster:hover { translate: 0 -4px; }
+  .card:hover .card-art img { scale: 1.045; }
+  .card-art img { transition: scale var(--dur-4) var(--ease-settle); }
+  [data-lit]::after { content: ""; position: absolute; inset: 0; z-index: 2; pointer-events: none; opacity: 0; transition: opacity var(--dur-3) var(--ease-lamp);
+    background: radial-gradient(22rem circle at var(--mx, 50%) var(--my, 50%), var(--ui-glow), transparent 62%); }
+  [data-lit].is-lit::after { opacity: 1; }
+}
+.card-art { position: relative; }
+/* reading surfaces stay still: no lift, no lamp, in the reader and on a story's own page */
+:is(.cx-film, .reader-main, .reader-bar, .scene, .mx-text, [data-reader]) :is(.btn, .cx-btn, .ed-btn, .chip):not(:active) { translate: 0 0 !important; box-shadow: none !important; }
+
+/* ---------- Entrances: rise and settle, one after another ---------- */
+:root:not([data-motion="reduce"]) {
+  /* the page-head of Library, Collections, Daily, Festivals, My reading and the like */
+  .is-cx-head .ed-page-head-in > *, .ed-page-head-in > * { animation: ui-rise 900ms var(--ease-settle) calc(120ms + var(--ui-i, 0) * var(--stagger)) both; }
+  .ed-page-head-in > :nth-child(1) { --ui-i: 0; } .ed-page-head-in > :nth-child(2) { --ui-i: 1; } .ed-page-head-in > :nth-child(3) { --ui-i: 2; } .ed-page-head-in > :nth-child(4) { --ui-i: 3; } .ed-page-head-in > :nth-child(5) { --ui-i: 4; }
+  /* the painting itself comes into focus */
+  .ed-page-media { animation: ui-lens var(--dur-4) var(--ease-lamp) both; transform-origin: 50% 40%; }
+  /* the Atlas (plain pages, the 404 and the empty states arrive through epic.js, which already staggers them) */
+  .at-head > * { animation: ui-rise 900ms var(--ease-settle) calc(120ms + var(--ui-i, 0) * var(--stagger)) both; }
+  .at-head > :nth-child(2) { --ui-i: 1; } .at-head > :nth-child(3) { --ui-i: 2; } .at-head > :nth-child(4) { --ui-i: 3; }
+  .at-stage { animation: ui-rise 1000ms var(--ease-settle) 380ms both; }
+}
+/* the gold rule under a plain page's title is drawn once */
+.cx-plain-in > h1 { position: relative; padding-bottom: .9rem; }
+.cx-plain-in > h1::after { content: ""; position: absolute; left: 0; bottom: 0; width: 3.5rem; height: 2px; background: var(--cx-marigold, #e8913a); transform-origin: 0 50%; border-radius: 2px; }
+:root:not([data-motion="reduce"]) .cx-plain-in > h1::after { animation: ui-draw 900ms var(--ease-lamp) 520ms both; }
+
+/* ---------- A painted dawn behind pages that had none ----------
+   (the Atlas, Scroll worlds and the plain reading pages): the sunrise lake, washed so the words keep their contrast */
+:is(.cx-plain, .at) { position: relative; isolation: isolate; }
+:is(.cx-plain, .at)::before { content: ""; position: absolute; z-index: -1; inset: calc(-1 * (var(--ed-head-h, 64px) + env(safe-area-inset-top, 0px))) 0 auto 0; height: min(64svh, 34rem); pointer-events: none;
+  background: var(--ui-wash), var(--ui-dawn) center 62% / cover no-repeat;
+  -webkit-mask-image: linear-gradient(#000, #000 42%, transparent); mask-image: linear-gradient(#000, #000 42%, transparent); }
+:root:not([data-motion="reduce"]) :is(.cx-plain, .at)::before { animation: ui-fade var(--dur-4) var(--ease-lamp) both; }
+.at-head .ed-kicker, .cx-plain-in .ed-kicker { color: inherit; }
+
+/* ---------- Sheets and dialogs share one behaviour ----------
+   They rise and settle over a warm scrim; Escape, the scrim and (on touch) a swipe down put them away; native modal
+   dialogs hold focus inside and give it back. */
+dialog.sheet::backdrop { background: radial-gradient(120% 70% at 50% 100%, rgb(58 28 8 / .5), rgb(12 6 2 / .72)); -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); }
+:root:not([data-motion="reduce"]) dialog.sheet { transition: opacity var(--dur-3) var(--ease-settle), translate var(--dur-3) var(--ease-settle), scale var(--dur-3) var(--ease-settle), display var(--dur-3) allow-discrete, overlay var(--dur-3) allow-discrete; }
+:root:not([data-motion="reduce"]) dialog.sheet:not([open]) { opacity: 0; translate: 0 2.25rem; scale: .985; transition-duration: var(--dur-2); transition-timing-function: var(--ease-leave); }
+:root:not([data-motion="reduce"]) dialog.sheet::backdrop { transition: opacity var(--dur-3) var(--ease-lamp), display var(--dur-3) allow-discrete, overlay var(--dur-3) allow-discrete; }
+:root:not([data-motion="reduce"]) dialog.sheet:not([open])::backdrop { opacity: 0; transition-duration: var(--dur-2); }
+@starting-style { :root:not([data-motion="reduce"]) dialog.sheet[open] { opacity: 0; translate: 0 2.25rem; scale: .985; } :root:not([data-motion="reduce"]) dialog.sheet[open]::backdrop { opacity: 0; } }
+dialog.sheet.ui-drag { transition: none !important; }
+/* let go past the threshold: the sheet carries on down and fades, quickly, then closes */
+dialog.sheet.ui-away { transition: translate 260ms var(--ease-leave), opacity 260ms var(--ease-leave) !important; }
+dialog.sheet { overscroll-behavior: contain; }
+/* the grab handle every bottom sheet shows */
+@media (max-width: 600px) { dialog.sheet .sheet-in::before { content: ""; display: block; width: 2.6rem; height: 4px; border-radius: 4px; background: var(--cx-line-2, rgb(90 55 25 / .3)); margin: -.5rem auto .25rem; } dialog.sheet--bottom .sheet-in::before { margin: -.4rem auto .2rem; } }
+
+/* ---------- Empty, loading ---------- */
+.empty { border: 1px solid var(--cx-line-2, rgb(90 55 25 / .3)); border-radius: 4px; background: radial-gradient(120% 140% at 0 0, color-mix(in srgb, var(--cx-marigold, #e8913a) 10%, transparent), transparent 60%), var(--cx-surface, transparent); }
+.empty { position: relative; overflow: hidden; isolation: isolate; }
+/* (epic.js can leave a box that was hidden when the page loaded waiting faint: once it is shown, it is simply there) */
+.empty:not([hidden]).ep-rv { opacity: 1; }
+.empty:not(.empty--fig)::before { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none; background: var(--ui-wash-empty), var(--ui-dawn) center 60% / cover no-repeat; }
+/* the words are the point of this box: they sit on a deep wash (78% or more from the top) and take the full ink colour */
+.empty:not(.empty--fig) :is(h1, h2, h3, p) { color: var(--cx-ink, #2a1e15); }
+/* a painting that has not arrived yet rests as a slow warm sheen, not a hole; ui-motion.js clears it the moment the image lands */
+.ui-ph { position: relative; background: color-mix(in srgb, var(--cx-sand, #33261c) 70%, transparent); overflow: hidden; }
+.ui-ph::before { content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none; background: linear-gradient(100deg, transparent 20%, rgb(243 196 126 / .16) 50%, transparent 80%); animation: ui-shimmer 1.6s var(--ease-lamp) 4; }
+@media (prefers-reduced-motion: reduce) { .ui-ph::before { animation: none; opacity: .5; } }
+:root[data-motion="reduce"] .ui-ph::before { animation: none; opacity: .5; }
+
+/* ---------- Reduced motion: still, and still beautiful ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .card-art img { transition: none !important; }
+  .card:hover .card-art img { scale: 1; }
+  .ed-menu, .ed-menu::before, dialog.sheet, dialog.sheet::backdrop { transition: none !important; }
+  .ed-menu::before { scale: 1; }
+  :where(.cx-btn, .ed-btn, .btn, .chip span) { transition: background-color var(--dur-1), border-color var(--dur-1), color var(--dur-1); }
+}
+:root[data-motion="reduce"] :is(.ed-menu, .ed-menu::before, dialog.sheet, dialog.sheet::backdrop) { transition: none !important; }
+:root[data-motion="reduce"] .ed-menu::before { scale: 1; }
+:root[data-motion="reduce"] .card-art img { transition: none !important; }
+:root[data-motion="reduce"] .card:hover .card-art img { scale: 1; }
+:root[data-motion="reduce"] :where(.cx-btn, .ed-btn, .btn, .grid .card, .cx-poster):hover { translate: 0 0 !important; }
+@media print { .ed-head::before, .ed-head::after, :is(.cx-plain, .at)::before { display: none; } }
+
+/* ---------- 44 px to touch: the Atlas's map buttons and place names, the questions list ---------- */
+.at-tools button { position: relative; }
+.at-tools button::after { content: ""; position: absolute; inset: -3px; }
+@media (pointer: coarse) { .at-off a { display: inline-flex; align-items: center; min-height: 44px; } .at .at-rname::after { content: ""; position: absolute; inset: -9px -4px; } }
+.cx-qs li { padding: 0; }
+.cx-qs a { padding-block: .85rem; }
+
+/* ---------- Opening a story: the incoming page waits a breath so the painting's morph lands first ---------- */
+:root[data-vt="story"]::view-transition-new(root) { animation-delay: 120ms; }
+:root[data-vt="story"]::view-transition-old(cx-hero), :root[data-vt="story"]::view-transition-new(cx-hero) { background: #1a110a; }

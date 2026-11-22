@@ -15,7 +15,7 @@
   if (!secs.length || !window.PointerEvent || !('IntersectionObserver' in window)) return;
   var mm = window.matchMedia ? function (q) { return window.matchMedia(q).matches; } : function () { return false; };
   var conn = navigator.connection;
-  if (root.classList.contains('ep-lite') || (conn && conn.saveData) || mm('(prefers-reduced-data: reduce)') || mm('(prefers-reduced-motion: reduce)')) return;
+  if (root.classList.contains('ep-lite') || root.dataset.light || (conn && conn.saveData) || mm('(prefers-reduced-data: reduce)') || mm('(prefers-reduced-motion: reduce)')) return;
   if ((navigator.deviceMemory && navigator.deviceMemory <= 2) || (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 2)) return;
 
   var el = function (tag, cls, attrs) { var n = doc.createElement(tag); if (cls) n.className = cls; if (attrs) for (var k in attrs) n.setAttribute(k, attrs[k]); return n; };

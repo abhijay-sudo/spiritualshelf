@@ -9,7 +9,7 @@ sky.classList.add('is-on');
 const ac = new AbortController();
 const on = (t, ev, fn, o) => t.addEventListener(ev, fn, Object.assign({ signal: ac.signal }, o));
 const mq = matchMedia('(prefers-reduced-motion: reduce)');
-const calm = () => root.dataset.motion === 'reduce' || mq.matches;
+const calm = () => root.dataset.motion === 'reduce' || !!root.dataset.light || mq.matches;
 let wasCalm = calm();
 const UI = JSON.parse(sky.querySelector('[data-st-ui]').textContent);
 const hi = root.lang === 'hi';

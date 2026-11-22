@@ -3,6 +3,8 @@
 (function () {
   var d = document.documentElement, me = document.currentScript;
   d.lang = (me && me.dataset.lang) || d.lang || 'en';
+  // [dusk] the hour, for the pages that take their colours from it: dawn, day, dusk or night (a word, for this moment only)
+  try { var hr = new Date(), hm = hr.getHours() * 60 + hr.getMinutes(); d.dataset.hour = hm < 300 || hm >= 1170 ? 'night' : hm < 480 ? 'dawn' : hm < 990 ? 'day' : 'dusk'; } catch (e) {}
   // the not-found page carries both languages; a missing address under /hi/ gets the Hindi one (see lost.js)
   if (me && me.hasAttribute('data-lost') && /^\/hi(\/|$)/.test(location.pathname)) { d.lang = 'hi'; d.dataset.lostLang = 'hi'; }
   var calm = false;
@@ -11,6 +13,13 @@
     if (p.size) d.dataset.size = p.size;
     if (p.theme) d.dataset.theme = p.theme;
     if (p.motion) d.dataset.motion = p.motion;
+    // [comfort] the reader's own comfort choices (comfort.css, the Aa sheet): set here so the first paint is already theirs.
+    // Night Lamp is the dark theme with warm amber text (comfort.css); it wins over the colour choice while it is on.
+    if (p.lead) d.dataset.lead = p.lead;
+    if (p.measure) d.dataset.measure = p.measure;
+    if (p.hisize) d.dataset.hisize = p.hisize;
+    if (p.aa) d.dataset.aa = p.aa;
+    if (p.lamp === 'on') { d.dataset.lamp = 'on'; d.dataset.theme = 'sanctum'; }
     calm = p.motion === 'reduce';
   } catch (e) { p = {}; }
   // A story page carries its own language only (the other edition is its own page; site.js fetches it when the reader
@@ -24,18 +33,27 @@
     var mine; try { mine = JSON.parse(localStorage.getItem('spritual:prefs') || '{}').motion; } catch (e) {}
     if (mq.matches || mine === 'reduce') d.dataset.motion = 'reduce'; else delete d.dataset.motion;
   });
+  // [keep] a browser that can keep a story for offline reading (the Cache API on a secure page): the hero's quiet keep control
+  // holds its place from the first paint (site.css .kp-can), so it never moves the story's buttons when it appears
+  if (window.caches && window.fetch && window.isSecureContext) d.classList.add('kp-can');
   if (!calm && !mq.matches) d.classList.add('cx-js');
+  // [calm] Light mode (assets/calm.js, calm.css): the reader's own choice (Reading comfort > Motion), or this tab's own
+  // "resting the motion" after the device struggled (calm.js keeps only that word, for this tab: never a measurement).
+  // data-light is read live by every script that moves anything; set here, before the first paint, so nothing flashes.
+  try { if (p.motion === 'light') d.dataset.light = 'manual'; else if (sessionStorage.getItem('spritual:calm') === 'rest') d.dataset.light = 'auto'; } catch (e) {}
+  if (d.dataset.light) d.classList.remove('cx-js');   // Light mode keeps the entrances still, like reduced motion
   // [type] a language switch that carries the reader's paragraph across (assets/type.js): the story's words wait unseen
   // until they are in place (cinema.css, .ty-arr and .ty-arw, which also show them by themselves if that script never arrives)
   try { var ty = me && me.hasAttribute('data-read') && d.classList.contains('cx-js') && JSON.parse(sessionStorage.getItem('spritual:ty-lang') || 'null'); if (ty && Date.now() - ty.t < 20000 && /#page-\d+$/.test(location.hash)) d.classList.add('ty-arr', 'ty-arw'); } catch (e) {}
   try { if ((navigator.connection && navigator.connection.saveData) || matchMedia('(prefers-reduced-data: reduce)').matches) d.classList.add('ep-lite'); } catch (e) {}
   // The Unbroken Shot (film.js, film.css): a story page is laid out as a film from its first paint, so a reader arriving
   // in the middle of a story never sees the page change under them. Its styles are fetched here, off the critical path.
-  // Not with reduced motion, Save-Data, page-by-page or side-by-side reading, a very short screen, or once the reader
-  // has chosen the reading page.
+  // Not with Save-Data, page-by-page or side-by-side reading, a very short screen, or once the reader has chosen the
+  // reading page. [calm] Reduced motion keeps the film too, and stays in the dark: still paintings, soft cross-fades,
+  // no camera (film.js).
   try {
     var fc = me && me.dataset.film;
-    if (fc && d.classList.contains('cx-js') && !d.classList.contains('ep-lite') && p.film !== 'off' && p.mode !== 'leaf' && p.read !== 'both' && innerHeight >= 480) {
+    if (fc && !d.classList.contains('ep-lite') && p.film !== 'off' && p.mode !== 'leaf' && p.read !== 'both' && innerHeight >= 480) {
       d.classList.add('fm'); var fl = document.createElement('link'); fl.rel = 'stylesheet'; fl.href = fc; document.head.appendChild(fl);
     }
   } catch (e) {}
@@ -135,6 +153,8 @@
     d.style.backgroundColor = '#160c05';
     if (!('onpagereveal' in window)) addEventListener('load', undark);
   }
+  // lane E: a back or forward step only dissolves (ui-motion.css reads data-nav); a fresh visit rises
+  try { var nv = performance.getEntriesByType('navigation')[0]; if (nv && nv.type === 'back_forward') d.dataset.nav = 'back'; } catch (e) {}
   addEventListener('pagereveal', function (e) {
     if (dark) { if (e.viewTransition) e.viewTransition.finished.then(undark, undark); else undark(); }
     if (!e.viewTransition) return;
@@ -143,7 +163,7 @@
     var t = document.querySelector('[data-vt-target] img,img[data-vt-target]'); if (!t) return;
     t.style.viewTransitionName = 'cx-hero';
     var who = ''; try { who = sessionStorage.getItem('cx-vtk'); sessionStorage.removeItem('cx-vtk'); } catch (x) {}
-    if (who) d.dataset.vt = 'who';
+    d.dataset.vt = who ? 'who' : 'story'; /* lane E: ui-motion.css lets the painting's morph land before the page rises */
     var clear = function () { t.style.viewTransitionName = ''; delete d.dataset.vt; };
     e.viewTransition.finished.then(clear, clear);
   });

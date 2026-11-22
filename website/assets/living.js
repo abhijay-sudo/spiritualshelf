@@ -6,7 +6,7 @@ const AMP = .006;
 const make = () => {
 let cv, gl, U = {}, texA, texD, host = null, img = null, src = '', dsrc = '', map = null, raf = 0, last = 0, t0 = 0, run = false, dead = false, scale = 1, n = 0, sum = 0, prev = 0, px = 0, py = 0, tx = 0, ty = 0, ready = false, dir = 1, scrub = null, kk = 0, turn = 0;
 const lite = () => root.classList.contains('ep-lite') || !!navigator.connection?.saveData;
-const still = () => root.dataset.motion === 'reduce' || matchMedia('(prefers-reduced-motion: reduce)').matches;
+const still = () => root.dataset.motion === 'reduce' || !!root.dataset.light || matchMedia('(prefers-reduced-motion: reduce)').matches;
 const ok = () => !dead && !lite() && !still() && (navigator.deviceMemory || 4) >= 4 && (navigator.hardwareConcurrency || 4) >= 4 && !!window.WebGLRenderingContext;
 const kill = () => { dead = true; stop(); cv?.remove(); host = null; scrub?.lost?.(); };
 const init = () => {

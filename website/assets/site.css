@@ -1132,3 +1132,9 @@ html[lang="hi"] .intertitle span { font-style: normal; font-family: var(--font-h
 @media (max-width: 420px) { .ring-legend .ring-k { flex-direction: column; align-items: center; } .ring-legend .ring-k::before { margin: 0 0 .2rem; } }
 .ring-legend { font-size: max(.72rem, 11px); letter-spacing: .02em; gap: .25rem; }
 .ring-legend .ring-k { white-space: nowrap; flex-wrap: nowrap; }
+
+/* [keep] the hero's "Keep on this phone" holds its place (invisible) only where the browser can keep files; assets/keep.js lights it */
+.kp--hero { display: none; }
+.kp-can .kp--hero { display: block; visibility: hidden; box-sizing: border-box; width: min(100%, 17.5rem); min-height: 44px; margin: .95rem auto 0; }
+.kp-can .kp--hero.is-live { visibility: visible; }
+@media (max-width: 759px) { .kp-can .kp--hero { margin-top: .8rem; } }
