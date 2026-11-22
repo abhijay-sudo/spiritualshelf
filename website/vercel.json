@@ -1129,6 +1129,11 @@
       "statusCode": 308
     },
     {
+      "source": "/characters/constellation{/}?",
+      "destination": "/characters/",
+      "statusCode": 308
+    },
+    {
       "source": "/characters/medhas{/}?",
       "destination": "/characters/",
       "statusCode": 308
@@ -1251,6 +1256,11 @@
     {
       "source": "/hi/journeys/:any{/}?",
       "destination": "/hi/library/",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/characters/constellation{/}?",
+      "destination": "/hi/characters/",
       "statusCode": 308
     },
     {

@@ -1,83 +1,135 @@
-/* The constellation of people (/characters/constellation/). The page is a list first: every person, their ties and
-   who they appear with, readable with no script. With scripts the sky above it is drawn from that same list
-   (assets/stars.js). The sky is night whatever the theme, and has no frame: it is the page's own dark. */
-.st-page {
+/* The sky of people: the first thing on the People page (/characters/), drawn by assets/stars.js from the list further
+   down the same page. The list is the page for everyone the sky is not drawn for (no script, Save-Data, print); the wall
+   of portraits sits between them. The sky is night whatever the theme, and has no frame: it is the page's own dark. */
+.st-night {
   --cx-paper: #120c08; --cx-paper-2: #1d150f; --cx-sand: #33261c; --cx-surface: #1a120c;
   --cx-ink: #f3e7d7; --cx-ink-2: #cdb9a3; --cx-ink-3: #a8927d; --cx-saffron: #f0a456; --cx-saffron-2: #ffbb73;
   --cx-line: rgb(243 231 215 / .14); --cx-line-2: rgb(243 231 215 / .28);
-  --st-gold: #f3c47e;
-  background: #0e0906; color: var(--cx-ink); padding-top: clamp(.6rem, .3rem + 1.2vw, 1.5rem); padding-bottom: var(--cx-sec);
+  --st-gold: #f3c47e; --st-night: #0b0710; --st-ctl: rgb(17 12 26 / .8);
+  color: var(--cx-ink);
 }
-body.is-stars { background: #0e0906; }
-.st-head { text-align: center; }
-.st-kicker { margin: 0; font-size: .74rem; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; }
-.st-kicker a { color: var(--cx-ink-3); text-decoration: none; padding: .6rem .4rem; display: inline-block; }
-.st-kicker a:hover, .st-kicker a:focus-visible { color: var(--st-gold); }
-html[lang="hi"] .st-kicker { letter-spacing: .02em; font-size: .9rem; text-transform: none; }
-.st-h1 { margin: 0; font: 500 clamp(1.9rem, 1.5rem + 1.6vw, 2.9rem)/1.08 var(--cx-title); letter-spacing: -.02em; color: var(--cx-ink); text-wrap: balance; }
-html[lang="hi"] .st-h1 { line-height: 1.3; letter-spacing: 0; }
-.st-lead { max-width: 46rem; margin: .5rem auto 0; font: 400 clamp(.95rem, .92rem + .2vw, 1.06rem)/1.5 var(--cx-text); color: var(--cx-ink-2); text-wrap: pretty; }
-html[lang="hi"] .st-lead { font-family: "Tiro Devanagari Hindi", var(--cx-text); line-height: 1.75; }
 
 /* ---------- the sky: only where a script will draw it (never for Save-Data: boot.js sets ep-lite before first paint) ---------- */
-.st-sky { display: none; position: relative; margin-top: clamp(.9rem, .6rem + 1vw, 1.4rem); }
-/* On a phone the sky is a little over half the screen, so a strip of the page is always under the thumb and a swipe
-   there scrolls on; on a wide screen it takes what the screen has left, and is never taller than the screen itself. */
-.st-box { position: relative; height: clamp(340px, 56svh, 620px); margin-top: .5rem; overflow: hidden; isolation: isolate; }
-@media (min-width: 701px) { .st-box { height: min(82svh, clamp(440px, calc(100svh - var(--ed-head-h, 4rem) - 17.5rem), 940px)); } }
+.st-sky { display: none; position: relative; margin-top: var(--ed-head-h, 68px); height: calc(100svh - var(--ed-head-h, 68px)); min-height: min(31rem, calc(100svh - var(--ed-head-h, 68px))); background: var(--st-night); overflow: hidden; }
 @media (scripting: enabled) { :root:not(.ep-lite) .st-sky { display: block; } }
 .st-sky.is-on { display: block; }   /* a browser that does not know the query above: the script opens the sky */
 .st-sky.is-off { display: none !important; }
-/* Until the script has started there is only the sky's reserved place: no field or button that does nothing. If it
-   never starts (site.js closes the place at once when the script cannot be fetched; this is the last resort when no
-   script runs at all), the place closes by itself and the list moves up. */
-.st-sky:not(.is-on) { overflow: hidden; animation: st-quit 1ms linear 10s forwards; }
-.st-sky:not(.is-on) :is(.st-tools, .st-zoom, .st-foot) { visibility: hidden; }
-@keyframes st-quit { to { max-height: 0; margin: 0; visibility: hidden; } }
+/* Until the script has started there is only the sky's reserved place. If it never starts (site.js closes the place at
+   once when the script cannot be fetched; this is the last resort), the place closes by itself and the page moves up. */
+.st-sky:not(.is-on) { animation: st-quit 1ms linear 10s forwards; }
+.st-sky:not(.is-on) .st-box > :not(.st-stage) { visibility: hidden; }
+@keyframes st-quit { to { height: 0; min-height: 0; margin: 0; visibility: hidden; } }
+.st-box { position: absolute; inset: 0; overflow: hidden; isolation: isolate;
+  background: radial-gradient(ellipse 62% 56% at 50% 46%, rgb(52 32 78 / .5) 0, rgb(30 19 52 / .28) 48%, transparent 78%), radial-gradient(ellipse 120% 100% at 50% 50%, #140d22 0, #0c0813 56%, #07050b 100%); }
+/* a soft vignette, and the foot of the sky sinking into the page's own dark */
+.st-box::before { content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none; background: radial-gradient(ellipse 78% 74% at 50% 50%, transparent 58%, rgb(4 3 7 / .5) 100%), linear-gradient(to top, #0e0906 0, rgb(14 9 6 / 0) 9%); }
+/* the foot of the sky: a soft dark under the controls and the words, so nothing reads across a face or a thread */
+.st-box::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: clamp(7.5rem, 17svh, 10rem); z-index: 1; pointer-events: none; background: linear-gradient(to top, rgb(8 5 16 / .9) 0, rgb(8 5 16 / .62) 46%, rgb(8 5 16 / 0) 100%); }
 .st-stage { position: absolute; inset: 0; touch-action: none; cursor: grab; outline: none; -webkit-user-select: none; user-select: none; -webkit-tap-highlight-color: transparent; }
 .st-stage.is-drag { cursor: grabbing; }
 .st-stage.is-over { cursor: pointer; }
-.st-stage:focus-visible::after { content: ""; position: absolute; z-index: 2; inset: 6px; border-radius: 10px; box-shadow: 0 0 0 1px rgb(243 196 126 / .55); pointer-events: none; }
-/* star dust: a still field behind everything, painted once by the browser */
-.st-box::before { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none; opacity: .9;
-  background-image: radial-gradient(circle, rgb(255 236 205 / .5) 0 .7px, transparent 1.3px), radial-gradient(circle, rgb(255 228 190 / .34) 0 .6px, transparent 1.2px), radial-gradient(circle, rgb(255 240 220 / .42) 0 1px, transparent 1.7px), radial-gradient(circle, rgb(255 226 196 / .22) 0 .6px, transparent 1.2px);
-  background-size: 197px 211px, 263px 173px, 419px 367px, 131px 149px; background-position: 23px 41px, 111px 7px, 201px 160px, 67px 93px; }
-/* medallions that reach the top or bottom edge sink into the night instead of being cut by it */
-.st-canvas { position: absolute; left: 0; top: 0; width: 100%; height: 100%; display: block; transform-origin: 50% 50%; will-change: transform; }
-.st-stage::before { content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none; background: linear-gradient(to bottom, #0e0906 0, rgb(14 9 6 / 0) 8%, rgb(14 9 6 / 0) 92%, #0e0906 100%), linear-gradient(to right, #0e0906 0, rgb(14 9 6 / 0) min(5%, 36px), rgb(14 9 6 / 0) calc(100% - min(5%, 36px)), #0e0906 100%); }
-.st-skip { position: absolute; z-index: 5; left: 50%; top: .25rem; translate: -50% 0; padding: .6rem 1rem; border-radius: 2rem; background: var(--cx-paper-2); color: var(--cx-ink); box-shadow: inset 0 0 0 1px var(--cx-line-2); text-decoration: none; white-space: nowrap; }
+.st-canvas { position: absolute; left: 0; top: 0; width: 100%; height: 100%; display: block; }
+.st-stage:focus-visible { outline: 2px solid var(--st-gold); outline-offset: -4px; }
+.st-skip { position: absolute; z-index: 6; left: 50%; top: .25rem; translate: -50% 0; padding: .6rem 1rem; border-radius: 2rem; background: var(--cx-paper-2); color: var(--cx-ink); box-shadow: inset 0 0 0 1px var(--cx-line-2); text-decoration: none; white-space: nowrap; }
 .st-skip:not(:focus-visible) { width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); }
+@media (max-width: 700px) {
+  /* the foot of the sky is a strip a thumb can swipe to scroll the page on (the sky itself holds a finger) */
+  .st-stage { bottom: calc(3.2rem + env(safe-area-inset-bottom, 0px)); }
+}
 
-.st-tools { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: .5rem .75rem; }
-.st-find input { box-sizing: border-box; width: 15rem; min-height: 44px; padding: 0 1rem; border-radius: 2rem; border: 0; background: #17100a; box-shadow: inset 0 0 0 1px var(--cx-line-2); color: var(--cx-ink); font: 400 1rem/1 var(--cx-ui); }
+/* ---------- over the sky: its name, the realms, a name to find, the way to the wall ---------- */
+.st-top { position: absolute; z-index: 3; left: 0; right: 0; top: 0; display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: .6rem 1.25rem; box-sizing: border-box; padding: clamp(.75rem, .4rem + 1vw, 1.4rem) var(--cx-gut-r) 2.4rem var(--cx-gut); pointer-events: none; background: linear-gradient(to bottom, rgb(8 5 13 / .78) 0, rgb(8 5 13 / .5) 55%, rgb(8 5 13 / 0) 100%); }
+.st-title { min-width: 0; text-shadow: 0 1px 14px rgb(5 3 8 / .8); }
+.st-kicker { margin: 0; font: 500 .72rem/1.2 var(--cx-ui); letter-spacing: .14em; text-transform: uppercase; color: var(--st-gold); }
+html[lang="hi"] .st-kicker { letter-spacing: .02em; font-size: .9rem; text-transform: none; }
+.st-h1 { margin: .15rem 0 0; font: 500 clamp(1.5rem, 1.1rem + 1.5vw, 2.4rem)/1.1 var(--cx-title); letter-spacing: -.015em; color: var(--cx-ink); text-wrap: balance; }
+html[lang="hi"] .st-h1 { line-height: 1.3; letter-spacing: 0; }
+.st-bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: .5rem .6rem; }
+.st-bar > * { pointer-events: auto; }
+.st-realms { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: .4rem; }
+.st-realms button, .st-ctl button, .st-find-btn, .st-view button, .st-wander { flex: none; min-height: 44px; min-width: 44px; padding: 0 1rem; border-radius: 2rem; border: 0; background: var(--st-ctl); box-shadow: inset 0 0 0 1px var(--cx-line); color: var(--cx-ink-2); font: 500 .9rem/1 var(--cx-ui); white-space: nowrap; cursor: pointer; transition: color .25s, box-shadow .25s, background-color .25s; }
+html[lang="hi"] .st-realms button, html[lang="hi"] .st-view button, html[lang="hi"] .st-wander { font-size: .98rem; }
+.st-realms button:hover, .st-ctl button:hover, .st-find-btn:hover, .st-view button:hover, .st-wander:hover { color: var(--cx-ink); box-shadow: inset 0 0 0 1px var(--cx-line-2); }
+.st-realms button[aria-pressed="true"] { color: #1d1007; background: var(--st-gold); box-shadow: none; }
+.st-realms .st-s { display: none; }
+.st-view { display: flex; padding: 0; overflow: hidden; border-radius: 2rem; background: var(--st-ctl); box-shadow: inset 0 0 0 1px var(--cx-line); }
+.st-view button { min-height: 44px; background: none; box-shadow: none; border-radius: 2rem; padding: 0 1.05rem; }
+.st-view button[aria-pressed="true"] { color: #1d1007; background: var(--st-gold); }
+.st-find { position: relative; display: flex; }
+.st-find input { box-sizing: border-box; width: 13rem; min-height: 44px; padding: 0 1rem; border-radius: 2rem; border: 0; background: var(--st-ctl); box-shadow: inset 0 0 0 1px var(--cx-line-2); color: var(--cx-ink); font: 400 1rem/1 var(--cx-ui); }
 .st-find input::placeholder { color: var(--cx-ink-3); opacity: 1; }
 .st-find input:focus-visible { outline: none; box-shadow: inset 0 0 0 1.5px var(--st-gold); }
-.st-realms { display: flex; flex-wrap: wrap; justify-content: center; gap: .4rem; }
-.st-realms button, .st-zoom button { flex: none; min-height: 44px; padding: 0 .95rem; border-radius: 2rem; border: 0; background: rgb(24 16 10 / .7); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); box-shadow: inset 0 0 0 1px var(--cx-line); color: var(--cx-ink-2); font: 500 .9rem/1 var(--cx-ui); white-space: nowrap; cursor: pointer; transition: color .25s, box-shadow .25s; }
-/* (the realm buttons stand on the page's own dark, not over the sky: no blur behind them, and nothing to repaint while the sky is drawn) */
-.st-realms button { background: #17100a; -webkit-backdrop-filter: none; backdrop-filter: none; transition: none; }
-html[lang="hi"] .st-realms button { font-size: .98rem; }
-.st-realms button:hover, .st-zoom button:hover { color: var(--cx-ink); box-shadow: inset 0 0 0 1px var(--cx-line-2); }
-.st-realms button:focus-visible, .st-zoom button:focus-visible { outline: none; box-shadow: inset 0 0 0 1.5px var(--st-gold); color: var(--cx-ink); }
-.st-realms button[aria-pressed="true"] { color: #1d1007; background: var(--st-gold); box-shadow: none; }
-.st-zoom { position: absolute; z-index: 3; right: var(--cx-gut-r); bottom: clamp(.75rem, 2vw, 1.5rem); display: flex; flex-direction: column; gap: .4rem; }
-.st-zoom button { width: 44px; padding: 0; font-size: 1.25rem; }
-@media (max-width: 700px) { .st-find { flex: 1 1 100%; } .st-find input { width: 100%; } .st-zoom { bottom: 1.1rem; } .st-box:has(.st-card:not([hidden])) .st-zoom { visibility: hidden; } .st-realms button { padding: 0 .8rem; font-size: .86rem; } html[lang="hi"] .st-realms button { font-size: .94rem; } }
+.st-find-btn { display: none; width: 44px; padding: 0; align-items: center; justify-content: center; }
+.st-ic, .st-sky .ic { width: 1.25rem; height: 1.25rem; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.st-realms button:focus-visible, .st-ctl button:focus-visible, .st-find-btn:focus-visible, .st-view button:focus-visible, .st-wander:focus-visible, .st-find input:focus-visible, .st-cue:focus-visible { outline: 2px solid var(--st-gold); outline-offset: 2px; }
 
-/* the way on to the list, always in sight under the sky */
-.st-foot { display: flex; flex-direction: column; align-items: center; margin-top: .3rem; }
-@media (min-width: 701px) { .st-foot { flex-direction: row-reverse; flex-wrap: wrap; justify-content: center; gap: 0 .75rem; padding: 0 var(--cx-gut); } .st-foot .st-hint { padding: 0; } }
-.st-more { margin: 0; text-align: center; }
-.st-more a { display: inline-flex; align-items: center; gap: .45rem; min-height: 44px; padding: 0 1.1rem; border-radius: 2rem; color: var(--cx-ink); font: 500 .95rem/1 var(--cx-ui); text-decoration: underline; text-decoration-color: rgb(243 196 126 / .6); text-underline-offset: .28em; }
-html[lang="hi"] .st-more a { font-size: 1.02rem; }
-.st-more a:hover { text-decoration-color: currentColor; color: var(--st-gold); }
-.st-more .ic { width: 1.05em; height: 1.05em; fill: none; stroke: var(--st-gold); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
-.st-hint { margin: 0; padding: 0 var(--cx-gut); text-align: center; font: 400 .86rem/1.4 var(--cx-ui); color: var(--cx-ink-3); text-wrap: balance; }
-html[lang="hi"] .st-hint { font-size: .95rem; line-height: 1.6; }
+/* ---------- bottom: the zoom keys, the wandering, the way down to the wall ---------- */
+.st-ctl { position: absolute; z-index: 3; right: var(--cx-gut-r); bottom: calc(1.25rem + var(--st-lift, 0px)); display: flex; flex-direction: column; gap: .4rem; }
+.st-ctl { transition: opacity .6s var(--cx-ease), visibility 0s; }
+.st-sky.is-tour .st-ctl { opacity: .45; } .st-sky.is-tour .st-ctl:hover, .st-sky.is-tour .st-ctl:focus-within { opacity: 1; }
+.st-ctl button { width: 44px; padding: 0; display: inline-flex; align-items: center; justify-content: center; }
+.st-foot { position: absolute; z-index: 3; left: 50%; bottom: calc(.8rem + var(--st-lift, 0px)); translate: -50% 0; display: flex; flex-direction: column; align-items: center; gap: .2rem; pointer-events: none; max-width: calc(100% - 9rem); }
+.st-foot > * { pointer-events: auto; }
+.st-wander { display: inline-flex; align-items: center; gap: .55rem; padding: 0 1.15rem 0 .95rem; }
+.st-wander .ic { width: 1.1rem; height: 1.1rem; color: var(--st-gold); }
+.st-wander[aria-pressed="true"] { color: var(--cx-ink); box-shadow: inset 0 0 0 1px rgb(243 196 126 / .45), 0 0 22px rgb(243 196 126 / .16); }
+.st-wander.is-run .ic { fill: currentColor; fill-opacity: .9; }
+.st-wander.is-asking { color: #1d1007; background: var(--st-gold); box-shadow: 0 0 26px rgb(243 196 126 / .3); }
+.st-wander.is-asking .ic { color: #1d1007; }
+.st-cue { display: inline-flex; align-items: center; gap: .4rem; min-height: 36px; padding: 0 .8rem; border-radius: 2rem; color: var(--cx-ink-2); font: 400 .86rem/1 var(--cx-ui); text-decoration: none; text-shadow: 0 1px 10px rgb(5 3 8 / .9); }
+.st-cue:hover { color: var(--st-gold); }
+.st-cue .ic { width: 1rem; height: 1rem; }
+.st-hint { margin: 0; padding: 0 .5rem; text-align: center; font: 400 .82rem/1.35 var(--cx-ui); color: var(--cx-ink-3); text-shadow: 0 1px 10px rgb(5 3 8 / .9); text-wrap: balance; transition: opacity 1.2s; }
+html[lang="hi"] .st-hint, html[lang="hi"] .st-cue { font-size: .92rem; }
+.st-sky.is-used .st-hint { opacity: 0; pointer-events: none; }
+:root:not([data-motion="reduce"]) .st-hint { animation: st-hint 1.6s 11s ease forwards; }
+@keyframes st-hint { to { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .st-hint { animation: none; } }
+.st-sky.is-calm .st-wander { display: none; }
+.st-sky.is-quick .st-opening { display: none; }
+.st-sky.is-quick :is(.st-top, .st-ctl, .st-foot) { animation: none !important; }
+@media (prefers-reduced-motion: reduce) { .st-wander { display: none; } }
+
+/* the opening: the sky's name, once, while it draws itself */
+.st-opening { position: absolute; inset: 0; z-index: 2; display: grid; place-content: center; justify-items: center; gap: .6rem; padding: 0 1rem 4rem; text-align: center; pointer-events: none; opacity: 0; text-shadow: 0 2px 30px rgb(5 3 8 / .9); animation: st-open 2.6s .3s cubic-bezier(.4, 0, .2, 1) both; }
+.st-opening-k { font: 500 .8rem/1.2 var(--cx-ui); letter-spacing: .22em; text-transform: uppercase; color: var(--st-gold); }
+html[lang="hi"] .st-opening-k { letter-spacing: .04em; font-size: 1rem; text-transform: none; }
+.st-opening-t { font: 500 clamp(2.3rem, 1.4rem + 4.4vw, 4.8rem)/1.05 var(--cx-title); letter-spacing: -.02em; color: #fff3e0; text-wrap: balance; }
+html[lang="hi"] .st-opening-t { line-height: 1.25; letter-spacing: 0; }
+@keyframes st-open { 0% { opacity: 0; transform: translateY(8px) scale(.985); } 28% { opacity: .96; transform: none; } 66% { opacity: .96; } 100% { opacity: 0; transform: translateY(-3vh) scale(.94); } }
+:root[data-motion="reduce"] .st-opening, .st-sky.is-calm .st-opening { display: none; }
+@media (prefers-reduced-motion: reduce) { .st-opening { display: none; } }
+:root:not([data-motion="reduce"]) .st-top, :root:not([data-motion="reduce"]) .st-ctl, :root:not([data-motion="reduce"]) .st-foot { animation: st-in 1.4s 2.3s var(--cx-ease) both; }
+@keyframes st-in { from { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .st-top, .st-ctl, .st-foot { animation: none !important; } }
+
+/* ---------- the caption: what the wandering sky is telling, in the page's own words ---------- */
+.st-cap { position: absolute; z-index: 2; left: var(--cx-gut); bottom: calc(clamp(4.2rem, 3rem + 4vw, 6rem) + var(--st-lift, 0px)); width: min(27rem, calc(100% - var(--cx-gut) - var(--cx-gut-r) - 4.5rem)); box-sizing: border-box; pointer-events: none; opacity: 0; transform: translateY(12px); transition: opacity .9s var(--cx-ease), transform 1.1s var(--cx-ease); text-shadow: 0 1px 16px rgb(5 3 8 / .95), 0 0 3px rgb(5 3 8 / .7); }
+.st-cap.is-in { opacity: 1; transform: none; }
+.st-cap::before { content: ""; position: absolute; z-index: -1; inset: -4.5rem -9rem -5rem calc(-1 * var(--cx-gut) - 2rem); background: radial-gradient(ellipse 80% 78% at 34% 58%, rgb(7 4 12 / .9) 0, rgb(7 4 12 / .78) 42%, rgb(7 4 12 / 0) 82%); }
+.st-cap-k { margin: 0 0 .15rem; font: 500 .8rem/1.3 var(--cx-ui); letter-spacing: .1em; text-transform: uppercase; color: var(--st-gold); }
+html[lang="hi"] .st-cap-k { letter-spacing: .02em; font-size: .95rem; text-transform: none; }
+.st-cap-n { margin: 0; font: 500 clamp(1.7rem, 1.3rem + 1.6vw, 2.5rem)/1.1 var(--cx-title); letter-spacing: -.01em; color: #fff3e0; overflow-wrap: anywhere; }
+html[lang="hi"] .st-cap-n { line-height: 1.35; letter-spacing: 0; }
+.st-cap-n span { margin-left: .4em; font: 400 .5em/1 "Tiro Devanagari Hindi", var(--cx-text); color: var(--cx-ink-2); white-space: nowrap; }
+.st-cap-l { margin: .5rem 0 0; max-width: 34ch; font: 400 clamp(1.125rem, 1.5vw, 1.3rem)/1.5 var(--cx-text); color: #ece0cf; text-wrap: balance; }
+html[lang="hi"] .st-cap-l { font-family: "Tiro Devanagari Hindi", var(--cx-text); line-height: 1.7; }
+.st-cap-hop { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: .1rem .65rem; align-items: baseline; margin: .85rem 0 0; padding-top: .75rem; border-top: 1px solid rgb(243 196 126 / .3); font: 400 .98rem/1.4 var(--cx-ui); color: #efe2d0; }
+html[lang="hi"] .st-cap-hop { line-height: 1.65; }
+.st-cap-hk { grid-column: 1 / -1; font: 500 .74rem/1.2 var(--cx-ui); letter-spacing: .1em; text-transform: uppercase; color: var(--st-gold); }
+html[lang="hi"] .st-cap-hk { letter-spacing: .02em; font-size: .88rem; text-transform: none; }
+.st-cap-hop .st-cap-ar { color: var(--st-gold); }
+.st-cap-hop b { font-weight: 500; font-family: var(--cx-title); font-size: 1.1em; color: #fff3e0; }
+.st-cap-q { grid-column: 1 / -1; margin: .25rem 0 0; font: italic 400 .98rem/1.5 var(--cx-text); color: #d6c4ae; text-wrap: balance; }
+@media (max-width: 700px) {
+  .st-cap { left: 0; right: 0; width: auto; bottom: calc(6.4rem + var(--st-lift, 0px)); padding: 0 var(--cx-gut-r) 0 var(--cx-gut); }
+  .st-cap::before { inset: -3rem 0 -7rem 0; background: linear-gradient(to top, rgb(8 5 16 / .95) 0, rgb(8 5 16 / .86) 58%, rgb(8 5 16 / 0) 100%); }
+  .st-cap-n { font-size: 1.6rem; } .st-cap-l { font-size: .96rem; margin-top: .35rem; line-height: 1.42; } .st-cap-hop { margin-top: .6rem; padding-top: .55rem; font-size: .93rem; } .st-cap-q { display: none; }
+}
 
 /* ---------- the card of the person in hand ---------- */
 /* (while the analytics question is on the screen the card keeps clear of it: stars.js measures how far, --st-lift) */
-.st-card { position: absolute; z-index: 4; left: var(--cx-gut); bottom: calc(clamp(.75rem, 2vw, 1.5rem) + var(--st-lift, 0px)); width: min(23rem, calc(100% - var(--cx-gut) - var(--cx-gut-r))); max-height: calc(100% - 2.5rem - var(--st-lift, 0px)); overflow: auto; overscroll-behavior: contain; box-sizing: border-box; padding: 1rem 1.1rem 1.1rem; border-radius: 14px; background: #150e09; box-shadow: inset 0 0 0 1px rgb(243 196 126 / .22), 0 18px 50px rgb(0 0 0 / .5); color: var(--cx-ink); }
+.st-card { position: absolute; z-index: 4; left: var(--cx-gut); bottom: calc(1.25rem + var(--st-lift, 0px)); width: min(23rem, calc(100% - var(--cx-gut) - var(--cx-gut-r) - 4.5rem)); max-height: calc(100% - 8rem - var(--st-lift, 0px)); overflow: auto; overscroll-behavior: contain; box-sizing: border-box; padding: 1rem 1.1rem 1.1rem; border-radius: 14px; background: #150e1a; background: rgb(20 13 24 / .94); box-shadow: inset 0 0 0 1px rgb(243 196 126 / .24), 0 18px 50px rgb(0 0 0 / .5); color: var(--cx-ink); scrollbar-width: thin; }
 .st-card[hidden] { display: none; }
 .st-card.is-peek { pointer-events: none; }
 .st-card.is-peek .st-card-more, .st-card.is-peek .st-card-x { display: none; }
@@ -90,7 +142,7 @@ html[lang="hi"] .st-hint { font-size: .95rem; line-height: 1.6; }
 html[lang="hi"] .st-card-n { line-height: 1.4; }
 .st-card-n span { margin-left: .35em; font: 400 .95rem/1 "Tiro Devanagari Hindi", var(--cx-text); color: var(--cx-ink-3); white-space: nowrap; }
 .st-card-k { margin: 0; align-self: start; font: 400 .92rem/1.35 var(--cx-ui); color: var(--st-gold); }
-.st-card-l { margin: .75rem 0 0; font: 400 1rem/1.5 var(--cx-text); color: var(--cx-ink-2); }
+.st-card-l { margin: .75rem 0 0; font: 400 1rem/1.5 var(--cx-text); color: var(--cx-ink-2); text-wrap: pretty; }
 html[lang="hi"] .st-card-l { font-family: "Tiro Devanagari Hindi", var(--cx-text); line-height: 1.7; }
 .st-card-open { display: inline-flex; align-items: center; gap: .5rem; min-height: 44px; margin-top: .35rem; color: var(--cx-ink); font: 500 1rem/1.2 var(--cx-ui); text-decoration: underline; text-decoration-color: rgb(243 196 126 / .6); text-underline-offset: .25em; }
 .st-card-open:hover { text-decoration-color: currentColor; }
@@ -107,14 +159,45 @@ html[lang="hi"] .st-card-ties { line-height: 1.6; }
 .st-card-ties button { min-height: 42px; padding: .45rem 0; border: 0; background: none; color: var(--cx-ink); font: 500 1.05rem/1.2 var(--cx-title); cursor: pointer; text-decoration: underline; text-decoration-color: rgb(243 231 215 / .3); text-underline-offset: .25em; text-align: left; }
 .st-card-ties button:hover, .st-card-ties button:focus-visible { text-decoration-color: var(--st-gold); outline: none; color: var(--st-gold); }
 .st-card :focus-visible { outline: 1.5px solid var(--st-gold); outline-offset: 2px; border-radius: 4px; }
+/* a card taller than the sky scrolls inside it; while more lies below, its foot fades so no row is ever seen half cut */
+.st-card-fade { display: none; }
+.st-card.is-more .st-card-fade { display: block; position: sticky; bottom: -1.1rem; height: 2.6rem; margin: -2.6rem -1.1rem -1.1rem; pointer-events: none; background: linear-gradient(to bottom, rgb(20 13 24 / 0), #140d18 85%); border-radius: 0 0 14px 14px; }
+
+/* ---------- a phone, or any screen too short for the full bar: one tidy bar; the card is a sheet ---------- */
+@media (max-width: 700px), (max-height: 520px) {
+  .st-top { gap: .45rem; padding-bottom: 1.8rem; }
+  .st-title { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+  .st-bar { width: 100%; justify-content: stretch; }
+  .st-view { order: 1; flex: 1 1 auto; } .st-view button { flex: 1 1 0; padding: 0 .5rem; font-size: .88rem; }
+  .st-find { order: 2; } .st-find-btn { display: inline-flex; }
+  .st-find input { display: none; position: absolute; right: 0; top: 0; width: min(24rem, calc(100vw - var(--cx-gut) - var(--cx-gut-r))); z-index: 2; }
+  .st-find.is-open input { display: block; } .st-find.is-open .st-find-btn { visibility: hidden; }
+  .st-realms { order: 3; flex: 1 1 100%; justify-content: flex-start; gap: .25rem; }
+  .st-realms button { padding: 0 .56rem; font-size: .82rem; } html[lang="hi"] .st-realms button { font-size: .92rem; }
+  .st-realms .st-l { display: none; } .st-realms .st-s { display: inline; }
+}
+@media (max-height: 520px) and (min-width: 701px) {
+  .st-top { padding-bottom: 1.2rem; } .st-bar { flex-wrap: nowrap; } .st-view { order: 3; flex: none; } .st-realms { order: 1; flex: 1 1 auto; } .st-find { order: 2; }
+  .st-cue, .st-hint, .st-cap-l, .st-cap-q, .st-cap-k { display: none; } .st-cap { bottom: 4.2rem; } .st-cap-n { font-size: 1.5rem; } .st-cap-hop { margin-top: .4rem; padding-top: .4rem; }
+}
 @media (max-width: 700px) {
-  .st-card { left: 0; right: 0; bottom: 0; width: 100%; max-height: min(100% - 2rem, 56% + var(--st-lift, 0px)); border-radius: 16px 16px 0 0; padding: .85rem var(--cx-gut-r) calc(1rem + var(--st-lift, 0px)) var(--cx-gut); }
+  .st-sky.is-tour .st-ctl { opacity: 0; visibility: hidden; transition: opacity .6s var(--cx-ease), visibility 0s .6s; }
+  .st-ctl { top: 50%; bottom: auto; translate: 0 -50%; } .st-box:has(.st-card:not([hidden])) .st-ctl { visibility: hidden; }
+  .st-foot { bottom: calc(.2rem + env(safe-area-inset-bottom, 0px) + var(--st-lift, 0px)); max-width: calc(100% - 1.5rem); gap: 0; }
+  .st-wander { position: absolute; bottom: 3rem; left: 50%; translate: -50% 0; } .st-hint { display: none; }
+  .st-cue { min-height: 44px; }
+  .st-card { left: 0; right: 0; bottom: 0; width: 100%; max-height: min(100% - 6rem, 60%); border-radius: 16px 16px 0 0; padding: .85rem var(--cx-gut-r) calc(1rem + var(--st-lift, 0px)) var(--cx-gut); }
   .st-card-top { grid-template-columns: 3.4rem minmax(0, 1fr); } .st-card-pic { width: 3.4rem; height: 3.4rem; } .st-card-n { font-size: 1.3rem; }
   .st-card-l { margin-top: .55rem; font-size: .96rem; line-height: 1.42; }
+  .st-box:has(.st-card:not([hidden])) .st-wander, .st-box:has(.st-card:not([hidden])) .st-cap { visibility: hidden; }
 }
+@media (max-width: 700px) and (max-height: 520px) { .st-cap { display: none; } .st-wander { bottom: .6rem; } .st-foot { bottom: .2rem; } }
+@media (min-width: 701px) { .st-box:has(.st-card:not([hidden])) .st-cap { visibility: hidden; } }
+@media print { .st-sky { display: none !important; } }
+@media (forced-colors: active) { .st-realms button[aria-pressed="true"], .st-view button[aria-pressed="true"] { outline: 2px solid Highlight; } }
 
 /* ---------- the list: the whole page without scripts, and always under the sky ---------- */
-.st-list { padding-top: clamp(2rem, 1.4rem + 3vw, 4.5rem); }
+.st-list { background: #0e0906; padding: clamp(3rem, 2rem + 4vw, 6rem) 0 var(--cx-sec); }
 .st-h2 { margin: 0; font: 500 clamp(1.6rem, 1.3rem + 1.4vw, 2.4rem)/1.15 var(--cx-title); color: var(--cx-ink); text-wrap: balance; }
 html[lang="hi"] .st-h2, html[lang="hi"] .st-h3 { line-height: 1.4; }
 .st-list-lead { max-width: 46rem; margin: .6rem 0 0; font: 400 1rem/1.6 var(--cx-text); color: var(--cx-ink-3); }
@@ -150,14 +233,16 @@ html[lang="hi"] .st-p-l { font-family: "Tiro Devanagari Hindi", var(--cx-text); 
 .st-ev q { color: var(--cx-ink-2); }
 .st-ev cite { display: block; font-style: normal; font-size: .84rem; color: var(--cx-ink-3); }
 .st-ev-note { margin: .5rem 0 0; font-size: .84rem; }
-.st-page :is(a, summary):focus-visible { outline: 1.5px solid var(--st-gold); outline-offset: 3px; border-radius: 3px; }
-@media print { .st-sky { display: none !important; } .st-page { background: #fff; color: #000; } }
-@media (forced-colors: active) { .st-realms button[aria-pressed="true"] { outline: 2px solid Highlight; } }
+.st-night :is(a, summary):focus-visible { outline: 1.5px solid var(--st-gold); outline-offset: 3px; border-radius: 3px; }
+@media print { .st-night { background: #fff; color: #000; } }
 
-/* a card taller than the sky scrolls inside it; while more lies below, its foot fades so no row is ever seen half cut */
-.st-card-fade { display: none; }
-.st-card.is-more .st-card-fade { display: block; position: sticky; bottom: -1.1rem; height: 2.6rem; margin: -2.6rem -1.1rem -1.1rem; pointer-events: none; background: linear-gradient(to bottom, rgb(21 14 9 / 0), #150e09 85%); border-radius: 0 0 14px 14px; }
-.st-card { max-height: calc(100% - 1rem - var(--st-lift, 0px)); scrollbar-width: thin; }
-/* keyboard focus is always an outline, not only an inset glow */
-.st-realms button:focus-visible, .st-zoom button:focus-visible, .st-find input:focus-visible { outline: 2px solid var(--st-gold); outline-offset: 2px; }
-.st-stage:focus-visible { outline: 2px solid var(--st-gold); outline-offset: -3px; }
+/* the sky sinks into the painted masthead of the wall below it, not onto a hard edge */
+@media (scripting: enabled) { :root:not(.ep-lite) .cast--sky .ed-page-head::before { content: ""; position: absolute; z-index: -1; left: 0; right: 0; top: 0; height: clamp(8rem, 22svh, 14rem); pointer-events: none; background: linear-gradient(to bottom, #0e0906 0, rgb(14 9 6 / .72) 38%, rgb(14 9 6 / 0) 100%); } }
+.cast--sky .cast-wall { scroll-margin-top: calc(var(--ed-head-h, 68px) + .5rem); }
+
+/* from the wall, one tap back up to the sky (only where there is a sky) */
+.st-back { display: none; }
+@media (scripting: enabled) { :root:not(.ep-lite) .st-back { display: inline-flex; align-items: center; gap: .5rem; position: sticky; top: calc(var(--ed-head-h, 68px) + .6rem); z-index: 6; width: max-content; min-height: 44px; margin: .8rem 0 -3.4rem var(--cx-gut, 1rem); padding: 0 1.1rem 0 .9rem; border-radius: 2rem; background: rgb(17 12 26 / .86); box-shadow: inset 0 0 0 1px rgb(243 196 126 / .35), 0 6px 22px rgb(0 0 0 / .4); color: #f3e7d7; font: 500 .9rem/1 var(--cx-ui); text-decoration: none; -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+  :root:not(.ep-lite) .st-back:hover { color: #f3c47e; } :root:not(.ep-lite) .st-back:focus-visible { outline: 2px solid #f3c47e; outline-offset: 2px; }
+  .st-back .ic { width: 1.1rem; height: 1.1rem; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; color: #f3c47e; } }
+html[lang="hi"] .st-back { font-size: .98rem; }

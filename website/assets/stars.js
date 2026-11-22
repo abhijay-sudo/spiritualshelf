@@ -6,89 +6,136 @@ if (root.classList.contains('ep-lite')) return off();
 const stage = sky.querySelector('[data-st-stage]'); const cv = stage.querySelector('canvas'); const ctx = cv.getContext && cv.getContext('2d');
 if (!ctx || !window.ResizeObserver) return off();
 sky.classList.add('is-on');
-const calm = () => root.dataset.motion === 'reduce' || matchMedia('(prefers-reduced-motion: reduce)').matches;
-const weak = (navigator.deviceMemory && navigator.deviceMemory <= 2) || (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 2);
+const ac = new AbortController();
+const on = (t, ev, fn, o) => t.addEventListener(ev, fn, Object.assign({ signal: ac.signal }, o));
+const mq = matchMedia('(prefers-reduced-motion: reduce)');
+const calm = () => root.dataset.motion === 'reduce' || mq.matches;
+let wasCalm = calm();
 const UI = JSON.parse(sky.querySelector('[data-st-ui]').textContent);
 const hi = root.lang === 'hi';
-const boxEl = stage.parentNode; const zoomEl = sky.querySelector('.st-zoom'); const card = sky.querySelector('[data-st-card]'); const live = sky.querySelector('[data-st-live]');
-const TAU = Math.PI * 2; const GOLD = '243,196,126';
-const realms = [...document.querySelectorAll('.st-realm')].map((el) => ({ id: el.dataset.realm, hw: +el.dataset.hw, hh: +el.dataset.hh, name: el.querySelector('.st-h3').firstChild.textContent.trim(), cx: 0, cy: 0, a: 1 }));
+const card = sky.querySelector('[data-st-card]'); const live = sky.querySelector('[data-st-live]'); const cap = sky.querySelector('[data-st-cap]'); const topEl = sky.querySelector('[data-st-top]');
+const wbtn = sky.querySelector('[data-st-wander]'); const wlabel = sky.querySelector('[data-st-wlabel]'); const boxEl = stage.parentNode;
+const TAU = Math.PI * 2; const GOLD = '243,196,126'; const PI = Math.PI;
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v)); const clamp01 = (v) => Math.max(0, Math.min(1, v)); const lerp = (a, b, t) => a + (b - a) * t;
+const ss = (s) => s * s * s * (s * (s * 6 - 15) + 10);                  // smootherstep
+const easeOut = (s) => 1 - Math.pow(1 - s, 3);
+const rng = (seed) => () => { seed |= 0; seed = (seed + 0x6D2B79F5) | 0; let t = Math.imul(seed ^ (seed >>> 15), 1 | seed); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+const nb = (s) => s.replace(/\s+(\S+)$/, ' $1');                      // no stranded last word
+const coarse = matchMedia('(pointer: coarse)').matches;
+const mem = navigator.deviceMemory || 8; const cores = navigator.hardwareConcurrency || 8;
+let Q = mem <= 2 || cores <= 2 ? 2 : coarse || mem <= 4 || cores <= 4 ? 1 : 0;
+const QP = [{ dpr: 2, dust: 1, comets: 34, neb: 3, fps: 0, wide: 1, px: 8e6 }, { dpr: 1.5, dust: 0.6, comets: 20, neb: 2, fps: 0, wide: 0, px: 4e6 }, { dpr: 1.25, dust: 0.32, comets: 10, neb: 1, fps: 30, wide: 0, px: 2.5e6 }, { dpr: 1, dust: 0.18, comets: 5, neb: 1, fps: 30, wide: 0, px: 1.2e6 }];
+const realms = [...document.querySelectorAll('.st-realm')].map((el, i) => ({ id: el.dataset.realm, i, hw: +el.dataset.hw, hh: +el.dataset.hh, name: el.querySelector('.st-h3').firstChild.textContent.trim(), cx: 0, cy: 0, a: 1 }));
 const nodes = []; const byId = {};
 for (const el of document.querySelectorAll('.st-p')) {
-const d = el.dataset; const a = el.querySelector('.st-p-a');
-const n = { id: d.id, el, i: nodes.length, realm: realms.find((r) => r.id === el.closest('.st-realm').dataset.realm), lx: +d.x, ly: +d.y, r: +d.r, tier: d.tier, light: d.light, cell: +d.cell,
+const d = el.dataset; const a = el.querySelector('.st-p-a'); const i = nodes.length;
+const n = { id: d.id, el, i, realm: realms.find((r) => r.id === el.closest('.st-realm').dataset.realm), lx: +d.x, ly: +d.y, r: +d.r, tier: d.tier, light: d.light, cell: +d.cell,
 name: el.querySelector('.st-p-n').textContent, other: d.o, en: d.en, href: a.getAttribute('href'), title: el.querySelector('.st-p-k')?.textContent || '', line: el.querySelector('.st-p-l').textContent,
-ties: [...el.querySelectorAll('.st-ties > li')].map((li) => ({ k: li.dataset.k, ph: li.dataset.ph })), withs: [...el.querySelectorAll('.st-with a')].map((x) => ({ k: x.dataset.k, n: +x.dataset.n })),
-x: 0, y: 0, ph: (nodes.length * 2.399) % TAU, sp: 0.38 + ((nodes.length * 7) % 11) * 0.02, near: null, lab: null };
+ties: [...el.querySelectorAll('.st-ties > li')].map((li) => ({ k: li.dataset.k, ph: li.dataset.ph, fl: li.dataset.fl || '', ev: li.dataset.ev || '' })), withs: [...el.querySelectorAll('.st-with a')].map((x) => ({ k: x.dataset.k, n: +x.dataset.n })),
+x: 0, y: 0, px: 0, py: 0, pr: 0, vis: false, ph: (i * 2.399) % TAU, sp: 0.36 + ((i * 7) % 11) * 0.02, near: null, kin: null, lab: null,
+in: 0, dr: 0, bt: 0, sm: null, under: 1, pulseAt: 0, wd: -1, dim: 1, hot: 0, glow: 0, pulse: -1e9, la: 0, spr: null, halo: null, rgb: null, rank: 0 };
 nodes.push(n); byId[n.id] = n;
 }
 if (!nodes.length) return off();
 const short = (n) => n.name.replace(/\s*\(.*\)$/, '');
-const named = []; const withs = []; const seen = new Set();
-for (const n of nodes) for (const t of n.ties) { const m = byId[t.k]; if (!m) continue; const key = n.i < m.i ? n.i + '-' + m.i : m.i + '-' + n.i; if (!seen.has(key)) { seen.add(key); named.push({ a: n, b: m, bow: (n.i + m.i) % 2 ? 1 : -1 }); } }
-for (const n of nodes) for (const t of n.withs) { const m = byId[t.k]; if (!m || m.i < n.i) continue; if (!seen.has(n.i + '-' + m.i)) withs.push({ a: n, b: m, n: t.n, bow: (n.i + m.i) % 2 ? 1 : -1 }); }
-for (const n of nodes) { n.near = new Set([...n.ties.map((t) => t.k), ...n.withs.map((t) => t.k)]); n.kin = new Set(n.ties.map((t) => t.k)); }
-let W = 0; let H = 0; let CW = 0; let CH = 0; let MG = 0; let lazy = false; let dpr = 1; let wide = null; const dc = { x: 0, y: 0, k: 1 }; let box = { x0: 0, y0: 0, x1: 1, y1: 1 };
-const cam = { x: 0, y: 0, k: 1 }; const to = { x: 0, y: 0, k: 1 }; let ease = 0.3; let kMin = 0.2; const K_MAX = 1.7;
+const rgbOf = (c) => { let m = /^#([0-9a-f]{6})$/i.exec(c || ''); if (m) { const v = parseInt(m[1], 16); return [v >> 16, (v >> 8) & 255, v & 255]; } m = /^#([0-9a-f])([0-9a-f])([0-9a-f])$/i.exec(c || ''); if (m) return [17 * parseInt(m[1], 16), 17 * parseInt(m[2], 16), 17 * parseInt(m[3], 16)]; m = /(\d+)\D+(\d+)\D+(\d+)/.exec(c || ''); return m ? [+m[1], +m[2], +m[3]] : [243, 196, 126]; };
+const TIER = { legend: 0, lead: 1, cast: 2 };
+nodes.forEach((n) => { n.rgb = rgbOf(n.light); n.rank = TIER[n.tier] ?? 2; });
+const FLOOR = { legend: 8.5, lead: 7.5, cast: 6.5 };   // a face is never drawn smaller than this, so a far sky is still faces, not blobs of light
+for (const r of realms) { let hub = null; for (const n of nodes) if (n.realm === r && (!hub || n.rank < hub.rank || (n.rank === hub.rank && n.ties.length > hub.ties.length))) hub = n; r.hub = hub; }
+nodes.forEach((n) => { const h = n.realm.hub; n.bt = 1.2 + n.realm.i * 0.3 + Math.hypot(n.lx - h.lx, n.ly - h.ly) / Math.max(n.realm.hw, 1) * 1.15 + (n.i % 5) * 0.025; });
+const easeBack = (x) => { const c1 = 1.70158; const c3 = c1 + 1; return 1 + c3 * Math.pow(x - 1, 3) + c1 * Math.pow(x - 1, 2); };
+const edges = []; const named = []; const withE = []; const edgeAt = {}; const key = (a, b) => (a.i < b.i ? a.i + '-' + b.i : b.i + '-' + a.i);
+for (const n of nodes) for (const t of n.ties) {
+const m = byId[t.k]; if (!m || edgeAt[key(n, m)]) continue;
+const back = m.ties.find((u) => u.k === n.id); const fl = t.fl === 'o' ? 1 : t.fl === 'i' ? -1 : back && back.fl === 'o' ? -1 : back && back.fl === 'i' ? 1 : 0;
+const e = { a: n, b: m, bow: (n.i + m.i) % 2 ? 1 : -1, named: true, n: 3, flow: fl, ev: t.ev, ph: t.ph, g: edges.length % 4, hot: 0, prog: 1, t0: 0, len: 1, ax: 0, ay: 0, bx: 0, by: 0, mx: 0, my: 0, vis: false };
+edges.push(e); named.push(e); edgeAt[key(n, m)] = e;
+}
+for (const n of nodes) for (const t of n.withs) {
+const m = byId[t.k]; if (!m || m.i < n.i || edgeAt[key(n, m)]) continue;
+const e = { a: n, b: m, bow: (n.i + m.i) % 2 ? 1 : -1, named: false, n: t.n, flow: 0, ev: '', ph: '', g: edges.length % 4, hot: 0, prog: 1, t0: 0, len: 1, ax: 0, ay: 0, bx: 0, by: 0, mx: 0, my: 0, vis: false };
+edges.push(e); withE.push(e); edgeAt[key(n, m)] = e;
+}
+edges.forEach((e, i) => { const ra = e.a.realm.i * 0.35 + e.a.rank * 0.45; const rb = e.b.realm.i * 0.35 + e.b.rank * 0.45; e.fb = rb < ra; e.t0 = 1.9 + Math.min(ra, rb) * 0.6 + (e.named ? 0 : 0.6) + (i % 17) * 0.03; });
+for (const n of nodes) { n.near = new Set([...n.ties.map((t) => t.k), ...n.withs.map((t) => t.k)]); n.kin = new Set(n.ties.map((t) => t.k)); n.edges = []; n.namedE = []; }
+for (const e of edges) { e.a.edges.push(e); e.b.edges.push(e); if (e.named) { e.a.namedE.push(e); e.b.namedE.push(e); } }
+let W = 0; let H = 0; let dpr = 1; let wide = null; let narrow = false; let box = { x0: 0, y0: 0, x1: 1, y1: 1 }; let topH = 80; let first = true; let atHome = true; let panel = 'none';
+const cam = { x: 0, y: 0, k: 1 }; const to = { x: 0, y: 0, k: 1 }; let ease = 0.22; let kMin = 0.2; const K_MAX = 2; const home = { x: 0, y: 0, k: 1 };
+let flight = null; const vel = { x: 0, y: 0 };
 const arrange = () => {
-const gap = 90; let c = 0;
-if (wide) { const tot = realms.reduce((s, r) => s + r.hw * 2, 0) + gap * (realms.length - 1); c = -tot / 2; realms.forEach((r, i) => { r.cx = c + r.hw; r.cy = i % 2 ? -36 : 24; c += r.hw * 2 + gap; }); }
-else { const tot = realms.reduce((s, r) => s + r.hh * 2 + 60, 0) + gap * (realms.length - 1); c = -tot / 2; realms.forEach((r) => { r.cx = 0; r.cy = c + 60 + r.hh; c += r.hh * 2 + 60 + gap; }); }
+const gap = wide ? 40 : 30; let c = 0;
+if (wide) { const tot = realms.reduce((s, r) => s + r.hw * 2, 0) + gap * (realms.length - 1); c = -tot / 2; realms.forEach((r, i) => { r.cx = c + r.hw; r.cy = i === 1 ? -50 : 20; c += r.hw * 2 + gap; }); }
+else { const tot = realms.reduce((s, r) => s + r.hh * 2 + 50, 0) + gap * (realms.length - 1); c = -tot / 2; realms.forEach((r, i) => { r.cx = (i - 1) * 46; r.cy = c + 50 + r.hh; c += r.hh * 2 + 50 + gap; }); }
 for (const n of nodes) { n.x = n.realm.cx + n.lx; n.y = n.realm.cy + n.ly; }
-box = { x0: Math.min(...realms.map((r) => r.cx - r.hw)), x1: Math.max(...realms.map((r) => r.cx + r.hw)), y0: Math.min(...realms.map((r) => r.cy - r.hh - 60)), y1: Math.max(...realms.map((r) => r.cy + r.hh)) };
+box = { x0: Math.min(...realms.map((r) => r.cx - r.hw)), x1: Math.max(...realms.map((r) => r.cx + r.hw)), y0: Math.min(...realms.map((r) => r.cy - r.hh - 50)), y1: Math.max(...realms.map((r) => r.cy + r.hh)) };
+for (const e of edges) e.len = Math.hypot(e.a.x - e.b.x, e.a.y - e.b.y) || 1;
 };
-const fit = (b, pad) => ({ x: (b.x0 + b.x1) / 2, y: (b.y0 + b.y1) / 2, k: Math.min(K_MAX, (W - pad * 2) / (b.x1 - b.x0), (H - pad * 2 - 40) / (b.y1 - b.y0)) });
-const realmBox = (r) => ({ x0: r.cx - r.hw, x1: r.cx + r.hw, y0: r.cy - r.hh - 60, y1: r.cy + r.hh });
-const frameRealm = (r) => {
-const top = H * 0.08 + 6; const bot = H * 0.08; const b = realmBox(r); const k = Math.min(K_MAX, Math.max(wide ? 0.66 : 0.74, Math.min((W - 40) / (b.x1 - b.x0), (H - top - bot) / (b.y1 - b.y0))));
-return { x: r.cx, y: (b.y1 - b.y0) * k <= H - top - bot ? (b.y0 + b.y1) / 2 + (bot - top) / 2 / k : b.y0 + (H / 2 - top) / k, k };
+const freeRect = (mode) => {
+const top = Math.min(H * 0.36, topH + 14); const bot = narrow ? 56 : 120; const r = { x0: 12, x1: W - (narrow ? 12 : 64), y0: top, y1: H - bot };
+if (mode === 'cap' || mode === 'card') { if (narrow) r.y1 = H - (mode === 'card' ? H * 0.56 : Math.max(250, H * 0.4)) - 6; else r.x0 = Math.min(W * 0.42, 540); }
+if (r.y1 - r.y0 < 140) r.y1 = r.y0 + 140;
+return r;
 };
+const camFor = (px, py, k, r) => ({ x: px - ((r.x0 + r.x1) / 2 - W / 2) / k, y: py - ((r.y0 + r.y1) / 2 - H / 2) / k, k });
+const fitK = (b, r, pad) => Math.min(K_MAX, (r.x1 - r.x0 - pad * 2) / (b.x1 - b.x0), (r.y1 - r.y0 - pad * 2) / (b.y1 - b.y0));
+const fitBox = (b, r, pad) => camFor((b.x0 + b.x1) / 2, (b.y0 + b.y1) / 2, fitK(b, r, pad), r);
+const realmBox = (r) => ({ x0: r.cx - r.hw, x1: r.cx + r.hw, y0: r.cy - r.hh - 50, y1: r.cy + r.hh + 10 });
 const clampCam = (c) => {
-c.k = Math.max(kMin, Math.min(K_MAX, c.k)); const hw = W / 2 / c.k * 0.2; const hh = H / 2 / c.k * 0.5;
-c.x = box.x0 + hw > box.x1 - hw ? (box.x0 + box.x1) / 2 : Math.max(box.x0 + hw, Math.min(box.x1 - hw, c.x)); c.y = box.y0 + hh > box.y1 - hh ? (box.y0 + box.y1) / 2 : Math.max(box.y0 + hh, Math.min(box.y1 - hh, c.y)); return c;
+c.k = clamp(c.k, kMin, K_MAX); const mx = W / 2 / c.k * 0.35; const my = H / 2 / c.k * 0.35;
+c.x = clamp(c.x, box.x0 - mx, box.x1 + mx); c.y = clamp(c.y, box.y0 - my, box.y1 + my); return c;
 };
-const go = (c, t = 0.42) => { Object.assign(to, clampCam(c)); ease = t; if (calm()) Object.assign(cam, to); if (sheet && !pts.size && to.k / sheet.kb > 1.4) bake(); wake(); };
-const home = () => frameRealm(realms[0]);
-const tether = () => {
-const hw = Math.max(20, W / 2 - 44) / to.k; const hh = Math.max(20, H / 2 - H * 0.08 - 40) / to.k; let best = null; let bd = 1e18;
-for (const p of nodes) { const dx = Math.max(0, Math.abs(p.x - to.x) - hw); const dy = Math.max(0, Math.abs(p.y - to.y) - hh); const d = dx * dx + dy * dy; if (!d) return; if (d < bd) { bd = d; best = p; } }
-const dx = best.x - to.x; const dy = best.y - to.y;
-go({ x: to.x + Math.sign(dx) * Math.max(0, Math.abs(dx) - hw * 0.55), y: to.y + Math.sign(dy) * Math.max(0, Math.abs(dy) - hh * 0.55), k: to.k }, 0.5);
+const setCam = (c) => { Object.assign(cam, c); Object.assign(to, c); flight = null; vel.x = vel.y = 0; wake(); };
+const fly = (tg, sec, o = {}) => {
+tg = clampCam({ x: tg.x, y: tg.y, k: tg.k });
+if (calm() || !W) { setCam(tg); o.done && o.done(); return; }
+const d = Math.hypot((tg.x - cam.x) * cam.k, (tg.y - cam.y) * cam.k);
+flight = { t0: performance.now(), dur: (sec || clamp(0.9 + d / 900, 1.1, 2.6)) * 1000, from: { x: cam.x, y: cam.y, k: cam.k }, to: tg, bump: o.bump != null ? o.bump : Math.min(0.34, d / Math.max(W, H) * 0.4), edge: o.edge || null, rev: !!o.rev, out: !!o.out, done: o.done || null, r: o.r || null };
+vel.x = vel.y = 0; wake();
 };
-let faces = null; let fresh = false; let cell = 0; const cols = +sky.dataset.cols || 10;
-const loadFaces = (src, then) => {
-if (!src) return; const ok = (pic) => { if (faces && faces.width > pic.width) return; faces = pic; cell = pic.width / cols; if (W) { if (sheet && sheet.had) { fresh = true; wake(); } else bake(); } then && then(); };
+const stopFlight = () => { if (flight) { flight = null; Object.assign(to, cam); } };
+let faces = null; let cell = 0; const cols = +sky.dataset.cols || 10; let hd = !sky.dataset.atlasHd;
+const loadFaces = (src) => {
+if (!src) return; const ok = (pic) => { if (faces && faces.width >= pic.width) return; faces = pic; cell = pic.width / cols; bakeAll(); };
 const plain = () => { const im = new Image(); im.decoding = 'async'; im.onload = () => ok(im); im.src = src; };
 if (window.createImageBitmap && window.fetch) fetch(src).then((r) => (r.ok ? r.blob() : Promise.reject())).then((bl) => createImageBitmap(bl)).then(ok, plain); else plain();
 };
-let hd = weak || !sky.dataset.atlasHd;
-const wantHd = () => { if (hd) return; hd = true; setTimeout(() => (window.requestIdleCallback || setTimeout)(() => loadFaces(sky.dataset.atlasHd)), 900); };
-for (const ev of ['pointerup', 'keyup']) sky.addEventListener(ev, wantHd, { capture: true, passive: true });
-loadFaces(sky.dataset.atlas, () => { if (matchMedia('(hover: hover) and (pointer: fine)').matches) (window.requestIdleCallback || setTimeout)(wantHd); });
-const halo = document.createElement('canvas'); halo.width = halo.height = 128;
-{ const g = halo.getContext('2d'); const gr = g.createRadialGradient(64, 64, 18, 64, 64, 64); gr.addColorStop(0, `rgba(${GOLD},.5)`); gr.addColorStop(0.45, `rgba(${GOLD},.16)`); gr.addColorStop(1, `rgba(${GOLD},0)`); g.fillStyle = gr; g.fillRect(0, 0, 128, 128); }
-const font = getComputedStyle(sky.closest('.st-page').querySelector('.st-h1')).fontFamily; const SIZE = { legend: hi ? 16.5 : 15.5, lead: hi ? 15 : 14, cast: hi ? 14 : 13 };
-let labels = null;
-let sheet = null; let baking = 0;
-const bake = () => {
-const job = ++baking; const had = !!faces; const kb = to.k; const d = dpr; const pad = 2; const cellPx = Math.ceil(44 * 2 * kb * d) + pad * 2; const per = Math.max(1, Math.floor(2048 / cellPx)); const c = document.createElement('canvas');
-c.width = Math.min(nodes.length, per) * cellPx; c.height = Math.ceil(nodes.length / per) * cellPx; const g = c.getContext('2d'); g.imageSmoothingQuality = 'medium'; let i = 0;
-const some = () => {
-if (job !== baking) return; const end = sheet ? Math.min(nodes.length, i + 6) : nodes.length;
-for (; i < end; i++) {
-const n = nodes[i]; const r = n.r * kb * d; const x = (n.i % per) * cellPx + cellPx / 2; const y = Math.floor(n.i / per) * cellPx + cellPx / 2;
-if (faces && n.cell >= 0) g.drawImage(faces, (n.cell % cols) * cell, Math.floor(n.cell / cols) * cell, cell, cell, x - r, y - r, r * 2, r * 2); else { g.fillStyle = '#2a1b11'; g.beginPath(); g.arc(x, y, r, 0, TAU); g.fill(); }
-g.beginPath(); g.arc(x, y, r - 0.6 * d, 0, TAU); g.strokeStyle = n.light; g.globalAlpha = 0.72; g.lineWidth = (n.tier === 'cast' ? 1 : 1.4) * d; g.stroke(); g.globalAlpha = 1;
-}
-if (i < nodes.length) return requestAnimationFrame(some);
-sheet = { c, kb, cellPx, per, dpr: d, had }; wake();
+const wantHd = () => { if (hd) return; hd = true; setTimeout(() => (window.requestIdleCallback || setTimeout)(() => loadFaces(sky.dataset.atlasHd)), 400); };
+on(sky, 'pointerup', wantHd, { capture: true, passive: true }); on(sky, 'keyup', wantHd, { capture: true, passive: true });
+const SPR = { legend: 184, lead: 144, cast: 116 };
+let baking = 0;
+const bake = (n) => { n.spr = paint(n, Math.round(SPR[n.tier] * (dpr >= 1.75 ? 1 : 0.8)), n.spr); n.sm = paint(n, 44, n.sm); };
+const paint = (n, D, old) => {
+const c = old && old.width === D ? old : document.createElement('canvas'); c.width = c.height = D; const g = c.getContext('2d'); g.clearRect(0, 0, D, D); g.imageSmoothingQuality = 'high';
+const r = D / 2 - 1; const rw = Math.max(1.6, D * 0.016, D < 60 ? 3 : 0);
+g.save(); g.beginPath(); g.arc(D / 2, D / 2, r - rw * 0.4, 0, TAU); g.clip();
+if (faces && n.cell >= 0) g.drawImage(faces, (n.cell % cols) * cell, Math.floor(n.cell / cols) * cell, cell, cell, 0, 0, D, D); else { g.fillStyle = '#2a1b11'; g.fillRect(0, 0, D, D); }
+const gr = g.createRadialGradient(D / 2, D / 2, r * 0.6, D / 2, D / 2, r); gr.addColorStop(0, 'rgba(8,4,12,0)'); gr.addColorStop(1, 'rgba(8,4,12,.42)'); g.fillStyle = gr; g.fillRect(0, 0, D, D); g.restore();
+g.beginPath(); g.arc(D / 2, D / 2, r - rw * 0.5, 0, TAU); g.strokeStyle = n.light; g.globalAlpha = 0.9; g.lineWidth = rw; g.stroke(); return c;
 };
+const bakeAll = () => {
+const job = ++baking; let i = 0; const some = () => { if (job !== baking) return; for (const end = Math.min(nodes.length, i + 12); i < end; i++) bake(nodes[i]); wake(); if (i < nodes.length) requestAnimationFrame(some); };
 some();
 };
-let labelJob = 0;
+const sprite = (w, h, fn) => { const c = document.createElement('canvas'); c.width = w; c.height = h; fn(c.getContext('2d'), w, h); return c; };
+const haloCache = {};
+const haloOf = (rgb) => { const k = rgb.join(','); return haloCache[k] || (haloCache[k] = sprite(96, 96, (g) => { const gr = g.createRadialGradient(48, 48, 0, 48, 48, 48); gr.addColorStop(0, `rgba(${k},.7)`); gr.addColorStop(0.3, `rgba(${k},.4)`); gr.addColorStop(0.55, `rgba(${k},.14)`); gr.addColorStop(1, `rgba(${k},0)`); g.fillStyle = gr; g.fillRect(0, 0, 96, 96); })); };
+const core = sprite(48, 48, (g) => { const gr = g.createRadialGradient(24, 24, 0, 24, 24, 24); gr.addColorStop(0, 'rgba(255,252,240,1)'); gr.addColorStop(0.16, 'rgba(255,242,212,.9)'); gr.addColorStop(0.45, 'rgba(255,214,150,.26)'); gr.addColorStop(1, 'rgba(255,200,120,0)'); g.fillStyle = gr; g.fillRect(0, 0, 48, 48); });
+const glint = sprite(64, 64, (g) => { for (const [x0, y0, x1, y1] of [[0, 32, 64, 32], [32, 0, 32, 64]]) { const gr = g.createLinearGradient(x0, y0, x1, y1); gr.addColorStop(0, 'rgba(255,240,210,0)'); gr.addColorStop(0.5, 'rgba(255,244,222,.95)'); gr.addColorStop(1, 'rgba(255,240,210,0)'); g.fillStyle = gr; if (x0 === 0) g.fillRect(0, 31, 64, 2); else g.fillRect(31, 0, 2, 64); } const c = g.createRadialGradient(32, 32, 0, 32, 32, 12); c.addColorStop(0, 'rgba(255,250,235,1)'); c.addColorStop(1, 'rgba(255,230,190,0)'); g.fillStyle = c; g.fillRect(20, 20, 24, 24); });
+const TINT = { ramayana: [255, 205, 130], mahabharata: [205, 198, 255], gods: [255, 226, 178] }; const tintOf = (r) => TINT[r.id] || TINT.gods;
+const cometSpr = {};
+const cometOf = (rgb) => { const k = rgb.join(','); return cometSpr[k] || (cometSpr[k] = { tail: sprite(128, 8, (g) => { const gr = g.createLinearGradient(0, 0, 128, 0); gr.addColorStop(0, `rgba(${k},0)`); gr.addColorStop(0.7, `rgba(${k},.55)`); gr.addColorStop(1, 'rgba(255,248,230,.95)'); g.fillStyle = gr; g.beginPath(); g.moveTo(0, 4); g.lineTo(128, 0.3); g.lineTo(128, 7.7); g.closePath(); g.fill(); }),
+head: sprite(64, 64, (g) => { const gr = g.createRadialGradient(32, 32, 0, 32, 32, 32); gr.addColorStop(0, 'rgba(255,253,244,1)'); gr.addColorStop(0.12, 'rgba(255,246,222,.95)'); gr.addColorStop(0.32, `rgba(${k},.42)`); gr.addColorStop(1, `rgba(${k},0)`); g.fillStyle = gr; g.fillRect(0, 0, 64, 64); }) }); };
+const NEB = { ramayana: [[255, 140, 52], [208, 54, 38]], mahabharata: [[74, 92, 224], [200, 42, 86]], gods: [[152, 84, 224], [242, 192, 94]] };
+const blobCache = {};
+const blobOf = (rgb) => { const k = rgb.join(','); return blobCache[k] || (blobCache[k] = sprite(256, 256, (g) => { for (const [x, y, rr, a] of [[128, 128, 128, 0.9], [92, 104, 90, 0.55], [168, 150, 80, 0.5]]) { const gr = g.createRadialGradient(x, y, 0, x, y, rr); gr.addColorStop(0, `rgba(${k},${a})`); gr.addColorStop(0.5, `rgba(${k},${a * 0.38})`); gr.addColorStop(1, `rgba(${k},0)`); g.fillStyle = gr; g.fillRect(0, 0, 256, 256); } })); };
+const blobs = [];
+{ const R = rng(7); for (const r of realms) { const tn = NEB[r.id] || NEB.gods; for (let j = 0; j < 3; j++) blobs.push({ r, tint: tn[j % 2], rx: (R() - 0.5) * r.hw * (j ? 1.3 : 0.5), ry: (R() - 0.5) * r.hh * (j ? 1.1 : 0.4), rad: Math.max(r.hw, r.hh) * (j === 0 ? 1.28 : j === 1 ? 0.95 : 0.72), asp: 0.7 + R() * 0.3, rot: R() * TAU, rv: (R() - 0.5) * 0.012, a: j === 0 ? 0.2 : 0.15, ds: 0.03 + R() * 0.03, ph: R() * TAU }); } }
+const font = getComputedStyle(sky.querySelector('.st-h1')).fontFamily; const SIZE = { legend: hi ? 16.5 : 15.5, lead: hi ? 15 : 14, cast: hi ? 14 : 13 };
+let labels = null; let labelJob = 0; let labelDpr = 0;
 const makeLabels = () => {
-const job = ++labelJob; const s = Math.min(2, dpr); const rowH = hi ? 30 : 24; const SH = 1024 / s; const c = document.createElement('canvas'); c.width = 1024; c.height = Math.ceil(rowH * s * 20); const g = c.getContext('2d');
-g.scale(s, s); g.textBaseline = 'middle'; g.textAlign = 'center'; g.lineJoin = 'round'; g.lineWidth = 3.5; g.strokeStyle = 'rgba(10,6,4,.82)'; g.fillStyle = '#f6ead9'; let x = 0; let y = 0; let i = 0; const lab = [];
+const job = ++labelJob; const s = Math.min(2, dpr); labelDpr = dpr; const rowH = hi ? 30 : 24; const SH = 1024 / s; const c = document.createElement('canvas'); c.width = 1024; c.height = Math.ceil(rowH * s * 20); const g = c.getContext('2d');
+g.scale(s, s); g.textBaseline = 'middle'; g.textAlign = 'center'; g.lineJoin = 'round'; g.lineWidth = 3.5; g.strokeStyle = 'rgba(8,5,12,.85)'; g.fillStyle = '#f6ead9'; let x = 0; let y = 0; let i = 0; const lab = [];
 const some = () => {
 if (job !== labelJob) return;
 for (const end = Math.min(nodes.length, i + 12); i < end; i++) { const n = nodes[i]; g.font = `500 ${SIZE[n.tier]}px ${font}`; const w = Math.ceil(g.measureText(short(n)).width) + 12; if (x + w > SH) { x = 0; y += rowH; } lab[i] = { x, y, w, h: rowH }; g.strokeText(short(n), x + w / 2, y + rowH / 2 + 1); g.fillText(short(n), x + w / 2, y + rowH / 2 + 1); x += w; }
@@ -97,127 +144,289 @@ nodes.forEach((n, j) => { n.lab = lab[j]; }); labels = { c, s }; wake();
 };
 requestAnimationFrame(some);
 };
-let sel = null; let hover = null; let kbd = false; let born = 0; let fr = null; let pressed = ''; let zr = null; let loose = false;
-const focusOf = () => sel || hover;
-const sx = (x) => (x - dc.x) * dc.k + CW / 2; const sy = (y) => (y - dc.y) * dc.k + CH / 2;
-const curve = (e, t) => { const ax = e.a.px; const ay = e.a.py; const bx = e.b.px; const by = e.b.py; const mx = (ax + bx) / 2 - (by - ay) * 0.1 * e.bow; const my = (ay + by) / 2 + (bx - ax) * 0.1 * e.bow; if (t == null) { ctx.moveTo(ax, ay); ctx.quadraticCurveTo(mx, my, bx, by); return null; } const u = 1 - t; return [u * u * ax + 2 * u * t * mx + t * t * bx, u * u * ay + 2 * u * t * my + t * t * by]; };
-const hit = (ax, ay, aw, ah, bx, by, bw, bh) => ax < bx + bw && bx < ax + aw && ay < by + bh && by < ay + ah;
-const clamp01 = (v) => Math.max(0, Math.min(1, v));
-const edgeA = (x0, x1) => { const g = Math.min(W * 0.05, 36); return clamp01((Math.min(x0 - MG, MG + W - x1) - g * 0.4) / g); };
-const titles = []; const placed = []; const byRank = [...nodes].sort((a, b) => b.r - a.r || a.i - b.i);
-const draw = (now) => {
-dc.x = cam.x; dc.y = cam.y; dc.k = cam.k; const t = now / 1000; const still = calm(); const f = focusOf(); const k = dc.k;
-ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, CW, CH);
-const far = clamp01((0.3 - k) / 0.08); const ra = Math.max(clamp01((0.95 - k) / 0.3) * 0.5 * (f ? 0.35 : 1), far * 0.94); titles.length = 0;
-if (ra > 0.01) {
-const small = W < 500; const base = Math.max(13, Math.min(small ? 22 : 30, 46 * k)); const fs = base + ((small ? 19 : 22) - base) * far;
-ctx.fillStyle = `rgb(${GOLD})`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.lineJoin = 'round'; ctx.font = `500 ${fs.toFixed(1)}px ${font}`; try { ctx.letterSpacing = hi ? '0px' : '0.14em'; } catch (e) {}
-for (const r of realms) {
-const s = hi ? r.name : r.name.toUpperCase(); const w = ctx.measureText(s).width + 10; const h = fs * (hi ? 1.5 : 1.1); const x = sx(r.cx); const y = sy(r.cy - (r.hh + 26) * (1 - far));
-const a = ra * r.a * edgeA(x - w / 2, x + w / 2) * clamp01((y - h / 2 - MG - H * 0.07) / 10) * clamp01((MG + H * 0.93 - y - h / 2) / 10);
-if (a < 0.02 || (zr && hit(x - w / 2, y - h / 2, w, h, zr[0] + MG, zr[1] + MG, zr[2], zr[3]))) continue;
-ctx.globalAlpha = a; if (far > 0.05) { ctx.lineWidth = 4; ctx.strokeStyle = `rgba(10,6,4,${(0.85 * far).toFixed(2)})`; ctx.strokeText(s, x, y); } ctx.fillText(s, x, y); titles.push([x - w / 2, y - h / 2, w, h]);
+const LAYERS = [{ pf: 0.05, n: 250, s0: 0.6, s1: 1.0, a: 0.62, rgb: '196,204,255', v: 1.2 }, { pf: 0.13, n: 160, s0: 0.8, s1: 1.4, a: 0.75, rgb: '255,236,206', v: 2.2 }, { pf: 0.28, n: 80, s0: 1.1, s1: 2.0, a: 0.9, rgb: '255,226,184', v: 3.6 }];
+let dust = [];
+const dustInit = () => {
+const R = rng(11); const area = clamp(W * H / (1440 * 900), 0.35, 1.5); dust = LAYERS.map((L, li) => {
+const cnt = Math.round(L.n * area * QP[Q].dust); const p = [];
+for (let i = 0; i < cnt; i++) {
+let fx = R(); let fy = R();
+if (li === 0 && R() < 0.4) { const u = R(); const off = (R() + R() + R() - 1.5) * 0.12; fx = u; fy = 0.78 - u * 0.56 + off; fy = ((fy % 1) + 1) % 1; }
+p.push({ fx, fy, s: lerp(L.s0, L.s1, R() * R()), a: 0.35 + R() * 0.65, tw: R() < 0.5 ? 0.15 + R() * 0.45 : 0.05, ts: 0.5 + R() * 1.8, ph: R() * TAU, vx: (R() - 0.3) * L.v, vy: (R() - 0.5) * L.v * 0.5, bright: li > 0 && R() < (li === 2 ? 0.1 : 0.04) });
 }
+return p;
+});
+};
+let sel = null; let hover = null; let kbd = false; let fr = null; let pressed = ''; let fs = 0; const pts = new Map();
+const wander = { run: false, user: false, cur: null, nxt: null, e: null, rev: false, mode: 'off', t0: 0, hold: 8000, recent: [], visits: {}, hops: 0, fnode: null, guide: null, started: false };
+const focusOf = () => sel || hover || (wander.run ? wander.fnode : null);
+const sx = (x) => (x - cam.x) * cam.k + W / 2; const sy = (y) => (y - cam.y) * cam.k + H / 2;
+const hit = (ax, ay, aw, ah, bx, by, bw, bh) => ax < bx + bw && bx < ax + aw && ay < by + bh && by < ay + ah;
+const bez = (e, t) => { const u = 1 - t; const ax = e.a.x; const ay = e.a.y; const bx = e.b.x; const by = e.b.y; const mx = (ax + bx) / 2 - (by - ay) * 0.1 * e.bow; const my = (ay + by) / 2 + (bx - ax) * 0.1 * e.bow; return { x: u * u * ax + 2 * u * t * mx + t * t * bx, y: u * u * ay + 2 * u * t * my + t * t * by }; };
+const qpath = (e, p) => {
+const x0 = e.fb ? e.bx : e.ax; const y0 = e.fb ? e.by : e.ay; const x1 = e.fb ? e.ax : e.bx; const y1 = e.fb ? e.ay : e.by; ctx.moveTo(x0, y0);
+if (p >= 0.999) return ctx.quadraticCurveTo(e.mx, e.my, x1, y1);
+const u = 1 - p; ctx.quadraticCurveTo(x0 + (e.mx - x0) * p, y0 + (e.my - y0) * p, u * u * x0 + 2 * u * p * e.mx + p * p * x1, u * u * y0 + 2 * u * p * e.my + p * p * y1);
+};
+const QP4 = [0, 0, 0, 0]; const qpt = (e, t) => { const u = 1 - t; QP4[0] = u * u * e.ax + 2 * u * t * e.mx + t * t * e.bx; QP4[1] = u * u * e.ay + 2 * u * t * e.my + t * t * e.by; QP4[2] = 2 * u * (e.mx - e.ax) + 2 * t * (e.bx - e.mx); QP4[3] = 2 * u * (e.my - e.ay) + 2 * t * (e.by - e.my); return QP4; };
+const edgeA = (x0, x1) => { const g = Math.min(W * 0.05, 36); return clamp01((Math.min(x0, W - x1) - g * 0.4) / g); };
+const byRank = [...nodes].sort((a, b) => b.r - a.r || a.i - b.i); const titles = []; const placed = [];
+const glow = document.createElement('canvas'); const gx = glow.getContext('2d'); let glowS = 3; let capR = null; let capF = 0; let introT = 0; let introDone = false; let introFast = false; let introHold = 0; let comets = []; let ripples = []; let shoot = null; let shootAt = 0;
+const ptr = { x: 0, y: 0, tx: 0, ty: 0 }; const rwid = {};
+const rnd = rng(5); const rndr = Math.random;
+const draw = (now, dt, still) => {
+const t = still ? 0 : now / 1000; const k = cam.k; const f = focusOf(); const d = dpr;
+ctx.setTransform(d, 0, 0, d, 0, 0); ctx.clearRect(0, 0, W, H); ctx.imageSmoothingQuality = 'medium';
+const intro = still || introDone ? 1 : clamp01(introT / 6.2); const neb = still || introDone ? 1 : clamp01((introT - 0.9) / 3.2); const ia = still || introDone ? 1 : clamp01((introT - 1.6) / 1.2); const capA = cap.classList.contains('is-in') && capR ? 1 : 0; capF += (capA - capF) * (still ? 1 : Math.min(1, dt * 3));
+for (const n of nodes) {
+const fl = still ? 0 : 3 / k * 0.85; const dx = Math.sin(t * n.sp + n.ph) * fl; const dy = Math.cos(t * n.sp * 0.8 + n.ph * 1.7) * fl;
+n.px = sx(n.x + dx); n.py = sy(n.y + dy); n.pr = n.r * k; n.dr = Math.max(n.pr, FLOOR[n.tier]); n.vis = n.px > -n.dr * 3 - 40 && n.px < W + n.dr * 3 + 40 && n.py > -n.dr * 3 - 40 && n.py < H + n.dr * 3 + 40;
+n.under = capF > 0.01 && capR && n.px > capR[0] - n.dr && n.px < capR[0] + capR[2] + n.dr && n.py > capR[1] - n.dr && n.py < capR[1] + capR[3] + n.dr ? 1 - 0.7 * capF : 1;
+n.in = still || introDone ? 1 : clamp01((introT - n.bt) / 0.75);
+}
+for (const e of edges) {
+const a = e.a; const b = e.b; e.ax = a.px; e.ay = a.py; e.bx = b.px; e.by = b.py; e.mx = (e.ax + e.bx) / 2 - (e.by - e.ay) * 0.1 * e.bow; e.my = (e.ay + e.by) / 2 + (e.bx - e.ax) * 0.1 * e.bow;
+e.vis = Math.min(e.ax, e.bx, e.mx) < W + 40 && Math.max(e.ax, e.bx, e.mx) > -40 && Math.min(e.ay, e.by, e.my) < H + 40 && Math.max(e.ay, e.by, e.my) > -40;
+e.hot = Math.max(a.hot, b.hot); e.prog = still || introDone ? 1 : ease01(introT, e);
+}
+const dimG = 1 - 0.76 * fs; ctx.globalCompositeOperation = 'lighter';
+const gs = glowS; gx.setTransform(1, 0, 0, 1, 0, 0); gx.clearRect(0, 0, glow.width, glow.height); gx.setTransform(1 / gs, 0, 0, 1 / gs, 0, 0); gx.globalCompositeOperation = 'lighter';
+if (blobs.length) {
+const ho = (x, y) => [(x - home.x) * home.k + W / 2, (y - home.y) * home.k + H / 2]; const ks = home.k + (k - home.k) * 0.55; const na = QP[Q].neb; const px = -ptr.x * 7; const py = -ptr.y * 5;
+for (let i = 0; i < blobs.length; i++) {
+const b = blobs[i]; if (i % 3 >= na) continue; const wx = b.r.cx + b.rx + Math.sin(t * b.ds + b.ph) * 36; const wy = b.r.cy + b.ry + Math.cos(t * b.ds * 0.8 + b.ph) * 28; const h = ho(wx, wy);
+const x = h[0] + (sx(wx) - h[0]) * 0.58 + px; const y = h[1] + (sy(wy) - h[1]) * 0.58 + py; const rad = b.rad * ks; if (x < -rad || x > W + rad || y < -rad || y > H + rad) continue;
+const al = b.a * (0.82 + 0.18 * Math.sin(t * 0.17 + b.ph * 2)) * neb * (0.6 + 0.4 * b.r.a) * (1 - 0.34 * fs); const ang = b.rot + t * b.rv; const cs = Math.cos(ang) * d; const sn = Math.sin(ang) * d;
+gx.globalAlpha = al; gx.setTransform(cs / gs, sn / gs, -sn / gs, cs / gs, x / gs, y / gs); gx.drawImage(blobOf(b.tint), -rad, -rad * b.asp, rad * 2, rad * 2 * b.asp);
+}
+gx.setTransform(1 / gs, 0, 0, 1 / gs, 0, 0);
+}
+for (const n of nodes) {
+if (!n.vis || n.in <= 0.01) continue; const lit = !f || n === f || f.near.has(n.id); const a = n.in * n.dim * n.under * (0.45 + 0.55 * n.realm.a); const br = still ? 0 : Math.sin(t * 0.8 + n.ph);
+const zf = clamp01((n.pr - 12) / 26); const hr = n.dr * lerp(1.55, n.tier === 'legend' ? 3.2 : n.tier === 'lead' ? 2.7 : 2.3, zf) * (1 + 0.5 * n.glow + 0.25 * n.hot); const ha = Math.min(1, a * lerp(0.4, 1, zf) * (n.tier === 'cast' && !lit ? 0.5 : 0.62 + 0.14 * br + 0.5 * n.glow + 0.5 * n.hot)); if (ha < 0.01 || !halo(n)) continue;
+gx.globalAlpha = ha; gx.drawImage(halo(n), n.px - hr, n.py - hr, hr * 2, hr * 2);
+}
+ctx.globalAlpha = 1; ctx.drawImage(glow, 0, 0, W, H);
+{ const PXs = W + 160; const PYs = H + 160; const fade = still || introDone ? 1 : clamp01(introT / 1.3); const sh = still ? 0 : 1;
+dust.forEach((L, li) => {
+const Ly = LAYERS[li]; const zs = Math.pow(k / home.k, Ly.pf * 0.5); const sxp = cam.x * home.k * Ly.pf; const syp = cam.y * home.k * Ly.pf; const ox = -ptr.x * Ly.pf * 30; const oy = -ptr.y * Ly.pf * 20;
+const P = [new Path2D(), new Path2D(), new Path2D(), new Path2D()]; let gl = null;
+for (const p of L) {
+let x = ((p.fx * PXs + p.vx * t * sh - sxp + ox) % PXs + PXs) % PXs - 80; let y = ((p.fy * PYs + p.vy * t * sh - syp + oy) % PYs + PYs) % PYs - 80; x = W / 2 + (x - W / 2) * zs; y = H / 2 + (y - H / 2) * zs;
+if (x < -4 || x > W + 4 || y < -4 || y > H + 4) continue; const a = p.a * (1 - p.tw * (1 + Math.sin(t * p.ts + p.ph))) * Ly.a;
+if (p.bright) { (gl || (gl = [])).push(x, y, p.s, a); continue; }
+P[Math.min(3, (a * 4.6) | 0)].rect(x - p.s / 2, y - p.s / 2, p.s, p.s);
+}
+ctx.globalAlpha = fade; for (let q = 0; q < 4; q++) { ctx.fillStyle = `rgba(${Ly.rgb},${((q + 1) * 0.22).toFixed(2)})`; ctx.fill(P[q]); }
+if (gl) for (let q = 0; q < gl.length; q += 4) { const g = gl[q + 2] * (li === 2 ? 6.5 : 4.5) * (0.8 + 0.4 * Math.sin(t * 1.3 + q)); ctx.globalAlpha = fade * clamp01(gl[q + 3] * 1.2); ctx.drawImage(glint, gl[q] - g, gl[q + 1] - g, g * 2, g * 2); }
+});
+}
+if (!still && intro >= 1) {
+if (!shoot && now > shootAt && !(shootAt === 0)) { const ang = (0.25 + rndr() * 0.3) * (rndr() < 0.5 ? 1 : -1) + (rndr() < 0.5 ? 0 : PI); shoot = { t0: now, x: W * (0.15 + rndr() * 0.7), y: H * (0.1 + rndr() * 0.35), a: ang, L: 240 + rndr() * 160, dur: 1100 + rndr() * 500 }; }
+if (!shootAt) shootAt = now + 9000 + rndr() * 8000;
+if (shoot) { const s = (now - shoot.t0) / shoot.dur; if (s >= 1) { shoot = null; shootAt = now + 20000 + rndr() * 20000; } else { const hx = shoot.x + Math.cos(shoot.a) * shoot.L * 2.2 * s; const hy = shoot.y + Math.sin(shoot.a) * shoot.L * 2.2 * s; const tx = hx - Math.cos(shoot.a) * shoot.L; const ty = hy - Math.sin(shoot.a) * shoot.L; const g = ctx.createLinearGradient(tx, ty, hx, hy); g.addColorStop(0, 'rgba(255,236,200,0)'); g.addColorStop(1, 'rgba(255,248,232,.9)'); ctx.globalAlpha = Math.sin(PI * s) * 0.8; ctx.strokeStyle = g; ctx.lineWidth = 1.4; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(tx, ty); ctx.lineTo(hx, hy); ctx.stroke(); ctx.globalAlpha = Math.sin(PI * s); ctx.drawImage(core, hx - 7, hy - 7, 14, 14); } }
+}
+ctx.lineCap = 'round'; ctx.lineJoin = 'round'; const lw = 0.9 + 0.35 * Math.min(1, k);
+for (let g = 0; g < 4; g++) {
+const sh = still ? 1 : 0.78 + 0.22 * Math.sin(t * 0.55 + g * 1.7); ctx.globalAlpha = ia * dimG; ctx.lineWidth = lw;
+ctx.beginPath(); for (const e of withE) if (e.g === g && e.n > 1 && e.vis && e.hot < 0.02 && e.prog > 0) qpath(e, e.prog); ctx.strokeStyle = `rgba(222,216,255,${(0.085 * sh).toFixed(3)})`; ctx.stroke();
+ctx.beginPath(); for (const e of named) if (e.g === g && e.vis && e.hot < 0.02 && e.prog > 0) qpath(e, e.prog); if (QP[Q].wide) { ctx.lineWidth = lw * 4.2; ctx.strokeStyle = `rgba(${GOLD},${(0.05 * sh).toFixed(3)})`; ctx.stroke(); } ctx.lineWidth = lw * 1.15; ctx.strokeStyle = `rgba(${GOLD},${(0.4 * sh).toFixed(3)})`; ctx.stroke();
+}
+if (f || fs > 0.01) for (const e of edges) {
+if (e.hot < 0.02 || !e.vis) continue; const tour = wander.run && wander.e && f === wander.fnode; const h = e.hot * (tour && e !== wander.e ? 0.36 : 1); const tw = tour && e === wander.e ? 1.5 : 1; ctx.globalAlpha = 1;
+if (e.named) { ctx.lineWidth = lw * 6 * tw; ctx.strokeStyle = `rgba(${GOLD},${(0.16 * h).toFixed(3)})`; ctx.beginPath(); qpath(e, 1); ctx.stroke(); ctx.lineWidth = lw * 1.8 * tw; ctx.strokeStyle = `rgba(255,228,176,${(0.92 * h).toFixed(3)})`; ctx.stroke(); }
+else { ctx.lineWidth = lw * 1.1; ctx.strokeStyle = `rgba(232,226,255,${(0.34 * h * (e.n > 1 ? 1 : 0.7)).toFixed(3)})`; ctx.beginPath(); qpath(e, 1); ctx.stroke(); }
+}
+if (!still) { drawComets(now, dt, f); if (wander.guide && wander.guide.e) drawComet(wander.guide, 1.9); }
+for (const n of nodes) {
+if (!n.vis || n.in <= 0.01) continue; const a = n.in * n.dim * n.under * (0.45 + 0.55 * n.realm.a); const pr = n.dr; const br = still ? 0 : Math.sin(t * 0.8 + n.ph);
+if (pr > 12) { const rr = pr * (1.14 + 0.04 * br) * (1 + 0.1 * n.glow); ctx.globalAlpha = a * (0.22 + 0.1 * br + 0.5 * n.hot) * clamp01((pr - 12) / 6); ctx.lineWidth = 1; ctx.strokeStyle = `rgb(${n.rgb[0]},${n.rgb[1]},${n.rgb[2]})`; ctx.beginPath(); ctx.arc(n.px, n.py, rr, 0, TAU); ctx.stroke(); }
+}
+if (!still) { for (const n of nodes) { const u = (now - n.pulse) / 1500; if (u < 0 || u > 1 || !n.vis) continue; ctx.globalAlpha = 0.5 * Math.pow(1 - u, 1.6) * n.dim; ctx.lineWidth = 1.5 * (1 - u) + 0.5; ctx.strokeStyle = `rgb(${n.rgb[0]},${n.rgb[1]},${n.rgb[2]})`; ctx.beginPath(); ctx.arc(n.px, n.py, n.dr * (1.08 + 0.85 * easeOut(u)), 0, TAU); ctx.stroke(); } }
+ctx.globalCompositeOperation = 'source-over';
+for (let pass = 0; pass < 2; pass++) for (const n of nodes) {
+if (!n.vis || n.in <= 0.01 || (pass === 0) === (f ? n === f || f.near.has(n.id) : false)) continue;
+const a = n.in * n.dim * n.under * (0.4 + 0.6 * n.realm.a); if (a <= 0.01) continue;
+const br = still ? 0 : Math.sin(t * 0.8 + n.ph); const r = n.dr * (1 + 0.012 * br + 0.07 * n.hot + 0.04 * n.glow) * (0.6 + 0.4 * easeBack(n.in));
+const sp = r * 2 * dpr < 76 && n.sm ? n.sm : n.spr; ctx.globalAlpha = a; if (sp) ctx.drawImage(sp, n.px - r, n.py - r, r * 2, r * 2); else { ctx.fillStyle = '#2a1b11'; ctx.beginPath(); ctx.arc(n.px, n.py, r, 0, TAU); ctx.fill(); }
+if (r < 16) { ctx.globalAlpha = a * 0.85; ctx.lineWidth = 1; ctx.strokeStyle = n.light; ctx.beginPath(); ctx.arc(n.px, n.py, r, 0, TAU); ctx.stroke(); }
+}
+if (f && f.vis) { ctx.globalCompositeOperation = 'lighter'; const r = f.dr * 1.1; ctx.globalAlpha = 0.5 + (still ? 0 : 0.2 * Math.sin(t * 1.6)); ctx.lineWidth = 1.6; ctx.strokeStyle = `rgb(${f.rgb[0]},${f.rgb[1]},${f.rgb[2]})`; ctx.beginPath(); ctx.arc(f.px, f.py, r * 1.07, 0, TAU); ctx.stroke(); ctx.globalCompositeOperation = 'source-over'; }
+if (f && f.vis && kbd && document.activeElement === stage) { ctx.globalAlpha = 1; ctx.beginPath(); ctx.arc(f.px, f.py, f.dr * 1.1 + 6, 0, TAU); ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.5; ctx.stroke(); }
+if (!still && wander.run && wander.mode === 'hold' && wander.nxt && f === wander.fnode) {
+const m = wander.nxt; const ra = clamp01((now - wander.t0 - 900) / 900); const R = freeRect('cap');
+if (ra > 0.01) {
+if (m.px > R.x0 - 24 && m.px < R.x1 + 24 && m.py > R.y0 - 24 && m.py < R.y1 + 24) {
+const u = (t * 0.55) % 1; ctx.globalCompositeOperation = 'lighter'; ctx.strokeStyle = 'rgb(255,226,170)'; ctx.lineWidth = 1.4; ctx.globalAlpha = ra * 0.55; ctx.beginPath(); ctx.arc(m.px, m.py, m.dr * 1.2, 0, TAU); ctx.stroke();
+ctx.lineWidth = 1.1; ctx.globalAlpha = ra * 0.5 * (1 - u); ctx.beginPath(); ctx.arc(m.px, m.py, m.dr * (1.2 + 0.75 * u), 0, TAU); ctx.stroke(); ctx.globalCompositeOperation = 'source-over';
+} else {
+let dx = m.px - f.px; let dy = m.py - f.py; const dl = Math.hypot(dx, dy) || 1; dx /= dl; dy /= dl; const tx = dx > 0 ? (R.x1 - 16 - f.px) / dx : dx < 0 ? (R.x0 + 16 - f.px) / dx : 1e9; const ty = dy > 0 ? (R.y1 - 16 - f.py) / dy : dy < 0 ? (R.y0 + 16 - f.py) / dy : 1e9; const tt = Math.max(0, Math.min(tx, ty));
+const bx = f.px + dx * tt + dx * 3 * Math.sin(t * 3); const by = f.py + dy * tt + dy * 3 * Math.sin(t * 3); ctx.globalAlpha = ra * 0.9; ctx.fillStyle = 'rgb(255,226,170)'; ctx.strokeStyle = 'rgba(8,5,16,.7)'; ctx.lineWidth = 3; ctx.lineJoin = 'round';
+ctx.beginPath(); ctx.moveTo(bx + dx * 9, by + dy * 9); ctx.lineTo(bx - dx * 5 - dy * 8, by - dy * 5 + dx * 8); ctx.lineTo(bx - dx * 5 + dy * 8, by - dy * 5 - dx * 8); ctx.closePath(); ctx.stroke(); ctx.fill();
+}
+}
+}
+titles.length = 0; placed.length = 0;
+const far = clamp01((home.k * 1.5 - k) / (home.k * 0.5)); const ta = far * 0.5 * (f ? 0.3 : 1) * clamp01(intro * 3 - 1.4);
+if (ta > 0.01) {
+const base = Math.max(13, Math.min(narrow ? 21 : 30, 40 * k)); ctx.fillStyle = `rgb(${GOLD})`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.font = `500 ${base.toFixed(1)}px ${font}`; try { ctx.letterSpacing = hi ? '0px' : '0.16em'; } catch (e) {}
+for (const r of realms) { const s = hi ? r.name : r.name.toUpperCase(); const ck = s + base.toFixed(1); const w = (rwid[ck] || (rwid[ck] = ctx.measureText(s).width)) + 10; const x = sx(r.cx); const y = sy(r.cy - r.hh - 30); const a = ta * r.a * edgeA(x - w / 2, x + w / 2) * clamp01((y - base - topH) / 12) * clamp01((H - 80 - y) / 12); if (a < 0.02) continue; ctx.globalAlpha = a; ctx.lineJoin = 'round'; ctx.lineWidth = 6; ctx.strokeStyle = 'rgba(8,5,16,.88)'; ctx.strokeText(s, x, y); ctx.fillText(s, x, y); titles.push([x - w / 2, y - base / 2, w, base]); }
 try { ctx.letterSpacing = '0px'; } catch (e) {}
 }
-const age = (now - born) / 1000;
-for (const n of nodes) { const dx = still ? 0 : Math.sin(t * n.sp + n.ph) * 3; const dy = still ? 0 : Math.cos(t * n.sp * 0.8 + n.ph * 1.7) * 3; n.px = sx(n.x + dx); n.py = sy(n.y + dy); n.pr = n.r * k; n.vis = n.px > -n.pr - 80 && n.px < CW + n.pr + 80 && n.py > -n.pr - 40 && n.py < CH + n.pr + 40; n.in = still ? 1 : Math.max(0, Math.min(1, age * 1.6 - n.i * 0.012)); }
-const seenE = (e) => e.a.vis || e.b.vis;
-ctx.lineCap = 'round';
-if (!f) {
-const ag = Math.min(1, age) * (1 - 0.6 * far); const part = realms.some((r) => r.a < 0.995);
-for (const r of part ? realms : [null]) {
-const mine = (e) => !r || (e.a.realm.a <= e.b.realm.a ? e.a.realm : e.b.realm) === r; ctx.globalAlpha = ag * (r ? 0.22 + 0.78 * r.a : 1);
-ctx.beginPath(); for (const e of withs) if (e.n > 1 && mine(e) && seenE(e)) curve(e); ctx.strokeStyle = 'rgba(243,231,215,.055)'; ctx.lineWidth = 1; ctx.stroke();
-ctx.beginPath(); for (const e of named) if (mine(e) && seenE(e)) curve(e); ctx.strokeStyle = `rgba(${GOLD},.34)`; ctx.lineWidth = 1.1; ctx.stroke();
-}
-} else {
-ctx.globalAlpha = 1; ctx.beginPath(); for (const e of named) if (e.a !== f && e.b !== f && seenE(e)) curve(e); ctx.strokeStyle = `rgba(${GOLD},.07)`; ctx.lineWidth = 1; ctx.stroke();
-ctx.beginPath(); for (const e of withs) if (e.a === f || e.b === f) curve(e); ctx.strokeStyle = 'rgba(243,231,215,.2)'; ctx.lineWidth = 1; ctx.stroke();
-ctx.beginPath(); for (const e of named) if (e.a === f || e.b === f) curve(e); ctx.strokeStyle = `rgba(${GOLD},.18)`; ctx.lineWidth = 4.5; ctx.stroke(); ctx.strokeStyle = `rgba(255,224,170,.95)`; ctx.lineWidth = 1.6; ctx.stroke();
-if (!still) { ctx.fillStyle = '#fff3da'; let j = 0; for (const e of named) if (e.a === f || e.b === f) { let u = (t * 0.32 + j++ * 0.27) % 1; if (e.b === f) u = 1 - u; const p = curve(e, u); ctx.globalAlpha = Math.sin(Math.PI * (e.b === f ? 1 - u : u)) * 0.9; ctx.beginPath(); ctx.arc(p[0], p[1], 2.1, 0, TAU); ctx.fill(); } }
-}
-const lit = (n) => !f || n === f || f.near.has(n.id);
-for (let pass = 0; pass < 2; pass++) for (const n of nodes) {
-if (!n.vis || (pass === 0) === (f ? lit(n) : false)) continue;
-const a = n.in * (lit(n) ? 1 : 0.16) * (f && lit(n) ? 1 : 0.3 + 0.7 * n.realm.a) * (1 - 0.5 * far); if (a <= 0.01) continue; const r = n.pr * (n === f ? 1.1 : 1);
-if (n.tier === 'legend' || n === f) { ctx.globalAlpha = a * (n === f ? 1 : 0.8); const hr = r * (n === f ? 2.5 : 2.1); ctx.drawImage(halo, n.px - hr, n.py - hr, hr * 2, hr * 2); }
-ctx.globalAlpha = a;
-if (sheet) { const q = sheet.cellPx; const h = q / sheet.dpr * (k / sheet.kb) * (n === f ? 1.1 : 1) / 2; ctx.drawImage(sheet.c, (n.i % sheet.per) * q, Math.floor(n.i / sheet.per) * q, q, q, n.px - h, n.py - h, h * 2, h * 2); }
-if (n === f) { ctx.beginPath(); ctx.arc(n.px, n.py, r - 0.5, 0, TAU); ctx.strokeStyle = n.light; ctx.lineWidth = 2; ctx.stroke(); }
-if (n === f && kbd && document.activeElement === stage) { ctx.globalAlpha = 1; ctx.beginPath(); ctx.arc(n.px, n.py, r + 5, 0, TAU); ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.5; ctx.stroke(); }
-}
 if (labels) {
-placed.length = 0; for (const t of titles) placed.push(t); if (zr) placed.push([zr[0] + MG, zr[1] + MG, zr[2], zr[3]]);
-const order = f ? [f, ...nodes.filter((n) => n !== f && f.kin.has(n.id)), ...nodes.filter((n) => n !== f && !f.kin.has(n.id) && f.near.has(n.id))] : byRank;
+for (const p of titles) placed.push(p);
+for (const q of ctlRects) placed.push(q); if (capR && capF > 0.01) placed.push(capR);
+const order = f ? [f, ...f.kinL, ...f.nearL] : byRank; const sfar = 1;
+for (const n of nodes) n.want = 0;
 for (const n of order) {
-if (!n.vis || n.in < 0.5) continue; if (!f && n.tier === 'cast' && n.pr < 15.5) continue; if (!f && n.tier === 'lead' && n.pr < 14) continue;
-const L = n.lab; const r = n.pr * (n === f ? 1.1 : 1); const lx = n.px - L.w / 2; const ly = n.py + r + 3;
-const la = (f ? 1 : n.realm.a * (1 - far)) * edgeA(lx + 4, lx + L.w - 4) * clamp01((ly + 4 - MG - H * 0.05) / 8) * clamp01((MG + H * 0.95 - ly - L.h + 4) / 8); if (la < 0.05) continue;
+if (!n.vis || n.in < 0.5) continue; if (!f && n.tier === 'cast' && n.pr < 15) continue; if (!f && n.tier === 'lead' && n.pr < 13) continue; if (!f && n.pr < 12) continue; if (f && n !== f && (n.pr < 9 || n.dim < 0.4)) continue;
+const L = n.lab; if (!L) continue; const r = n.dr * (n === f ? 1.1 : 1); const lx = n.px - L.w / 2; const ly = n.py + r + 5;
+const la = (f ? 1 : n.realm.a) * edgeA(lx + 4, lx + L.w - 4) * clamp01((ly + 4 - topH) / 8) * clamp01((H - 60 - ly - L.h + 4) / 8); if (la < 0.05) continue;
 const ty = ly + L.h / 2 - 7; let ok = true; for (const p of placed) if (hit(lx, ty, L.w, 14, p[0], p[1], p[2], p[3])) { ok = false; break; }
-if (ok && n !== f) for (const m of nodes) if (m !== n && m.vis && (!f || lit(m)) && hit(lx + 6, ty + 1, L.w - 12, 12, m.px - m.pr * 0.8, m.py - m.pr * 0.8, m.pr * 1.6, m.pr * 1.6)) { ok = false; break; }
-if (!ok) continue; placed.push([lx, ty, L.w, 14]);
-ctx.globalAlpha = n.in * la * (f && n !== f && !f.kin.has(n.id) ? 0.7 : 1); ctx.drawImage(labels.c, L.x * labels.s, L.y * labels.s, L.w * labels.s, L.h * labels.s, lx, ly, L.w, L.h);
+if (ok && n !== f) for (const m of nodes) if (m !== n && m.vis && m.in > 0.3 && hit(lx + 6, ty + 1, L.w - 12, 12, m.px - m.dr * 0.9, m.py - m.dr * 0.9, m.dr * 1.8, m.dr * 1.8)) { ok = false; break; }
+if (!ok) continue; placed.push([lx, ty, L.w, 14]); n.want = la;
+}
+for (const n of nodes) {
+n.la += (n.want - n.la) * (still ? 1 : Math.min(1, dt * 7)); if (n.la < 0.03 || !n.vis) continue; const L = n.lab; const r = n.dr * (n === f ? 1.1 : 1); const lx = n.px - L.w / 2; const ly = n.py + r + 5;
+ctx.globalAlpha = n.la * n.in * (f ? (n === f || f.kin.has(n.id) ? 1 : 0.72) : 1) * Math.max(0.5, n.dim); ctx.drawImage(labels.c, L.x * labels.s, L.y * labels.s, L.w * labels.s, L.h * labels.s, lx, ly, L.w, L.h);
 }
 }
-ctx.globalAlpha = 1;
+if (f && f.vis && k >= 0.75 && fs > 0.6 && labels) {
+ctx.font = `italic 400 ${hi ? 13.5 : 13}px ${font}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.lineJoin = 'round'; ctx.lineWidth = 4.6; ctx.strokeStyle = 'rgba(8,5,16,.9)'; let cnt = 0; const tourE = wander.run && f === wander.fnode ? wander.e : null;
+for (const e of f.namedE) {
+if (!e.vis || e.hot < 0.9 || cnt > 7) continue; const o = e.a === f ? e.b : e.a; if (!o.vis || o.pr < 12 || (tourE && e !== tourE)) continue; const t = f.ties.find((u) => u.k === o.id); if (!t) continue;
+const txt = t.ph.replace('{n}', short(o)); const pt = qpt(e, 0.5); const mx = pt[0]; const my = pt[1]; const tl = Math.hypot(pt[2], pt[3]) || 1; let nx = -pt[3] / tl; let ny = pt[2] / tl; if (ny > 0) { nx = -nx; ny = -ny; }
+const w = (e.lw && e.lwT === txt ? e.lw : (e.lw = ctx.measureText(txt).width, e.lwT = txt, e.lw)) + 8; const x = mx + nx * 12; const y = my + ny * 12 - 2;
+let cl = 1; for (const c of comets) if (c.e === e && c.wait <= 0) { const q2 = qpt(e, clamp01(c.fwd ? c.u : 1 - c.u)); cl = Math.min(cl, clamp01(Math.hypot(q2[0] - mx, q2[1] - my) / 64)); }
+if (x - w / 2 < 8 || x + w / 2 > W - 8 || y < topH + 6 || y > H - 70) continue; let ok = true; for (const p of placed) if (hit(x - w / 2, y - 8, w, 16, p[0], p[1], p[2], p[3])) { ok = false; break; } for (const m of nodes) if (m.vis && m.in > 0.3 && hit(x - w / 2, y - 8, w, 16, m.px - m.dr * 1.05, m.py - m.dr * 1.05, m.dr * 2.1, m.dr * 2.1)) { ok = false; break; } if (!ok) continue;
+if (Math.hypot(x - f.px, y - f.py) < f.dr * 1.6 || Math.hypot(x - o.px, y - o.py) < o.dr * 1.4) continue;
+placed.push([x - w / 2, y - 8, w, 16]); ctx.globalAlpha = 0.9 * fs * (0.3 + 0.7 * cl); ctx.strokeText(txt, x, y); ctx.fillStyle = 'rgb(247,214,150)'; ctx.fillText(txt, x, y); cnt++;
+}
+}
+ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
 };
-let raf = 0; let last = 0; let busy = 0; let rebake = 0; let shown = true; let dirty = true; let since = 0; let slow = 0; let moved = ''; const vel = { x: 0, y: 0 };
-const wake = () => { dirty = true; busy = performance.now() + 900; if (!raf && shown) raf = requestAnimationFrame(frame); };
+const ease01 = (T, e) => { const s = clamp01((T - e.t0) / 1.5); return s * s * (3 - 2 * s); };
+const halo = (n) => n.halo || (n.rgb ? (n.halo = haloOf(n.rgb)) : null);
+const guideOf = () => (wander.guide || (wander.guide = { e: null, fwd: true, u: 0, v: 0, tint: [255, 236, 200], a: 1, tail: 120, rad: 1 }));
+const drawComet = (c, sc) => {
+const e = c.e; const u = c.fwd ? c.u : 1 - c.u; const p = qpt(e, clamp01(u)); const sgn = c.fwd ? 1 : -1; const ang = Math.atan2(p[3] * sgn, p[2] * sgn); const cs = Math.cos(ang) * dpr; const sn = Math.sin(ang) * dpr; const ts = cometOf(c.tint);
+const da = Math.hypot(p[0] - e.a.px, p[1] - e.a.py) - e.a.dr - 3; const db = Math.hypot(p[0] - e.b.px, p[1] - e.b.py) - e.b.dr - 3;
+const fade = Math.min(1, c.u / 0.1, (1 - c.u) / 0.1, clamp01(da / 10), clamp01(db / 10)); const edim = e.hot > 0.02 ? 1 : 1 - 0.7 * fs; ctx.globalAlpha = fade * c.a * edim; ctx.setTransform(cs, sn, -sn, cs, p[0] * dpr, p[1] * dpr);
+const L = Math.min(c.tail * Math.max(0.5, cam.k), 120 * sc) * (0.4 + 0.6 * Math.min(1, c.u * 4)); const h = 3.4 * sc; ctx.drawImage(ts.tail, -L, -h / 2, L, h); const g = 11 * sc * c.rad; ctx.drawImage(ts.head, -g, -g, g * 2, g * 2);
+ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+};
+const spawn = (c, f) => {
+const list = named; let e = null; let tries = 0;
+while (tries++ < 7) {
+const tour = wander.run && wander.e && f === wander.fnode; const cand = tour && rndr() < 0.5 ? wander.e : f && f.namedE.length && rndr() < (tour ? 0.4 : 0.72) ? f.namedE[(rndr() * f.namedE.length) | 0] : list[(rndr() * list.length) | 0];
+if (cand && cand.vis && cand.prog >= 0.999) { e = cand; break; }
+}
+if (!e) { c.e = null; c.wait = 0.4 + rndr(); return; }
+c.e = e; c.u = 0; c.v = (62 + rndr() * 50) / e.len * (f && (e.a === f || e.b === f) ? 1.35 : 1); c.fwd = e.flow ? e.flow > 0 : rndr() < 0.5; if (f && (e.a === f || e.b === f) && !e.flow) c.fwd = e.a === f;
+const src = c.fwd ? e.a : e.b; c.tint = tintOf(src.realm); c.a = 0.62 + rndr() * 0.3; c.tail = 38 + rndr() * 50; c.rad = 0.8 + rndr() * 0.5;
+};
+const drawComets = (now, dt, f) => {
+ctx.globalCompositeOperation = 'lighter'; const want = introDone || introT > 4.2 ? QP[Q].comets : 0;
+while (comets.length < want) comets.push({ e: null, wait: rndr() * 2.5, u: 0, v: 0, fwd: true, tint: TINT.gods, a: 1, tail: 60, rad: 1 });
+if (comets.length > want) comets.length = want;
+for (const c of comets) {
+if (c.wait > 0) { c.wait -= dt; continue; }
+if (!c.e) { spawn(c, f); continue; }
+c.u += c.v * dt;
+if (c.u >= 1) { const dest = c.fwd ? c.e.b : c.e.a; dest.pulse = now; dest.glow = Math.min(1, dest.glow + 0.45); c.e = null; c.wait = 0.2 + rndr() * 2.2; continue; }
+if (c.e.vis) drawComet(c, 1);
+}
+};
+let raf = 0; let last = 0; let shown = true; let dirty = true; let ema = 16; let slow = 0; let lastQ = 0; let lastInput = performance.now(); let wanderBusy = 0;
+const wake = () => { dirty = true; if (!raf && shown) raf = requestAnimationFrame(frame); };
+const ctlRects = [];
+const update = (now, dt, still) => {
+if (!introDone) {
+const hold = !faces && introT > 1.05 && introHold < 3.5 && !introFast; if (hold) introHold += dt; else introT += dt * (introFast ? 6 : 1);
+if (introT >= 5.7 || still) { introDone = true; introT = 7; }
+}
+if (!hd && cam.k > 1.3) wantHd();
+if (flight) {
+let s = clamp01((now - flight.t0) / flight.dur); const e = flight.out ? easeOut(s) : ss(s); const F = flight; const k = Math.exp(lerp(Math.log(F.from.k), Math.log(F.to.k), e)) * (1 - F.bump * Math.sin(PI * e));
+if (F.edge) { const p = bez(F.edge, F.rev ? 1 - e : e); const c = camFor(p.x, p.y, k, F.r || freeRect(panel)); cam.x = c.x; cam.y = c.y; cam.k = c.k; }
+else { cam.x = lerp(F.from.x, F.to.x, e); cam.y = lerp(F.from.y, F.to.y, e); cam.k = k; }
+if (s >= 1) { flight = null; cam.x = F.to.x; cam.y = F.to.y; cam.k = F.to.k; Object.assign(to, cam); F.done && F.done(); }
+if (wander.guide && wander.guide.e && wander.mode === 'travel') { const g = wander.guide; g.u = clamp01(s + 0.05 * (1 - s) + 0.02); }
+} else {
+if (Math.abs(vel.x) + Math.abs(vel.y) > 2) { to.x -= vel.x * dt / cam.k; to.y -= vel.y * dt / cam.k; clampCam(to); const fr2 = Math.exp(-dt / 0.28); vel.x *= fr2; vel.y *= fr2; cam.x = to.x; cam.y = to.y; }
+const a = ease && !still ? 1 - Math.exp(-dt / ease) : 1; const dx = to.x - cam.x; const dy = to.y - cam.y; const dk = to.k - cam.k;
+if (Math.abs(dx) * cam.k > 0.15 || Math.abs(dy) * cam.k > 0.15 || Math.abs(dk) > 0.0004) { cam.x += dx * a; cam.y += dy * a; cam.k += dk * a; } else { cam.x = to.x; cam.y = to.y; cam.k = to.k; }
+}
+const f = focusOf(); const tf = f ? 1 : 0; const tour = wander.run && wander.nxt && f === wander.fnode; fs += (tf - fs) * (still ? 1 : Math.min(1, dt * 2.4));
+const rate = still ? 1 : Math.min(1, dt * 3);
+for (const n of nodes) { const lit = !f || n === f || f.near.has(n.id); const tg = !lit ? 0.25 : tour && n !== f && n !== wander.nxt ? 0.55 : 1; n.dim += (tg - n.dim) * (tg > n.dim ? rate : rate * 0.6); n.hot += ((n === f ? 1 : 0) - n.hot) * (n === f ? rate * 1.2 : rate * 0.7); n.glow = still ? 0 : n.glow * Math.exp(-dt * 1.5); if (Math.abs(n.dim - tg) < 0.004) n.dim = tg; if (n.hot < 0.003 && n !== f) n.hot = 0; }
+for (const r of realms) { const tg = !fr || r === fr ? 1 : 0.3; r.a += (tg - r.a) * (still ? 1 : Math.min(1, dt * 4)); if (Math.abs(r.a - tg) < 0.004) r.a = tg; }
+if (!still && !coarse) { ptr.x += (ptr.tx - ptr.x) * Math.min(1, dt * 2.2); ptr.y += (ptr.ty - ptr.y) * Math.min(1, dt * 2.2); } else { ptr.x = ptr.y = 0; }
+if (!still && introDone) { if (!nextWave) nextWave = now + 12000; else if (now > nextWave) { wave(now); nextWave = now + 26000 + rndr() * 18000; } wavePulse(now); }
+wTick(now, still);
+};
+const moving = () => flight || vel.x * vel.x + vel.y * vel.y > 4 || Math.abs(to.x - cam.x) * cam.k > 0.15 || Math.abs(to.y - cam.y) * cam.k > 0.15 || Math.abs(to.k - cam.k) > 0.0004;
 const frame = (now) => {
-raf = 0; const gap = now - last; const dt = Math.min(0.05, gap / 1000 || 0.016); last = now;
-if (Math.abs(vel.x) + Math.abs(vel.y) > 2) { to.x -= vel.x * dt / cam.k; to.y -= vel.y * dt / cam.k; clampCam(to); const fr = Math.exp(-dt / 0.28); vel.x *= fr; vel.y *= fr; cam.x = to.x; cam.y = to.y; busy = now + 300; }
-const a = ease ? 1 - Math.exp(-dt / ease) : 1; const dx = to.x - cam.x; const dy = to.y - cam.y; const dk = to.k - cam.k;
-const moving = Math.abs(dx) * cam.k > 0.3 || Math.abs(dy) * cam.k > 0.3 || Math.abs(dk) > 0.0008;
-if (moving) { cam.x += dx * a; cam.y += dy * a; cam.k += dk * a; busy = now + 300; }
-else { cam.x = to.x; cam.y = to.y; cam.k = to.k; if (sheet && !pts.size && (Math.abs(cam.k / sheet.kb - 1) > 0.04 || sheet.dpr !== dpr) && !rebake) rebake = setTimeout(() => { rebake = 0; if (Math.abs(to.k / sheet.kb - 1) > 0.04 || sheet.dpr !== dpr) bake(); }, 160); }
-for (const r of realms) { const tg = !fr || r === fr ? 1 : 0; if (r.a !== tg) { r.a = calm() || Math.abs(tg - r.a) < 0.01 ? tg : r.a + (tg - r.a) * Math.min(1, dt * 5); busy = now + 300; dirty = true; } }
-if (fresh && !moving && !pts.size && Math.abs(vel.x) + Math.abs(vel.y) <= 2) { fresh = false; bake(); }
-if (loose && !moving && !pts.size && Math.abs(vel.x) + Math.abs(vel.y) <= 2) { loose = false; if (!sel) tether(); }
-const active = now < busy || now - born < 2600; const held = pts.size > 0;
-if (!lazy && since === 0 && active && gap < 200) { slow = gap > 24 ? slow + 1 : Math.max(0, slow - 1); if (slow > 14) { lazy = true; size(true); } }
-const s = cam.k / dc.k; const tx = (dc.x - cam.x) * cam.k; const ty = (dc.y - cam.y) * cam.k; const same = Math.abs(s - 1) < 0.0005 && Math.abs(tx) < 0.05 && Math.abs(ty) < 0.05;
-const edge = Math.abs(tx) > s * CW / 2 - W / 2 - 4 || Math.abs(ty) > s * CH / 2 - H / 2 - 4 || s > 1.3 || s < 0.8;
-const every = !lazy ? (active ? 1 : 2) : held ? 1e9 : active && !same ? 5 : 6;
-since++;
-if (dirty && (!lazy || same || !held) || edge || since >= every) {
-if (calm() && !dirty && same) { /* still: nothing to redraw */ } else { draw(now); const tr = MG ? `translate3d(${-MG}px,${-MG}px,0)` : ''; if (moved !== tr) cv.style.transform = moved = tr; }
-dirty = false; since = 0;
-} else if (!same) { const tr = `translate3d(${(tx - MG).toFixed(2)}px,${(ty - MG).toFixed(2)}px,0) scale(${s.toFixed(4)})`; if (tr !== moved) cv.style.transform = moved = tr; }
-if (shown && (active || !calm())) raf = requestAnimationFrame(frame);
+raf = 0; if (!shown) return;
+const q = QP[Q]; const gap = now - last;
+const idle = !wander.run && !flight && !pts.size && !drag && !sel && !hover && introDone && !calm() && !moving(); const fcap = q.fps || (idle ? 30 : 0);
+if (fcap && last && gap < 1000 / fcap - 2) { if (!raf) raf = requestAnimationFrame(frame); return; }
+if (last && gap > 400) { const shift = gap - 16; if (flight) flight.t0 += shift; wander.t0 += shift; wanderBusy += shift; lastInput += shift; if (shoot) shoot.t0 += shift; if (shootAt) shootAt += shift; if (nextWave) nextWave += shift; }
+const dt = Math.min(0.05, Math.max(0.001, (last ? gap : 16) / 1000)); last = now;
+const still = calm(); if (still !== wasCalm) calmChanged(still);
+update(now, dt, still);
+if (!still || dirty || moving()) { draw(now, dt, still); dirty = false; }
+if (!still && introT > 1.5 && gap < 250) { ema += (gap - ema) * 0.08; if (ema > (fcap ? 1000 / fcap * 1.7 : 24)) slow++; else slow = Math.max(0, slow - 2); if (slow > 24 && Q < QP.length - 1 && now - lastQ > 2500) { Q++; lastQ = now; slow = 0; ema = 16; applyQ(); } }
+if (shown && !raf && (!still || dirty || moving())) raf = requestAnimationFrame(frame);
 };
-new IntersectionObserver((es) => { shown = es[0].isIntersecting && !document.hidden; if (shown) wake(); }).observe(sky);
-document.addEventListener('visibilitychange', () => { shown = !document.hidden; if (shown) wake(); });
-let first = true;
+const applyQ = () => { size(true); dustInit(); comets.length = 0; };
+const calmChanged = (still) => {
+wasCalm = still; sky.classList.toggle('is-calm', still);
+if (still) { stopFlight(); Object.assign(cam, to); wStop(); capHide(); if (!sel) setPanel('none'); introDone = true; introT = 7; comets.length = 0; shoot = null; wander.guide = null; ripples.length = 0; }
+else { wander.user = false; if (introDone && !sel) wSoon(); }
+wLabel(); wake();
+};
+const io = new IntersectionObserver((es) => {
+const r = es[0].intersectionRatio; shown = r > 0.04 && !document.hidden; if (shown) { last = 0; wake(); }
+for (const b of sky.querySelectorAll('[data-st-view]')) b.setAttribute('aria-pressed', String((b.dataset.stView === 'sky') === (r >= 0.5)));
+}, { threshold: [0, 0.04, 0.5] });
+io.observe(sky);
+on(document, 'visibilitychange', () => { const v = !document.hidden; if (v && !shown) { shown = true; last = 0; wake(); } else if (!v) shown = false; });
+let metrics = false;
 const size = (force) => {
 const r = stage.getBoundingClientRect(); if (!r.width || !r.height) return;
-const d = Math.min(lazy ? 1.5 : 2, window.devicePixelRatio || 1); const w = r.width > r.height * 1.15;
+const d0 = Math.min(QP[Q].dpr, window.devicePixelRatio || 1); const d = Math.min(d0, Math.sqrt(QP[Q].px / (r.width * r.height)));
 if (!force && r.width === W && r.height === H && d === dpr) return;
-W = r.width; H = r.height; dpr = d; MG = lazy ? 110 : 0; CW = W + MG * 2; CH = H + MG * 2;
-cv.style.width = CW + 'px'; cv.style.height = CH + 'px'; cv.style.transform = moved = MG ? `translate3d(${-MG}px,${-MG}px,0)` : ''; cv.width = Math.round(CW * dpr); cv.height = Math.round(CH * dpr);
-{ const z = zoomEl.getBoundingClientRect(); zr = z.width ? [z.left - r.left - 8, z.top - r.top - 8, z.width + 16, z.height + 16] : null; }
-if (w !== wide) { wide = w; arrange(); kMin = fit(box, 28).k * 0.85; const h = sel ? { x: sel.x, y: sel.y, k: cam.k } : home(); Object.assign(to, clampCam(h)); Object.assign(cam, to); if (!sel) { pressRealm(realms[0].id); for (const q of realms) q.a = q === fr ? 1 : 0; } if (first && !calm()) { cam.k = to.k * 0.94; ease = 0.9; } }
-else { kMin = fit(box, 28).k * 0.85; clampCam(to); }
-if (first) { first = false; born = performance.now(); bake(); if (document.fonts && document.fonts.status !== 'loaded') document.fonts.ready.then(makeLabels); else makeLabels(); } else if (force) bake();
+const was = W; W = r.width; H = r.height; dpr = d; cv.width = Math.round(W * d); cv.height = Math.round(H * d); narrow = W <= 700; glowS = Q >= 2 ? 4 : 3; glow.width = Math.ceil(W / glowS); glow.height = Math.ceil(H / glowS); gx.imageSmoothingQuality = 'low';
+{ const tr = topEl.getBoundingClientRect(); const br = boxEl.getBoundingClientRect(); topH = Math.max(56, Math.round(tr.top - br.top + [...topEl.children].reduce((m, c) => Math.max(m, c.getBoundingClientRect().bottom - tr.top), 0) + 6)); }
+ctlRects.length = 0; for (const el of sky.querySelectorAll('.st-ctl, .st-wander, .st-cue')) { const z = el.getBoundingClientRect(); const s = stage.getBoundingClientRect(); ctlRects.push([z.left - s.left - 6, z.top - s.top - 6, z.width + 12, z.height + 12]); }
+const w = W > H * 1.15; const rearr = w !== wide;
+if (rearr) { wide = w; arrange(); }
+kMin = fitK(box, freeRect('none'), 12) * 0.9; const hm = fitBox(box, freeRect('none'), 14); hm.k = Math.min(hm.k, narrow ? 0.9 : 1.1); Object.assign(home, camFor((box.x0 + box.x1) / 2, (box.y0 + box.y1) / 2, hm.k, freeRect('none')));
+if (first) {
+first = false; const calmNow = calm(); sky.classList.toggle('is-calm', calmNow); wasCalm = calmNow;
+Object.assign(cam, home); Object.assign(to, home); if (!calmNow) { cam.k = home.k * 0.82; flight = { t0: performance.now(), dur: 4600, from: { x: cam.x, y: cam.y, k: cam.k }, to: { x: home.x, y: home.y, k: home.k }, bump: 0, edge: null, rev: false, out: true, done: null, r: null }; }
+else { introDone = true; introT = 7; }
+if (document.fonts && document.fonts.status !== 'loaded') document.fonts.ready.then(makeLabels); else makeLabels();
+dustInit(); bakeAll();
+loadFaces(sky.dataset.atlas); if (Q < 2 && !coarse) (window.requestIdleCallback || setTimeout)(wantHd);
+} else {
+if (rearr || atHome) { stopFlight(); Object.assign(to, home); Object.assign(cam, home); } else if (sel) { fly(nodeCam(sel), 0.6); } else clampCam(to);
+dustInit(); if (labelDpr !== dpr) makeLabels(); if (nodes[0].spr && nodes[0].spr.width !== Math.round(SPR[nodes[0].tier] * (dpr >= 1.75 ? 1 : 0.8))) bakeAll();
+}
 wake();
 };
-new ResizeObserver(() => size(false)).observe(stage);
+new ResizeObserver(() => size(false)).observe(stage); on(window, 'orientationchange', () => setTimeout(() => size(false), 300));
 const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
 const fill = (s, v) => s.replace(/\{(\w+)\}/g, (m, k) => v[k] ?? m);
-let cardFor = null; let cardPeek = null;
-let liftPx = 0; let liftF = 0; let liftT = 0;
+let cardFor = null; let cardPeek = null; let liftPx = 0; let liftF = 0; let liftT = 0;
 const lift = () => {
-let px = 0; const b = !card.hidden && document.querySelector('.cx-consent:not([hidden])');
-if (b && getComputedStyle(b).visibility !== 'hidden') { const br = b.getBoundingClientRect(); const xr = boxEl.getBoundingClientRect(); const cr = card.getBoundingClientRect(); if (br.right > cr.left && br.left < cr.right && br.top < xr.bottom && br.bottom > xr.top) px = Math.round(Math.min(xr.height * 0.5, xr.bottom - br.top + 8)); }
+let px = 0; const b = document.querySelector('.cx-consent:not([hidden])');
+if (b && getComputedStyle(b).visibility !== 'hidden') { const br = b.getBoundingClientRect(); const xr = sky.getBoundingClientRect(); if (br.top < xr.bottom && br.bottom > xr.top) px = Math.round(Math.min(xr.height * 0.45, Math.max(0, xr.bottom - br.top + 8))); }
 if (px !== liftPx) { liftPx = px; sky.style.setProperty('--st-lift', px + 'px'); }
 };
-const barOn = () => { const b = document.querySelector('.cx-consent:not([hidden])'); return b && getComputedStyle(b).visibility !== 'hidden' ? b.getBoundingClientRect() : null; };
-const reveal = () => {
-const xr = boxEl.getBoundingClientRect(); const br = barOn(); const floor = (br && br.width > innerWidth * 0.6 ? br.top : innerHeight) - 8; const d = xr.bottom - floor;
-const by = d > 1 ? Math.min(d, xr.top - 72) : xr.top < 72 ? xr.top - 72 : 0; if (Math.abs(by) > 1) window.scrollBy({ top: by, behavior: calm() ? 'instant' : 'smooth' });
-};
-const liftSoon = () => { if (card.hidden && !liftPx) return; if (!liftF) liftF = requestAnimationFrame(() => { liftF = 0; lift(); }); clearTimeout(liftT); liftT = setTimeout(lift, 480); };
-addEventListener('scroll', liftSoon, { passive: true }); addEventListener('resize', liftSoon); document.addEventListener('click', liftSoon);
+const liftSoon = () => { if (!liftF) liftF = requestAnimationFrame(() => { liftF = 0; lift(); }); clearTimeout(liftT); liftT = setTimeout(lift, 480); };
+on(window, 'scroll', liftSoon, { passive: true }); on(window, 'resize', liftSoon); on(document, 'click', liftSoon);
 const showCard = (n, peek) => {
 if (!n) { card.hidden = true; cardFor = null; return; }
 if (cardFor === n && cardPeek === peek) return; cardFor = n; cardPeek = peek;
@@ -225,14 +434,14 @@ card.textContent = ''; card.classList.toggle('is-peek', peek); card.hidden = fal
 const top = el('div', 'st-card-top'); const pic = el('span', 'st-card-pic'); const face = n.el.querySelector('.st-face > *'); if (face) { const c = face.cloneNode(true); c.querySelector('img')?.removeAttribute('loading'); pic.append(c); }
 if (n.id === 'vishvamitra' || n.id === 'shurpanakha') pic.style.filter = getComputedStyle(n.el.querySelector('.st-face img')).filter;
 const h = el('h2', 'st-card-n', n.name); h.id = 'st-card-n'; const o = el('span', '', n.other); o.lang = hi ? 'en' : 'hi'; h.append(o);
-top.append(pic, h, el('p', 'st-card-k', n.title)); card.append(top, el('p', 'st-card-l', n.line)); card.classList.remove('is-more');
+top.append(pic, h, el('p', 'st-card-k', n.title)); card.append(top, el('p', 'st-card-l', nb(n.line))); card.classList.remove('is-more');
 card.setAttribute('aria-labelledby', 'st-card-n'); lift();
 if (peek) return;
 const more = el('div', 'st-card-more'); const open = el('a', 'st-card-open', fill(UI.open, { name: short(n) })); open.href = n.href; more.append(open);
-const x = el('button', 'st-card-x', '×'); x.type = 'button'; x.setAttribute('aria-label', UI.close); x.addEventListener('click', () => { pick(null); stage.focus({ preventScroll: true }); });
+const x = el('button', 'st-card-x', '×'); x.type = 'button'; x.setAttribute('aria-label', UI.close); on(x, 'click', () => { pick(null); stage.focus({ preventScroll: true }); });
 if (n.ties.length || n.withs.length) {
 more.append(el('h3', 'st-card-h', UI.ties)); const ul = el('ul', 'st-card-ties');
-const row = (k, phrase, cls) => { const m = byId[k]; if (!m) return; const li = el('li', cls); const [pre, post] = phrase.split('{n}'); const b = el('button', '', short(m)); b.type = 'button'; b.addEventListener('click', () => { pick(m, { by: 'card' }); }); if (pre) li.append(pre); li.append(b); if (post) li.append(post); ul.append(li); };
+const row = (k, phrase, cls) => { const m = byId[k]; if (!m) return; const li = el('li', cls); const [pre, post] = phrase.split('{n}'); const b = el('button', '', short(m)); b.type = 'button'; on(b, 'click', () => { pick(m, { by: 'card', via: n }); }); if (pre) li.append(pre); li.append(b); if (post) li.append(post); ul.append(li); };
 for (const t of n.ties) row(t.k, t.ph, 'is-named');
 for (const t of n.withs) if (!n.kin.has(t.k)) row(t.k, '{n} · ' + (t.n === 1 ? UI.with1 : fill(UI.withN, { n: t.n })), 'is-with');
 more.append(ul);
@@ -241,83 +450,212 @@ card.append(x, more);
 card.append(el('span', 'st-card-fade')); moreCheck();
 };
 const moreCheck = () => { card.classList.toggle('is-more', card.scrollHeight - card.clientHeight - card.scrollTop > 6); };
-card.addEventListener('scroll', moreCheck, { passive: true }); addEventListener('resize', moreCheck);
+on(card, 'scroll', moreCheck, { passive: true }); on(window, 'resize', moreCheck);
 const say = (s) => { live.textContent = ''; setTimeout(() => { live.textContent = s; }, 60); };
+const nodeK = (n, nxt, r) => {
+const px = (n.tier === 'legend' ? 66 : n.tier === 'lead' ? 56 : 48) * clamp(Math.min(W, H) / 780, 0.72, 1.12); let k = Math.min(K_MAX, px / n.r);
+if (nxt) { const dx = Math.abs(nxt.x - n.x) || 1; const dy = Math.abs(nxt.y - n.y) || 1; const kf = Math.min(0.42 * (r.x1 - r.x0) / dx, 0.42 * (r.y1 - r.y0) / dy); k = Math.min(k, Math.max(kf, 0.9 * clamp(Math.min(W, H) / 780, 0.72, 1.12))); }
+return Math.max(k, kMin);
+};
+const nodeCam = (n, nxt, mode, hopNo) => {
+const r = freeRect(mode || panel);
+if (!nxt || mode !== 'cap') return camFor(n.x, n.y, nodeK(n, nxt, r), r);
+const sc = clamp(Math.min(W, H) / 780, 0.72, 1.12); const pad = (n.tier === 'legend' ? 78 : 66) * sc;
+const dx = Math.abs(nxt.x - n.x) || 1; const dy = Math.abs(nxt.y - n.y) || 1; const kfit = Math.min((r.x1 - r.x0 - 2 * pad) / dx, (r.y1 - r.y0 - 2 * pad) / dy);
+const wide = (hopNo | 0) % 3 === 0; const kc = (n.tier === 'legend' ? 66 : n.tier === 'lead' ? 56 : 48) * sc / n.r;
+const k = Math.max(kMin, Math.min(K_MAX, wide ? Math.max(kfit * 0.7, 0.5 * sc) : Math.max(Math.min(kfit, kc * 1.15), 0.62 * sc)));
+return camFor(lerp(n.x, nxt.x, 0.5), lerp(n.y, nxt.y, 0.5), k, r);
+};
 const pressRealm = (id) => { pressed = id; fr = realms.find((r) => r.id === id) || null; remember(); for (const b of sky.querySelectorAll('[data-st-go]')) b.setAttribute('aria-pressed', String(b.dataset.stGo === id)); wake(); };
 const free = () => { if (pressed) pressRealm(''); };
-const goRealm = (r) => { pick(null); go(r ? frameRealm(r) : fit(box, 28), 0.55); pressRealm(r ? r.id : 'all'); sky.classList.add('is-used'); reveal(); };
-const realmAt = (cx, cy) => { const q = stage.getBoundingClientRect(); const x = (cx - q.left - W / 2) / cam.k + cam.x; const y = (cy - q.top - H / 2) / cam.k + cam.y; return realms.find((r) => Math.abs(x - r.cx) < r.hw + 30 && y > r.cy - r.hh - 70 && y < r.cy + r.hh + 30) || null; };
+const setPanel = (m) => { panel = m; };
+const goHome = () => { pick(null); setPanel('none'); atHome = true; fly(home, 1.8); pressRealm('all'); sky.classList.add('is-used'); };
+const goRealm = (r) => {
+userInput(); pick(null); setPanel('none'); atHome = false; const rr = freeRect('none'); const b = realmBox(r); fly(camFor((b.x0 + b.x1) / 2, (b.y0 + b.y1) / 2, clamp(Math.max(fitK(b, rr, 12), narrow ? 0.62 : 0.5), kMin, K_MAX), rr), 1.7); pressRealm(r.id); sky.classList.add('is-used');
+};
 const remember = () => { try { const u = new URL(location.href); if (sel) u.searchParams.set('p', sel.id); else u.searchParams.delete('p'); if (pressed && pressed !== 'all') u.searchParams.set('r', pressed); else u.searchParams.delete('r'); history.replaceState(history.state, '', u); } catch (e) {} };
-const pick = (n, { by = 'tap', travel = true } = {}) => {
-sel = n; hover = null; sky.classList.add('is-used'); showCard(n, false); pressRealm(''); remember();
+const ripple = (n) => { n.pulse = performance.now(); n.glow = Math.min(1, n.glow + 0.6); };
+const pick = (n, { by = 'tap', travel = true, via = null } = {}) => {
+if (n) userInput(); sel = n; hover = null; sky.classList.add('is-used'); showCard(n, false); pressRealm(''); remember(); setPanel(n ? 'card' : (wander.run ? 'cap' : 'none')); capHide();
 if (n) {
-const narrow = W <= 700; const k = Math.max(Math.min(cam.k, 1.25), narrow ? 0.82 : 0.95);
-if (travel) go({ x: n.x - (narrow ? 0 : Math.min(140, W * 0.1) / k), y: n.y + (narrow ? H * 0.25 / k : 0), k }, 0.42);
-reveal();
+atHome = false; ripple(n);
+if (travel) { const e = via && edgeAt[key(via, n)]; fly(nodeCam(n), 1.7, e && !calm() ? { edge: e, rev: e.a !== via, bump: 0.12, r: freeRect('card') } : {}); }
 say(`${n.name}. ${n.title ? n.title + '. ' : ''}${n.ties.map((t) => t.ph.replace('{n}', short(byId[t.k] || n))).join('; ')}`);
 if (by === 'card' || by === 'find') card.querySelector('.st-card-open')?.focus({ preventScroll: true });
 }
 wake();
 };
-const at = (cx, cy, slop) => { const r = stage.getBoundingClientRect(); const x = (cx - r.left - W / 2) / cam.k + cam.x; const y = (cy - r.top - H / 2) / cam.k + cam.y; let best = null; let bd = 1e9; for (const n of nodes) { const d = Math.hypot(n.x - x, n.y - y); if (d < n.r + slop / cam.k && d < bd) { bd = d; best = n; } } return best; };
-const zoomAt = (px, py, mul, t = 0.18) => { free(); loose = true; const k = Math.max(kMin, Math.min(K_MAX, to.k * mul)); const wx = (px - W / 2) / to.k + to.x; const wy = (py - H / 2) / to.k + to.y; go({ x: wx - (px - W / 2) / k, y: wy - (py - H / 2) / k, k }, t); };
-const pts = new Map(); let drag = null; let pinch = 0;
-stage.addEventListener('pointerdown', (e) => {
-if (e.button) return; kbd = false; pts.set(e.pointerId, { x: e.clientX, y: e.clientY }); try { stage.setPointerCapture(e.pointerId); } catch (err) {}
+const at = (cx, cy, slop) => { const r = stage.getBoundingClientRect(); const x = (cx - r.left - W / 2) / cam.k + cam.x; const y = (cy - r.top - H / 2) / cam.k + cam.y; let best = null; let bd = 1e9; for (const n of nodes) { if (n.in < 0.5) continue; const d = Math.hypot(n.x - x, n.y - y); if (d < Math.max(n.r, n.dr / cam.k) + slop / cam.k && d < bd) { bd = d; best = n; } } return best; };
+const zoomAt = (px, py, mul, t = 0.18) => { stopFlight(); free(); atHome = false; const k = clamp(to.k * mul, kMin, K_MAX); const wx = (px - W / 2) / to.k + to.x; const wy = (py - H / 2) / to.k + to.y; Object.assign(to, clampCam({ x: wx - (px - W / 2) / k, y: wy - (py - H / 2) / k, k })); ease = t; wake(); };
+const capHide = () => { cap.classList.remove('is-in'); wake(); };
+const capShow = (n, hop) => {
+cap.textContent = ''; if (n.title) cap.append(el('p', 'st-cap-k', n.title));
+const h = el('h3', 'st-cap-n', n.name); const o = el('span', '', n.other); o.lang = hi ? 'en' : 'hi'; h.append(o); cap.append(h, el('p', 'st-cap-l', nb(n.line)));
+if (hop) { const p = el('div', 'st-cap-hop'); p.append(el('span', 'st-cap-hk', UI.follow)); p.append(el('span', 'st-cap-ar', '→')); const s = el('span'); const [pre, post] = hop.ph.split('{n}'); if (pre) s.append(pre); s.append(el('b', '', short(hop.m))); if (post) s.append(post); p.append(s); if (hop.ev) p.append(el('q', 'st-cap-q', nb(hop.ev))); cap.append(p); }
+cap.classList.add('is-in'); requestAnimationFrame(() => { const r = cap.getBoundingClientRect(); const s = stage.getBoundingClientRect(); capR = [r.left - s.left - 20, r.top - s.top - 24, r.width + 60, r.height + 40]; wake(); });
+};
+const wLabel = () => {
+const asking = wander.started && !wander.run && !wander.user && !calm(); const idle = wander.started && !wander.run && !calm();
+wbtn.setAttribute('aria-pressed', String(wander.run)); wbtn.classList.toggle('is-asking', asking); wbtn.classList.toggle('is-run', wander.run); sky.classList.toggle('is-tour', wander.run);
+wlabel.textContent = wander.run ? (UI.pause || UI.wander) : idle ? UI.resume : UI.wander;
+};
+const phraseOf = (n, m) => { const t = n.ties.find((u) => u.k === m.id); if (t) return t; const w = n.withs.find((u) => u.k === m.id); return { ph: '{n} · ' + (!w || w.n === 1 ? UI.with1 : fill(UI.withN, { n: w.n })), ev: '' }; };
+const choose = (cur) => {
+const w2 = wander; const cand = [];
+const add = (t, nn) => { const m = byId[t.k]; if (!m || m === cur) return; const e = edgeAt[key(cur, m)]; if (!e) return; let w = e.named ? 1 : 0.1 + 0.04 * Math.min(nn, 4); const seen = w2.recent.lastIndexOf(m); if (seen >= 0 && seen >= w2.recent.length - 12) w *= 0.015; w /= 1 + 0.8 * (w2.visits[m.id] || 0); if (m.realm !== cur.realm && w2.hops >= 4) w *= 8; else if (m.realm === cur.realm && w2.hops >= 7) w *= 0.15; w *= m.rank === 0 ? 1.5 : m.rank === 1 ? 1.15 : 1; const p = phraseOf(cur, m); cand.push({ m, e, w, ph: p.ph, ev: p.ev }); };
+for (const t of cur.ties) add(t, 3);
+if (!cand.some((c) => c.w > 0.08) || (w2.hops >= 4 && !cand.some((c) => c.m.realm !== cur.realm))) for (const t of cur.withs) if (!cur.kin.has(t.k)) add(t, t.n);
+if (!cand.length) return null;
+let sum = 0; for (const c of cand) sum += c.w; let r = rndr() * sum; for (const c of cand) { r -= c.w; if (r <= 0) return c; } return cand[cand.length - 1];
+};
+const nextOf = (n) => {
+const w2 = wander;
+if (w2.script) { const i = w2.script.indexOf(n.id); const m = i >= 0 && byId[w2.script[i + 1]]; const e = m && edgeAt[key(n, m)]; if (e) { const p = phraseOf(n, m); return { m, e, ph: p.ph, ev: p.ev }; } w2.script = null; }
+return choose(n);
+};
+const farNode = (cur) => { let best = null; let bs = -1; for (const n of nodes) { if (n === cur || wander.recent.slice(-14).includes(n)) continue; const s = (n.rank === 0 ? 3 : n.rank === 1 ? 2 : 1) / (1 + (wander.visits[n.id] || 0) * 2) * (n.realm !== cur.realm ? 1.6 : 1) * (0.5 + rndr()); if (s > bs) { bs = s; best = n; } } return best || nodes[0]; };
+const arrive = (n, hop) => {
+const w = wander; if (!w.run) return; w.cur = n; w.fnode = n; w.visits[n.id] = (w.visits[n.id] || 0) + 1; w.recent.push(n); if (w.recent.length > 40) w.recent.shift(); ripple(n); if (w.guide) w.guide.e = null;
+if (hop === undefined) hop = nextOf(n);
+w.nxt = hop ? hop.m : null; w.e = hop ? hop.e : null; w.rev = hop ? hop.e.a !== n : false; w.hop = hop; if (hop && hop.m.realm === n.realm) w.hops++; else w.hops = 0;
+w.nHop = (w.nHop || 0) + 1; w.mode = 'hold'; w.t0 = performance.now(); w.nextC = w.t0 + 1100; w.hold = 6800 + Math.min(2400, (n.line.length + (hop ? hop.ev.length : 0)) * 7); setPanel('cap');
+const c = nodeCam(n, w.nxt, 'cap', w.nHop); const dx = w.nxt ? (w.nxt.x - n.x) * 0.03 : 0; const dy = w.nxt ? (w.nxt.y - n.y) * 0.03 : 0;
+flight = { t0: w.t0, dur: w.hold + 600, from: { x: cam.x, y: cam.y, k: cam.k }, to: { x: c.x + dx, y: c.y + dy, k: c.k * 1.035 }, bump: 0, edge: null, rev: false, out: false, done: null, r: null };
+setTimeout(() => { if (w.run && w.cur === n && w.mode === 'hold') capShow(n, hop); }, 600);
+surge(n); wake();
+};
+const launch = (e, from, wait, strong) => { const c = comets.find((x) => !x.e && x.wait <= 0.3) || comets[(rndr() * comets.length) | 0]; if (!c) return; c.e = e; c.u = 0; c.fwd = e.a === from; c.v = ((strong ? 82 : 70) + rndr() * 30) / e.len; c.tint = tintOf(from.realm); c.a = strong ? 0.95 : 0.85; c.tail = strong ? 80 : 64; c.rad = strong ? 1.3 : 1.1; c.wait = wait; };
+const surge = (n) => {
+if (calm() || !comets.length) return; const w = wander; let j = 0;
+if (w.run && w.e) { launch(w.e, n, 0.5, true); for (const e of n.namedE) if (e !== w.e && j < 2) launch(e, n, 1.1 + j++ * 0.6, false); return; }
+for (const e of n.namedE) { launch(e, n, 0.6 + j++ * 0.3, true); if (j > 7) break; }
+};
+let nextWave = 0; let lastHub = null;
+const wave = (now) => {
+const hubs = nodes.filter((n) => n.rank === 0 && n.namedE.length >= 3 && n !== lastHub); const h = hubs[(rndr() * hubs.length) | 0]; if (!h) return; lastHub = h;
+for (const n of nodes) n.wd = -1; h.wd = 0; const q = [h];
+while (q.length) { const x = q.shift(); if (x.wd >= 4) continue; for (const e of x.namedE) { const y = e.a === x ? e.b : e.a; if (y.wd < 0) { y.wd = x.wd + 1; q.push(y); } } }
+for (const n of nodes) if (n.wd >= 0) n.pulseAt = now + n.wd * 700;
+};
+const wavePulse = (now) => {
+for (const n of nodes) { if (!n.pulseAt || now < n.pulseAt) continue; n.pulseAt = 0; n.pulse = now; n.glow = Math.min(1, n.glow + 0.5); if (comets.length && n.wd < 4) for (const e of n.namedE) { const o = e.a === n ? e.b : e.a; if (o.wd === n.wd + 1) launch(e, n, 0.05, false); } }
+};
+const travel = () => {
+const w = wander; capHide(); const n = w.cur; let m = w.nxt; const e = m ? w.e : null; let rev = w.rev;
+if (!m) { m = farNode(n); rev = false; w.hops = 0; }
+w.mode = 'travel'; w.fnode = m; const pre = nextOf(m); const c = nodeCam(m, pre && pre.m, 'cap', (w.nHop || 0) + 1); const g = guideOf();
+if (e) { g.e = e; g.fwd = !rev; g.u = 0.02; g.tint = [255, 238, 205]; g.a = 1; g.tail = 130; g.rad = 1.4; } else g.e = null;
+const dur = clamp(3.4 + Math.hypot(n.x - m.x, n.y - m.y) / 380, 3.4, 5.4);
+fly(c, dur, e ? { edge: e, rev, bump: 0.1, r: freeRect('cap'), done: () => arrive(m, pre) } : { bump: 0.3, done: () => arrive(m, pre) });
+};
+const wanderLock = () => form.classList.contains('is-open') && document.activeElement === q;
+const wTick = (now, still) => {
+const w = wander;
+if (!w.run) {
+if (hover && !sel && !pts.size && now - lastInput > 25000) { hover = null; stage.classList.remove('is-over'); showCard(null); setPanel('none'); wake(); }
+if (still || !introDone || w.user || sel || hover || pts.size || card.contains(document.activeElement) || wanderLock()) return;
+if (w.started ? now - lastInput > 25000 : wanderBusy && now > wanderBusy) wStart(w.started);
+return;
+}
+if (still) return wStop();
+if (w.mode === 'hold' && w.e && w.cur && now > w.nextC && now - w.t0 < w.hold - 600) { launch(w.e, w.cur, 0, true); w.nextC = now + 1200; }
+if (w.mode === 'hold' && now - w.t0 > w.hold) travel();
+};
+const wSoon = () => { wanderBusy = performance.now() + 1200; };
+const wStart = (resume) => {
+const w = wander; if (calm()) return; w.run = true; w.started = true; w.user = false;
+if (sel) { w.cur = sel; pick(null); }
+if (!w.cur && !w.toured) { w.script = ['dasharatha', 'rama', 'sita', 'hanuman'].filter((id) => byId[id]); w.toured = true; }
+const n = w.script && w.script.length ? byId[w.script[0]] : (w.cur || byRank[0]); w.mode = 'fly'; w.fnode = n; setPanel('cap'); pressRealm('all'); atHome = false;
+const pre = nextOf(n); const c = nodeCam(n, pre && pre.m, 'cap', (w.nHop || 0) + 1); fly(c, clamp(1.6 + Math.hypot(n.x - cam.x, n.y - cam.y) * cam.k / 700, 1.8, 3.2), { done: () => arrive(n, pre) }); wLabel(); wake();
+};
+const wStop = () => { const w = wander; if (!w.run) return; w.run = false; w.mode = 'off'; w.fnode = null; w.nxt = null; w.e = null; if (w.guide) w.guide.e = null; capHide(); if (!sel) setPanel('none'); stopFlight(); wLabel(); wake(); };
+const userInput = () => { lastInput = performance.now(); if (!introDone) { introFast = true; } wander.started = true; if (wander.run) wStop(); else wLabel(); };
+on(wbtn, 'click', () => { lastInput = performance.now(); if (wander.run) { wander.user = true; wStop(); } else { wander.user = false; if (!introDone) introFast = true; wStart(true); } wLabel(); });
+const wanderToggle = () => { if (calm()) return; if (wander.run) { wander.user = true; wStop(); } else { wander.user = false; wStart(true); } wLabel(); };
+let drag = null; let pinch = 0; let tapAt = 0; let tapX = 0; let tapY = 0;
+on(stage, 'pointerdown', (e) => {
+if (e.button) return; kbd = false; userInput(); stopFlight(); pts.set(e.pointerId, { x: e.clientX, y: e.clientY }); try { stage.setPointerCapture(e.pointerId); } catch (err) {}
 vel.x = vel.y = 0; drag = { x: e.clientX, y: e.clientY, moved: false, t: performance.now(), touch: e.pointerType !== 'mouse' };
 if (pts.size === 2) { const [a, b] = [...pts.values()]; pinch = Math.hypot(a.x - b.x, a.y - b.y); drag.moved = true; }
 });
-stage.addEventListener('pointermove', (e) => {
+on(stage, 'pointermove', (e) => {
 const p = pts.get(e.pointerId);
-if (!p) { if (e.pointerType === 'mouse') { const n = at(e.clientX, e.clientY, 4); if (n !== hover) { hover = n; stage.classList.toggle('is-over', !!n); if (!sel) showCard(n, true); wake(); } } return; }
+if (!p) { if (e.pointerType === 'mouse') { const r = stage.getBoundingClientRect(); ptr.tx = clamp((e.clientX - r.left) / W * 2 - 1, -1, 1); ptr.ty = clamp((e.clientY - r.top) / H * 2 - 1, -1, 1); const n = at(e.clientX, e.clientY, 4); if (n !== hover) { if (n) userInput(); hover = n; stage.classList.toggle('is-over', !!n); if (!sel) { showCard(n, true); setPanel(n ? 'card' : wander.run ? 'cap' : 'none'); } wake(); } } return; }
 const dx = e.clientX - p.x; const dy = e.clientY - p.y; p.x = e.clientX; p.y = e.clientY;
-if (pts.size === 2) { const [a, b] = [...pts.values()]; const d = Math.hypot(a.x - b.x, a.y - b.y); const r = stage.getBoundingClientRect(); if (pinch) { ease = 0; zoomAt((a.x + b.x) / 2 - r.left, (a.y + b.y) / 2 - r.top, d / pinch, 0); to.x -= dx / 2 / to.k; to.y -= dy / 2 / to.k; Object.assign(cam, clampCam(to)); } pinch = d; sky.classList.add('is-used'); return; }
+if (pts.size === 2) { const [a, b] = [...pts.values()]; const d = Math.hypot(a.x - b.x, a.y - b.y); const r = stage.getBoundingClientRect(); if (pinch) { zoomAt((a.x + b.x) / 2 - r.left, (a.y + b.y) / 2 - r.top, d / pinch, 0); to.x -= dx / 2 / to.k; to.y -= dy / 2 / to.k; clampCam(to); Object.assign(cam, to); } pinch = d; sky.classList.add('is-used'); wake(); return; }
 if (!drag) return;
 if (!drag.moved && Math.hypot(e.clientX - drag.x, e.clientY - drag.y) < (drag.touch ? 8 : 4)) return;
-if (!drag.moved) { drag.moved = true; stage.classList.add('is-drag'); sky.classList.add('is-used'); free(); if (hover) { hover = null; if (!sel) showCard(null); } }
-const wy = to.y - dy / cam.k; to.x -= dx / cam.k; to.y = wy; clampCam(to); cam.x = to.x; cam.y = to.y;
-if (drag.touch) { const over = (wy - to.y) * cam.k; if (Math.abs(over) > 0.5 && Math.abs(dy) > Math.abs(dx)) { window.scrollBy({ top: over, behavior: 'instant' }); drag.pass = performance.now(); } } const now = performance.now(); const dt = Math.max(8, now - drag.t) / 1000; drag.t = now; vel.x = vel.x * 0.6 + dx / dt * 0.25; vel.y = vel.y * 0.6 + dy / dt * 0.25; wake();
+if (!drag.moved) { drag.moved = true; stage.classList.add('is-drag'); sky.classList.add('is-used'); free(); atHome = false; if (hover) { hover = null; if (!sel) showCard(null); } }
+to.x -= dx / cam.k; to.y -= dy / cam.k; clampCam(to); cam.x = to.x; cam.y = to.y; ease = 0;
+const now = performance.now(); const dt = Math.max(8, now - drag.t) / 1000; drag.t = now; vel.x = vel.x * 0.6 + dx / dt * 0.25; vel.y = vel.y * 0.6 + dy / dt * 0.25; wake();
 });
 const up = (e) => {
 if (!pts.has(e.pointerId)) return; pts.delete(e.pointerId); pinch = 0; stage.classList.remove('is-drag');
 if (pts.size) { drag = { moved: true, t: performance.now() }; vel.x = vel.y = 0; return; }
-const d = drag; drag = null; if (!d) return; loose = true;
+const d = drag; drag = null; if (!d) return;
 if (!d.moved && e.type === 'pointerup') {
-vel.x = vel.y = 0; const n = at(e.clientX, e.clientY, d.touch ? 12 : 4); const r = cam.k < 0.24 && (d.touch || !n) ? realmAt(e.clientX, e.clientY) : null;
-if (r) goRealm(r); else if (n) pick(n); else if (sel) pick(null);
-} else if (d.pass && performance.now() - d.pass < 90) { if (!calm() && Math.abs(vel.y) > 160) window.scrollBy({ top: -vel.y * 0.28, behavior: 'smooth' }); vel.x = vel.y = 0; }
-else if (performance.now() - d.t > 90 || calm()) vel.x = vel.y = 0;
-wake();
+vel.x = vel.y = 0; const n = at(e.clientX, e.clientY, d.touch ? 12 : 4); const now = performance.now();
+if (!n && d.touch && now - tapAt < 330 && Math.hypot(e.clientX - tapX, e.clientY - tapY) < 36) { tapAt = 0; goHome(); }
+else if (n) { tapAt = 0; pick(n); } else { tapAt = now; tapX = e.clientX; tapY = e.clientY; if (sel) pick(null); }
+} else if (performance.now() - d.t > 90 || calm()) vel.x = vel.y = 0;
+ease = 0.22; wake();
 };
-stage.addEventListener('pointerup', up); stage.addEventListener('pointercancel', up);
-stage.addEventListener('pointerleave', (e) => { if (e.pointerType === 'mouse' && hover) { hover = null; stage.classList.remove('is-over'); if (!sel) showCard(null); wake(); } });
-stage.addEventListener('wheel', (e) => { if (!e.ctrlKey && !e.metaKey) return; e.preventDefault(); const r = stage.getBoundingClientRect(); zoomAt(e.clientX - r.left, e.clientY - r.top, Math.exp(-e.deltaY * 0.012), 0.1); sky.classList.add('is-used'); }, { passive: false });
-stage.addEventListener('dblclick', (e) => { const r = stage.getBoundingClientRect(); if (!at(e.clientX, e.clientY, 4)) zoomAt(e.clientX - r.left, e.clientY - r.top, 1.5, 0.3); });
-stage.addEventListener('keydown', (e) => {
+on(stage, 'pointerup', up); on(stage, 'pointercancel', up);
+on(stage, 'pointerleave', (e) => { if (e.pointerType === 'mouse') { ptr.tx = ptr.ty = 0; if (hover) { hover = null; stage.classList.remove('is-over'); if (!sel) { showCard(null); setPanel(wander.run ? 'cap' : 'none'); } wake(); } } });
+on(stage, 'wheel', (e) => {
+const zoomIn = e.deltaY < 0; const atFar = to.k <= home.k * 1.02 && !flight;
+if (!zoomIn && atFar && !e.ctrlKey && !e.metaKey) return;
+e.preventDefault(); userInput(); const r = stage.getBoundingClientRect(); const dy = e.deltaMode === 1 ? e.deltaY * 16 : e.deltaY; zoomAt(e.clientX - r.left, e.clientY - r.top, Math.exp(-dy * (e.ctrlKey ? 0.011 : 0.0017)), 0.13); sky.classList.add('is-used');
+}, { passive: false });
+on(stage, 'dblclick', (e) => { if (e.pointerType === 'touch') return; if (!at(e.clientX, e.clientY, 4)) goHome(); });
+on(stage, 'keydown', (e) => {
+if (e.altKey || e.ctrlKey || e.metaKey || e.key === 'w' || e.key === 'W') return; userInput();
 const dir = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1] }[e.key];
 if (dir) {
-e.preventDefault(); kbd = true; let cur = sel;
+e.preventDefault(); kbd = true; let cur = sel || (wander.cur && wander.cur) ;
 if (!cur) { let bd = 1e9; for (const n of nodes) { const d = Math.hypot(n.x - cam.x, n.y - cam.y) - n.r * 2; if (d < bd) { bd = d; cur = n; } } return pick(cur, { by: 'key' }); }
 let best = null; let bs = 1e9; for (const n of nodes) { if (n === cur) continue; const dx = n.x - cur.x; const dy = n.y - cur.y; const along = dx * dir[0] + dy * dir[1]; if (along <= 0) continue; const side = Math.abs(dx * dir[1] - dy * dir[0]); const s = along + side * 2.2; if (side < along * 1.6 && s < bs) { bs = s; best = n; } }
-if (best) pick(best, { by: 'key' });
+pick(best || cur, { by: 'key' });
 } else if (e.key === 'Enter' || e.key === ' ') { if (sel) { e.preventDefault(); card.querySelector('.st-card-open')?.focus({ preventScroll: true }); } }
 else if (e.key === 'Escape') { if (sel) { e.preventDefault(); pick(null); } }
 else if (e.key === '+' || e.key === '=') { e.preventDefault(); zoomAt(W / 2, H / 2, 1.35, 0.3); }
 else if (e.key === '-' || e.key === '_') { e.preventDefault(); zoomAt(W / 2, H / 2, 1 / 1.35, 0.3); }
-else if (e.key === 'Home' || e.key === '0') { e.preventDefault(); pick(null); go(fit(box, 28), 0.5); pressRealm('all'); }
+else if (e.key === 'Home' || e.key === '0') { e.preventDefault(); goHome(); }
 });
-card.addEventListener('keydown', (e) => { if (e.key === 'Escape') { e.preventDefault(); pick(null); stage.focus({ preventScroll: true }); } });
-sky.addEventListener('click', (e) => {
-const g = e.target.closest('[data-st-go]'); const z = e.target.closest('[data-st-zoom]');
-if (g) goRealm(realms.find((x) => x.id === g.dataset.stGo));
-if (z) { zoomAt(W / 2, H / 2, +z.dataset.stZoom > 0 ? 1.4 : 1 / 1.4, 0.3); sky.classList.add('is-used'); }
+on(sky, 'keydown', (e) => { if ((e.key === 'w' || e.key === 'W') && !e.altKey && !e.ctrlKey && !e.metaKey && !/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)) { e.preventDefault(); wanderToggle(); } });
+on(card, 'keydown', (e) => { if (e.key === 'Escape') { e.preventDefault(); pick(null); stage.focus({ preventScroll: true }); } });
+const scrollTo = (el2) => { const calmNow = calm(); if (el2) { const y = el2.getBoundingClientRect().top + window.scrollY - (parseFloat(getComputedStyle(root).getPropertyValue('--ed-head-h')) || 68) - 8; window.scrollTo({ top: y, behavior: calmNow ? 'instant' : 'smooth' }); } else window.scrollTo({ top: 0, behavior: calmNow ? 'instant' : 'smooth' }); };
+on(sky, 'click', (e) => {
+const g = e.target.closest('[data-st-go]'); const z = e.target.closest('[data-st-zoom]'); const h = e.target.closest('[data-st-home]'); const v = e.target.closest('[data-st-view]'); const cue = e.target.closest('[data-st-cue]'); const fb = e.target.closest('[data-st-findbtn]');
+if (g) { if (g.dataset.stGo === 'all') { userInput(); goHome(); } else goRealm(realms.find((x) => x.id === g.dataset.stGo)); }
+if (z) { userInput(); zoomAt(W / 2, H / 2, +z.dataset.stZoom > 0 ? 1.4 : 1 / 1.4, 0.3); sky.classList.add('is-used'); }
+if (h) { userInput(); goHome(); }
+if (v) scrollTo(v.dataset.stView === 'wall' ? document.getElementById('cast-wall') : null);
+if (cue) { e.preventDefault(); scrollTo(document.getElementById('cast-wall')); }
+if (fb) { const f2 = fb.closest('.st-find'); f2.classList.add('is-open'); fb.setAttribute('aria-expanded', 'true'); q.focus(); }
 });
 const form = sky.querySelector('[data-st-find]'); const q = form.querySelector('input');
 const norm = (s) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().trim();
-const find = () => { const s = norm(q.value); if (!s) return; const keys = (n) => [n.name, n.other, n.en].map(norm); const n = nodes.find((x) => keys(x).includes(s)) || nodes.find((x) => keys(x).some((v) => v.startsWith(s))) || nodes.find((x) => keys(x).some((v) => v.includes(s))); if (n) { pick(n, { by: 'find' }); q.value = ''; } else say(UI.none); };
-form.addEventListener('submit', (e) => { e.preventDefault(); find(); });
-q.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); find(); } });
-q.addEventListener('change', () => { const s = norm(q.value); if (nodes.some((n) => norm(n.name) === s)) find(); });
-matchMedia('(prefers-reduced-motion: reduce)').addEventListener?.('change', wake);
-try { const u = new URL(location.href); const pid = u.searchParams.get('p'), rid = u.searchParams.get('r'); if (pid && byId[pid]) pick(byId[pid], { by: 'link' }); else if (rid && realms.some((r) => r.id === rid)) goRealm(realms.find((r) => r.id === rid)); } catch (e) {}
+const find = () => { const s = norm(q.value); if (!s) return; const keys = (n) => [n.name, n.other, n.en].map(norm); const n = nodes.find((x) => keys(x).includes(s)) || nodes.find((x) => keys(x).some((v) => v.startsWith(s))) || nodes.find((x) => keys(x).some((v) => v.includes(s))); if (n) { pick(n, { by: 'find' }); q.value = ''; closeFind(); } else say(UI.none); };
+const closeFind = () => { form.classList.remove('is-open'); form.querySelector('[data-st-findbtn]').setAttribute('aria-expanded', 'false'); };
+on(form, 'submit', (e) => { e.preventDefault(); find(); });
+on(q, 'keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); find(); } else if (e.key === 'Escape') { closeFind(); } e.stopPropagation(); userInput(); });
+on(q, 'focus', userInput); on(q, 'blur', () => setTimeout(() => { if (!q.value) closeFind(); }, 150));
+on(q, 'change', () => { const s = norm(q.value); if (nodes.some((n) => norm(n.name) === s)) find(); });
+on(topEl, 'pointerdown', () => { lastInput = performance.now(); });
+on(mq, 'change', () => { wake(); });
+on(window, 'pagehide', (e) => { cancelAnimationFrame(raf); raf = 0; shown = false; if (!e.persisted) { ac.abort(); io.disconnect(); } });
+on(window, 'pageshow', (e) => { if (e.persisted) { shown = !document.hidden; last = 0; wake(); } });
+try { new MutationObserver(() => wake()).observe(root, { attributes: true, attributeFilter: ['data-motion'] }); } catch (e) {}
+for (const n of nodes) { n.kinL = [...n.kin].map((k) => byId[k]).filter(Boolean); n.nearL = [...n.near].filter((k) => !n.kin.has(k)).map((k) => byId[k]).filter(Boolean); n.want = 0; }
+for (const b of sky.querySelectorAll('[data-st-go]')) b.setAttribute('aria-pressed', String(b.dataset.stGo === 'all')); pressed = 'all';
+size(false); wLabel();
+{ let pid = null; let rid = null; try { const u = new URL(location.href); pid = u.searchParams.get('p'); rid = u.searchParams.get('r'); } catch (e) {}
+if ((pid && byId[pid]) || (rid && realms.some((r) => r.id === rid))) sky.classList.add('is-quick');
+if (pid && byId[pid]) { introDone = true; introT = 7; flight = null; wander.started = true; pick(byId[pid], { by: 'link', travel: false }); setCam(nodeCam(byId[pid], null, 'card')); }
+else if (rid && realms.some((r) => r.id === rid)) { introDone = true; introT = 7; flight = null; wander.started = true; goRealm(realms.find((r) => r.id === rid)); const rr = freeRect('none'); const b = realmBox(realms.find((r) => r.id === rid)); setCam(camFor((b.x0 + b.x1) / 2, (b.y0 + b.y1) / 2, clamp(Math.max(fitK(b, rr, 12), narrow ? 0.62 : 0.5), kMin, K_MAX), rr)); }
+else wanderBusy = performance.now() + 5800; }
+if (calm()) { sky.classList.add('is-calm'); }
+wLabel(); wake();
 })();
