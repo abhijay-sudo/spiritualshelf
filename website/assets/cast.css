@@ -68,7 +68,8 @@
 .cast-world { position: absolute; inset: 0 0 1px; overflow: hidden; }
 .cast-world img { position: absolute; left: -8%; top: -8%; width: 116%; height: 116%; max-width: none; object-fit: cover; object-position: var(--world-pos, 50% 40%); filter: blur(22px) saturate(1.15) brightness(.8); }
 /* (the whole figure stands inside the first screen, under the bar: its height is the stage's or the screen's, whichever is less) */
-.cast-figure { position: absolute; isolation: isolate; --fig-top: calc(var(--ed-head-h) + env(safe-area-inset-top, 0px) + .75rem); --fig-h: min(calc(min(100cqh, 100svh) - var(--fig-top) - .75rem), 52rem); --fig-at: 70cqw;
+/* .ha-box: Hanuman's arrival rig stands in exactly the figure's box (assets/hanuman-arrival.css) */
+.cast-figure, .ha-box { position: absolute; isolation: isolate; --fig-top: calc(var(--ed-head-h) + env(safe-area-inset-top, 0px) + .75rem); --fig-h: min(calc(min(100cqh, 100svh) - var(--fig-top) - .75rem), 52rem); --fig-at: 70cqw;
   top: max(var(--fig-top), calc(min(100cqh, 100svh) - .75rem - var(--fig-h))); height: var(--fig-h); width: calc(var(--fig-h) * var(--fig-ar, .5)); left: calc(var(--fig-at) - var(--fig-h) * var(--fig-ar, .5) / 2); }
 /* (the shadow is cast by the frame round the picture, not by the picture: a picture's own fade below would cut its shadow
    off at the picture's edges, and a dark plate with straight sides stood behind the figure) */
@@ -172,7 +173,7 @@ html[lang="hi"] .cast-hymn-k { font: 400 .92rem/1.4 "Mukta", var(--cx-ui); lette
   @media (max-width: 379.98px) { .cast-facts { gap: 0 .85rem; font-size: .7rem; letter-spacing: .07em; } .cast-facts > li + li { padding-left: .85rem; } }
   .cast-title::after { display: none; }
   .cast-kicker { text-shadow: 0 1px 10px var(--cx-paper), 0 0 2px var(--cx-paper); }
-  .cast-figure { --fig-at: 50cqw; --fig-top: calc(var(--ed-head-h) + env(safe-area-inset-top, 0px) + .5rem); --fig-h: calc(100cqh - var(--fig-top)); top: var(--fig-top); }
+  .cast-figure, .ha-box { --fig-at: 50cqw; --fig-top: calc(var(--ed-head-h) + env(safe-area-inset-top, 0px) + .5rem); --fig-h: calc(100cqh - var(--fig-top)); top: var(--fig-top); }
   .cast-world img { filter: blur(16px) saturate(1.15) brightness(.8); }
 }
 /* A wide screen that is not tall (a 13-inch laptop, a tablet on its side): the two columns set closer, so the whole of a

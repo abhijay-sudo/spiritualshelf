@@ -96,7 +96,7 @@
   try {
     if (me && me.hasAttribute('data-titles')) {
       var titlesAt = +localStorage.getItem('spritual:titlesAt') || 0, ref = document.referrer || '';
-      if (sessionStorage.getItem('spritual:titles') || Date.now() - titlesAt < 6048e5) d.classList.add('cx-seen');
+      if (sessionStorage.getItem('spritual:titles') || Date.now() - titlesAt < 6048e5 || d.classList.contains('ep-lite')) d.classList.add('cx-seen');   // [joyQ] Save-Data gets the finished composition, not the sequence
       else if (ref && ref.indexOf(location.origin + '/') !== 0) { d.classList.add('cx-seen'); sessionStorage.setItem('spritual:titles', '1'); }
       else { localStorage.setItem('spritual:titlesAt', String(Date.now())); sessionStorage.setItem('spritual:titles', '1'); }
       localStorage.setItem('spritual:seen', '1');
@@ -129,7 +129,7 @@
         var z = zoomFix(), r = line.getBoundingClientRect(), y = Math.round((r.top + r.height / 2) * z - open.getBoundingClientRect().top);
         if (y > 0 && y !== seamAt) { seamAt = y; d.style.setProperty('--seam', y + 'px'); }
       }
-      if ((!seamFrom || Date.now() - seamFrom < 7000) && !d.classList.contains('cx-seen')) requestAnimationFrame(seam);
+      if ((!seamFrom || Date.now() - seamFrom < 11000) && !d.classList.contains('cx-seen')) requestAnimationFrame(seam);
     };
     requestAnimationFrame(seam);
   }

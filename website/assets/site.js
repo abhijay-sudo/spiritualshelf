@@ -148,6 +148,7 @@
   // the score carries on from page to page: browsers only let it start again after the first touch or key on a new page
   if (Sound.on()) { const resume = (e) => { if (e.target.closest?.('[data-sound], [data-sound-invite]')) return; removeEventListener('pointerdown', resume); removeEventListener('keydown', resume); Sound.droneStart(); }; addEventListener('pointerdown', resume); addEventListener('keydown', resume); }
   addEventListener('pagehide', Sound.droneStop);
+  document.addEventListener('spritual:bell', () => { Sound.bell(523, 0.16); });   // [joyQ] the title sequence's temple-bell ripple: sounds only if the reader has already switched sound on (bell() is silent otherwise)
   /* aura (assets/aura.js): the sound that answers the reading, and the gold of the rituals. Fetched only on the pages that
      use it and only when the page is idle: on the quiet moment and on Today; on a story only once the lamp is lit (at once
      when the reader lights it, since that touch is what lets it sound). */

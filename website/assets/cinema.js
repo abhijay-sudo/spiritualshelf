@@ -10,7 +10,7 @@
   if (!reduced()) root.classList.add('cx-js'); else root.classList.remove('cx-js');
   // phones and short landscape screens play a shorter title sequence (mobile.css): its clock runs at this pace here too
   const pocket = matchMedia('(max-width: 759px), (orientation: landscape) and (max-height: 520px)').matches;
-  const titlePace = pocket ? .42 : 1;
+  const titlePace = pocket ? .6 : 1;   // [joyQ] the festival-night sequence runs at this pace on a phone (--tk in joyq.css)
 
   /* ---------- One scroll loop for everything that follows the scroll ---------- */
   const jobs = [];
@@ -85,11 +85,11 @@
       const dt = Math.min(.05, (now - (last || now)) / 1000); last = now; const t = now / 1000; const age = (now - born) / 1000 / titlePace;
       g.clearRect(0, 0, W, H);
       // in the dark the dust is at its brightest; once the curtain has opened it thins, so the river stays the picture
-      const amb = !titles || root.classList.contains('cx-seen') ? .55 : 1 - .45 * clamp((age - 4.4) / 2.6);
+      const amb = !titles || root.classList.contains('cx-seen') ? .55 : 1 - .45 * clamp((age - 5.6) / 2.6);   // [joyQ] dawn lifts at about 5 s
       // the lamp's glow behind the name, while the screen is dark
-      if (titles && letters && age < 6 && !root.classList.contains('cx-seen')) {
+      if (titles && letters && age < 9.9 && !root.classList.contains('cx-seen')) {   // [joyQ] the name inks in at about 5.1 s: the lamp's glow behind it runs 3.85 s later than it did
         if (!lamp || now - lampAt > 400) { const z = zoomFix(), r = letters.getBoundingClientRect(), o = openEl.getBoundingClientRect(); lamp = { x: (r.left + r.width / 2) * z - o.left, y: (r.top + r.height / 2) * z - o.top, r: Math.max(r.width * z * .95, 180) }; lampAt = now; }
-        const la = clamp((age - 1.2) / 1.4) * (1 - clamp((age - 3.1) / 1.9)) * (.9 + .1 * Math.sin(t * 5.1) * Math.sin(t * 1.7));
+        const la = clamp((age - 5.05) / 1.4) * (1 - clamp((age - 6.95) / 1.9)) * (.9 + .1 * Math.sin(t * 5.1) * Math.sin(t * 1.7));
         if (la > .01) {
           // a wide, low ellipse with a long soft falloff (many stops), so no edge of it can be seen on the dark
           g.save(); g.translate(lamp.x, lamp.y); g.scale(1, .55);
@@ -171,6 +171,15 @@
     // how much of the screen the words leave above them (a phone held upright lays a close portrait's whole head in that band: cinema.css, .is-fit)
     const info = $('.cx-sel-info', sel); const band = () => { if (!info || !narrow.matches) return; const b = Math.round(info.getBoundingClientRect().top - sel.getBoundingClientRect().top); if (b > 0) sel.style.setProperty('--sel-band', b + 'px'); };
     band(); addEventListener('resize', band, { passive: true }); document.fonts?.ready.then(band);
+    // [hanuman-arrival] when Hanuman is the chosen one, a short sunrise flare behind the painting, then a halo and a few embers: his own
+    // script and styles (assets/hanuman-arrival.js, .css) are fetched the first time he is chosen, and never for anyone else
+    const haSel = (t) => {
+      const on = /(^|\/)characters\/hanuman\/?$/.test(t.getAttribute('href') || ''); const H = window.SpritualHanuman;
+      if (H) return H.select(sel, on);
+      if (!on || !sel.dataset.haJs || sel.dataset.haLoading) return; sel.dataset.haLoading = '1';
+      const l = document.createElement('link'); l.rel = 'stylesheet'; l.href = sel.dataset.haCss; document.head.append(l);
+      const sc = document.createElement('script'); sc.src = sel.dataset.haJs; sc.onload = () => { if (window.SpritualHanuman) window.SpritualHanuman.select(sel, /(^|\/)characters\/hanuman\/?$/.test(tiles[cur].getAttribute('href') || '')); }; document.head.append(sc);
+    };
     const pick = (i, byUser) => {
       i = (i + n) % n; if (byUser) halt();
       if (i === cur) return;
@@ -202,7 +211,7 @@
         // a figure not yet decoded fades in from the moment it is, rather than appearing part-way through its fade
         if (!out.hero.complete && fig) { const want = d.hero; out.hero.addEventListener('load', () => { if (out.hero.getAttribute('src') === want && !reduced()) { fig.style.animation = 'none'; void fig.offsetWidth; fig.style.animation = ''; } }, { once: true }); }
       }
-      band();
+      band(); haSel(t);
       // the painting: the roster's small copy at once (it is already loaded), the full one as soon as it has decoded
       // the new world comes in over the old one behind a blade of light; the old one leaves when it is covered
       const my = ++token; const next = layers[1 - front]; const prev = layers[front]; const thumb = $('img', t);
@@ -477,11 +486,11 @@
   if ($('.cx-home .cx-spark') && root.classList.contains('cx-js') && !root.classList.contains('cx-seen')) {
     const evs = ['pointerdown', 'keydown', 'wheel', 'touchstart'];
     const skip = $('[data-intro-skip]');
-    const done = () => { root.classList.add('cx-seen'); evs.forEach((n) => removeEventListener(n, done)); };
+    const done = () => { const had = skip && document.activeElement === skip; root.classList.add('cx-seen'); if (had) { for (const to of [$('.cx-home .cx-cue'), $('.cx-home h1')]) { if (!to) continue; if (!to.matches('a,button')) to.tabIndex = -1; try { to.focus({ preventScroll: true }); } catch (e) {} if (document.activeElement === to) break; } } evs.forEach((n) => removeEventListener(n, done)); };
     evs.forEach((n) => addEventListener(n, done, { passive: true }));
     // the visible "Skip intro" pill (phones) does the same, and leaves once the sequence is over
     skip?.addEventListener('click', done);
-    setTimeout(() => { evs.forEach((n) => removeEventListener(n, done)); if (skip) skip.hidden = true; }, pocket ? Math.max(0, 2400 - performance.now()) : 5600);
+    setTimeout(() => { evs.forEach((n) => removeEventListener(n, done)); if (skip) skip.hidden = true; }, pocket ? Math.max(0, 5600 - performance.now()) : 9000);   // [joyQ] the sequence now runs about 8.5 s (5 s on a phone)
   }
 
   /* ---------- Theatre: the poster under the pointer leans toward it and catches the light ---------- */

@@ -321,7 +321,7 @@
       var asked = false, ask = function () { if (asked) return; asked = true; d.removeEventListener('spritual:enter', onEnter); if (!read()) show(false); };
       var onEnter = function () { setTimeout(ask, 900); };
       if (root.dataset.opening === 'live') d.addEventListener('spritual:enter', onEnter);
-      setTimeout(ask, titles ? Math.max(1200, 7600 - (window.performance ? performance.now() : 0)) : 16000);
+      setTimeout(ask, titles ? Math.max(1200, ((window.matchMedia && matchMedia('(max-width: 759px), (orientation: landscape) and (max-height: 520px)').matches) ? 6400 : 10200) - (window.performance ? performance.now() : 0))   /* [joyQ] the festival-night sequence runs about 8.5 s (5 s on a phone) */ : 16000);
     } else show(false);
   }
 })();

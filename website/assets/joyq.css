@@ -1,0 +1,128 @@
+/* [joyQ] The first-visit title sequence, rewritten as the first minute of a festival night of storytelling.
+   Dark; one diya takes light and passes it along a line of lamps; the curtain parts on a night lake where floating lamps
+   ripple on, outward from the middle; the four great sources arrive like a recited line, each with a glimpse of one of our
+   own paintings; a temple-bell ripple of light; dawn lifts; SPRITUAL inks in; the hero line rises word by word; the way in.
+   About 8.5 s on a desktop, 5 s on a phone (--tk scales every time below). Any tap or key skips (cinema.js). Returning
+   readers (cx-seen), reduced motion, Light mode and Save-Data never see any of it: they get the finished composition, with a
+   300 ms fade at most. Only transform and opacity move; nothing here animates a filter or a shadow.
+   Loaded after cinema.css / mobile.css on the home page only, so these rules take over their timings. */
+:root { --tk: 1; --q-settle: cubic-bezier(.22, .8, .2, 1); --q-lamp: cubic-bezier(.2, .9, .3, 1.2); }
+@media (max-width: 759px), (orientation: landscape) and (max-height: 520px) { :root { --tk: .6; } }
+
+/* ---------- the layer is only there while the sequence plays ---------- */
+.cx-fest, .cx-night, .cx-petals { display: none; }
+:root.cx-js:not(.cx-seen):not(.cx-fest-end) .cx-fest { display: block; position: absolute; inset: 0; z-index: 3; pointer-events: none; overflow: hidden; }
+:root.cx-js:not(.cx-seen):not(.cx-fest-end) .cx-night { display: block; position: absolute; inset: 0; background: linear-gradient(180deg, #0b0605, #1a0e08 52%, #0b0605); opacity: .9; animation: cx-dawn calc(var(--tk) * 2s) cubic-bezier(.45, 0, .3, 1) calc(var(--tk) * 4.9s) forwards; }
+@keyframes cx-dawn { to { opacity: 0; } }
+@keyframes cx-appear { to { opacity: 1; } }
+:root.cx-js .cx-petals { display: block; position: absolute; inset: 0; z-index: 3; width: 100%; height: 100%; pointer-events: none; }
+@media print { .cx-fest, .cx-night, .cx-petals { display: none !important; } }
+
+/* ---------- the diyas: lit one from another, from the middle outward, along the line where the curtain will part ---------- */
+.cx-diyas { position: absolute; left: 0; right: 0; top: var(--seam, 50%); height: 0; animation: cx-diyas-out calc(var(--tk) * 1s) var(--q-settle) calc(var(--tk) * 5s) forwards; }
+@keyframes cx-diyas-out { to { opacity: 0; translate: 0 -2.2rem; } }
+.cx-diya { --gap: clamp(2.4rem, 6.2vw, 6.2rem); --ig: calc(var(--tk) * (.3s + min(var(--n), 1) * .85s + max(var(--n) - 1, 0) * .25s)); position: absolute; left: 50%; top: 0; width: 0; height: 0; translate: calc(var(--dx) * var(--gap)) 0; scale: calc(var(--sc) * var(--dk, 1)); }
+@media (max-width: 759px) { .cx-diya { --gap: 11.6vw; --dk: .56; } }
+.cx-diya u { position: absolute; left: -1.9rem; top: 0; width: 3.8rem; height: 1.45rem; border-radius: 0 0 3.8rem 3.8rem / 0 0 1.45rem 1.45rem; background: linear-gradient(180deg, #e9a24d, #a85a22 48%, #4f2711); box-shadow: inset 0 2px 0 rgb(255 226 160 / .85); opacity: 0; animation: cx-appear calc(var(--tk) * .8s) ease-out var(--ig) forwards; }
+.cx-diya u::after { content: ""; position: absolute; right: -.5rem; top: -.08rem; width: .95rem; height: .5rem; border-radius: 0 60% 0 0; background: linear-gradient(180deg, #f0b25c, #a85a22); }
+.cx-diya b { position: absolute; left: -11px; top: -39px; width: 22px; height: 37px; transform-origin: 50% 100%; opacity: 0; animation: cx-ignite calc(var(--tk) * .95s) var(--q-lamp) var(--ig) forwards; }
+.cx-diya b::before { content: ""; position: absolute; inset: 0; transform-origin: 50% 100%; clip-path: path('M11 0 C 12.5 8 22 15 22 26 A 11 11 0 0 1 0 26 C 0 15 9.5 8 11 0 Z'); background: radial-gradient(ellipse 52% 46% at 50% 80%, #fffaf0 0 14%, #ffe27a 36%, #ffab26 66%, #ef6a0c 100%); animation: cx-flicker calc(.8s + var(--n) * .17s) ease-in-out calc(var(--ig) + .6s) infinite alternate; }
+@keyframes cx-ignite { 0% { opacity: 0; scale: .05; } 38% { opacity: 1; scale: 1.45; } 100% { opacity: 1; scale: 1; } }
+@keyframes cx-flicker { from { rotate: -3deg; translate: -.4px 0; } to { rotate: 3.5deg; translate: .5px 0; } }
+/* the light a diya gives: it spreads (scale), then breathes (opacity) */
+.cx-diya s { position: absolute; left: -9.5rem; top: -11.4rem; width: 19rem; height: 19rem; border-radius: 50%; background: radial-gradient(circle, rgb(255 190 100 / .4), rgb(255 150 60 / .16) 34%, rgb(255 130 40 / 0) 68%); opacity: 0; animation: cx-halo calc(var(--tk) * 1.6s) var(--q-settle) var(--ig) forwards, cx-breathe 2.3s ease-in-out calc(var(--ig) + 1.6s) infinite alternate; }
+@keyframes cx-halo { from { opacity: 0; scale: .15; } to { opacity: 1; scale: 1; } }
+@keyframes cx-breathe { from { opacity: .82; } to { opacity: 1; } }
+/* the wick-light that runs along the line from the first diya to the last (cinema.js sparks off it) */
+:root.cx-js:not(.cx-seen) .cx-home .cx-spark { height: 1px; margin-top: 0; width: min(56vw, 46rem); background: linear-gradient(90deg, transparent, #f3b566 18%, #ffeccb 50%, #f3b566 82%, transparent); box-shadow: none; animation: cx-thread calc(var(--tk) * 1.9s) cubic-bezier(.5, 0, .2, 1) calc(var(--tk) * 1s) both; }
+@keyframes cx-thread { 0% { opacity: 0; transform: scaleX(.01); } 12% { opacity: 1; transform: scaleX(.01); } 58% { opacity: 1; transform: scaleX(1); } 100% { opacity: 0; transform: scaleX(1); } }
+
+/* ---------- the curtain parts on a night lake; the floating lamps ripple on, outward from the middle ---------- */
+:root.cx-js:not(.cx-seen) .cx-home .cx-open .cx-bar { opacity: 1; animation: cx-curtain calc(var(--tk) * 1.7s) cubic-bezier(.65, 0, .25, 1) calc(var(--tk) * 1.4s) both; }
+:root.cx-js:not(.cx-seen) .cx-home .cx-lamp { opacity: 0; animation: sky-lamp var(--dur) ease-in-out var(--del) infinite alternate, sky-flicker 2.6s ease-in-out var(--del) infinite alternate, cx-lamp-on calc(var(--tk) * 1s) var(--q-settle) calc(var(--tk) * (1.9s + var(--r) * 1.5s)) forwards; }
+@keyframes cx-lamp-on { from { opacity: 0; scale: .3; } to { opacity: 1; scale: 1; } }
+
+/* the curtain's inner edges feather out over a longer, eased fall, so the lake arrives as light and never as a strip */
+:root.cx-js:not(.cx-seen) .cx-home .cx-open .cx-bar::after { height: 19svh; }
+:root.cx-js:not(.cx-seen) .cx-home .cx-open .cx-bar--top::after { background: linear-gradient(to bottom, var(--cx-dusk), rgb(18 12 8 / .86) 16%, rgb(18 12 8 / .62) 34%, rgb(18 12 8 / .36) 54%, rgb(18 12 8 / .15) 76%, rgb(18 12 8 / .04) 91%, transparent); }
+:root.cx-js:not(.cx-seen) .cx-home .cx-open .cx-bar--bottom::after { background: linear-gradient(to top, var(--cx-dusk), rgb(18 12 8 / .86) 16%, rgb(18 12 8 / .62) 34%, rgb(18 12 8 / .36) 54%, rgb(18 12 8 / .15) 76%, rgb(18 12 8 / .04) 91%, transparent); }
+
+/* ---------- glimpses: our own paintings, one for each source, lit like windows in the dark and dissolving as the bell rings ---------- */
+.cx-glims { position: absolute; inset: 0; }
+.cx-glim { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; -webkit-mask-image: radial-gradient(ellipse 54% 56% at 50% 46%, #000 12%, transparent 72%); mask-image: radial-gradient(ellipse 54% 56% at 50% 46%, #000 12%, transparent 72%); animation: cx-glim calc(var(--tk) * 1.2s) cubic-bezier(.3, .1, .3, 1) calc(var(--tk) * (2.5s + var(--k) * .45s)) both; }
+.cx-glim:last-child { animation-duration: calc(var(--tk) * 1.9s); }
+@keyframes cx-glim { 0% { opacity: 0; scale: 1.1; } 30% { opacity: .4; } 62% { opacity: .32; } 100% { opacity: 0; scale: 1; } }
+
+/* ---------- the four sources, recited ---------- */
+.cx-chant { position: absolute; left: 0; right: 0; bottom: calc(100% - var(--seam, 50%) + 4.6rem); display: grid; justify-items: center; padding-inline: var(--cx-gut-r) var(--cx-gut); }
+.cx-chant::before { content: ""; position: absolute; left: 50%; top: 50%; width: min(120vw, 70rem); height: 15rem; translate: -50% -50%; background: radial-gradient(closest-side, rgb(12 6 3 / .62), rgb(12 6 3 / .4) 50%, rgb(12 6 3 / 0)); opacity: 0; animation: cx-appear calc(var(--tk) * .9s) ease-out calc(var(--tk) * 2.4s) forwards, cx-chant-out calc(var(--tk) * .8s) ease-in calc(var(--tk) * 4.9s) forwards; }
+.cx-chant-in { position: relative; display: flex; justify-content: center; align-items: flex-start; gap: clamp(1.8rem, 5vw, 4.6rem); animation: cx-chant-out calc(var(--tk) * .8s) ease-in calc(var(--tk) * 4.9s) forwards; }
+@keyframes cx-chant-out { to { opacity: 0; translate: 0 -.7rem; } }
+.cx-ch { position: relative; display: block; text-align: center; opacity: 0; animation: cx-ink-line calc(var(--tk) * 1s) var(--q-settle) calc(var(--tk) * (2.5s + var(--k) * .36s)) both; }
+@keyframes cx-ink-line { from { opacity: 0; translate: 0 .7rem; } to { opacity: 1; translate: 0 0; } }
+.cx-ch + .cx-ch::before { content: ""; position: absolute; left: calc(clamp(1.8rem, 5vw, 4.6rem) / -2 - 3px); top: .85em; width: 6px; height: 6px; rotate: 45deg; background: #ffd58a; box-shadow: 0 0 10px 2px rgb(255 170 70 / .65); opacity: 0; animation: cx-appear calc(var(--tk) * .6s) ease-out calc(var(--tk) * (2.7s + var(--k) * .36s)) forwards; }
+.cx-ch::after { content: ""; display: block; width: 62%; height: 1px; margin: .55rem auto 0; background: linear-gradient(90deg, transparent, #f3b566, transparent); transform: scaleX(0); animation: cx-stroke calc(var(--tk) * .9s) var(--q-settle) calc(var(--tk) * (2.8s + var(--k) * .36s)) forwards; }
+@keyframes cx-stroke { to { transform: scaleX(1); } }
+.cx-ch b { display: block; font: 500 clamp(1.7rem, 1rem + 2.3vw, 3rem)/1.15 var(--cx-text); letter-spacing: .01em; color: #f9d994; text-shadow: 0 0 22px rgb(255 168 66 / .5), 0 1px 14px rgb(14 6 0 / .85); }
+.cx-ch b[lang="hi"] { font-family: "Tiro Devanagari Hindi", var(--cx-text); font-weight: 400; font-size: clamp(1.9rem, 1.1rem + 2.6vw, 3.3rem); line-height: 1.3; letter-spacing: 0; }
+.cx-ch i { display: block; margin-top: .3rem; font-style: normal; opacity: .85; color: #f6d9a6; text-shadow: 0 1px 10px rgb(14 6 0 / .9); }
+.cx-ch i[lang="hi"] { font: 500 clamp(1.1rem, .95rem + .55vw, 1.45rem)/1.4 "Mukta", var(--cx-ui); }
+
+.cx-ch i[lang="en"] { font: 500 clamp(.8rem, .72rem + .32vw, 1rem)/1.4 "Cinzel", var(--cx-title); letter-spacing: .24em; text-transform: uppercase; margin-right: -.24em; }
+@media (max-width: 759px) {
+  .cx-chant { bottom: calc(100% - var(--seam, 50%) + 3rem); }
+  .cx-chant-in { display: grid; grid-template-columns: repeat(2, 9.2rem); grid-template-rows: repeat(2, auto); gap: 1.1rem 1rem; justify-content: center; }
+  .cx-ch + .cx-ch::before { display: none; }
+  .cx-ch b { font-size: clamp(1.45rem, 1rem + 2.6vw, 1.9rem); }
+  .cx-ch b[lang="hi"] { font-size: clamp(1.6rem, 1.1rem + 2.8vw, 2.1rem); }
+}
+
+/* ---------- the temple-bell ripple: rings of light spreading from the first diya ---------- */
+.cx-bell { position: absolute; left: 50%; top: var(--seam, 50%); width: 100vmin; height: 100vmin; margin: -50vmin 0 0 -50vmin; border-radius: 50%; opacity: 0; background: radial-gradient(closest-side, rgb(255 214 150 / 0) 90%, rgb(255 214 150 / .3) 96.5%, rgb(255 190 110 / .09) 99%, rgb(255 190 110 / 0)); animation: cx-bell calc(var(--tk) * 2.1s) cubic-bezier(.2, .6, .25, 1) calc(var(--tk) * 4.9s) both; }
+.cx-bell--2 { animation-delay: calc(var(--tk) * 5.2s); }
+@keyframes cx-bell { 0% { opacity: 0; scale: .04; } 12% { opacity: .9; } 62% { opacity: .35; } 100% { opacity: 0; scale: 1.7; } }
+
+/* ---------- then the name inks in over the dawn, and the hero line rises, word by word ---------- */
+:root.cx-js:not(.cx-seen) .cx-home .cx-open .cx-wm-l > span { opacity: 0; transform: none; animation: cx-ink-in calc(var(--tk) * 1.1s) cubic-bezier(.2, .7, .2, 1) calc(var(--tk) * (5.25s + var(--i) * .095s)) both; }
+@keyframes cx-ink-in { 0% { opacity: 0; transform: translateY(.14em) scale(1.07); } 100% { opacity: 1; transform: none; } }
+:root.cx-js:not(.cx-seen) .cx-home .cx-open .cx-wm-letters { animation: cx-title-settle calc(var(--tk) * 3s) cubic-bezier(.2, .6, .2, 1) calc(var(--tk) * 5.15s) both; }
+@keyframes cx-title-settle { from { scale: 1.07; } to { scale: 1; } }
+:root.cx-js:not(.cx-seen) .cx-home .cx-welcome-k > span { opacity: 0; animation: cx-rise-q calc(var(--tk) * .8s) var(--q-settle) calc(var(--tk) * (5.8s + var(--i) * .022s)) both; }
+@keyframes cx-rise-q { from { opacity: 0; translate: 0 .5em; } to { opacity: 1; translate: 0 0; } }
+:root.cx-js:not(.cx-seen) .cx-home .cx-wm-line { animation-duration: calc(var(--tk) * 1.1s); animation-delay: calc(var(--tk) * 5.9s); }
+:root.cx-js:not(.cx-seen) .cx-home .cx-wm-line circle { animation-delay: calc(var(--tk) * 6.7s); }
+:root.cx-js:not(.cx-seen) .cx-home .cx-w { opacity: 0; animation: cx-word-q calc(var(--tk) * .9s) var(--q-settle) calc(var(--tk) * (6.2s + var(--i) * .075s)) both; }
+@keyframes cx-word-q { from { opacity: 0; translate: 0 .5em; } to { opacity: 1; translate: 0 0; } }
+:root.cx-js:not(.cx-seen) .cx-home .cx-ol-b, html[lang="hi"]:root.cx-js:not(.cx-seen) .cx-home .cx-ol-b { opacity: 0; animation: cx-bloom-q calc(var(--tk) * 1.2s) var(--q-settle) calc(var(--tk) * 6.9s) both; }
+@keyframes cx-bloom-q { from { opacity: 0; scale: 1.05; translate: 0 .3em; } to { opacity: 1; scale: 1; translate: 0 0; } }
+:root.cx-js:not(.cx-seen) .cx-home .cx-open-sub { animation: cx-rise-in calc(var(--tk) * 1s) var(--q-settle) calc(var(--tk) * 7.3s) both; }
+:root.cx-js:not(.cx-seen) .cx-home .cx-open-foot { animation: cx-fade calc(var(--tk) * .9s) var(--q-settle) calc(var(--tk) * 7.6s) both; }
+:root.cx-js:not(.cx-seen) .cx-home :is(.cx-open-left, .cx-cards, .cx-hi-hint) { animation: cx-rise-in calc(var(--tk) * 1s) var(--q-settle) calc(var(--tk) * 7.7s) both; }
+:root.cx-js:not(.cx-seen) body:has(.cx-home) .ed-head { animation: cx-fade calc(var(--tk) * 1s) var(--q-settle) calc(var(--tk) * 7.6s) both; }
+:root.cx-js:not(.cx-seen) .cx-home :is(.cx-open-card, .cx-welcome-k, .cx-open-sub)::before { animation: cx-fade calc(var(--tk) * 1.4s) var(--q-settle) calc(var(--tk) * 5s) both; }
+
+/* ---------- Skip: a quiet pill on every screen, for as long as the sequence plays ---------- */
+:root.cx-js:not(.cx-seen) .cx-home .cx-intro-skip:not([hidden]) { display: inline-flex; position: fixed; z-index: 60; top: calc(env(safe-area-inset-top, 0px) + .6rem); bottom: auto; left: auto; right: var(--cx-gut-r); min-height: 44px; margin: 0; animation: cx-skip-life calc(var(--tk) * 7.4s) linear .0s both; }
+@keyframes cx-skip-life { 0% { opacity: 0; } 6% { opacity: 1; } 93% { opacity: 1; } 100% { opacity: 0; visibility: hidden; pointer-events: none; } }
+.cx-intro-skip .ic { rotate: none; }
+
+/* ---------- no sequence: the finished composition, with a 300 ms fade at most ---------- */
+:root.cx-seen .cx-fest, :root.cx-seen .cx-night, :root.cx-fest-end .cx-fest, :root.cx-fest-end .cx-night { display: none; }
+@media (prefers-reduced-motion: reduce) { html .cx-home .cx-open-card, html .cx-home .cx-open-foot { animation: cx-fade .3s ease-out both !important; } }
+:root[data-motion="reduce"] .cx-home :is(.cx-open-card, .cx-open-foot), :root.ep-lite .cx-home :is(.cx-open-card, .cx-open-foot) { animation: cx-fade .3s ease-out both !important; }
+:root[data-motion="reduce"] :is(.cx-fest, .cx-night, .cx-petals), :root.ep-lite :is(.cx-fest, .cx-night, .cx-petals) { display: none !important; }
+
+/* the hero line is now five words, so it can be larger than the old two-line version */
+.cx-home .cx-open-line .cx-ol-a { font-size: clamp(1.5rem, 1rem + 2.1vw, 3rem); }
+@media (max-width: 759px) { .cx-home .cx-open-line .cx-ol-a { font-size: clamp(1.45rem, 1.1rem + 1.8vw, 1.9rem); } }
+/* while the sequence plays the header is still arriving and must not catch the Skip pill's taps (the pill sits in the opening's own stacking context, under it) */
+:root.cx-js:not(.cx-seen):not(.cx-fest-end) body:has(.cx-home) .ed-head { pointer-events: none; }
+
+/* the sub line: normal case, in the italic line's gold and size, with room above the factual line beneath it */
+.cx-home .cx-open-line { margin-bottom: .2rem; }
+.cx-home .cx-ol-b { text-transform: none; letter-spacing: 0; font-variant: normal; font-size: clamp(1.15rem, .95rem + .85vw, 1.65rem); line-height: 1.35; color: #fbe3b0; margin-top: .35rem; }
+html:not([lang="hi"]) .cx-home .cx-ol-b { font-family: "Newsreader", "Newsreader Stand-in", Georgia, serif; font-style: italic; font-weight: 400; }
+html[lang="hi"] .cx-home .cx-ol-b { font-size: clamp(1.2rem, 1rem + .85vw, 1.7rem); }
+@media (max-width: 759px) { .cx-home .cx-ol-b, html[lang="hi"] .cx-home .cx-ol-b { font-size: 1.12rem; } }
+.cx-home .cx-open-sub { margin-top: 1.05rem; }
+:root.cx-seen .cx-petals, :root.cx-fest-end .cx-petals { display: none; }

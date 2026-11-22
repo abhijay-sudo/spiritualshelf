@@ -1,0 +1,210 @@
+/* Spritual: "The Arrival", Hanuman's signature entrance. Loaded on his page only (/characters/hanuman/, /hi/...), after cast.css.
+   Everything here is scoped to main[data-char="hanuman"]; no other person has it. Markup is written by src/build.mjs, the rest
+   is assets/hanuman-arrival.js (embers, tilt, skip, the letters of the name).
+
+   The film, in order (times from the page's first frame):
+     0.0  a deep pre-dawn indigo, a few stars
+     0.15 dawn breathes in: the night lifts, a golden sun rises behind the figure's box, a bloom and slow rays, two bands of cloud
+     0.45 he flies in along a curve from off-screen lower-left (a leap over the ocean), with a trail of warm light
+     1.6  he lands: a soft overshoot and rebound, a ring of light and a low burst of embers from the ground plane
+     1.65 his name arrives letter by letter on a wind; a band of light crosses it once
+     1.95 a highlight passes over the figure once (the gada catches it)
+     1.4+ the epithet, the words and the buttons rise in turn
+     after  idle, almost still: he breathes (scale Y 1.006 from his feet), his halo pulses, the clouds drift, embers rise (JS canvas)
+
+   Rules kept: transform and opacity only (rotate, translate, scale; one blurred duplicate for the trail, which is drawn once and
+   only moved), no per-frame filter or shadow, nothing placed by pixels inside the picture (every position is a share of the figure's
+   own box, .ha-box, which stands exactly where .cast-figure stands), so a new cut-out of the same file names fits.
+   Still and complete, with a single 400 ms fade: reduced motion (device or site switch), Save-Data (html.ep-lite), Light mode.
+   Pressing a key or touching the stage ends the sequence at once (the JS adds .ha-skip). */
+
+.cast-page[data-char="hanuman"] { --ha-land: 1.62s; --ha-t0: .3s; --ha-fly: 1.75s; --ha-gold: 255 212 130; --ha-warm: 255 168 84;
+  --ha-ease: cubic-bezier(.22, .8, .2, 1); --ha-lamp: cubic-bezier(.45, .05, .25, 1); }
+
+/* ---------- The composition at rest (what reduced motion, Save-Data and Light mode show, and where every animation ends) ---------- */
+.ha-sky, .ha-front { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+.ha-front { z-index: 3; }   /* over him in flight, so the foot of the sky and of his path can fade */
+.ha-box { pointer-events: none; }
+/* before dawn the sky and the flight end in a soft foot, not a straight edge: a gradient into the page colour that withdraws once he has landed */
+.ha-front::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 22%; opacity: 0; background: linear-gradient(to bottom, transparent, var(--cx-paper)); }
+.ha-night { position: absolute; inset: 0; opacity: 0; background: linear-gradient(180deg, #060619 0%, #0f0e33 38%, #241648 72%, #3a1b3c 100%); }
+.ha-stars { position: absolute; inset: 0; opacity: 0; -webkit-mask-image: linear-gradient(#000 25%, transparent 78%); mask-image: linear-gradient(#000 25%, transparent 78%);
+  background:
+    radial-gradient(1.4px 1.4px at 8% 16%, #fff 40%, transparent 70%), radial-gradient(1px 1px at 17% 41%, #fff 40%, transparent 70%), radial-gradient(1.6px 1.6px at 26% 9%, #ffe9c4 40%, transparent 70%),
+    radial-gradient(1px 1px at 33% 27%, #fff 40%, transparent 70%), radial-gradient(1.3px 1.3px at 41% 14%, #fff 40%, transparent 70%), radial-gradient(1px 1px at 49% 38%, #ffe9c4 40%, transparent 70%),
+    radial-gradient(1.7px 1.7px at 57% 7%, #fff 40%, transparent 70%), radial-gradient(1px 1px at 64% 22%, #fff 40%, transparent 70%), radial-gradient(1.3px 1.3px at 72% 12%, #ffe9c4 40%, transparent 70%),
+    radial-gradient(1px 1px at 79% 33%, #fff 40%, transparent 70%), radial-gradient(1.5px 1.5px at 86% 19%, #fff 40%, transparent 70%), radial-gradient(1px 1px at 93% 8%, #fff 40%, transparent 70%),
+    radial-gradient(1px 1px at 12% 62%, #fff 40%, transparent 70%), radial-gradient(1.2px 1.2px at 38% 55%, #fff 40%, transparent 70%), radial-gradient(1px 1px at 68% 52%, #ffe9c4 40%, transparent 70%), radial-gradient(1.2px 1.2px at 90% 47%, #fff 40%, transparent 70%); }
+/* two thin bands of cloud at two speeds (parallax); they only drift sideways */
+.ha-cloud { position: absolute; left: -35%; width: 170%; opacity: .5; border-radius: 50%;
+  background: radial-gradient(closest-side, rgb(255 206 150 / .34), rgb(255 150 90 / .12) 55%, transparent 100%); }
+.ha-cloud--a { top: 30%; height: 7%; }
+.ha-cloud--b { top: 47%; height: 5.5%; opacity: .42; }
+/* the sun, behind his shoulder and head: its centre is a share of his box */
+.ha-raysw, .ha-sun, .ha-halo { position: absolute; left: 50%; border-radius: 50%; translate: -50% -50%; }
+/* the rays: one small pre-drawn picture (art/ha-rays.webp: fine stripes already faded to the edge), so turning it costs only a turn; about 1.2 x his height */
+.ha-raysw { top: 30%; width: calc(var(--fig-h) * 1.2); aspect-ratio: 1; }
+.ha-rays { position: absolute; inset: 0; background: url("art/ha-rays.webp") 50% 50% / 100% 100% no-repeat; }
+.ha-sun { top: 30%; width: 88%; aspect-ratio: 1;
+  background: radial-gradient(closest-side, rgb(255 246 214 / .96) 0, rgb(255 224 150 / .92) 50%, rgb(255 184 96 / .74) 76%, rgb(255 150 70 / .4) 90%, rgb(255 150 70 / 0) 100%); }
+.ha-halo { top: 21%; width: 78%; aspect-ratio: 1; opacity: .86; background: radial-gradient(closest-side, rgb(255 232 170 / .5) 0, rgb(255 196 110 / .24) 52%, transparent 100%); }
+/* in front: the ring of light on the ground and the low burst (hidden until he lands) */
+.ha-ring { position: absolute; left: 50%; bottom: 11%; width: 118%; height: 20%; opacity: 0; translate: -50% 50%; border-radius: 50%;
+  background: radial-gradient(closest-side, transparent 74%, rgb(255 226 160 / .6) 91%, rgb(255 200 120 / .16) 97%, transparent 100%); }
+.ha-ring--b { width: 158%; height: 27%; background: radial-gradient(closest-side, transparent 82%, rgb(255 190 110 / .36) 93%, transparent 100%); }
+.ha-dust { position: absolute; left: 50%; bottom: 15%; }
+.ha-dust > i { position: absolute; left: 0; top: 0; width: 6px; height: 6px; margin: -3px 0 0 -3px; border-radius: 50%; opacity: 0;
+  background: radial-gradient(closest-side, rgb(255 238 190), rgb(255 160 70 / .9) 60%, rgb(255 130 50 / 0) 100%); }
+.ha-dust > i:nth-child(3n) { width: 4px; height: 4px; margin: -2px 0 0 -2px; }
+.ha-dust > i:nth-child(4n) { width: 9px; height: 9px; margin: -4.5px 0 0 -4.5px; background: radial-gradient(closest-side, rgb(255 214 150 / .8), rgb(255 150 80 / .35) 60%, transparent 100%); }
+/* the trail (two copies of the cut-out, blurred once and warm) and the highlight that passes once over the figure */
+.ha-ghost { position: absolute; inset: 0; z-index: -1; opacity: 0; filter: blur(9px); }   /* (the blur is on this frame, the silhouette inside it: a filter on the masked layer itself would blur nothing, the mask comes after) */
+.ha-ghost > b { position: absolute; inset: 0; background: linear-gradient(180deg, rgb(255 226 150), rgb(255 190 100)); -webkit-mask-image: var(--ha-cut), linear-gradient(to bottom, #000 62%, transparent 94%); mask-image: var(--ha-cut), linear-gradient(to bottom, #000 62%, transparent 94%);
+  -webkit-mask-size: contain, 100% 100%; mask-size: contain, 100% 100%; -webkit-mask-position: 50% 100%, 0 0; mask-position: 50% 100%, 0 0; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; -webkit-mask-composite: source-in; mask-composite: intersect; }
+.ha-sheen { position: absolute; inset: 0; overflow: hidden; pointer-events: none; opacity: 0; }
+/* (one mask only, the silhouette, on a static element; the band inside it is a plain gradient that only slides) */
+.ha-sheen > u { position: absolute; inset: 0; text-decoration: none; -webkit-mask: var(--ha-cut) 50% 100% / contain no-repeat; mask: var(--ha-cut) 50% 100% / contain no-repeat; }
+.ha-sheen b { position: absolute; top: 0; bottom: 0; left: 0; width: 34%; translate: -150% 0;
+  background: linear-gradient(108deg, transparent 0, rgb(255 226 160 / .06) 30%, rgb(255 238 190 / .46) 50%, rgb(255 226 160 / .06) 70%, transparent 100%); }
+/* on narrow screens the figure's foot lies close above the name: the rings ride higher and fainter, and the words stand over the light */
+.cast-page[data-char="hanuman"] .cast-hero-in { z-index: 2; }
+@media (max-width: 859px) { .ha-ring { bottom: 19%; opacity: 0; } .ha-ring--b { bottom: 19%; } .ha-dust { bottom: 21%; } }
+/* the old sparks (epic.js) give way to this page's own embers */
+.cast-page[data-char="hanuman"] .ep-air { display: none; }
+.ha-embers { position: absolute; top: 0; pointer-events: none; }
+
+/* the name, letter by letter (the JS splits it; until then, or without it, it is whole) */
+.cast-name .ep-l { display: inline-block; padding: .12em .03em .2em; margin: -.12em -.03em -.2em; }
+html[lang="hi"] .cast-name .ep-l { padding: .22em .04em .3em; margin: -.22em -.04em -.3em; }
+.cast-name.ha-split .cast-name-t { background: none; }
+.cast-page[data-char="hanuman"] .cast-name { position: relative; }
+.cast-page[data-char="hanuman"] .cast-name::before, .cast-page[data-char="hanuman"] .cast-name::after { content: ""; position: absolute; left: 0; width: 100%; height: 1.5px; pointer-events: none; opacity: 0; translate: -70% 0;
+  background: linear-gradient(90deg, transparent, rgb(255 236 190 / .85) 50%, transparent); }
+.cast-page[data-char="hanuman"] .cast-name::before { top: 34%; }
+.cast-page[data-char="hanuman"] .cast-name::after { top: 66%; width: 70%; }
+
+/* ---------- Reduced motion, Save-Data, Light mode, no script: the sun has risen, he stands, one 400 ms fade ---------- */
+:root:not(.cx-js) .cast-page[data-char="hanuman"] .cast-stage, :root.ep-lite .cast-page[data-char="hanuman"] .cast-stage,
+:root[data-motion="reduce"] .cast-page[data-char="hanuman"] .cast-stage, :root[data-light] .cast-page[data-char="hanuman"] .cast-stage { animation: ha-fade .4s ease-out both; }
+:root:not(.cx-js) .ha-embers, :root.ep-lite .ha-embers, :root[data-motion="reduce"] .ha-embers, :root[data-light] .ha-embers { display: none; }
+@keyframes ha-fade { from { opacity: 0; } }
+
+/* ---------- The score: each part names its own animation (--a: the arrival and then the idle; --ai: the idle alone), one switch below plays it ---------- */
+.ha-night { --a: ha-night 2.9s var(--ha-lamp) .1s backwards; }
+.ha-stars { --a: ha-stars 2.4s ease-out .1s backwards; }
+.ha-sun { --a: ha-sun 2.5s var(--ha-lamp) .25s backwards; }                                       /* the sun comes up from below his box */
+.ha-raysw { --a: ha-rays-in 1.4s ease-out 2.4s backwards; --ai: none; }   /* after he has landed: the busiest part of the film is not also the widest layer */
+.ha-rays { --a: ha-spin 210s linear 3.8s infinite; --ai: ha-spin 210s linear infinite; }   /* at rest for the whole entrance */
+.ha-cloud--a { --a: ha-cloud-in 2.6s ease-out 1s backwards, ha-drift-a 64s ease-in-out infinite alternate; --ai: ha-drift-a 64s ease-in-out infinite alternate; }
+.ha-cloud--b { --a: ha-cloud-in 2.6s ease-out 1s backwards, ha-drift-b 40s ease-in-out infinite alternate; --ai: ha-drift-b 40s ease-in-out infinite alternate; }
+/* he flies in: x and y run on their own clocks so the path is a curve, not a diagonal; he grows as he nears; he lands at --ha-land and breathes */
+.cast-figure { --a: ha-fly-x var(--ha-fly) cubic-bezier(.38, .28, .3, 1) var(--ha-t0) backwards, ha-fly-y var(--ha-fly) linear var(--ha-t0) backwards, ha-fly-r var(--ha-fly) linear var(--ha-t0) backwards,
+    ha-fly-o .2s ease-out var(--ha-t0) backwards, ha-z calc(var(--ha-fly) * .76) step-end var(--ha-t0) backwards, ha-breathe 7s ease-in-out 2.2s infinite alternate; --ai: ha-breathe 7s ease-in-out 2.2s infinite alternate; }
+.ha-ghost { --a: ha-ghost var(--ha-fly) linear var(--ha-t0) backwards; }
+.ha-ghost--2 { --lag: 1.7; --a: ha-ghost var(--ha-fly) linear calc(var(--ha-t0) + .06s) backwards; }
+.ha-halo { --a: ha-halo-on 1.3s var(--ha-ease) var(--ha-land) backwards, ha-pulse 6.5s ease-in-out 2.9s infinite alternate; --ai: ha-pulse 6.5s ease-in-out 2.6s infinite alternate; }
+.ha-ring { --a: ha-ring 1.25s cubic-bezier(.15, .7, .25, 1) var(--ha-land) backwards; }
+.ha-ring--b { --a: ha-ring 1.6s cubic-bezier(.15, .7, .25, 1) calc(var(--ha-land) + .12s) backwards; }
+.ha-dust > i { --a: ha-puff var(--d, 1.3s) cubic-bezier(.2, .7, .3, 1) calc(var(--ha-land) + var(--w, 0s)) backwards; }
+.ha-sheen { --a: ha-sheen-box 1.1s linear calc(var(--ha-land) + .4s) backwards; }                 /* the highlight, once, a beat after he lands */
+.ha-sheen b { --a: ha-sheen 1.1s cubic-bezier(.5, .05, .3, 1) calc(var(--ha-land) + .4s) backwards; }
+/* the words: the way in first, the name on the wind at his landing (letter by letter once split), then the rest in turn, each rising */
+.cast-hero-txt > :is(.crumbs, .cast-kicker) { --a: ha-word .8s var(--ha-ease) 1s backwards; }
+.cast-hero-txt > :is(.cast-echo, .cast-title, .cast-about, .cast-facts, .cast-acts) { --a: ha-word .65s var(--ha-ease) calc(var(--ha-land) + .05s + var(--k, 2) * .09s) backwards; }
+.cast-name:not(.ha-split) { --a: ha-word .8s var(--ha-ease) var(--ha-land) backwards; }
+.cast-name .ep-l { --a: ha-wind .85s var(--ha-ease) calc(var(--ha-land) + .04s + var(--i, 0) * .045s) backwards; }
+/* a weak device (the JS sets .ha-lite, by memory and cores): the light is there, the turning and drifting are not */
+.ha-lite .ha-rays { --a: none; --ai: none; }
+.ha-lite .ha-sheen { display: none; }
+.ha-lite .ha-cloud { --a: ha-cloud-in 2.6s ease-out 1s backwards; --ai: none; }
+.ha-lite .ha-ghost { display: none; }
+
+/* the switch: with motion allowed, the score plays; after .ha-skip (a key or a touch) only the idle remains; otherwise nothing runs and the rest state stands */
+:root.cx-js:not(.ep-lite):not([data-motion="reduce"]):not([data-light]) .cast-page[data-char="hanuman"]:not(.ha-skip) :is(.ha-night, .ha-stars, .ha-sun, .ha-raysw, .ha-rays, .ha-cloud, .cast-figure, .ha-halo, .ha-ghost, .ha-ring, .ha-dust > i, .ha-sheen, .ha-sheen b, .cast-name, .cast-name .ep-l, .cast-hero-txt > :is(.crumbs, .cast-kicker, .cast-echo, .cast-title, .cast-about, .cast-facts, .cast-acts)) { animation: var(--a, none); }
+:root.cx-js:not(.ep-lite):not([data-motion="reduce"]):not([data-light]) .cast-page[data-char="hanuman"].ha-skip :is(.ha-night, .ha-stars, .ha-sun, .ha-raysw, .ha-rays, .ha-cloud, .cast-figure, .ha-halo, .ha-ghost, .ha-ring, .ha-dust > i, .ha-sheen, .ha-sheen b, .cast-name, .cast-name .ep-l, .cast-hero-txt > :is(.crumbs, .cast-kicker, .cast-echo, .cast-title, .cast-about, .cast-facts, .cast-acts)) { animation: var(--ai, none); }
+:root.cx-js:not(.ep-lite):not([data-motion="reduce"]):not([data-light]) .cast-page[data-char="hanuman"] .cast-figure { transform-origin: 50% 100%; will-change: transform; }
+:root.cx-js:not(.ep-lite):not([data-motion="reduce"]):not([data-light]) .cast-page[data-char="hanuman"]:not(.ha-skip) .cast-name::before { animation: ha-band 1.1s cubic-bezier(.4, 0, .2, 1) var(--ha-land) backwards; }
+:root.cx-js:not(.ep-lite):not([data-motion="reduce"]):not([data-light]) .cast-page[data-char="hanuman"]:not(.ha-skip) .cast-name::after { animation: ha-band 1.1s cubic-bezier(.4, 0, .2, 1) calc(var(--ha-land) + .12s) backwards; }
+:root.cx-js:not(.ep-lite):not([data-motion="reduce"]):not([data-light]) .cast-page[data-char="hanuman"]:not(.ha-skip):not(.ha-late) .ha-front::after { animation: ha-foot 2.3s linear backwards; }
+/* the picture is still decoding: the whole film waits (the JS sets .ha-wait), at most a moment */
+.ha-wait .cast-stage, .ha-wait .cast-stage * { animation-play-state: paused !important; }   /* only the stage waits (600 ms at most); the words keep their own clock and are never held */
+/* the picture came too late for the flight: he is simply there, and fades in over 400 ms when it is decoded */
+.ha-late .cast-cut > img:not(.ha-ok) { opacity: 0; }
+.ha-late .cast-cut > img.ha-ok { transition: opacity .4s ease-out; }
+/* out of sight, everything that loops rests (the JS sets .ha-off) */
+.ha-off :is(.cast-figure, .ha-halo, .ha-rays, .ha-cloud) { animation-play-state: paused !important; }
+
+@keyframes ha-foot { 0% { opacity: .95; } 55% { opacity: .85; } 100% { opacity: 0; } }
+@keyframes ha-breathe { from { scale: 1 1; } to { scale: 1 1.006; } }
+@keyframes ha-pulse { from { opacity: .86; scale: 1; } to { opacity: 1; scale: 1.07; } }
+@keyframes ha-spin { to { rotate: 360deg; } }
+@keyframes ha-drift-a { from { translate: -7% 0; } to { translate: 7% 0; } }
+@keyframes ha-drift-b { from { translate: 6% 0; } to { translate: -6% 0; } }
+@keyframes ha-night { from { opacity: 1; } 60% { opacity: .6; } }
+@keyframes ha-stars { from { opacity: 1; } 55% { opacity: .65; } }
+@keyframes ha-sun { from { translate: -50% calc(-50% + var(--fig-h) * .72); scale: .78; opacity: .2; } 55% { opacity: 1; } }
+@keyframes ha-rays-in { from { opacity: 0; } }
+@keyframes ha-cloud-in { from { opacity: 0; } }
+@keyframes ha-fly-x { from { translate: calc(-1 * var(--fig-at) - 30cqw) 0; } }
+@media (max-width: 859px) { @keyframes ha-fly-x { from { translate: calc(-1 * var(--fig-at) - 12cqw) 0; } } }
+@keyframes ha-fly-y {
+  from { transform: translateY(46cqh) scale(.5); animation-timing-function: cubic-bezier(.32, .45, .35, 1); }
+  52% { transform: translateY(-1.8cqh) scale(.92); animation-timing-function: cubic-bezier(.5, 0, .4, 1); }
+  76% { transform: translateY(1.4cqh) scale(1.012); animation-timing-function: cubic-bezier(.3, .6, .4, 1); }
+  89% { transform: translateY(-.55cqh) scale(.998); animation-timing-function: ease-in-out; }
+  to { transform: none; } }
+@keyframes ha-fly-r {
+  from { rotate: -26deg; animation-timing-function: cubic-bezier(.3, .5, .35, 1); }
+  55% { rotate: -5deg; animation-timing-function: ease-out; }
+  76% { rotate: 1.3deg; animation-timing-function: ease-in-out; }
+  90% { rotate: -.35deg; }
+  to { rotate: 0deg; } }
+@media (max-width: 859px) { .cast-page[data-char="hanuman"] { --ha-t0: .18s; } }
+@keyframes ha-fly-o { from { opacity: 0; } }
+@keyframes ha-z { from, to { z-index: 2; } }   /* in flight he passes over the calm side's veil (the stage's ::after); at the landing he stands under it again, as on every page */
+@keyframes ha-ghost {
+  from { opacity: 0; translate: calc(-30% * var(--lag, 1)) calc(22% * var(--lag, 1)); }
+  22% { opacity: .28; }
+  60% { opacity: .18; translate: calc(-10% * var(--lag, 1)) calc(7% * var(--lag, 1)); }
+  80% { opacity: 0; translate: 0 0; }
+  to { opacity: 0; translate: 0 0; } }
+@keyframes ha-halo-on { from { opacity: 0; scale: .55; } }
+@keyframes ha-ring { 0% { opacity: 0; scale: .2 .2; } 7% { opacity: var(--ring-o, .95); } 100% { opacity: 0; scale: 1.25 1.25; } }
+@media (max-width: 859px) { .ha-ring { --ring-o: .6; } }
+@keyframes ha-puff {
+  0% { opacity: 0; translate: 0 0; scale: .5; }
+  10% { opacity: 1; }
+  45% { opacity: .85; translate: calc(var(--fig-h) * var(--dx, 0) * .75) calc(var(--fig-h) * var(--dy, -.1)); scale: 1; }
+  100% { opacity: 0; translate: calc(var(--fig-h) * var(--dx, 0)) calc(var(--fig-h) * (var(--dy, -.1) + .05)); scale: .3; } }
+@keyframes ha-sheen-box { 0%, 100% { opacity: 0; } 12%, 85% { opacity: 1; } }
+@keyframes ha-sheen { from { translate: -150% 0; } to { translate: 330% 0; } }
+@keyframes ha-word { from { opacity: 0; translate: 0 14px; } }
+@keyframes ha-wind { from { opacity: 0; translate: -.45em 0; transform: skewX(-14deg); } 60% { opacity: 1; } }
+@keyframes ha-band { 0% { opacity: 0; translate: -70% 0; } 25%, 65% { opacity: .9; } 100% { opacity: 0; translate: 80% 0; } }
+
+/* a pointer (epic.js writes --ep-px, --ep-py) or a phone's tilt (the JS writes the same two, only where the device needs no permission):
+   the sun and its light move a few pixels against him */
+@media (min-width: 860px) and (hover: hover) and (pointer: fine) {
+  :root.cx-js:not(.ep-lite):not([data-motion="reduce"]):not([data-light]) .ep-near .ha-sky .ha-box { translate: calc(var(--ep-px, 0) * -5px) calc(var(--ep-py, 0) * -3px); }
+}
+:root.cx-js:not(.ep-lite):not([data-motion="reduce"]):not([data-light]) .ha-tilt .cast-cut { translate: calc(var(--ep-px, 0) * 5px) calc(var(--ep-py, 0) * 3px); }
+:root.cx-js:not(.ep-lite):not([data-motion="reduce"]):not([data-light]) .ha-tilt .ha-sky .ha-box { translate: calc(var(--ep-px, 0) * -4px) calc(var(--ep-py, 0) * -2px); }
+
+@media (forced-colors: active), print { .ha-sky, .ha-front, .ha-ghost, .ha-sheen { display: none; } }
+
+/* ---------- The home page's character select: a flare as he is chosen, then a halo and a few embers (lighter than the page) ----------
+   (there he is painted in a scene: the rig lies over the painting, on the side of his face; the select's words are on the other) */
+.ha-sel-rig { position: absolute; inset: 0; overflow: hidden; pointer-events: none; opacity: 0; transition: opacity .45s var(--ease-lamp, cubic-bezier(.45, .05, .25, 1)); }
+.cx-select.ha-on .ha-sel-rig { opacity: 1; }
+.ha-sel-flare, .ha-sel-halo { position: absolute; opacity: 0; }
+.ha-sel-flare { left: 80%; top: 14%; width: 78vmin; aspect-ratio: 1; translate: -50% -50%; border-radius: 50%; background: radial-gradient(closest-side, rgb(255 240 200 / .9) 0, rgb(255 200 120 / .46) 30%, rgb(255 150 70 / .12) 62%, transparent 100%); }
+.ha-sel-halo { left: 74%; top: 22%; width: 52vmin; aspect-ratio: 1; translate: -50% -50%; border-radius: 50%; opacity: .6; background: radial-gradient(closest-side, rgb(255 230 170 / .42) 0, rgb(255 196 110 / .18) 55%, transparent 100%); }
+.cx-select.is-left :is(.ha-sel-flare, .ha-sel-halo) { left: 26%; }
+.ha-sel-embers { position: absolute; top: 0; pointer-events: none; }
+@media (max-width: 699px) { .ha-sel-flare, .ha-sel-halo { left: 66%; top: 22%; } .cx-select.is-left :is(.ha-sel-flare, .ha-sel-halo) { left: 38%; } }
+:root:not([data-motion="reduce"]):not([data-light]):not(.ep-lite) .ha-sel-rig.is-fire .ha-sel-flare { animation: ha-flare 1.2s cubic-bezier(.3, .6, .3, 1) both; }
+:root:not([data-motion="reduce"]):not([data-light]):not(.ep-lite) .cx-select.ha-on .ha-sel-halo { animation: ha-sel-pulse 6.5s ease-in-out infinite alternate; }
+@keyframes ha-flare { from { opacity: 0; scale: .3; } 28% { opacity: 1; } 58% { opacity: .85; scale: 1.05; } to { opacity: 0; scale: 1.7; } }
+@keyframes ha-sel-pulse { from { opacity: .5; scale: 1; } to { opacity: .7; scale: 1.08; } }
+@media (prefers-reduced-motion: reduce) { .ha-sel-rig { transition: none; } .ha-sel-flare, .ha-sel-embers { display: none; } }
+:root[data-motion="reduce"] :is(.ha-sel-flare, .ha-sel-embers), :root[data-light] :is(.ha-sel-flare, .ha-sel-embers), :root.ep-lite :is(.ha-sel-flare, .ha-sel-embers) { display: none; }
