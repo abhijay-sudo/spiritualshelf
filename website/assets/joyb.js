@@ -4,7 +4,9 @@
 (() => {
   const d = document, root = d.documentElement, hi = (root.lang || 'en').startsWith('hi');
   const $ = (s, r = d) => r.querySelector(s), $$ = (s, r = d) => [...r.querySelectorAll(s)];
-  const get = (k, f) => { try { const v = localStorage.getItem('spritual:' + k); return v == null ? f : JSON.parse(v); } catch { return f; } };
+  // the kept lines are an array; an older offline registry (an object) once shared this key: move it to its own key, never read it as lines
+  try { const ov = JSON.parse(localStorage.getItem('spritual:kept') || 'null'); if (ov && !Array.isArray(ov) && typeof ov === 'object') { if (!localStorage.getItem('spritual:offline')) localStorage.setItem('spritual:offline', JSON.stringify(ov)); localStorage.removeItem('spritual:kept'); } } catch {}
+  const get = (k, f) => { try { const v = localStorage.getItem('spritual:' + k); if (v == null) return f; const j = JSON.parse(v); return k === 'kept' && !Array.isArray(j) ? f : j; } catch { return f; } };
   const set = (k, v) => { try { localStorage.setItem('spritual:' + k, JSON.stringify(v)); return true; } catch { return false; } };
   const del = (k) => { try { localStorage.removeItem('spritual:' + k); } catch {} };
   const still = () => root.dataset.motion === 'reduce' || matchMedia('(prefers-reduced-motion: reduce)').matches;

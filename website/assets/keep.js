@@ -4,7 +4,8 @@ try { U = JSON.parse(d.getElementById('ui').textContent).keep || null; } catch (
 var reader = d.querySelector('[data-reader]');
 if (!U || !reader) return;
 var T = U.t, lang = de.lang === 'hi' ? 'hi' : 'en', slug = reader.dataset.slug, ID = lang + '/' + slug;
-var CACHE = 'spritual-keep', KEY = 'spritual:kept', INSTALL = 'spritual:install';
+var CACHE = 'spritual-keep', KEY = 'spritual:offline', INSTALL = 'spritual:install';
+try { var oldv = JSON.parse(localStorage.getItem('spritual:kept') || 'null'); if (oldv && !Array.isArray(oldv) && typeof oldv === 'object') { if (!localStorage.getItem(KEY)) localStorage.setItem(KEY, JSON.stringify(oldv)); localStorage.removeItem('spritual:kept'); } } catch (e) {}
 var ls = { get: function (k) { try { return JSON.parse(localStorage.getItem(k) || 'null'); } catch (e) { return null; } }, set: function (k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} } };
 var fmt = function (s, o) { return s.replace(/\{(\w+)\}/g, function (_, k) { return o[k]; }); };
 var size = function (b) { return b < 1048576 ? Math.max(1, Math.round(b / 1024)) + ' KB' : (b / 1048576).toFixed(1) + ' MB'; };
