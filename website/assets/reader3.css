@@ -1,0 +1,42 @@
+/* reader3.css: third-round reader fixes (lane R). Loaded after film.css/comfort.css on story pages. */
+
+/* ---------- [hfixR G03] the Aa chip, the strip and the header never touch ----------
+   The chip stands 58px lower while the header shows. It now travels in step with the header (same property, duration and easing), so the two never pass
+   over each other on the way, and the header takes no touch while it is tucked away. The strip's own start is kept below the chip's lowest position (film.js, fitRail). */
+.ed-head.is-hidden:not(.is-open) { pointer-events: none; }
+@media (prefers-reduced-motion: no-preference) {
+  :root:not([data-motion="reduce"]) .cmf-js .fm-aa { transition: opacity var(--dur-2) var(--ease-lamp), translate .45s var(--ease-settle), transform var(--dur-3) var(--ease-settle), box-shadow var(--dur-2) var(--ease-lamp), background-color var(--dur-2) var(--ease-lamp); }
+}
+
+/* ---------- [hfixR G26] while "About this story" is open, the floating chips step back ----------
+   The slip of paper is laid over the film; the Aa chip, the scene chip and the strip used to draw across it. They fade out (and leave the tab order) while it is
+   open, and come back as it closes. */
+:root.fm-live:has(.story-head.is-open) :is(.fm-aa, .fm-whisper, .fm-rail, .fm-peek) { opacity: 0 !important; visibility: hidden; pointer-events: none !important; transition: opacity var(--dur-2, 320ms) var(--ease-lamp, ease), visibility 0s linear var(--dur-2, 320ms); }
+
+/* ---------- [hfixR G17] "Start again" beside "Resume from scene N" reads as a control (the line it sits in no longer carries a link of its own) ---------- */
+.pk button { text-decoration: underline; text-decoration-color: rgb(239 227 207 / .5); text-underline-offset: .22em; }
+
+/* ---------- [hfixR G10] the opening's words stay readable on bright paintings ----------
+   Measured over all 49 openings on a phone (background with the words taken away, light text against its brightest 12%): 25 titles and 3 source lines fell short.
+   The title now stands in its own soft pool of the picture's dark (a gradient, never a box: no edge, no blur, no per-frame cost, and it thins out with the
+   card as it is scrolled), and the shade under the lower words reaches a little higher and holds its depth longer. */
+.fm .cx-film-title { position: relative; isolation: isolate; }
+.fm .cx-film-title::before { content: ""; position: absolute; z-index: -1; inset: -.3em -16% -.22em; pointer-events: none; background: radial-gradient(closest-side, rgb(14 8 4 / .7), rgb(14 8 4 / .5) 55%, rgb(14 8 4 / .2) 82%, rgb(14 8 4 / 0)); }
+@media not all and (min-width: 900px) and (min-aspect-ratio: 1/1) {
+  html.fm .cx-film-open:not(.mx-open) .cx-open-shade { background: linear-gradient(to top, rgb(14 8 4 / 0) 0, rgb(14 8 4 / .92) 9%, rgb(14 8 4 / .9) 38%, rgb(14 8 4 / .74) 50%, rgb(14 8 4 / .42) 61%, rgb(14 8 4 / .14) 72%, rgb(14 8 4 / 0) 82%), linear-gradient(to bottom, rgb(14 8 4 / .5), transparent 16%); }
+}
+.fm .cx-film-name, .fm .cx-film-card > .cx-facts li { text-shadow: 0 0 2px rgb(14 8 4 / .85), 0 1px 12px rgb(14 8 4 / .8); }
+
+/* the closing beat: its line, source and doors stand on a soft rise of the picture's dark that begins above the line (a gradient, not a box), and its
+   source line is set a touch heavier; on a wide screen the line is set larger (it was capped at 28px, small beside a 1440px painting) */
+.fm .cb-in.fm-t { isolation: isolate; }
+.fm .cb-in.fm-t::before { content: ""; position: absolute; z-index: -1; left: calc(-1 * var(--fm-x)); right: calc(-1 * var(--fm-xr)); top: -6.5rem; bottom: -2.2rem; pointer-events: none; background: linear-gradient(to top, rgb(14 8 4 / .84) 0, rgb(14 8 4 / .82) 66%, rgb(14 8 4 / .64) 82%, rgb(14 8 4 / .3) 93%, rgb(14 8 4 / 0)); }
+.fm .cb-src { font-weight: 600; }
+.fm .cb-line p { text-shadow: 0 1px 2px rgb(0 0 0 / .85), 0 0 22px rgb(0 0 0 / .6); }
+@media (min-width: 900px) and (min-aspect-ratio: 1/1) { .fm .cb-line p { font-size: clamp(1.7rem, 1.1rem + 1.25vw, 2.35rem); } .fm .cb-src { font-size: 1rem; } }
+
+/* ---------- [hfixR G36] the Aa sheet: a heading is never left cut in half by the Done bar ----------
+   The bar's fade was 22px, so a heading (Line spacing) could stand half under it. The fade is taller and softer, a focused control scrolls clear of the bar,
+   and the last group has room before it. */
+#comfort.sheet--story { scroll-padding-bottom: 5.5rem; scroll-padding-top: 1rem; }
+#comfort.sheet--story .sheet-foot::before { height: 46px; background: linear-gradient(to top, var(--surface) 0, color-mix(in srgb, var(--surface) 78%, transparent) 34%, color-mix(in srgb, var(--surface) 30%, transparent) 70%, transparent); }

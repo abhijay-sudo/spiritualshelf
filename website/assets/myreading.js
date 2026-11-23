@@ -24,9 +24,18 @@
   var places = {}; try { places = JSON.parse(localStorage.getItem('spritual:places') || '{}') || {}; } catch (e) {}
   // [fixS] the story the Continue card above already offers (the one read last, not finished) is not listed a second time
   var lastK = null; try { var lp = JSON.parse(localStorage.getItem('spritual:last') || 'null'); if (lp && lp.slug && +lp.scene < +lp.total) lastK = lp.slug; } catch (e) {}
+  // [hfixR G17] with a Continue card above, this list is "Other stories you are in" (it never repeats that story); without one it keeps its plain name
+  var hIn = secIn.querySelector('h2'), hPlain = hIn && hIn.textContent;
+  if (lastK && IDX[lastK] && ui.myrOther && hIn) hIn.textContent = ui.myrOther;
   show(secIn, Object.keys(places).filter(function (k) { var p = places[k]; return k !== lastK && IDX[k] && p && !p.d && +p.s < +p.t && +p.s >= 1; })
     .sort(function (a, b) { return (places[b].at || 0) - (places[a].at || 0); })
     .map(function (k, i) { var p = places[k], s = IDX[k], n = Math.max(1, +p.s), t = Math.max(1, +p.t); return item(s, i, s.h.split('#')[0] + '#page-' + n, fmt(ui.sceneOf, { n: n, t: t }), n / t); }));
+
+  // [hfixR G17] "Forget my place" clears the places (assets/joyb.js); the list on this page goes with them, at once, and the heading goes back to its plain name
+  d.addEventListener('click', function (e) {
+    var b = e.target.closest && e.target.closest('[data-pl-forget] button'); if (!b) return;
+    setTimeout(function () { var ol = secIn.querySelector('ol'); if (ol) ol.replaceChildren(); secIn.hidden = true; if (hIn && hPlain) hIn.textContent = hPlain; }, 0);
+  });
 
   // stories kept on this phone: the offline cache's own records (a story is kept under "<lang>-<slug>"), and its page must still be in it
   if (!window.caches) return;

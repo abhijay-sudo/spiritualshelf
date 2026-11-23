@@ -276,6 +276,9 @@ html[lang="hi"] .cx-sub-t { font-style: normal; font-family: "Tiro Devanagari Hi
 html[lang="hi"] .cx-skip { font-family: "Mukta", var(--cx-ui); font-size: 1rem; }
 .cx-skip:hover { background: rgb(30 15 5 / .6); border-color: var(--cx-cream); }
 .cx-skip .ic { width: 1rem; height: 1rem; rotate: 90deg; }
+/* [fixA G08] "Esc" beside "Skip intro" where a keyboard is in hand (fine pointer); phones and touch screens do not show it */
+.cx-skip-esc { display: none; margin-left: .15rem; padding: .12rem .38rem; border: 1px solid rgb(255 240 220 / .5); border-radius: 4px; font: 500 .7rem/1 var(--cx-ui); letter-spacing: .04em; color: inherit; opacity: .8; }
+@media (hover: hover) and (pointer: fine) { .cx-skip-esc { display: inline-block; } }
 .cx-skip:focus-visible, .cx-sub-go:focus-visible { outline: 2px solid var(--cx-cream); outline-offset: 3px; }
 .cx-js .cx-skip { position: absolute; top: calc(var(--ed-head-h) + .35rem); right: var(--cx-gut-r); margin: 0; }
 .cx-sub-go { display: inline-flex; align-items: center; gap: .5rem; min-height: 44px; padding: 0 1.1rem; border-radius: 999px; border: 1px solid rgb(255 240 220 / .5); background: rgb(30 15 5 / .5); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); color: #fff8ee; font: 600 1rem/1.2 var(--cx-ui); text-decoration: none; transition: background-color .25s, border-color .25s; }
@@ -1064,6 +1067,12 @@ html[lang="hi"] .off-txt small { font-family: "Mukta", var(--cx-ui); font-size: 
   .cx-open .cx-continue .continue-pic, .cx-open .cx-continue .continue-bar, .cx-open .cx-continue .continue-scene { display: none; }
   .cx-open .cx-continue .continue-txt { display: flex; align-items: baseline; gap: .5rem; min-width: 0; }
   .cx-open .cx-continue strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+}
+/* [fixA G39] A desktop browser zoomed to 200% (or a very short window) is also "landscape, under 520px high", but it is not a phone:
+   there the description keeps its place (hiding it lost content at zoom). Only a coarse-pointer phone on its side drops it. */
+@media (orientation: landscape) and (max-height: 520px) and (min-width: 640px) and (hover: hover) and (pointer: fine) {
+  .cx-open-sub { display: block; margin-top: .3rem; font-size: .92rem; line-height: 1.4; }
+  .cx-open-foot { padding-top: .25rem; }
 }
 /* a short phone screen (an iPhone SE with Safari's bars showing, 320x568): the descriptive sub-line steps aside so the
    name, the way in and a returning reader's place still fit in one screen; "Now showing" below says the same */
@@ -2452,3 +2461,12 @@ p, li, dd, figcaption, blockquote { text-wrap: pretty; }
    room (--cx-consent-room) so it lies on no link. Forced colours: borders stay (cinema.css). */
 :root.dusk-lock .cx-consent { opacity: 0; visibility: hidden; pointer-events: none; transition: opacity .3s var(--cx-ease), visibility 0s .3s; }
 .cx-consent-text a { min-height: 44px; display: inline-flex; align-items: center; box-sizing: border-box; }
+
+/* [fixS G14] the empty box of the library: a way on that is a feeling or a story, not a dead end */
+.lib-zero { display: grid; gap: .5rem; margin: 1.1rem 0 0; }
+.lib-zero-k { margin: .6rem 0 0; font: 500 .72rem/1.2 "Cinzel", var(--cx-title); letter-spacing: .2em; text-transform: uppercase; color: var(--cx-saffron); }
+html[lang="hi"] .lib-zero-k { font: 600 .95rem/1.3 var(--cx-title); letter-spacing: 0; text-transform: none; }
+.lib-zero-chips { display: flex; flex-wrap: wrap; gap: .5rem; margin: 0; }
+.lib-zero-chips .chip-link { font-family: inherit; font-weight: 600; font-size: .9rem; color: inherit; cursor: pointer; min-height: 44px; }
+.lib-zero-list { list-style: none; margin: 0; padding: 0; display: grid; gap: .1rem; }
+.lib-zero-list a { display: inline-flex; align-items: center; min-height: 44px; color: var(--cx-ink); text-decoration-color: var(--cx-gold); text-underline-offset: .25em; }

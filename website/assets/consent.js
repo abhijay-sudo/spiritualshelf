@@ -15,6 +15,7 @@
   var d = document, root = d.documentElement;
   var ui = {}; try { ui = JSON.parse(d.getElementById('ui').textContent) || {}; } catch (e) {}
   var T = ui.consent; if (!T) return;
+  if (d.body && d.body.classList.contains('is-offpage') || navigator.onLine === false) return;   // [fixS] the offline page and any kept page opened offline: no question while there is no connection to ask about
   var lang = function () { return (root.lang || 'en').slice(0, 2) === 'hi' ? 'hi' : 'en'; };
 
   var read = function () {
@@ -119,9 +120,10 @@
     var no = el('button', { type: 'button', class: 'cx-consent-btn', 'data-consent-no': '' }, T.decline);
     row.appendChild(yes); row.appendChild(no);
     bar.appendChild(h); bar.appendChild(p); bar.appendChild(row);
-    // early in the reading order (just after "Skip to content"), shown at the foot of the screen
-    var skip = d.querySelector('.skip'); var at = skip ? skip.nextSibling : d.body.firstChild;
-    d.body.insertBefore(status, at); d.body.insertBefore(bar, at);
+    // [fixA G01] LAST in the reading order, shown at the foot of the screen: it is a fixed strip at the bottom, so a Tab that
+    // met it before the header (it used to sit right after "Skip to content") pulled keyboard readers away from the page's
+    // own first stops. "Privacy choices" in the footer, the stop just before it, opens it with focus whenever it is wanted.
+    d.body.appendChild(status); d.body.appendChild(bar);
     yes.addEventListener('click', function () { choose('granted'); });
     no.addEventListener('click', function () { choose('denied'); });
     bar.addEventListener('keydown', function (e) { if (e.key === 'Escape' && opener) { e.preventDefault(); hide(); } });
@@ -142,7 +144,7 @@
   // take a third of the screen. Pages the footer keeps room for it (--cx-consent-room), so it lies on no link.
   var footOnly = !reading && !!foot && 'IntersectionObserver' in window && matchMedia('(orientation: landscape) and (max-height: 520px)').matches;
   if (footOnly) reading = true;
-  var atTop = function () { return (window.scrollY || 0) < innerHeight * .5; };
+  var atTop = function () { return (window.scrollY || 0) < Math.min(innerHeight * .5, 180); };   // [fixA G01] a first scroll of a thumb's length tucks it, so it never lies over the first screen's content for long
   var clear = function () {
     if (!bar || bar.hidden) return;
     var on = dock && !dock.classList.contains('is-away') && !dock.classList.contains('is-tucked') && dock.offsetHeight > 0;
@@ -158,6 +160,17 @@
     // on a page that is read it never shares the screen with the reader's dock: one bar at the foot at a time
     var tuck = (away || (reading && on)) && !bar.contains(d.activeElement) && !bar.hasAttribute('data-reopened');
     bar.classList.toggle('is-tucked', tuck); bar.inert = tuck || bar.classList.contains('is-aside');
+    lifted();
+  };
+  // [fixA G01] What the bar covers at the foot of the screen right now, told to the pages that stand things there (the
+  // People sky raises its controls by it): --cx-consent-lift on the root, and one event when it changes.
+  var liftWas = -1;
+  var lifted = function () {
+    var on = !!bar && !bar.hidden && !bar.classList.contains('is-tucked') && !bar.classList.contains('is-aside');
+    var px = on ? Math.ceil(bar.offsetHeight + (parseFloat(getComputedStyle(bar).bottom) || 0)) : 0;
+    if (px === liftWas) return; liftWas = px;
+    root.style.setProperty('--cx-consent-lift', px + 'px');
+    d.dispatchEvent(new CustomEvent('spritual:consent-layout', { detail: { lift: px } }));
   };
   // The room the bar takes at the foot of the screen, which the openings and the footer keep free (cinema.css). It is the
   // bar's own height and its resting gap only, never the dock's clearance: this value pads the story's opening, which is
@@ -218,7 +231,7 @@
     lastY = window.scrollY || 0; away = footOnly || (reading && !atTop());     // arriving part-way down a page (a kept place): it waits out of the way
     var tick = false;
     addEventListener('scroll', function () { if (!tick) { tick = true; requestAnimationFrame(function () { tick = false; scrolled(); }); } }, { passive: true });
-    if (foot && 'IntersectionObserver' in window) new IntersectionObserver(function (es) { footOn = es[es.length - 1].isIntersecting; var was = away; away = reading ? (footOnly ? !footOn : !(atTop() || footOn)) : away && !footOn; if (away !== was) clear(); }).observe(foot);
+    if (foot && 'IntersectionObserver' in window) new IntersectionObserver(function (es) { footOn = es[es.length - 1].isIntersecting; var was = away; away = reading ? (footOnly ? !footOn : !(atTop() || footOn)) : away && !footOn; if (away !== was) clear(); }, { rootMargin: '0px 0px -96px 0px' } /* [fixA G01] only once the footer is above the bar's own height: it never returns over the last lines of a story's closing */).observe(foot);
   };
   var show = function (focus) {
     if (!bar) build();
@@ -232,7 +245,7 @@
   };
   var hide = function () {
     if (!bar) return;
-    var had = bar.contains(d.activeElement); bar.hidden = true; root.removeAttribute('data-consent-ask');
+    var had = bar.contains(d.activeElement); bar.hidden = true; root.removeAttribute('data-consent-ask'); lifted();
     // the room it kept in a story's opening is given back only while that opening is on screen: once the reader is past
     // it, taking it away would shorten the page above them and move the line they are reading
     var hero = d.querySelector('.cx-film-open, .mx-open');
@@ -270,6 +283,12 @@
   // "Erase everything" (site.js) also erases the stored answer: analytics stops at once and is asked about again next time
   d.addEventListener('spritual:erase', function () { stop(); paintState(null); });
 
+  // [fixA G01] Unanswered, the question is asked on a visit's first two pages only (a count kept in this tab's session
+  // storage, never sent anywhere); after that it waits in the footer's "Privacy choices". assets/boot.js reserves the room
+  // for it by the same count. A new tab or window asks afresh; an answer, once given, holds for twelve months on every page.
+  var SEEN = 'spritual:consent-asked', LIMIT = 2;
+  var asks = function () { try { return parseInt(sessionStorage.getItem(SEEN) || '0', 10) || 0; } catch (e) { return 0; } };
+  var showFirst = function () { if (asks() >= LIMIT) return; try { sessionStorage.setItem(SEEN, String(asks() + 1)); } catch (e) {} show(false); };
   var c = read();
   if (c && c.value === 'granted') start();
   else if (!c) {
@@ -278,10 +297,10 @@
     // comes once it has finished. A safety timer asks anyway if the opening never reports its end.
     var titles = root.classList.contains('cx-js') && !root.classList.contains('cx-seen') && d.querySelector('.cx-spark');
     if (root.dataset.opening === 'live' || titles) {
-      var asked = false, ask = function () { if (asked) return; asked = true; d.removeEventListener('spritual:enter', onEnter); if (!read()) show(false); };
+      var asked = false, ask = function () { if (asked) return; asked = true; d.removeEventListener('spritual:enter', onEnter); if (!read()) showFirst(); };
       var onEnter = function () { setTimeout(ask, 900); };
       if (root.dataset.opening === 'live') d.addEventListener('spritual:enter', onEnter);
       setTimeout(ask, titles ? Math.max(1200, ((window.matchMedia && matchMedia('(max-width: 759px), (orientation: landscape) and (max-height: 520px)').matches) ? 6400 : 10200) - (window.performance ? performance.now() : 0))   /* [joyQ] the festival-night sequence runs about 8.5 s (5 s on a phone) */ : 16000);
-    } else show(false);
+    } else showFirst();
   }
 })();

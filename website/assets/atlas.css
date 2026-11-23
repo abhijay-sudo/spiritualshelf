@@ -289,3 +289,19 @@ html[lang="hi"] .at-more > summary { letter-spacing: 0; font-size: .84rem; }
 .at-flying .at-dock .at-tools { opacity: 1; visibility: visible; }
 .at-still .at-dock .at-fly-bar { display: none; }
 @media print { .at-dock { display: none !important; } }
+
+/* [fixHC] place cards. The painting is a scene of a story, so it is shown as a framed picture with a caption that says so (no feathered edge, which read as a smudge),
+   and where the browser has subgrid, the cards of a row share their rows: the names, lines, sources and "named in" line up across the row. */
+.at-place .at-art img { -webkit-mask-image: none; mask-image: none; border-radius: 6px; box-shadow: 0 0 0 1px var(--cx-line); }
+.at-art-cap { margin: -.35rem 0 0; font: 400 .8rem/1.4 var(--cx-ui); color: var(--cx-ink-3); }
+html[lang="hi"] .at-art-cap { font-size: .88rem; }
+.at-card .at-art-cap { display: none; }
+@supports (grid-template-rows: subgrid) {
+  .at-places { row-gap: clamp(1.75rem, 1rem + 2vw, 3rem); }
+  .at-place { grid-row: span 6; grid-template-rows: subgrid; gap: 0; row-gap: 0; }
+  .at-place > .at-art { margin-bottom: .75rem; }
+  .at-place > .at-art-cap { margin: -.4rem 0 .55rem; }
+  .at-place > .at-place-txt { display: contents; }
+  .at-place-txt > h3 { margin-bottom: .35rem; }
+  .at-place-txt > p, .at-place-txt > details { margin-bottom: .35rem; }
+}

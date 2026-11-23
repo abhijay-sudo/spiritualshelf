@@ -359,7 +359,7 @@
     const id = el.dataset.fig; const sym = doc.getElementById('fig-' + id); if (!sym) return;
     el.classList.add('fig-live'); el.classList.remove('fig-use'); el.innerHTML = sym.innerHTML;
   };
-  const feature = (c) => { c.classList.add('card--feature'); c.querySelector('.card-title')?.setAttribute('aria-level', '2');   /* [A] under the page's h1 with nothing between */ const img = c.querySelector('img'); if (img) { img.removeAttribute('loading'); img.setAttribute('fetchpriority', 'high'); } const f = c.querySelector('.fig-use'); if (f) enliven(f); return c; };
+  const feature = (c) => { c.classList.add('card--feature'); { const ct = c.querySelector('.card-title'); if (ct && ct.tagName === 'H3') { const h2 = document.createElement('h2'); h2.className = ct.className; while (ct.firstChild) h2.append(ct.firstChild); ct.replaceWith(h2); } }   /* [fixA G39] a real h2 (it was an h3 lifted by aria-level) */   /* [A] under the page's h1 with nothing between */ const img = c.querySelector('img'); if (img) { img.removeAttribute('loading'); img.setAttribute('fetchpriority', 'high'); } const f = c.querySelector('.fig-use'); if (f) enliven(f); return c; };
 
   /* ---------- Greeting, plan, today's story, "what do you need" ---------- */
   const h = new Date().getHours();
@@ -429,7 +429,7 @@
     const n = recent.length;
     for (const el of $$('[data-streak]')) {
       const dots = el.querySelector('[data-dots]'); const line = el.querySelector('[data-streak-line]');
-      if (dots) { dots.hidden = !n; dots.replaceChildren(...recent.map((k, i) => { const s = document.createElement('span'); s.className = 'dot on' + (k === dayKey() ? ' is-today' : ''); s.style.setProperty('--i', Math.min(i, 10)); return s; })); }
+      if (dots) { dots.hidden = n < 3; /* [fixL] one or two marks read as a lone oversized dot; the line beneath says it already, so the strip appears once there is a pattern to show */ dots.replaceChildren(...recent.map((k, i) => { const s = document.createElement('span'); s.className = 'dot on' + (k === dayKey() ? ' is-today' : ''); s.style.setProperty('--i', Math.min(i, 10)); return s; })); }
       if (line) line.textContent = n ? fmt(n === 1 ? UI.streakLine1 : UI.streakLine, { n }) : days.length ? UI.streakAgain : UI.streakNone;
     }
   };
@@ -473,6 +473,8 @@
         const deck = a.closest('.cx-open-side')?.querySelector('[data-cards]'); if (deck) deck.hidden = true;
       }
     }
+    // [joyHH] boot.js kept room for this card on the home page; if there turned out to be none to show, the room is given back
+    if (!$('[data-continue]:not([hidden])')) root.classList.toggle('cx-has-last', false);
   }
 
   /* ---------- Saved page: stories + reflections ---------- */
@@ -549,6 +551,7 @@
     Sound.droneStop(); Sound.riverStop(); paintSound();
     lastRemoved = null; const undo = $('[data-journal-undo]'); if (undo) undo.hidden = true; const jm = $('[data-journal-msg]'); if (jm) jm.textContent = '';
     renderSaved(); renderJournal(); paintStreak();
+    root.classList.toggle('cx-has-last', false);
     for (const a of $$('[data-continue]')) { a.hidden = true; const block = a.closest('[data-continue-block]'); if (block) block.hidden = true; const deck = a.closest('.cx-open-side')?.querySelector('[data-cards]'); if (deck) deck.hidden = false; }
     for (const g of $$('[data-greet]')) g.hidden = true;
   };
@@ -579,10 +582,10 @@
     // [fixC] assets/find-core.js (when it has arrived) makes the key phonetic: Raam, Laxman, Krishn, Hanumanji; themes (love, monkey) look for the pages' own words
     const FD = window.SpritualFind;
     const norm = FD ? FD.key : (s) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').normalize('NFC').replace(/[ङञणनम]्(?=[क-ह])/g, 'ं').replace(/ँ/g, 'ं');
-    if (FD) { try { FD.setSyn(JSON.parse($('#find-syn')?.textContent || '{}')); } catch {} }
+    if (FD) { try { FD.setSyn(JSON.parse($('#find-syn')?.textContent || '{}')); FD.setFeel(JSON.parse($('#find-feel')?.textContent || '{}')); } catch {} }
     for (const el of [...cards, ...$$('[data-more] li')]) { el.dataset.search = norm(el.dataset.search || ''); if (el.dataset.head != null) { el.dataset.head = norm(el.dataset.head); el.dataset.cast = norm(el.dataset.cast || ''); } }
     const home = new Map(cards.map((c, i) => [c, i]));   // [fixS] the library's own order, which a search without a ranking leaves as it was
-    const FILLER = new Set(('i im i\'m i’m am is are was were be been being a an the to of in on at for and or my me mine it its this that these those so do does you your we our with about some very really just how what why when who want wanna need like feel feeling please tell show find read story stories ' + 'मैं मुझे मुझको हूं हूँ हैं है था थी थे का की के को में से और या पर एक यह वह तो भी ही मेरा मेरी मेरे कि कुछ बहुत रहा रही रहे कैसे क्या क्यों चाहिए चाहता चाहती').split(' ').map((w) => norm(w.toLowerCase())).filter(Boolean));
+    const FILLER = new Set(('i im i\'m i’m am is are was were be been being a an the to of in on at for and or my me mine it its this that these those so do does you your we our with about some very really just how what why when who want wanna need like feel feeling please tell show find read story stories ' + 'मैं मुझे मुझको हूं हूँ हैं है था थी थे का की के को में से और या पर एक यह वह तो भी ही मेरा मेरी मेरे कि कुछ बहुत रहा रही रहे कैसे क्या क्यों चाहिए चाहता चाहती लग लगता लगती लगा रहा रही').split(' ').map((w) => norm(w.toLowerCase())).filter(Boolean));
     const apply = () => {
       const f = new FormData(filters);
       const rawQ = String(f.get('q') || '').trim();
@@ -596,7 +599,9 @@
       // [joyB] filler words do not search ("I am angry" looks for "angry", not for every story with an "am" in it); a query made only of them searches for nothing
       { const rest = words.filter((w) => !FILLER.has(w.replace(/^[^\p{L}\p{M}]+|[^\p{L}\p{M}]+$/gu, ''))); words = FD ? FD.words(rest.join(' ')) : rest; }   // (a query of nothing but filler, "i am", "the", is not a search: the whole library stays)
       let fz = false; const has = (hay, w) => (FD ? FD.find(hay, w, fz) > 0 : hay.includes(w));   // fz: a slip of a letter is forgiven, only once nothing matches as typed
-      const passes = (c, every) => { const m = +c.dataset.minutes; return !junk && (!words.length || words[every ? 'every' : 'some']((w) => has(c.dataset.search, w))) && (!value || c.dataset.values.split(' ').includes(value)) && (!coll || c.dataset.c === coll)
+      const feelHit = (c, w) => { const v = FD && FD.feel(w); return !!v && c.dataset.values.split(' ').some((x) => v.includes(x)); };   // [fixS] a feeling word (scared, lonely) finds the stories whose own values answer it
+      const feelRank = (c, w) => { const v = FD && FD.feel(w); if (!v) return 0; const at = c.dataset.values.split(' ').map((x) => v.indexOf(x)).filter((i) => i >= 0); return at.length ? 90 - Math.min(...at) * 20 + at.length * 5 : 0; };
+      const passes = (c, every) => { const m = +c.dataset.minutes; return !junk && (!words.length || words[every ? 'every' : 'some']((w) => has(c.dataset.search, w) || feelHit(c, w))) && (!value || c.dataset.values.split(' ').includes(value)) && (!coll || c.dataset.c === coll)
         && (!time || (time === '6' ? m <= 6 : time === '7' ? m === 7 : m >= 8)); };
       let some = false; let m2 = 0;
       const more = $('[data-more]'); const someNote = $('[data-some]');
@@ -622,7 +627,7 @@
       run(); if (FD && words.length && !n && !m2) { fz = true; run(); }
       // [fixS] ranked, not only filtered: a story named by the words (its name, its title) comes before one that has a person of that name,
       // and that before one that only mentions it; between equals the library's own order stands. Nothing typed: the library's order.
-      { const sc = (c) => { let t = 0; for (const w of words) { const h = FD ? FD.find(c.dataset.head, w, fz) : +c.dataset.head.includes(w) * 4, p = FD ? FD.find(c.dataset.cast, w, fz) : +c.dataset.cast.includes(w) * 4, b = FD ? FD.find(c.dataset.search, w, fz) : +c.dataset.search.includes(w) * 3; t += h * 100 + p * 20 + b + (FD && FD.find(norm(c.dataset.lead || ''), w, false) >= 4 ? 60 : 0); }   // (and the story whose leading person it is)
+      { const sc = (c) => { let t = 0; for (const w of words) { const h = FD ? FD.find(c.dataset.head, w, fz) : +c.dataset.head.includes(w) * 4, p = FD ? FD.find(c.dataset.cast, w, fz) : +c.dataset.cast.includes(w) * 4, b = FD ? FD.find(c.dataset.search, w, fz) : +c.dataset.search.includes(w) * 3; t += h * 100 + p * 20 + b + (FD && FD.find(norm(c.dataset.lead || ''), w, false) >= 4 ? 60 : 0) + feelRank(c, w); }   // (and the story whose leading person it is; and, for a feeling word, the story whose first value answers it best)
           return t; };
         const by = words.length ? new Map(cards.map((c) => [c, sc(c)])) : null;
         const order = cards.slice().sort((a, b) => (by ? by.get(b) - by.get(a) : 0) || home.get(a) - home.get(b));
@@ -657,6 +662,8 @@
         scrollTo({ top: Math.max(0, scrollY + top - nav - 14), behavior: reduced() ? 'auto' : 'smooth' }); }); }
     filters.addEventListener('submit', (e) => e.preventDefault()); filters.addEventListener('reset', () => setTimeout(apply));
     $('[data-reset]')?.addEventListener('click', () => filters.reset());
+    // [fixS G14] the chips in the empty box: pick a value, the words are cleared, the list answers
+    $$('[data-lib-pick]').forEach((b) => b.addEventListener('click', () => { const r = filters.querySelector('input[name="value"][value="' + b.dataset.libPick + '"]'); const q = $('#q'); if (q) q.value = ''; if (r) r.checked = true; apply(); const top = filters.getBoundingClientRect().top; if (top < 0 || top > innerHeight * .6) filters.scrollIntoView({ behavior: reduced() ? 'auto' : 'smooth', block: 'start' }); }));
     addEventListener('keydown', (e) => { if (e.key === '/' && !/input|textarea/i.test(document.activeElement?.tagName)) { e.preventDefault(); $('#q')?.focus(); } });
   }
 

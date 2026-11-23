@@ -164,7 +164,8 @@
   try {
     var cq = null; try { cq = JSON.parse(localStorage.getItem('spritual:consent') || 'null'); } catch (e) {}
     var cat = cq && Date.parse(cq.date);
-    if (!cq || (cq.value !== 'granted' && cq.value !== 'denied') || !cat || Date.now() - cat > 365 * 864e5) {
+    var asked = 0; try { asked = parseInt(sessionStorage.getItem('spritual:consent-asked') || '0', 10) || 0; } catch (e) {}   // [fixA G01] consent.js asks on a visit's first two pages only
+    if ((!cq || (cq.value !== 'granted' && cq.value !== 'denied') || !cat || Date.now() - cat > 365 * 864e5) && asked < 2) {
       var cw = innerWidth, ch = innerHeight, hi = d.lang === 'hi', k = d.dataset.size === 'xl' ? 2 : d.dataset.size === 'l' ? 1 : 0;
       var land = cw > ch && ch <= 520, room = matchMedia('(min-width: 860px) and (min-height: 520.02px)').matches ? [118, 133, 149][k]
         : land || (cw < 760 && cw >= 600) ? [70, 75, 85][k]
@@ -192,10 +193,13 @@
   // plays the titles (not having been seen, they are not counted as played this week).
   try {
     if (me && me.hasAttribute('data-titles')) {
-      var titlesAt = +localStorage.getItem('spritual:titlesAt') || 0, ref = document.referrer || '';
-      if (sessionStorage.getItem('spritual:titles') || Date.now() - titlesAt < 6048e5 || d.classList.contains('ep-lite') || matchMedia('(forced-colors: active)').matches) d.classList.add('cx-seen');   // [A] forced colours too: the finished page, not words waiting on animation   // [joyQ] Save-Data gets the finished composition, not the sequence
-      else if (ref && ref.indexOf(location.origin + '/') !== 0) { d.classList.add('cx-seen'); sessionStorage.setItem('spritual:titles', '1'); }
-      else { localStorage.setItem('spritual:titlesAt', String(Date.now())); sessionStorage.setItem('spritual:titles', '1'); }
+      // [joyHH] the sequence is shown once a week per language: a reader who saw the English titles and then chose Hindi (or the other way round) still gets the opening in the language they are reading
+      var tk = d.lang === 'hi' ? '-hi' : '', titlesAt = +localStorage.getItem('spritual:titlesAt' + tk) || 0, ref = document.referrer || '';
+      if (sessionStorage.getItem('spritual:titles' + tk) || Date.now() - titlesAt < 6048e5 || d.classList.contains('ep-lite') || matchMedia('(forced-colors: active)').matches) d.classList.add('cx-seen');   // [A] forced colours too: the finished page, not words waiting on animation   // [joyQ] Save-Data gets the finished composition, not the sequence
+      else if (ref && ref.indexOf(location.origin + '/') !== 0) { d.classList.add('cx-seen'); sessionStorage.setItem('spritual:titles' + tk, '1'); }
+      else { localStorage.setItem('spritual:titlesAt' + tk, String(Date.now())); sessionStorage.setItem('spritual:titles' + tk, '1'); }
+      // [joyHH] a returning reader's "Continue reading" card arrives after the first paint (site.js); its room is kept from the start so the opening does not move when it does
+      try { var lastRead = JSON.parse(localStorage.getItem('spritual:last') || 'null'); if (lastRead && lastRead.slug) d.classList.add('cx-has-last'); } catch (e2) {}
       localStorage.setItem('spritual:seen', '1');
     }
     else if (localStorage.getItem('spritual:seen')) d.classList.add('cx-seen'); else localStorage.setItem('spritual:seen', '1');

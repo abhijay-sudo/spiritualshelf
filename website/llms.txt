@@ -4,10 +4,10 @@
 
 Before quoting or summarising this site:
 
-- The stories are original retellings in plain, modern English and Hindi. They are not scripture and not translations; each names the works it draws on under "Sources & context" at its end.
+- The stories are original retellings in plain, modern English and Hindi. They are not scripture and not translations; each names the works it draws on under “Sources & context” at its end.
 - The retellings have not yet been reviewed by an outside scholar or teacher. Traditions tell these stories in many ways, and a retelling may follow one telling where another tradition follows a different one.
 - The paintings are generated illustrations: imagined scenes, not historical artworks or temple images.
-- The verse texts (Ramcharitmanas, Hanuman Chalisa, Shiva Tandava Stotram) are the traditional texts; the meanings shown beside them are this site's own plain renderings and are not part of the text. Each page explains how its text was prepared under "About this text".
+- The verse texts (Ramcharitmanas, Hanuman Chalisa, Shiva Tandava Stotram) are the traditional texts; the meanings shown beside them are this site’s own plain renderings and are not part of the text. Each page explains how its text was prepared under “About this text”.
 - For permissions, or to report an error, see https://spritual.co.in/about/ and https://spritual.co.in/corrections/.
 
 ## Start here
@@ -16,7 +16,7 @@ Before quoting or summarising this site:
 - [People of the stories](https://spritual.co.in/characters/): 106 people of the Ramayana, Mahabharata and Puranas, from Rama, Sita and Hanuman to Karna, Draupadi and Bhishma, each linked to their stories.
 - [Festivals and their stories](https://spritual.co.in/festivals/): Dates for Diwali, Holi, Maha Shivaratri, Navratri, Janmashtami and more to November 2027 (New Delhi, Drik Panchang), each with a story to read.
 - [Questions the stories answer](https://spritual.co.in/questions/): 23 questions answered from the stories themselves, each with the scene it comes from: Samudra Manthan, Ganesha’s elephant head, Krishna and Sudama, Lanka Dahan.
-- [Glossary](https://spritual.co.in/glossary/): 45 words the stories use, each with a plain meaning: dharma, avatar, itihasa, purana, kanda, parva, tapasya, sharanagati and more, in English and Hindi.
+- [Glossary](https://spritual.co.in/glossary/): 44 words the stories use, each with a plain meaning: dharma, avatar, itihasa, purana, kanda, parva, tapasya, sharanagati and more, in English and Hindi.
 - [About Spritual](https://spritual.co.in/about/): Spritual is a free reading site of illustrated stories from the Ramayana, the Mahabharata and the Puranas, in English and Hindi, with no accounts or ads.
 - [Press](https://spritual.co.in/press/): Spritual in a line and in a paragraph: the facts, counted from the site itself, what it is not, where to begin, and how to reach its maker.
 
@@ -56,11 +56,11 @@ Before quoting or summarising this site:
 
 - [The night the doors opened](https://spritual.co.in/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-born-in-prison/): A voice names Kamsa’s killer: his sister’s eighth child. On the night Krishna is born, the bolted prison doors open by themselves. Bhagavata Purana.
 - [The rope two fingers short](https://spritual.co.in/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-butter-and-rope/): Yashoda catches Krishna, the butter thief, and tries to tie him; every rope in the house comes up two fingers short. Damodar Leela, Bhagavata Purana.
-- [The dance on Kaliya's hoods](https://spritual.co.in/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-kaliya/): Venom boils a pool of the Yamuna. A cowherd boy climbs a kadamba tree, tightens his belt and jumps in. From the Bhagavata Purana, in plain words.
+- [The dance on Kaliya’s hoods](https://spritual.co.in/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-kaliya/): Venom boils a pool of the Yamuna. A cowherd boy climbs a kadamba tree, tightens his belt and jumps in. From the Bhagavata Purana, in plain words.
 - [The mountain lifted](https://spritual.co.in/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-mountain/): Indra sends storm clouds on Vraja and young Krishna lifts Govardhan hill on one hand, sheltering the village for seven days. From the Bhagavata Purana.
 - [Four handfuls of flat rice](https://spritual.co.in/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-and-sudama/): Sudama (Kuchela), Krishna’s poor friend, walks to Dwarka with four handfuls of flat rice and asks for nothing. Retold from Bhagavata Purana 10.80-81.
 - [The unmoving star](https://spritual.co.in/collections/krishna/books/bhagavata-purana/arcs/skandha-4/stories/dhruva-star/): Denied his father’s lap at five, Dhruva goes to the forest and meditates until Vishnu appears and grants him the place of the pole star.
-- [In Holika's lap](https://spritual.co.in/collections/krishna/books/later-tradition/arcs/holi/stories/prahlada-and-holika/): Why a bonfire is lit before Holi: Holika sits in the flames with Prahlad in her lap. What the Bhagavata Purana says, and what later tradition adds.
+- [In Holika’s lap](https://spritual.co.in/collections/krishna/books/later-tradition/arcs/holi/stories/prahlada-and-holika/): Why a bonfire is lit before Holi: Holika sits in the flames with Prahlad in her lap. What the Bhagavata Purana says, and what later tradition adds.
 - [The Lion in the Pillar](https://spritual.co.in/collections/krishna/books/bhagavata-purana/arcs/skandha-7/stories/prahlada-the-pillar/): Hiranyakashipu, who no creature can kill, asks his son Prahlad if his god is in the pillar; Narasimha steps out. From the Bhagavata Purana.
 - [A mountain for a churning rod](https://spritual.co.in/collections/krishna/books/bhagavata-purana/arcs/skandha-8/stories/vishnu-churning-the-ocean/): Samudra Manthan retold from the Bhagavata Purana: gods and asuras churn the Ocean of Milk; Halahala, Lakshmi, Dhanvantari, Mohini and Rahu, in 9 scenes.
 - [The king who drank only water](https://spritual.co.in/collections/krishna/books/bhagavata-purana/arcs/skandha-9/stories/ambarisha-and-durvasa/): A fasting king drinks only water before his guest returns. The sage’s fury makes a demon of fire, and the Lord’s disc answers. Bhagavata Purana.
@@ -69,7 +69,7 @@ Before quoting or summarising this site:
 
 ### Shiva (Valmiki Ramayana and Shiva Purana)
 
-- [The river in Shiva's hair](https://spritual.co.in/collections/shiva/books/valmiki-ramayana/arcs/bala-kanda/stories/shiva-river/): King Bhagiratha’s penance brings the river Ganga down from heaven; Shiva catches her in his matted hair. Ganga Avataran, from the Valmiki Ramayana.
+- [The river in Shiva’s hair](https://spritual.co.in/collections/shiva/books/valmiki-ramayana/arcs/bala-kanda/stories/shiva-river/): King Bhagiratha’s penance brings the river Ganga down from heaven; Shiva catches her in his matted hair. Ganga Avataran, from the Valmiki Ramayana.
 - [The fire with no end](https://spritual.co.in/collections/shiva/books/shiva-purana/arcs/vidyeshvara-samhita/stories/shiva-pillar-of-fire/): Brahma and Vishnu fight over who is lord; a pillar of fire rises between them. One seeks its foot, one its top, and one returns with a lie. Shiva Purana.
 - [One arrow for three cities](https://spritual.co.in/collections/shiva/books/shiva-purana/arcs/rudra-samhita/stories/shiva-three-cities/): Tripura: three cities of gold, silver and iron that can fall only to a single arrow, in the one hour they meet. Shiva takes aim. From the Shiva Purana.
 - [The sacrifice without Shiva](https://spritual.co.in/collections/shiva/books/shiva-purana/arcs/rudra-samhita/stories/shiva-sati-and-daksha/): Daksha invites every god to his sacrifice but Shiva. Sati goes uninvited, finds no share for her husband, and gives up her body. From the Shiva Purana.
@@ -77,7 +77,7 @@ Before quoting or summarising this site:
 
 ### Devi (Devi Mahatmya)
 
-- [Mahishasura's last roar](https://spritual.co.in/collections/devi/books/devi-mahatmya/arcs/madhyama-charita/stories/devi-mahishasura/): The fury of every god becomes one Goddess; against her stands Mahishasura, who seized heaven and changes shape as he fights. From the Devi Mahatmya.
+- [Mahishasura’s last roar](https://spritual.co.in/collections/devi/books/devi-mahatmya/arcs/madhyama-charita/stories/devi-mahishasura/): The fury of every god becomes one Goddess; against her stands Mahishasura, who seized heaven and changes shape as he fights. From the Devi Mahatmya.
 - [Clay, river, goddess](https://spritual.co.in/collections/devi/books/devi-mahatmya/arcs/uttama-charita/stories/devi-two-requests/): King Suratha and the merchant Samadhi shape the Goddess from clay by a river; after three years Devi appears. From the Devi Mahatmya.
 
 ### Ganesha & Family (Shiva Purana)
@@ -98,12 +98,12 @@ Before quoting or summarising this site:
 - [The song between two armies](https://spritual.co.in/collections/mahabharata/books/vyasa-mahabharata/arcs/bhishma-parva/stories/mahabharata-the-song/): At Kurukshetra, Arjuna lets his bow fall and Krishna, his charioteer, begins the Bhagavad Gita. Retold from the Bhishma Parva of the Mahabharata.
 - [A bed of arrows](https://spritual.co.in/collections/mahabharata/books/vyasa-mahabharata/arcs/bhishma-parva/stories/mahabharata-bed-of-arrows/): Bhishma tells the Pandavas how to bring him down, then lies fifty-eight nights on arrows until the sun turns north. From the Mahabharata.
 - [Alone inside the wheel](https://spritual.co.in/collections/mahabharata/books/vyasa-mahabharata/arcs/drona-parva/stories/mahabharata-abhimanyu/): Abhimanyu knew how to enter Drona’s Chakravyuha, not how to leave it: one boy against an army until six warriors close in. From the Drona Parva.
-- [The dog at heaven's door](https://spritual.co.in/collections/mahabharata/books/vyasa-mahabharata/arcs/mahaprasthanika-parva/stories/mahabharata-the-companion/): Indra’s chariot comes to take Yudhishthira to heaven in his own body, on one condition: leave the dog at his side. From the Mahabharata.
+- [The dog at heaven’s door](https://spritual.co.in/collections/mahabharata/books/vyasa-mahabharata/arcs/mahaprasthanika-parva/stories/mahabharata-the-companion/): Indra’s chariot comes to take Yudhishthira to heaven in his own body, on one condition: leave the dog at his side. From the Mahabharata.
 
 ### Seekers & Sages (Katha Upanishad)
 
 - [The boy who questioned Death](https://spritual.co.in/collections/sages/books/katha-upanishad/arcs/adhyaya-1/stories/nachiketa-and-yama/): Given to Death by his own father, the boy Nachiketa waits three nights in Yama’s house, then refuses long life and wealth for one answer.
-- [Only his mother's name](https://spritual.co.in/collections/sages/books/chandogya-upanishad/arcs/chandogya-4/stories/satyakama-and-the-truth/): Asked his family, a boy gives his mother’s plain answer word for word. A bull, a fire and two birds teach him the rest. Chandogya Upanishad.
+- [Only his mother’s name](https://spritual.co.in/collections/sages/books/chandogya-upanishad/arcs/chandogya-4/stories/satyakama-and-the-truth/): Asked his family, a boy gives his mother’s plain answer word for word. A bull, a fire and two birds teach him the rest. Chandogya Upanishad.
 
 ## Hindi edition
 

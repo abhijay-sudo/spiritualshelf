@@ -3,11 +3,17 @@ const root = document.documentElement;
 const VS = 'attribute vec2 p;varying vec2 v;void main(){v=p*.5+.5;v.y=1.-v.y;gl_Position=vec4(p,0.,1.);}';
 const FS = 'precision mediump float;uniform sampler2D A,D;uniform vec2 o,s,m,c;uniform float k,b;varying vec2 v;void main(){vec2 u=o+v*s,q=u;for(int i=0;i<4;i++){float d=texture2D(D,q).r-b;q=u-m*d-(u-c)*k*d;}gl_FragColor=texture2D(A,clamp(q,0.,1.));}';
 const AMP = .006;
+const weak = { v: false };   // shared by every instance on the page: set when a texture upload blocked the page for too long
 const make = () => {
 let cv, gl, U = {}, texA, texD, host = null, img = null, src = '', dsrc = '', map = null, raf = 0, last = 0, t0 = 0, run = false, dead = false, scale = 1, n = 0, sum = 0, prev = 0, px = 0, py = 0, tx = 0, ty = 0, ready = false, dir = 1, scrub = null, kk = 0, turn = 0;
 const lite = () => root.classList.contains('ep-lite') || !!navigator.connection?.saveData;
 const still = () => root.dataset.motion === 'reduce' || !!root.dataset.light || matchMedia('(prefers-reduced-motion: reduce)').matches;
-const ok = () => !dead && !lite() && !still() && (navigator.deviceMemory || 4) >= 4 && (navigator.hardwareConcurrency || 4) >= 4 && !!window.WebGLRenderingContext;
+const slowLine = () => { const c = navigator.connection || {}; return !!(window.SpritualNet && window.SpritualNet.slow()) || /^(slow-)?[23]g$/.test(c.effectiveType || ''); };
+const ok = () => !dead && !weak.v && !lite() && !slowLine() && !still() && (navigator.deviceMemory || 4) >= 4 && (navigator.hardwareConcurrency || 4) >= 4 && !!window.WebGLRenderingContext;
+const bmp = (u, cap = scrub && (scrub.px || 3.3e6) <= 1.6e6 ? 1600 : 0) => !window.createImageBitmap ? Promise.reject() : fetch(u).then((r) => (r.ok ? r.blob() : Promise.reject())).then((b) => {
+const o = { premultiplyAlpha: 'none', colorSpaceConversion: 'none' }; if (cap && img?.naturalWidth > cap) { o.resizeWidth = cap; o.resizeQuality = 'medium'; }
+return createImageBitmap(b, o).catch(() => createImageBitmap(b));
+});
 const kill = () => { dead = true; stop(); cv?.remove(); host = null; scrub?.lost?.(); };
 const init = () => {
 if (gl || dead) return !dead;
@@ -67,17 +73,18 @@ if (!ok() || !init() || !el.naturalWidth) return false;
 detach(); host = h; img = el; map = m || null; dir = push;
 const mine = ++turn, key = el.currentSrc || el.src, use = (pic) => {
 if (turn !== mine || dead) return pic?.close?.();
+if (src !== key && !pic) return kill();
 try {
-if (src !== key) { gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, texA); gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, pic || el); src = key; }
+if (src !== key) { const t = performance.now(); gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, texA); gl.pixelStorei(gl.UNPACK_COLORSPACE_CONVERSION_WEBGL, gl.NONE); gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, pic); src = key; if (performance.now() - t > 90) weak.v = true; }
 } catch { return kill(); }
 pic?.close?.();
+if (weak.v) return kill();
 cv.style.transition = scrub ? 'opacity .35s linear' : 'opacity .8s ease'; host.append(cv); size(); if (scrub) return paint(); t0 = performance.now(); run = true; go();
-}, go1 = () => { if (src !== key && window.createImageBitmap) fetch(key).then((r) => r.blob()).then((b) => createImageBitmap(b)).then(use, () => use()); else use(); };
+}, go1 = () => { if (src !== key) bmp(key).then(use, () => use()); else use(); };
 if (dsrc === depth) go1();
 else {
-const upD = (d) => { if (dead) return d?.close?.(); try { gl.activeTexture(gl.TEXTURE1); gl.bindTexture(gl.TEXTURE_2D, texD); gl.texImage2D(gl.TEXTURE_2D, 0, gl.LUMINANCE, gl.LUMINANCE, gl.UNSIGNED_BYTE, d); dsrc = depth; } catch { return kill(); } d?.close?.(); go1(); };
-const viaImg = () => { const d = new Image(); d.onload = () => upD(d); d.src = depth; };
-if (window.createImageBitmap) fetch(depth).then((r) => (r.ok ? r.blob() : Promise.reject())).then((b) => createImageBitmap(b)).then(upD, viaImg); else viaImg();
+const upD = (d) => { if (dead) return d?.close?.(); try { gl.activeTexture(gl.TEXTURE1); gl.bindTexture(gl.TEXTURE_2D, texD); gl.pixelStorei(gl.UNPACK_COLORSPACE_CONVERSION_WEBGL, gl.NONE); gl.texImage2D(gl.TEXTURE_2D, 0, gl.LUMINANCE, gl.LUMINANCE, gl.UNSIGNED_BYTE, d); dsrc = depth; } catch { return kill(); } d?.close?.(); go1(); };
+bmp(depth, 0).then(upD, () => kill());
 }
 return true;
 };

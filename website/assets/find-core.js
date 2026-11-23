@@ -17,6 +17,10 @@
   const words = (raw) => { const w = fold(raw).split(/[^\p{L}\p{M}\p{N}]+/u).filter(Boolean); const rest = w.filter((x) => !HON.test(x)); return (rest.length ? rest : w).map(stem); };
   let SYN = {};
   const setSyn = (o) => { SYN = {}; for (const k of Object.keys(o || {})) SYN[fold(k)] = String(o[k]).split(/\s+/).map(fold).filter(Boolean); };
+  // [fixS] FEELINGS: a word a reader uses for what they carry, and the library values the stories for it are about (matched against a story's own value list)
+  let FEEL = {};
+  const setFeel = (o) => { FEEL = {}; for (const k of Object.keys(o || {})) FEEL[fold(k)] = String(o[k]).split(/\s+/).filter(Boolean); };
+  const feel = (w) => FEEL[w] || null;
   // the number of edits between two short words, given up once it is past `max`
   const lev = (a, b, max) => {
     if (Math.abs(a.length - b.length) > max) return max + 1;
@@ -34,13 +38,14 @@
   const find = (hay, w, fuzzy) => {
     const h = ' ' + hay + ' ';
     const at = (x) => { if (h.includes(' ' + x + ' ')) return 5; if (h.includes(' ' + x)) return 4; return x.length > 3 && h.includes(x) ? 3 : 0; };
-    let best = at(w);
+    // [fixS] a feeling word of up to four letters ("sad") is found as itself only, not as the start of another word ("sadhu"); its values do the rest
+    let best = FEEL[w] && w.length <= 4 ? (h.includes(' ' + w + ' ') ? 5 : 0) : at(w);
     if (best >= 4) return best;
     for (const e of SYN[w] || []) if (at(e) >= (e.length > 3 ? 4 : 5)) { best = Math.max(best, 2); break; }
-    if (best || !fuzzy || w.length < 4 || /[^\x00-\x7f]/.test(w)) return best;
-    const max = w.length >= 9 ? 2 : 1;
+    if (best || !fuzzy || w.length < 6 || /[^\x00-\x7f]/.test(w)) return best;
+    const max = w.length >= 9 ? 2 : 1;   // [fixS] one slip is forgiven from six letters (money is not monkey), two from nine
     for (const hw of hay.split(' ')) { if (hw.length < 3) continue; if (lev(w, hw, max) <= max || (hw.length > w.length && lev(w, hw.slice(0, w.length), max) <= max)) return 1; }
     return 0;
   };
-  window.SpritualFind = { fold, key, words, find, setSyn, lev };
+  window.SpritualFind = { fold, key, words, find, setSyn, setFeel, feel, lev };
 })();

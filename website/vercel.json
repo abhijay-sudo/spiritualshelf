@@ -2284,6 +2284,31 @@
       "statusCode": 308
     },
     {
+      "source": "/people{/}?",
+      "destination": "/characters/",
+      "statusCode": 308
+    },
+    {
+      "source": "/persons{/}?",
+      "destination": "/characters/",
+      "statusCode": 308
+    },
+    {
+      "source": "/stories{/}?",
+      "destination": "/library/",
+      "statusCode": 308
+    },
+    {
+      "source": "/story{/}?",
+      "destination": "/library/",
+      "statusCode": 308
+    },
+    {
+      "source": "/festival{/}?",
+      "destination": "/festivals/",
+      "statusCode": 308
+    },
+    {
       "source": "/characters/medhas{/}?",
       "destination": "/characters/",
       "statusCode": 308
@@ -2581,6 +2606,31 @@
     {
       "source": "/hi/characters/angad{/}?",
       "destination": "/hi/characters/angada/",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/people{/}?",
+      "destination": "/hi/characters/",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/persons{/}?",
+      "destination": "/hi/characters/",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/stories{/}?",
+      "destination": "/hi/library/",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/story{/}?",
+      "destination": "/hi/library/",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/festival{/}?",
+      "destination": "/hi/festivals/",
       "statusCode": 308
     },
     {

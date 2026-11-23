@@ -126,42 +126,44 @@ if (!card) return; var c = card; card = null; c.classList.remove('is-in');
 var gone = function () { c.remove(); };
 if (matchMedia('(prefers-reduced-motion: reduce)').matches || de.dataset.motion === 'reduce') gone(); else setTimeout(gone, 360);
 }
+function place(c) {
+var end = d.querySelector('.story-end'), cl = d.querySelector('[data-closing]');
+if (end) end.insertBefore(c, end.firstChild); else if (cl && cl.parentNode) cl.parentNode.insertBefore(c, cl.nextSibling); else (d.querySelector('main') || d.body).appendChild(c);
+}
+function watch(c) {
+if (!window.IntersectionObserver) { mark({ s: 'shown', at: Date.now() }); return; }
+var vis = false, t = 0, io = new IntersectionObserver(function (es) { vis = es[es.length - 1].isIntersecting; check(); }, { threshold: [.6] });
+var check = function () {
+clearTimeout(t);
+if (!card || card !== c) { io.disconnect(); return; }
+if (vis && !de.hasAttribute('data-consent-ask') && !d.hidden) t = setTimeout(function () { mark({ s: 'shown', at: Date.now() }); io.disconnect(); mo.disconnect(); }, 1200);
+};
+var mo = new MutationObserver(check); mo.observe(de, { attributes: true, attributeFilter: ['data-consent-ask'] });
+io.observe(c);
+}
 function offer() {
 if (card || seen() || standalone() || !(deferred || ios)) return;
-mark({ s: 'shown', at: Date.now() });   // shown once: never again, whatever the reader does
 var ldr = d.createElement('link'); ldr.rel = 'stylesheet'; ldr.href = U.css;
 var build = function () {
-card = d.createElement('section'); card.className = 'kp-install'; card.setAttribute('role', 'region'); card.setAttribute('aria-labelledby', 'kpi-h'); card.lang = lang;
+if (card || seen()) return;
+card = d.createElement('section'); card.className = 'kp-install kp-install--inline'; card.setAttribute('role', 'region'); card.setAttribute('aria-labelledby', 'kpi-h'); card.lang = lang;
 var use = deferred, ic = '<svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5c1.6 2.1 2.4 3.7 2.4 5a2.4 2.4 0 1 1-4.8 0c0-1.3.8-2.9 2.4-5Z"/><path d="M4 14.5h16c-.6 3.3-4 5.5-8 5.5s-7.4-2.2-8-5.5Z"/></svg>';
 card.innerHTML = '<span class="kp-i-ic" aria-hidden="true">' + ic + '</span><div class="kp-i-tx"><h2 id="kpi-h"></h2><p class="kp-i-p" aria-live="polite"></p></div><div class="kp-i-btns"><button type="button" class="kp-i-go"></button><button type="button" class="kp-i-no"></button></div>';
 card.querySelector('h2').textContent = T.installTitle; card.querySelector('.kp-i-p').textContent = use ? T.installBody : T.installIos;
 var go = card.querySelector('.kp-i-go'), no = card.querySelector('.kp-i-no'); no.textContent = T.installNo;
 if (use) go.textContent = T.installYes; else go.remove();
-var dismiss = function () { mark({ s: 'declined', at: Date.now() }); d.removeEventListener('keydown', esc); close(); };
-var esc = function (e) { if (e.key === 'Escape' && card) dismiss(); };
+var dismiss = function () { mark({ s: 'declined', at: Date.now() }); close(); };
 no.addEventListener('click', dismiss);
 go.addEventListener('click', function () {
 if (!use) return; use.prompt(); use.userChoice.then(function (r) { mark({ s: r && r.outcome === 'accepted' ? 'done' : 'declined', at: Date.now() }); deferred = null; if (r && r.outcome === 'accepted') { card.querySelector('.kp-i-p').textContent = T.installDone; go.remove(); setTimeout(close, 2200); } else close(); }, close);
 });
-d.addEventListener('keydown', esc);   // Escape anywhere on the page, not only once focus is inside the card
-d.body.appendChild(card);
-var bar = d.querySelector('[data-consent]:not([hidden])'); if (bar) card.style.setProperty('--kp-lift', bar.getBoundingClientRect().height + 8 + 'px');
-requestAnimationFrame(function () { requestAnimationFrame(function () { card && card.classList.add('is-in'); }); });
+place(card); watch(card);
+var c = card; requestAnimationFrame(function () { requestAnimationFrame(function () { c.classList.add('is-in'); }); });
 };
 ldr.onload = build; ldr.onerror = build; d.head.appendChild(ldr);
 }
-var finished = false, endEl = d.querySelector('.cx-the-end') || d.querySelector('[data-done-line]'), endT = 0;
-function arm() {
-if (!endEl || !window.IntersectionObserver || seen()) return;
-var io = new IntersectionObserver(function (es) {
-es.forEach(function (en) {
-clearTimeout(endT);
-var seen = en.intersectionRect.height, need = Math.min(.6 * en.boundingClientRect.height, .5 * innerHeight);
-if (en.isIntersecting && seen >= need - 1 && finished) { endT = setTimeout(function () { io.disconnect(); offer(); }, 1500); }
-});
-}, { threshold: [0, .1, .2, .3, .4, .5, .6, .7, .8, .9, 1] });
-io.observe(endEl);
-}
+var finished = false;
+function arm() { if (!seen()) setTimeout(offer, 600); }
 d.addEventListener('spritual:story', function (e) {
 if (!e.detail || e.detail.kind !== 'complete') return;
 finished = true; arm();

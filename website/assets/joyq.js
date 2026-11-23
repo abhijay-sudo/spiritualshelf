@@ -7,7 +7,7 @@
   const open = document.querySelector('.cx-home .cx-open');
   if (!open) return;
   const playing = () => root.classList.contains('cx-js') && !root.classList.contains('cx-seen');
-  const tk = matchMedia('(max-width: 759px), (orientation: landscape) and (max-height: 520px)').matches ? .6 : 1;
+  const tk = matchMedia('(max-width: 759px), (orientation: landscape) and (max-height: 520px)').matches ? .6 : .7;   // [joyHH] desktop pace .7 (matches --tk in joyhh.css)
   const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
   const titles = playing();
 

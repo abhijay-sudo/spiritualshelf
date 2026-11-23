@@ -99,3 +99,21 @@ html[lang="hi"] .shr-toast { font-family: "Mukta", var(--cx-ui, sans-serif); }
 :root[data-motion="reduce"] dialog.shr { opacity: 1; transform: none; }
 :root[data-motion="reduce"] dialog.shr::backdrop { opacity: 1; }
 @media print { dialog.shr, .sh-glyph, .sh-rail { display: none !important; } }
+
+/* [fixS] the chosen line carries a small mark as well as the gold edge (so it does not rest on colour alone), the list fades where more
+   lines wait below it, and on a short screen the picture and the buttons give room to the lines */
+.shr-line { position: relative; }
+.shr-line[aria-checked="true"] { padding-right: 2.4rem; }
+.shr-line[aria-checked="true"]::after { content: ""; position: absolute; right: 1rem; top: 50%; width: .5rem; height: .9rem; margin-top: -.62rem; border: solid #e9c98c; border-width: 0 2px 2px 0; transform: rotate(45deg); opacity: .95; }
+.shr-ctl.has-more { -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 2.2rem), transparent); mask-image: linear-gradient(to bottom, #000 calc(100% - 2.2rem), transparent); }
+.shr-ctl.has-above { -webkit-mask-image: linear-gradient(to bottom, transparent, #000 1.6rem); mask-image: linear-gradient(to bottom, transparent, #000 1.6rem); }
+.shr-ctl.has-above.has-more { -webkit-mask-image: linear-gradient(to bottom, transparent, #000 1.6rem, #000 calc(100% - 2.2rem), transparent); mask-image: linear-gradient(to bottom, transparent, #000 1.6rem, #000 calc(100% - 2.2rem), transparent); }
+@media (max-height: 760px) and (max-width: 859px) {
+  .shr-cv { max-height: 24dvh; }
+  .shr-stage { padding-bottom: .5rem; }
+  .shr-k { margin-top: .8rem; }
+  .shr-seg button { min-height: 44px; }
+  .shr-btns[data-mode="save"] .shr-alt, .shr-alt { flex: 1 1 calc(50% - .3rem); }
+  .shr-btns[data-mode="save"] .shr-go { flex-basis: 100%; }
+  .shr-go { min-height: 46px; }
+}

@@ -10,7 +10,8 @@
   if (!reduced()) root.classList.add('cx-js'); else root.classList.remove('cx-js');
   // phones and short landscape screens play a shorter title sequence (mobile.css): its clock runs at this pace here too
   const pocket = matchMedia('(max-width: 759px), (orientation: landscape) and (max-height: 520px)').matches;
-  const titlePace = pocket ? .6 : 1;   // [joyQ] the festival-night sequence runs at this pace on a phone (--tk in joyq.css)
+  const titlePace = pocket ? .6 : .7;   // [joyHH] 6 s on a desktop too (was 8.5)
+  // [joyQ] the festival-night sequence runs at this pace (--tk in joyq.css, overridden for desktop in joyhh.css)
 
   /* ---------- One scroll loop for everything that follows the scroll ---------- */
   const jobs = [];
@@ -159,7 +160,7 @@
     let lastX = -1, lastY = -1; const moved = (e) => e.clientX !== lastX || e.clientY !== lastY;
     addEventListener('pointermove', (e) => { lastX = e.clientX; lastY = e.clientY; }, { passive: true });
     const T = (k) => $(`[data-sel-${k}]`, sel);
-    const out = { n: T('n'), coll: T('coll'), title: T('title'), sum: T('sum'), min: T('min'), scenes: T('scenes'), go: T('go'), hero: T('hero'), name: T('name'), who: T('who'), chips: T('chips'), goT: $('[data-sel-go-t]', sel), story: T('story'), storyT: $('[data-sel-story-t]', sel) };
+    const out = { n: T('n'), coll: T('coll'), title: T('title'), sum: T('sum'), min: T('min'), scenes: T('scenes'), go: T('go'), hero: T('hero'), name: T('name'), who: T('who'), chips: T('chips'), goT: $('[data-sel-go-t]', sel), story: T('story'), storyT: $('[data-sel-story-t]', sel), storyN: $('[data-sel-story-n]', sel) };
     const whoLabel = out.who ? out.who.textContent.replace(out.name ? out.name.textContent : '', '').trim() : '';
     const layers = $$('.cx-sel-bg img', sel); const fig = $('[data-sel-fig]', sel); const auto = $('[data-sel-auto]', sel);
     // on a phone the frame is tall and narrow: the camera goes to the character's face, not the middle of the figure
@@ -199,7 +200,8 @@
       out.title.setAttribute('aria-label', d.title);
       if (out.chips) out.chips.innerHTML = d.chips || '';   // built by the site's own generator (escaped there)
       out.go.href = t.href; out.go.setAttribute('aria-label', d.meet || d.title); if (out.goT) out.goT.textContent = d.meet || d.title;
-      if (out.story && d.story) { out.story.href = d.story; out.story.setAttribute('aria-label', `${out.storyT ? out.storyT.textContent : ''}: ${d.storyT || ''}`); }
+      if (out.story && d.story) { out.story.href = d.story; if (out.storyN) out.storyN.textContent = (d.storyT || '').replace(/ (\S+)$/u, '\u00a0$1');   // [joyHH] the button names the story it opens
+        out.story.setAttribute('aria-label', `${out.storyT ? out.storyT.textContent : ''}: ${d.storyT || ''}`); }
       // a character with a cut-out portrait steps in front of their world; one painted inside a scene is found by the
       // camera instead: the world itself pushes in on them, and the words move to the other side
       const scene = d.mode === 'scene'; const wasCut = !sel.classList.contains('is-scene');
@@ -492,11 +494,24 @@
   if ($('.cx-home .cx-spark') && root.classList.contains('cx-js') && !root.classList.contains('cx-seen')) {
     const evs = ['pointerdown', 'keydown', 'wheel', 'touchstart'];
     const skip = $('[data-intro-skip]');
-    const done = () => { const had = skip && document.activeElement === skip; root.classList.add('cx-seen'); if (had) { for (const to of [$('.cx-home .cx-cue'), $('.cx-home h1')]) { if (!to) continue; if (!to.matches('a,button')) to.tabIndex = -1; try { to.focus({ preventScroll: true }); } catch (e) {} if (document.activeElement === to) break; } } evs.forEach((n) => removeEventListener(n, done)); };
+    // [fixA G08] The pill is the one stop in reach during the titles. Any key used to end the sequence on the spot, so a
+    // keyboard reader never met it (the first Tab ended the intro and landed on the page's first link). Now Tab (or
+    // Shift+Tab) lands on "Skip intro", Enter, Space or Esc skip, any other key still skips, and the header, the page's
+    // "Skip to content" link and the opening's own buttons are inert, so Tab cannot wander under the curtain, until the
+    // sequence is over (released by done(), or by the timer below).
+    const under = [$('.ed-head'), $('.skip'), $('.cx-home .cx-open-card'), $('.cx-home .cx-open-foot'), ...$$('main.cx-home > *:not(.cx-open)')].filter((x) => x && !x.contains(skip));
+    const rest = () => { for (const x of under) x.inert = false; };
+    if (skip && !skip.hidden) for (const x of under) x.inert = true;
+    const hold = (e) => {
+      if (e.key !== 'Tab' || e.ctrlKey || e.altKey || e.metaKey || !skip || skip.hidden || document.activeElement === skip) return;
+      e.preventDefault(); e.stopImmediatePropagation(); skip.focus({ preventScroll: true });
+    };
+    addEventListener('keydown', hold, true);
+    const done = () => { const had = skip && document.activeElement === skip; root.classList.add('cx-seen'); rest(); removeEventListener('keydown', hold, true); if (had) { for (const to of [$('.cx-home .cx-cue'), $('.cx-home h1')]) { if (!to) continue; if (!to.matches('a,button')) to.tabIndex = -1; try { to.focus({ preventScroll: true }); } catch (e) {} if (document.activeElement === to) break; } } evs.forEach((n) => removeEventListener(n, done)); };
     evs.forEach((n) => addEventListener(n, done, { passive: true }));
     // the visible "Skip intro" pill (phones) does the same, and leaves once the sequence is over
     skip?.addEventListener('click', done);
-    setTimeout(() => { evs.forEach((n) => removeEventListener(n, done)); if (skip) skip.hidden = true; }, pocket ? Math.max(0, 5600 - performance.now()) : 9000);   // [joyQ] the sequence now runs about 8.5 s (5 s on a phone)
+    setTimeout(() => { evs.forEach((n) => removeEventListener(n, done)); rest(); removeEventListener('keydown', hold, true); if (skip) skip.hidden = true; }, pocket ? Math.max(0, 5600 - performance.now()) : 6600);   // [joyQ] the sequence now runs about 8.5 s (5 s on a phone)
   }
 
   /* ---------- Theatre: the poster under the pointer leans toward it and catches the light ---------- */

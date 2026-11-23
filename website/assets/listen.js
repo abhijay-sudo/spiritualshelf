@@ -255,7 +255,7 @@
   };
   const closeNoVoice = (readIt, quiet) => {
     if (!noVoiceUp) return; noVoiceUp = false; $('.lst-nv', bar).hidden = true; $('.lst-row', bar).hidden = false; if (quiet) return; bar.dataset.state = 'idle'; show(false);
-    if (readIt && scrollY < innerHeight * .5) $('.cx-film-btns a[href="#page-1"]')?.click();
+    if (readIt && scrollY < innerHeight * .5) ($('.cx-film-btns a[href="#page-1"]') || $('.cx-film-btns a[data-resume]'))?.click();   /* [hfixR G17] the button reads "Resume from scene N" for a reader who has a place */
     btns[0]?.focus({ preventScroll: true });
   };
 

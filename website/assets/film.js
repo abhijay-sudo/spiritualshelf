@@ -6,8 +6,9 @@ const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v)), ss = (t) => t * 
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 const still = () => root.dataset.motion === 'reduce' || matchMedia('(prefers-reduced-motion: reduce)').matches;
 const low = () => still() || !!root.dataset.light;
+const SPK = '<svg viewBox="0 0 24 24" aria-hidden="true" class="fm-ic fm-spk"><path class="sp" d="M4 9.5v5h3.5l5 4v-13l-5 4H4Z"/><path class="wv" d="M16 9.5a3.5 3.5 0 0 1 0 5M18.5 7a7 7 0 0 1 0 10"/><path class="xx" d="M16.2 9.7l4.6 4.6M20.8 9.7l-4.6 4.6"/></svg>';
 const DIYA = (cls = '') => `<svg class="fm-diya ${cls}" viewBox="0 0 48 48" aria-hidden="true"><path class="fl" d="M24 4c4.2 6.2 6.6 9.8 6.6 13.9a6.6 6.6 0 0 1-13.2 0C17.4 13.8 19.8 10.2 24 4Z"/><path class="wk" d="M24 28v-4.5"/><path class="bw" d="M4 27c5.2 1.6 12 2.3 20 2.3S38.8 28.6 44 27c-1.2 8.3-8.6 14-20 14S5.2 35.3 4 27Z"/></svg>`;
-const langChip = () => { const a = d.querySelector('a.ed-lang[data-lang-switch]'); if (!a) return ''; const o = [...a.querySelectorAll('.ed-lang-opt')]; if (!o.length) return ''; const lbl = ($('.visually-hidden', a)?.textContent || '').replace(/^[\s—–-]+/, ''); return `<button type="button" class="fm-lang" data-fm-lang lang="${esc(a.getAttribute('lang') || '')}" aria-label="${esc(lbl)}" title="${esc(lbl)}">${o.map((x) => `<span class="fm-lang-o${x.classList.contains('ed-lang-cur') ? ' is-cur' : ''}" lang="${esc(x.lang)}" aria-hidden="true">${esc($('.l-s', x)?.textContent || x.textContent)}</span>`).join('')}</button>`; };
+const langChip = () => { const a = d.querySelector('a.ed-lang[data-lang-switch]'); if (!a) return ''; const o = [...a.querySelectorAll('.ed-lang-opt')]; if (!o.length) return ''; const hv = $('.visually-hidden', a), lbl = (hv?.textContent || '').replace(/^[\s—–-]+/, ''); return `<button type="button" class="fm-lang" data-fm-lang lang="${esc((hv && hv.getAttribute('lang')) || a.getAttribute('lang') || '')}" aria-label="${esc(lbl)}" title="${esc(lbl)}">${o.map((x) => `<span class="fm-lang-o${x.classList.contains('ed-lang-cur') ? ' is-cur' : ''}" lang="${esc(x.lang)}" aria-hidden="true">${esc($('.l-s', x)?.textContent || x.textContent)}</span>`).join('')}</button>`; };
 const LAMP = (id, cls = '') => `<svg class="fm-lampx ${cls}" viewBox="0 0 120 120" aria-hidden="true"><defs><radialGradient id="${id}h" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#ffd27a" stop-opacity=".55"/><stop offset=".35" stop-color="#ff9a3c" stop-opacity=".2"/><stop offset="1" stop-color="#ff8a2a" stop-opacity="0"/></radialGradient><linearGradient id="${id}c" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b9713f"/><stop offset=".5" stop-color="#8a4a26"/><stop offset="1" stop-color="#4a2412"/></linearGradient><linearGradient id="${id}f" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#ff8a1f"/><stop offset=".55" stop-color="#ffc24a"/><stop offset="1" stop-color="#fff0b8"/></linearGradient><radialGradient id="${id}o" cx="50%" cy="40%" r="60%"><stop offset="0" stop-color="#3a1c0c"/><stop offset="1" stop-color="#1c0d06"/></radialGradient></defs><circle class="lh" cx="60" cy="46" r="58" fill="url(#${id}h)"/><path class="lb" d="M14 74c10 3 26 4.6 46 4.6S96 77 106 74c-3 17-20 29-46 29S17 91 14 74Z" fill="url(#${id}c)"/><ellipse class="lo" cx="60" cy="74.5" rx="45.5" ry="6.4" fill="url(#${id}o)" stroke="#c98652" stroke-width="1.6"/><path class="ls" d="M24 84c8 9 21 13.5 36 13.5" fill="none" stroke="#e0a674" stroke-opacity=".35" stroke-width="1.6" stroke-linecap="round"/><path class="lw" d="M60 75v-8" stroke="#2a160b" stroke-width="2.4" stroke-linecap="round"/><g class="lf"><path d="M60 22c8.4 12.6 13.4 20 13.4 28.6a13.4 13.4 0 0 1-26.8 0C46.6 42 51.6 34.6 60 22Z" fill="url(#${id}f)"/><path d="M60 41c3.6 5.6 5.6 8.8 5.6 12.4a5.6 5.6 0 0 1-11.2 0C54.4 49.8 56.4 46.6 60 41Z" fill="#fff6d6" fill-opacity=".85"/></g></svg>`;
 const PAGE = '<svg viewBox="0 0 24 24" aria-hidden="true" class="fm-ic"><path d="M6.5 3.5h8l3.5 3.5v13.5h-11.5Z"/><path d="M9.5 11h5.5M9.5 14.5h5.5"/></svg>';
 const cssHref = $('script[data-film]')?.dataset.film;
@@ -59,7 +60,7 @@ const themes = $$('meta[name="theme-color"]'), themeWas = themes.map((m) => m.co
 const build = () => {
 built = true;
 stage = d.createElement('div'); stage.className = 'fm-stage'; stage.setAttribute('aria-hidden', 'true');
-const ly = '<div class="fm-ly"><div class="fm-cam"><img alt="" decoding="async"></div></div>';
+const ly = '<div class="fm-ly"><div class="fm-cam"><img alt="" decoding="async" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="></div></div>';
 stage.innerHTML = ly + ly + '<div class="fm-vig"></div><div class="fm-scrim"></div><i class="fm-sv"></i>';
 reader.prepend(stage);
 layers = $$('.fm-ly', stage).map((el) => ({ el, cam: $('.fm-cam', el), img: $('img', el), k: -1, s: '', q: null, z: -1, amp: 1, lv: null, deep: false }));
@@ -81,9 +82,9 @@ if (closeEl && $('.cb-in', closeEl)) add(closeEl, $('.cb-in', closeEl), 'close',
 endSec?.style.setProperty('--t', tints[N]); document.documentElement.style.setProperty('--fm-end', 'rgb(' + tints[N] + ')');   // [fixL G34] the footer's rise starts from the afterword's own tint
 const on = ctx.sound.on(), beads = $$('[data-bead]', reader), lbl = on ? UI.soundDrone : UI.soundOffLong;
 rail = d.createElement('nav'); rail.className = 'fm-rail'; rail.setAttribute('aria-label', F.fScenes || '');
-rail.innerHTML = `<button type="button" class="fm-lamp" data-sound aria-pressed="${on}" title="${esc(lbl)}">${DIYA()}<span class="visually-hidden">${esc(lbl)}</span></button><ol>${scenes.map((s, i) => `<li><a href="#page-${i + 1}" draggable="false" aria-label="${esc(beads[i]?.getAttribute('aria-label') || i + 1)}"><i></i></a></li>`).join('')}</ol><button type="button" data-fm="off" aria-label="${esc(F.fPaper)}" title="${esc(F.fPaper)}">${PAGE}</button>${langChip()}`;
+rail.innerHTML = `<button type="button" class="fm-lamp" data-sound aria-pressed="${on}" title="${esc(lbl)}">${SPK}<span class="visually-hidden">${esc(lbl)}</span></button><ol>${scenes.map((s, i) => `<li><a href="#page-${i + 1}" draggable="false" aria-label="${esc(beads[i]?.getAttribute('aria-label') || i + 1)}"><i></i></a></li>`).join('')}</ol><button type="button" data-fm="off" aria-label="${esc(F.fPaper)}" title="${esc(F.fPaper)}">${PAGE}</button>${langChip()}`;
 head.after(rail); ticks = $$('a i', rail); thread = $('ol', rail); links = $$('a', thread);
-peek = d.createElement('div'); peek.className = 'fm-peek'; peek.setAttribute('aria-hidden', 'true'); peek.innerHTML = '<img alt="" decoding="async" width="160" height="90"><span><i></i><b></b></span>'; rail.append(peek);
+peek = d.createElement('div'); peek.className = 'fm-peek'; peek.setAttribute('aria-hidden', 'true'); peek.innerHTML = '<img alt="" decoding="async" width="160" height="90" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="><span><i></i><b></b></span>'; rail.append(peek);
 const bi = (t) => links.indexOf(t?.closest?.('a'));
 thread.addEventListener('pointerover', (e) => { if (e.pointerType === 'mouse' && !drag?.on) { const i = bi(e.target); if (i >= 0) showPeek(i); } });
 thread.addEventListener('pointerleave', (e) => { if (e.pointerType === 'mouse' && !drag?.on) showPeek(-1); });
@@ -116,9 +117,11 @@ if (acts) for (const [v, t, c] of [['off', F.fPaper, ' fm-only'], ['on', F.fFilm
 };
 const fitRail = () => {
 if (!rail || !rail.offsetHeight) return; rail.style.setProperty('--fm-bead', '28px');
-const rest = rail.offsetHeight - links.length * 28, H = innerHeight, bead = clamp(Math.floor((H - 76 - rest) / links.length), 24, 28), rh = rest + links.length * bead;
-rail.style.setProperty('--fm-bead', bead + 'px'); rail.style.setProperty('--fm-rt', Math.round(clamp(H * .4, 64 + rh / 2, Math.max(64 + rh / 2, H - 12 - rh / 2))) + 'px');
+const aa = d.querySelector('.fm-aa'), aaTop = aa ? parseFloat(getComputedStyle(aa).top) || 10 : 6, clear = Math.max(64, Math.round(aaTop + 58 + 44 + 8));
+const rest = rail.offsetHeight - links.length * 28, H = innerHeight, bead = clamp(Math.floor((H - clear - 12 - rest) / links.length), 24, 28), rh = rest + links.length * bead;
+rail.style.setProperty('--fm-bead', bead + 'px'); rail.style.setProperty('--fm-rt', Math.round(clamp(H * .4, clear + rh / 2, Math.max(clear + rh / 2, H - 12 - rh / 2))) + 'px');
 };
+if (d.fonts && d.fonts.ready) d.fonts.ready.then(() => requestAnimationFrame(() => fitRail()));
 const measure = () => {
 const vh = innerHeight, sv = $('.fm-sv', stage).offsetHeight || vh; SV = sv;
 vw = stage.clientWidth; VH = stage.clientHeight;
@@ -193,7 +196,7 @@ const Y = scrollY + innerHeight; let q = null;
 for (const b of beats) if (b.k === k) { q = b.q; if (Y <= b.e + 2) break; }
 return q || keys[k - 1]?.[0];
 };
-const tier = () => { if (low() || root.dataset.lamp === 'on') return 0; /* [comfort] Night Lamp: no parallax, no scroll camera */ const m = navigator.deviceMemory || 4, c = navigator.hardwareConcurrency || 4; return m < 2 || c < 4 ? 0 : m >= 4 && window.WebGLRenderingContext && UI.livingJs ? 2 : 1; };
+const tier = () => { if (low() || root.dataset.lamp === 'on') return 0; /* [comfort] Night Lamp: no parallax, no scroll camera */ const m = navigator.deviceMemory || 4, c = navigator.hardwareConcurrency || 4; return m < 2 || c < 4 ? 0 : m >= 4 && window.WebGLRenderingContext && UI.livingJs && !(window.SpritualNet && window.SpritualNet.slow()) /* [perf G13] not on a slow or Save-Data line: the painting alone comes forward */ ? 2 : 1; };
 const flat = (l) => { if (l.deep) { l.lv.release(); l.deep = false; } };
 const lower = () => { dzT--; gN = gSum = gSlow = 0; layers.forEach((l) => { flat(l); l.z = -1; if (!dzT) l.img.style.transform = ''; }); kick(); };
 const deepen = (l) => {
@@ -237,7 +240,7 @@ Promise.race([Promise.all(ready), wait(4000)]).then(() => {
 loading = false; if (!active) return;
 pose(inc, poseOf(k), false); if (dzT) deepen(inc); inc.el.style.zIndex = 2; out.el.style.zIndex = 1; inc.el.style.setProperty('--dis', dis + 'ms'); inc.el.classList.toggle('fade', !was); inc.el.classList.add('on'); top ^= 1;
 const done = () => { out.el.classList.remove('on', 'fade'); out.k = -1; flat(out); busy = false; if (pending != null) { const p = pending; pending = null; cutTo(p); } };
-if (was) { first = false; live = true; root.classList.add('fm-live'); fitRail(); done(); kick(); }
+if (was) { first = false; live = true; root.classList.add('fm-live'); fitRail(); setTimeout(fitRail, 400); done(); kick(); }
 else { busy = true; if (ctx.sound.on()) ctx.sound.swell?.(); setTimeout(done, dis + 40); }
 pre(k + 1); sharpen(inc, k);
 });

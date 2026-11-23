@@ -5,7 +5,7 @@
 <id>https://spritual.co.in/hi/feed.xml</id>
 <link rel="self" type="application/atom+xml" href="https://spritual.co.in/hi/feed.xml"/>
 <link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/"/>
-<updated>2026-11-23T00:27:28Z</updated>
+<updated>2026-11-23T01:54:05Z</updated>
 <author><name>Spritual</name><uri>https://spritual.co.in/hi/about/</uri></author>
 <icon>https://spritual.co.in/favicon.ico</icon>
 <logo>https://spritual.co.in/assets/icons/icon-512.png</logo>
@@ -14,9 +14,72 @@
 <id>https://spritual.co.in/hi/collections/devi/books/devi-mahatmya/arcs/madhyama-charita/stories/devi-mahishasura/</id>
 <link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/collections/devi/books/devi-mahatmya/arcs/madhyama-charita/stories/devi-mahishasura/"/>
 <link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/collections/devi/books/devi-mahatmya/arcs/madhyama-charita/stories/devi-mahishasura/"/>
-<updated>2026-11-23T00:27:28Z</updated>
+<updated>2026-11-23T01:54:05Z</updated>
 <category term="devi"/>
 <summary>सब देवताओं का क्रोध एक देवी बन जाता है। सामने है महिषासुर, जिसने स्वर्ग छीना और जो लड़ते-लड़ते रूप बदलता है। देवी माहात्म्य के मध्यम चरित से।</summary>
+</entry>
+<entry>
+<title>छह माताओं के लिए छह मुख</title>
+<id>https://spritual.co.in/hi/collections/ganesha/books/shiva-purana/arcs/rudra-samhita/stories/kartikeya-six-faces/</id>
+<link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/collections/ganesha/books/shiva-purana/arcs/rudra-samhita/stories/kartikeya-six-faces/"/>
+<link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/collections/ganesha/books/shiva-purana/arcs/rudra-samhita/stories/kartikeya-six-faces/"/>
+<updated>2026-11-23T01:54:05Z</updated>
+<category term="ganesha"/>
+<summary>शिव का तेज न अग्नि सह पाए, न गंगा। सरकंडों में वह बालक बना, और छह माताएँ झगड़ पड़ीं कि गोद में कौन ले। शिव पुराण से।</summary>
+</entry>
+<entry>
+<title>खंभे में सिंह</title>
+<id>https://spritual.co.in/hi/collections/krishna/books/bhagavata-purana/arcs/skandha-7/stories/prahlada-the-pillar/</id>
+<link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/collections/krishna/books/bhagavata-purana/arcs/skandha-7/stories/prahlada-the-pillar/"/>
+<link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/collections/krishna/books/bhagavata-purana/arcs/skandha-7/stories/prahlada-the-pillar/"/>
+<updated>2026-11-23T01:54:05Z</updated>
+<category term="krishna"/>
+<summary>जिसे कोई प्राणी नहीं मार सकता, वह हिरण्यकशिपु पुत्र प्रह्लाद से पूछता है कि क्या उसका भगवान खंभे में है; तब नृसिंह प्रकट होते हैं। भागवत पुराण से।</summary>
+</entry>
+<entry>
+<title>सूरज को पकड़ने उछले हनुमान</title>
+<id>https://spritual.co.in/hi/collections/ramayana/books/valmiki-ramayana/arcs/kishkindha-kanda/stories/hanuman-reaches-for-the-sun/</id>
+<link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/collections/ramayana/books/valmiki-ramayana/arcs/kishkindha-kanda/stories/hanuman-reaches-for-the-sun/"/>
+<link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/collections/ramayana/books/valmiki-ramayana/arcs/kishkindha-kanda/stories/hanuman-reaches-for-the-sun/"/>
+<updated>2026-11-23T01:54:05Z</updated>
+<category term="ramayana"/>
+<summary>नवजात हनुमान उगते सूर्य को फल समझकर उछलते हैं; इंद्र का वज्र उन्हें गिरा देता है। बरसों बाद जांबवान याद दिलाते हैं कि वे कौन हैं। वाल्मीकि रामायण से।</summary>
+</entry>
+<entry>
+<title>यहीं से छलाँग शुरू हुई</title>
+<id>https://spritual.co.in/hi/collections/ramayana/books/valmiki-ramayana/arcs/kishkindha-kanda/stories/ramayana-trust-and-alliance/</id>
+<link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/collections/ramayana/books/valmiki-ramayana/arcs/kishkindha-kanda/stories/ramayana-trust-and-alliance/"/>
+<link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/collections/ramayana/books/valmiki-ramayana/arcs/kishkindha-kanda/stories/ramayana-trust-and-alliance/"/>
+<updated>2026-11-23T01:54:05Z</updated>
+<category term="ramayana"/>
+<summary>पंपा के तट पर हनुमान राम-लक्ष्मण से मिलते हैं, अग्नि की साक्षी में राम-सुग्रीव मैत्री होती है, वाली गिरता है, और जांबवान हनुमान को बल याद दिलाते हैं।</summary>
+</entry>
+<entry>
+<title>सागर पार, एक मुद्रिका</title>
+<id>https://spritual.co.in/hi/collections/ramayana/books/valmiki-ramayana/arcs/sundara-kanda/stories/ramayana-crossing-and-recognition/</id>
+<link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/collections/ramayana/books/valmiki-ramayana/arcs/sundara-kanda/stories/ramayana-crossing-and-recognition/"/>
+<link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/collections/ramayana/books/valmiki-ramayana/arcs/sundara-kanda/stories/ramayana-crossing-and-recognition/"/>
+<updated>2026-11-23T01:54:05Z</updated>
+<category term="ramayana"/>
+<summary>हनुमान समुद्र लाँघते हैं, सुरसा से बचते हैं, लंका में प्रवेश कर अशोक वाटिका में सीता को खोजते हैं और राम की मुद्रिका देते हैं। सुंदर कांड से।</summary>
+</entry>
+<entry>
+<title>हनुमान चालीसा</title>
+<id>https://spritual.co.in/hi/hanuman-chalisa/</id>
+<link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/hanuman-chalisa/"/>
+<link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/hanuman-chalisa/"/>
+<updated>2026-11-23T01:54:05Z</updated>
+<category term="hymn"/>
+<summary>गोस्वामी तुलसीदास कृत संपूर्ण हनुमान चालीसा: दो दोहे, चालीस चौपाइयाँ और अंतिम दोहा, हर पद के सरल हिन्दी अर्थ सहित।</summary>
+</entry>
+<entry>
+<title>रामचरितमानस: सुंदरकांड</title>
+<id>https://spritual.co.in/hi/ramcharitmanas/sundar-kand/</id>
+<link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/ramcharitmanas/sundar-kand/"/>
+<link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/ramcharitmanas/sundar-kand/"/>
+<updated>2026-11-23T01:54:05Z</updated>
+<category term="ramcharitmanas"/>
+<summary>तुलसीदास कृत रामचरितमानस का सुंदरकांड, दोहा 1–60, हिन्दी भावार्थ सहित, 16 प्रसंगों में: समुद्र-लंघन, सीता की खोज, लंका-दहन और विभीषण की शरणागति।</summary>
 </entry>
 <entry>
 <title>मिट्टी, नदी और देवी</title>
@@ -55,15 +118,6 @@
 <summary>कार्तिकेय पूरी पृथ्वी की परिक्रमा को निकलते हैं; गणेश माता-पिता शिव-पार्वती की सात परिक्रमाएँ करते हैं। शिव पुराण से, सचित्र।</summary>
 </entry>
 <entry>
-<title>छह माताओं के लिए छह मुख</title>
-<id>https://spritual.co.in/hi/collections/ganesha/books/shiva-purana/arcs/rudra-samhita/stories/kartikeya-six-faces/</id>
-<link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/collections/ganesha/books/shiva-purana/arcs/rudra-samhita/stories/kartikeya-six-faces/"/>
-<link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/collections/ganesha/books/shiva-purana/arcs/rudra-samhita/stories/kartikeya-six-faces/"/>
-<updated>2026-11-23T00:27:28Z</updated>
-<category term="ganesha"/>
-<summary>शिव का तेज न अग्नि सह पाए, न गंगा। सरकंडों में वह बालक बना, और छह माताएँ झगड़ पड़ीं कि गोद में कौन ले। शिव पुराण से।</summary>
-</entry>
-<entry>
 <title>जब गिरिधर ने पर्वत उठाया</title>
 <id>https://spritual.co.in/hi/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-mountain/</id>
 <link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-mountain/"/>
@@ -80,15 +134,6 @@
 <updated>2026-11-23T00:27:28Z</updated>
 <category term="krishna"/>
 <summary>पाँच वर्ष की आयु में पिता की गोद से ठुकराया गया ध्रुव वन में तप करता है, जब तक विष्णु प्रकट होकर उसे ध्रुव तारे का स्थान नहीं देते।</summary>
-</entry>
-<entry>
-<title>खंभे में सिंह</title>
-<id>https://spritual.co.in/hi/collections/krishna/books/bhagavata-purana/arcs/skandha-7/stories/prahlada-the-pillar/</id>
-<link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/collections/krishna/books/bhagavata-purana/arcs/skandha-7/stories/prahlada-the-pillar/"/>
-<link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/collections/krishna/books/bhagavata-purana/arcs/skandha-7/stories/prahlada-the-pillar/"/>
-<updated>2026-11-23T00:27:28Z</updated>
-<category term="krishna"/>
-<summary>जिसे कोई प्राणी नहीं मार सकता, वह हिरण्यकशिपु पुत्र प्रह्लाद से पूछता है कि क्या उसका भगवान खंभे में है; तब नृसिंह प्रकट होते हैं। भागवत पुराण से।</summary>
 </entry>
 <entry>
 <title>होलिका की गोद में</title>
@@ -188,33 +233,6 @@
 <updated>2026-11-23T00:27:28Z</updated>
 <category term="ramayana"/>
 <summary>दूत अयोध्या पहुँचते हैं: राम ने सीता को जीत लिया है। कुछ दिन बाद मिथिला में चारों राजकुमारों का विवाह होता है। वाल्मीकि रामायण के बालकांड से।</summary>
-</entry>
-<entry>
-<title>सूरज को पकड़ने उछले हनुमान</title>
-<id>https://spritual.co.in/hi/collections/ramayana/books/valmiki-ramayana/arcs/kishkindha-kanda/stories/hanuman-reaches-for-the-sun/</id>
-<link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/collections/ramayana/books/valmiki-ramayana/arcs/kishkindha-kanda/stories/hanuman-reaches-for-the-sun/"/>
-<link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/collections/ramayana/books/valmiki-ramayana/arcs/kishkindha-kanda/stories/hanuman-reaches-for-the-sun/"/>
-<updated>2026-11-23T00:27:28Z</updated>
-<category term="ramayana"/>
-<summary>नवजात हनुमान उगते सूर्य को फल समझकर उछलते हैं; इंद्र का वज्र उन्हें गिरा देता है। बरसों बाद जांबवान याद दिलाते हैं कि वे कौन हैं। वाल्मीकि रामायण से।</summary>
-</entry>
-<entry>
-<title>यहीं से छलाँग शुरू हुई</title>
-<id>https://spritual.co.in/hi/collections/ramayana/books/valmiki-ramayana/arcs/kishkindha-kanda/stories/ramayana-trust-and-alliance/</id>
-<link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/collections/ramayana/books/valmiki-ramayana/arcs/kishkindha-kanda/stories/ramayana-trust-and-alliance/"/>
-<link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/collections/ramayana/books/valmiki-ramayana/arcs/kishkindha-kanda/stories/ramayana-trust-and-alliance/"/>
-<updated>2026-11-23T00:27:28Z</updated>
-<category term="ramayana"/>
-<summary>पंपा के तट पर हनुमान राम-लक्ष्मण से मिलते हैं, अग्नि की साक्षी में राम-सुग्रीव मैत्री होती है, बालि गिरता है, और जांबवान हनुमान को बल याद दिलाते हैं।</summary>
-</entry>
-<entry>
-<title>सागर पार, एक मुद्रिका</title>
-<id>https://spritual.co.in/hi/collections/ramayana/books/valmiki-ramayana/arcs/sundara-kanda/stories/ramayana-crossing-and-recognition/</id>
-<link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/collections/ramayana/books/valmiki-ramayana/arcs/sundara-kanda/stories/ramayana-crossing-and-recognition/"/>
-<link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/collections/ramayana/books/valmiki-ramayana/arcs/sundara-kanda/stories/ramayana-crossing-and-recognition/"/>
-<updated>2026-11-23T00:27:28Z</updated>
-<category term="ramayana"/>
-<summary>हनुमान समुद्र लाँघते हैं, सुरसा से बचते हैं, लंका में प्रवेश कर अशोक वाटिका में सीता को खोजते हैं और राम की मुद्रिका देते हैं। सुंदर कांड से।</summary>
 </entry>
 <entry>
 <title>जिस दिन लंका जली</title>
@@ -341,15 +359,6 @@
 <updated>2026-11-23T00:27:28Z</updated>
 <category term="ramcharitmanas"/>
 <summary>गोस्वामी तुलसीदास कृत रामचरितमानस का लंकाकांड ऑनलाइन, दोहा 1–121 का पूरा पद्य-पाठ: सेतु-बंध, युद्ध और रावण का अंत।</summary>
-</entry>
-<entry>
-<title>रामचरितमानस: सुंदरकांड</title>
-<id>https://spritual.co.in/hi/ramcharitmanas/sundar-kand/</id>
-<link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/ramcharitmanas/sundar-kand/"/>
-<link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/ramcharitmanas/sundar-kand/"/>
-<updated>2026-11-23T00:27:28Z</updated>
-<category term="ramcharitmanas"/>
-<summary>तुलसीदास कृत रामचरितमानस का सुंदरकांड, दोहा 1–60, हिन्दी भावार्थ सहित, 16 प्रसंगों में: समुद्र-लंघन, सीता की खोज, लंका-दहन और विभीषण की शरणागति।</summary>
 </entry>
 <entry>
 <title>रामचरितमानस: उत्तरकांड</title>
@@ -494,15 +503,6 @@
 <updated>2026-11-13T11:33:20Z</updated>
 <category term="mahabharata"/>
 <summary>इंद्र का रथ युधिष्ठिर को सदेह स्वर्ग ले जाने आता है, एक शर्त पर: साथ चल रहे कुत्ते को छोड़ दो। महाभारत के महाप्रस्थानिक पर्व से।</summary>
-</entry>
-<entry>
-<title>हनुमान चालीसा</title>
-<id>https://spritual.co.in/hi/hanuman-chalisa/</id>
-<link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/hanuman-chalisa/"/>
-<link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/hanuman-chalisa/"/>
-<updated>2026-11-13T08:32:15Z</updated>
-<category term="hymn"/>
-<summary>गोस्वामी तुलसीदास कृत संपूर्ण हनुमान चालीसा: दो दोहे, चालीस चौपाइयाँ और अंतिम दोहा, हर पद के सरल हिन्दी अर्थ सहित।</summary>
 </entry>
 <entry>
 <title>दो सेनाओं के बीच गूँजा गीत</title>

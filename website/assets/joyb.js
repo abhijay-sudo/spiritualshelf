@@ -11,10 +11,10 @@
   const del = (k) => { try { localStorage.removeItem('spritual:' + k); } catch {} };
   const still = () => root.dataset.motion === 'reduce' || matchMedia('(prefers-reduced-motion: reduce)').matches;
   const S = hi ? {
-    pick: (n) => `दृश्य ${n} से आगे पढ़ें?`, again: 'फिर से आरंभ करें', arc: (n, t) => `दृश्य ${n} / ${t} तक पढ़ी`, done: 'पूरी पढ़ी हुई कथा', capArc: (n, t) => `दृश्य ${n} / ${t}`, capDone: 'पूरी पढ़ी',
+    pick: (n) => `दृश्य ${n} से आगे पढ़ें?`, resume: (n) => `दृश्य ${n} से आगे पढ़ें`, again: 'फिर से आरंभ करें', arc: (n, t) => `दृश्य ${n} / ${t} तक पढ़ी`, done: 'पूरी पढ़ी हुई कथा', capArc: (n, t) => `दृश्य ${n} / ${t}`, capDone: 'पूरी पढ़ी',
     forgot: 'आपकी जगहें भुला दी गईं।', gone: 'हटा दिया गया।', remove: 'हटाएँ',
   } : {
-    pick: (n) => `Pick up at scene ${n}?`, again: 'Start again', arc: (n, t) => `Read to scene ${n} of ${t}`, done: 'A story you have finished', capArc: (n, t) => `Scene ${n} of ${t}`, capDone: 'Finished',
+    pick: (n) => `Pick up at scene ${n}?`, resume: (n) => `Resume from scene ${n}`, again: 'Start again', arc: (n, t) => `Read to scene ${n} of ${t}`, done: 'A story you have finished', capArc: (n, t) => `Scene ${n} of ${t}`, capDone: 'Finished',
     forgot: 'Your places are forgotten.', gone: 'Removed.', remove: 'Remove',
   };
   // [fixS] straight quotes and apostrophes, set as the page sets them (Rama's, "word"): a line kept before the build did this still reads right
@@ -66,15 +66,18 @@
   if (reader) {
     const slug = reader.dataset.slug, btns = $('.cx-film-btns'), pl = places(), p = pl[slug];
     if (btns && p && !p.d && p.s >= 2 && p.s <= p.t && !/^#page-/.test(location.hash) && $(`#page-${p.s}`)) {
+      // [hfixR G17] the primary button itself becomes "Resume from scene N" (it ignored the saved place and said "Begin the story"); the line beside it keeps only "Start again"
+      const prim = $('a[href="#page-1"]', btns); if (prim) prim.dataset.begin = prim.textContent; const pickA = $(`#page-${p.s}`) ? true : false;
+      if (prim && pickA) { prim.href = `#page-${p.s}`; prim.textContent = S.resume(p.s); prim.setAttribute('data-resume', String(p.s)); prim.addEventListener('click', () => { d.dispatchEvent(new CustomEvent('spritual:pickup')); }); }
       const el = d.createElement('p'); el.className = 'pk'; el.setAttribute('role', 'group'); el.setAttribute('aria-label', S.pick(p.s));
-      el.innerHTML = `<a href="#page-${p.s}"></a><button type="button"></button>`; $('a', el).textContent = nbsp(S.pick(p.s)); $('button', el).textContent = S.again;
+      el.innerHTML = `<button type="button"></button>`; $('button', el).textContent = S.again;
       btns.after(el); root.classList.add('pk-in');
       const off = () => { el.classList.remove('is-on'); el.classList.add('is-off'); setTimeout(() => { if (!el.contains(d.activeElement)) { el.inert = true; el.hidden = true; root.classList.remove('pk-can', 'pk-in'); } }, still() ? 0 : 700); };
       requestAnimationFrame(() => setTimeout(() => { el.classList.add('is-on'); }, still() ? 0 : 900));
-      $('a', el).addEventListener('click', () => { d.dispatchEvent(new CustomEvent('spritual:pickup')); setTimeout(off, 300); });
+      prim?.addEventListener('click', () => setTimeout(off, 300));
       $('button', el).addEventListener('click', () => {
         const all = get('places', {}); delete all[slug]; set('places', all); const last = get('last', null); if (last && last.slug === slug) del('last');
-        off(); $('.cx-film-btns a[href="#page-1"]')?.focus({ preventScroll: true });
+        if (prim) { prim.href = '#page-1'; prim.textContent = prim.dataset.begin || prim.textContent; prim.removeAttribute('data-resume'); } off(); prim?.focus({ preventScroll: true });
       });
     } else root.classList.remove('pk-can');   // boot.js held room for a line that will not come
   }

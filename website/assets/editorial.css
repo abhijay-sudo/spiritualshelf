@@ -412,7 +412,7 @@ main:not(.ed-home) > .wrap:last-child, main:not(.ed-home) > .block:last-child { 
    so the first cards are within a thumb's reach of the box and the result of typing shows at once */
 @media (max-width: 640px) {
   .ed-lib .filters { gap: 1rem; padding-block: 1.2rem; margin-bottom: 1.75rem; }
-  .ed-lib .filters .chips { flex-wrap: nowrap; overflow-x: auto; margin-inline: -1rem; padding: .2rem 1rem .35rem; scrollbar-width: none; overscroll-behavior-x: contain; scroll-padding-inline: 1rem; }
+  .ed-lib .filters .chips { flex-wrap: nowrap; overflow-x: auto; margin-inline: calc(-1 * var(--ed-gut)) calc(-1 * var(--ed-gut-r)); padding: .2rem var(--ed-gut-r) .35rem var(--ed-gut); scrollbar-width: none; overscroll-behavior-x: contain; scroll-padding-inline: var(--ed-gut) var(--ed-gut-r); } /* [fixL] bleed by exactly the page gutter (1rem is 17px here, the gutter is 16px: that was the 1px sideways scroll) */
   .ed-lib .filters .chips::-webkit-scrollbar { display: none; }
   .ed-lib .filters .chip { flex: none; }
   .ed-lib .filters .filter-row { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .75rem; }

@@ -1,0 +1,49 @@
+/* [joyHH] Home: opening pace and hand-off, "Continue reading" room, the character strip's realm chips, the story button.
+   Loaded after joyq.css / joyh.css on the home page only. Everything moved here is transform / opacity only. */
+
+/* ---------- the title sequence: about 6 s on a desktop (it was 8.5), 5 s on a phone as before (--tk scales every time in joyq.css) ---------- */
+:root { --tk: .7; }
+@media (max-width: 759px), (orientation: landscape) and (max-height: 520px) { :root { --tk: .6; } }
+
+/* the four sources are gone before the name begins: they leave at 4.3 s (0.6 s), the name starts at 5.25 s, so the two are never on screen together */
+.cx-chant::before { animation: cx-appear calc(var(--tk) * .9s) ease-out calc(var(--tk) * 2.4s) forwards, cx-chant-out calc(var(--tk) * .6s) ease-in calc(var(--tk) * 4.3s) forwards; }
+.cx-chant-in { animation: cx-chant-out calc(var(--tk) * .6s) ease-in calc(var(--tk) * 4.3s) forwards; }
+
+/* the name inks in from its middle outward (--c is each letter's distance from the centre, set by the build), so what is on screen at any moment is centred */
+:root.cx-js:not(.cx-seen) .cx-home .cx-open .cx-wm-l > span { animation-delay: calc(var(--tk) * (5.25s + var(--c, 0) * .17s)); }
+/* ...and it is centred: its last letter carries the letter-spacing, which used to push the whole word to the right of the page's middle */
+.cx-home .cx-open .cx-wm { margin-right: -.07em; }
+
+/* Skip: a real touch target with readable type */
+:root.cx-js:not(.cx-seen) .cx-home .cx-intro-skip:not([hidden]) { font-size: .95rem; min-height: 44px; padding-inline: 1.05rem .9rem; }
+
+/* ---------- a returning reader's "Continue reading" card is put in by script after the first paint: its room is kept from the start (boot.js sets cx-has-last) ---------- */
+:root { --cont-h: 108px; }
+@media (min-width: 1000px) { :root { --cont-h: 128px; } }
+:root.cx-has-last .cx-open-side { min-height: var(--cont-h); align-content: end; }
+/* between 760 and 1049 px the buttons and the card only just share a row, and the row broke in two once the real font arrived: with a card to come they stack from the start */
+@media (min-width: 760px) and (max-width: 1049px) { :root.cx-has-last .cx-open-foot { grid-template-columns: minmax(0, 1fr); } :root.cx-has-last .cx-open-side { width: min(100%, 26rem); } }
+/* the card itself has that one height whatever the story's name or the language (a long name is cut with an ellipsis), so the room kept and the card that arrives are the same size */
+:root .cx-open .cx-continue:not([hidden]), :root .cx-open .cx-continue:not([hidden]):not(:has(.continue-pic[hidden])) { height: var(--cont-h); min-height: var(--cont-h); box-sizing: border-box; }
+:root .cx-open .cx-continue:not([hidden]) strong, :root .cx-open .cx-continue:not([hidden]):not(:has(.continue-pic[hidden])) strong { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* ---------- the story button says which story it opens ---------- */
+.cx-select .cx-sel-btns .cx-sel-story { flex-direction: column; gap: .12rem; }
+.cx-select .cx-sel-btns .cx-sel-story .cx-sel-story-n { display: block; max-width: 15rem; font: 500 12px/1.25 var(--cx-ui); letter-spacing: 0; white-space: normal; text-wrap: balance; text-align: center; color: color-mix(in oklab, var(--sel-glow) 40%, #f3e7d3); opacity: .9; }
+html[lang="hi"] .cx-select .cx-sel-btns .cx-sel-story .cx-sel-story-n { font: 500 13px/1.4 "Mukta", var(--cx-ui); }
+.cx-select .cx-sel-btns .cx-sel-story .cx-sel-story-n:empty { display: none; }
+
+/* ---------- the realm chips ---------- */
+/* the glow of the chosen chip was cut to a hard box by the scrolling strip it sits in */
+@media (max-width: 699px) { .cx-select .cx-sel-realm.is-on { box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--sel-glow) 35%, transparent); } }
+/* on a phone the three chips share the width and nothing is hidden or needs a swipe: a name that is long wraps to two lines */
+@media (max-width: 519px) {
+  .cx-select .cx-sel-realms { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .35rem; overflow: visible; scroll-snap-type: none; -webkit-mask-image: none; mask-image: none; padding: .1rem 0 .2rem; flex: 0 0 100%; }
+  .cx-select .cx-sel-realm, html[lang="hi"] .cx-select .cx-sel-realm { flex: none; min-width: 0; min-height: 44px; padding: .25rem .3rem; justify-content: center; text-align: center; font-size: 13.5px; line-height: 1.2; letter-spacing: 0; }
+  html[lang="hi"] .cx-select .cx-sel-realm { font-size: 15px; }
+  .cx-select .cx-sel-realm-pic { display: none; }
+  .cx-select .cx-sel-realm-w { align-items: center; text-align: center; }
+  .cx-select .cx-sel-realm-t { white-space: normal; text-wrap: balance; overflow-wrap: normal; }
+}
+/* the chosen tile keeps to its own cell: it lifts, and no longer also grows into its neighbour */
+@media (max-width: 699px) { :root.cx-js .cx-select .cx-sel-grid[data-sel-grid] .cx-sel-tile.is-on { scale: 1; } }

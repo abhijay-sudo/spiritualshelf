@@ -5,10 +5,55 @@
 <id>https://spritual.co.in/feed.xml</id>
 <link rel="self" type="application/atom+xml" href="https://spritual.co.in/feed.xml"/>
 <link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/"/>
-<updated>2026-11-23T00:27:28Z</updated>
+<updated>2026-11-23T01:54:05Z</updated>
 <author><name>Spritual</name><uri>https://spritual.co.in/about/</uri></author>
 <icon>https://spritual.co.in/favicon.ico</icon>
 <logo>https://spritual.co.in/assets/icons/icon-512.png</logo>
+<entry>
+<title>Six faces for six mothers</title>
+<id>https://spritual.co.in/collections/ganesha/books/shiva-purana/arcs/rudra-samhita/stories/kartikeya-six-faces/</id>
+<link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/collections/ganesha/books/shiva-purana/arcs/rudra-samhita/stories/kartikeya-six-faces/"/>
+<link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/collections/ganesha/books/shiva-purana/arcs/rudra-samhita/stories/kartikeya-six-faces/"/>
+<updated>2026-11-23T01:54:05Z</updated>
+<category term="ganesha"/>
+<summary>Shiva’s fire is too fierce for Agni and for Ganga. In a thicket of reeds it becomes a boy, and six mothers quarrel over him. From the Shiva Purana.</summary>
+</entry>
+<entry>
+<title>The Lion in the Pillar</title>
+<id>https://spritual.co.in/collections/krishna/books/bhagavata-purana/arcs/skandha-7/stories/prahlada-the-pillar/</id>
+<link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/collections/krishna/books/bhagavata-purana/arcs/skandha-7/stories/prahlada-the-pillar/"/>
+<link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/collections/krishna/books/bhagavata-purana/arcs/skandha-7/stories/prahlada-the-pillar/"/>
+<updated>2026-11-23T01:54:05Z</updated>
+<category term="krishna"/>
+<summary>Hiranyakashipu, who no creature can kill, asks his son Prahlad if his god is in the pillar; Narasimha steps out. From the Bhagavata Purana.</summary>
+</entry>
+<entry>
+<title>Across the sea, a ring</title>
+<id>https://spritual.co.in/collections/ramayana/books/valmiki-ramayana/arcs/sundara-kanda/stories/ramayana-crossing-and-recognition/</id>
+<link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/collections/ramayana/books/valmiki-ramayana/arcs/sundara-kanda/stories/ramayana-crossing-and-recognition/"/>
+<link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/collections/ramayana/books/valmiki-ramayana/arcs/sundara-kanda/stories/ramayana-crossing-and-recognition/"/>
+<updated>2026-11-23T01:54:05Z</updated>
+<category term="ramayana"/>
+<summary>Hanuman leaps the ocean, escapes Surasa, enters Lanka and finds Sita in the Ashoka grove, giving her Rama’s ring. From Valmiki’s Sundara Kanda.</summary>
+</entry>
+<entry>
+<title>Hanuman Chalisa</title>
+<id>https://spritual.co.in/hanuman-chalisa/</id>
+<link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/hanuman-chalisa/"/>
+<link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/hanuman-chalisa/"/>
+<updated>2026-11-23T01:54:05Z</updated>
+<category term="hymn"/>
+<summary>Hanuman Chalisa lyrics by Tulsidas, in full: 2 opening dohas, 40 chaupais and the closing doha, with transliteration and an English meaning for each verse.</summary>
+</entry>
+<entry>
+<title>Ramcharitmanas: Sundar Kand</title>
+<id>https://spritual.co.in/ramcharitmanas/sundar-kand/</id>
+<link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/ramcharitmanas/sundar-kand/"/>
+<link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/ramcharitmanas/sundar-kand/"/>
+<updated>2026-11-23T01:54:05Z</updated>
+<category term="ramcharitmanas"/>
+<summary>The Sundar Kand of Tulsidas’s Ramcharitmanas, dohas 1–60, in Devanagari with transliteration and English meaning, in 16 episodes from the leap to the ocean.</summary>
+</entry>
 <entry>
 <title>Ramcharitmanas: Aranya Kand</title>
 <id>https://spritual.co.in/ramcharitmanas/aranya-kand/</id>
@@ -53,15 +98,6 @@
 <updated>2026-11-23T00:27:28Z</updated>
 <category term="ramcharitmanas"/>
 <summary>Tulsidas’s Ramcharitmanas, Lanka Kand: the complete verse text, dohas 1–121, with transliteration, online. Covers the bridge, the war and Ravana’s end.</summary>
-</entry>
-<entry>
-<title>Ramcharitmanas: Sundar Kand</title>
-<id>https://spritual.co.in/ramcharitmanas/sundar-kand/</id>
-<link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/ramcharitmanas/sundar-kand/"/>
-<link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/ramcharitmanas/sundar-kand/"/>
-<updated>2026-11-23T00:27:28Z</updated>
-<category term="ramcharitmanas"/>
-<summary>The Sundar Kand of Tulsidas’s Ramcharitmanas, dohas 1–60, in Devanagari with transliteration and English meaning, in 16 episodes from the leap to the ocean.</summary>
 </entry>
 <entry>
 <title>Ramcharitmanas: Uttar Kand</title>
@@ -136,15 +172,6 @@
 <summary>Hanuman meets Rama and Lakshmana by Pampa, Rama and Sugriva swear friendship before fire, Vali falls, and Jambavan reminds Hanuman of his strength.</summary>
 </entry>
 <entry>
-<title>Across the sea, a ring</title>
-<id>https://spritual.co.in/collections/ramayana/books/valmiki-ramayana/arcs/sundara-kanda/stories/ramayana-crossing-and-recognition/</id>
-<link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/collections/ramayana/books/valmiki-ramayana/arcs/sundara-kanda/stories/ramayana-crossing-and-recognition/"/>
-<link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/collections/ramayana/books/valmiki-ramayana/arcs/sundara-kanda/stories/ramayana-crossing-and-recognition/"/>
-<updated>2026-11-22T21:47:13Z</updated>
-<category term="ramayana"/>
-<summary>Hanuman leaps the ocean, escapes Surasa, enters Lanka and finds Sita in the Ashoka grove, giving her Rama’s ring. From Valmiki’s Sundara Kanda.</summary>
-</entry>
-<entry>
 <title>The day Lanka burned</title>
 <id>https://spritual.co.in/collections/ramayana/books/valmiki-ramayana/arcs/sundara-kanda/stories/ramayana-lanka-ablaze/</id>
 <link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/collections/ramayana/books/valmiki-ramayana/arcs/sundara-kanda/stories/ramayana-lanka-ablaze/"/>
@@ -197,15 +224,6 @@
 <updated>2026-11-22T19:16:55Z</updated>
 <category term="krishna"/>
 <summary>A fasting king drinks only water before his guest returns. The sage’s fury makes a demon of fire, and the Lord’s disc answers. Bhagavata Purana.</summary>
-</entry>
-<entry>
-<title>Six faces for six mothers</title>
-<id>https://spritual.co.in/collections/ganesha/books/shiva-purana/arcs/rudra-samhita/stories/kartikeya-six-faces/</id>
-<link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/collections/ganesha/books/shiva-purana/arcs/rudra-samhita/stories/kartikeya-six-faces/"/>
-<link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/collections/ganesha/books/shiva-purana/arcs/rudra-samhita/stories/kartikeya-six-faces/"/>
-<updated>2026-11-21T00:49:25Z</updated>
-<category term="ganesha"/>
-<summary>Shiva’s fire is too fierce for Agni and for Ganga. In a thicket of reeds it becomes a boy, and six mothers quarrel over him. From the Shiva Purana.</summary>
 </entry>
 <entry>
 <title>The dance on Kaliya's hoods</title>
@@ -467,24 +485,6 @@
 <updated>2026-11-13T08:32:15Z</updated>
 <category term="krishna"/>
 <summary>Denied his father’s lap at five, Dhruva goes to the forest and meditates until Vishnu appears and grants him the place of the pole star.</summary>
-</entry>
-<entry>
-<title>Hanuman Chalisa</title>
-<id>https://spritual.co.in/hanuman-chalisa/</id>
-<link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/hanuman-chalisa/"/>
-<link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/hanuman-chalisa/"/>
-<updated>2026-11-13T08:32:15Z</updated>
-<category term="hymn"/>
-<summary>Hanuman Chalisa lyrics by Tulsidas, in full: 2 opening dohas, 40 chaupais and the closing doha, with transliteration and an English meaning for each verse.</summary>
-</entry>
-<entry>
-<title>The Lion in the Pillar</title>
-<id>https://spritual.co.in/collections/krishna/books/bhagavata-purana/arcs/skandha-7/stories/prahlada-the-pillar/</id>
-<link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/collections/krishna/books/bhagavata-purana/arcs/skandha-7/stories/prahlada-the-pillar/"/>
-<link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/collections/krishna/books/bhagavata-purana/arcs/skandha-7/stories/prahlada-the-pillar/"/>
-<updated>2026-11-13T04:31:25Z</updated>
-<category term="krishna"/>
-<summary>Hiranyakashipu, who no creature can kill, asks his son Prahlad if his god is in the pillar; Narasimha steps out. From the Bhagavata Purana.</summary>
 </entry>
 <entry>
 <title>The bird, the thumb, the bow</title>

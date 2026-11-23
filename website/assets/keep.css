@@ -77,3 +77,10 @@ html[lang="hi"] .kp-i-go, html[lang="hi"] .kp-i-no { font-family: "Mukta", var(-
 :root[data-motion="reduce"] .kp *, :root[data-motion="reduce"] .kp-install { transition: none !important; animation: none !important; }
 :root[data-motion="reduce"] .kp-install { opacity: 1; transform: none; }
 @media print { .kp, .kp-install { display: none !important; } }
+
+/* [hfixR G04] the install card stands in the page after the closing doors, never over the painting, the lamp or the doors */
+.kp-install.kp-install--inline { position: static; z-index: auto; order: -1; left: auto; right: auto; bottom: auto; width: min(27rem, 100%); margin: 0 auto 1.2rem; transform: translateY(14px); }
+.kp-install--inline.is-in { transform: none; }
+:root[data-motion="reduce"] .kp-install--inline, :root[data-motion="reduce"] .kp-install { transition: opacity .01s; transform: none; }
+@media (prefers-reduced-motion: reduce) { .kp-install--inline { transition: opacity .01s; transform: none; } }
+@media (min-width: 760px) { .kp-install.kp-install--inline { right: auto; margin: 0 auto 1.2rem; bottom: auto; } }

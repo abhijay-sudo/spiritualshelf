@@ -10,7 +10,7 @@
 }
 
 /* ---------- the sky: only where a script will draw it (never for Save-Data: boot.js sets ep-lite before first paint) ---------- */
-.st-sky { display: none; position: relative; margin-top: var(--ed-head-h, 68px); height: calc(100svh - var(--ed-head-h, 68px)); min-height: min(31rem, calc(100svh - var(--ed-head-h, 68px))); background: var(--st-night); overflow: hidden; }
+.st-sky { box-shadow: 0 calc(-1 * var(--ed-head-h, 68px)) 0 var(--st-night); /* [fixA G09] the sky is night whatever the theme: the strip behind the header is night too (in the light theme it showed the paper, and the header's cream words lay on it at about 1.3:1) */ display: none; position: relative; margin-top: var(--ed-head-h, 68px); height: calc(100svh - var(--ed-head-h, 68px)); min-height: min(31rem, calc(100svh - var(--ed-head-h, 68px))); background: var(--st-night); overflow: hidden; }
 @media (scripting: enabled) { :root:not(.ep-lite) .st-sky { display: block; } }
 .st-sky.is-on { display: block; }   /* a browser that does not know the query above: the script opens the sky */
 .st-sky.is-off { display: none !important; }

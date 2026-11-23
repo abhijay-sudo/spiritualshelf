@@ -66,7 +66,7 @@ dlg.innerHTML = `<div class="wt-stage" aria-hidden="true">${layer()}${layer()}<d
 </div>
 </div>
 <section class="wt-end" hidden aria-labelledby="wt-end-t">
-<div class="wt-end-pic" aria-hidden="true"><img alt="" decoding="async"></div>
+<div class="wt-end-pic" aria-hidden="true"><img alt="" decoding="async" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="></div>
 <div class="wt-end-in"><p class="wt-k">${esc(UI.theEnd || '')}</p><h2 class="wt-end-t" id="wt-end-t">${esc(title)}</h2>
 <div class="wt-end-row"><button type="button" class="cx-btn cx-btn--light" data-a="read">${esc(W.wReadIt)}</button><button type="button" class="cx-btn cx-btn--ghost" data-a="replay">${esc(W.wReplay)}</button></div>
 ${nextA ? `<a class="wt-next" href="${esc(nextA.getAttribute('href').split('#')[0])}#watch"><small>${esc(W.wNextStory)}</small><strong>${esc($('strong', nextA)?.textContent || '')}</strong><span class="wt-next-go" aria-hidden="true">${IC.next}</span></a>` : ''}
@@ -341,7 +341,7 @@ return {
 open(opener) {
 if (open) return; open = true; back = opener || d.activeElement; try { keyNav = !!opener?.matches(':focus-visible'); } catch {} reached = 0; ended = false; endEl.hidden = true; dlg.classList.remove('is-ended', 'is-idle', 'is-closing');
 if (location.hash !== '#watch') { history.pushState(history.state, '', '#watch'); pushed = true; }
-if (UI.livingJs && !window.SpritualLiving && !lowData && !reduced() && (navigator.deviceMemory || 4) >= 4 && !d.querySelector('script[data-lv]')) { const s = d.createElement('script'); s.src = UI.livingJs; s.async = true; s.dataset.lv = ''; d.head.append(s); }
+if (UI.livingJs && !window.SpritualLiving && !lowData && !reduced() && (navigator.deviceMemory || 4) >= 4 && (navigator.hardwareConcurrency || 4) >= 4 && !(window.SpritualNet && window.SpritualNet.slow()) /* [perf G13] */ && !d.querySelector('script[data-lv]')) { const s = d.createElement('script'); s.src = UI.livingJs; s.async = true; s.dataset.lv = ''; d.head.append(s); }
 const door = !ctx.store.get('door', 0) && window.SpritualDoor;
 playing = !door; playT0 = performance.now(); played = 0; paintPlay(); paintOpts(); ctx.sound.duck(.35); if (!door && ctx.sound.on()) ctx.sound.set(true);
 segs.forEach((s) => { $('i', s).style.cssText = 'transform:scaleX(0)'; });

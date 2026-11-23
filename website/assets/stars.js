@@ -374,7 +374,7 @@ for (const p of titles) placed.push(p);
 if (narrow && sel) placed.push([0, boxHpx * 0.52 - 6, W, 400]);   // a phone's card holds the lower half: no name is set across its edge
 for (const q of ctlRects) placed.push(q); if (capR && capF > 0.01) placed.push(capR);
 const touring = f && wander.run && !sel && !hover; const order = touring ? [f, ...(wander.nxt ? [wander.nxt] : []), ...f.kinL].filter((n, i, a) => a.indexOf(n) === i) : f ? [f, ...f.kinL, ...f.nearL] : byRank; const sfar = 1;
-for (const n of nodes) n.want = 0; let nl = 0; const lmax = f || !narrow ? 99 : k < home.k * 1.35 ? 8 : 12;   // (a phone's whole sky names only the few best known; a realm, a dozen)
+for (const n of nodes) n.want = 0; let nl = 0; const lmax = f ? 99 : !narrow ? (W <= 900 && H <= 700 && k < home.k * 1.35 ? 14 : 99) /* [fixHC] a short tablet window names the best known only */ : k < home.k * 1.35 ? 8 : 12;   // (a phone's whole sky names only the few best known; a realm, a dozen)
 for (const n of order) {
 if (nl >= lmax) break; if (!n.vis || n.in < 0.5) continue; if (!f && n.tier === 'cast' && n.pr < 15) continue; if (!f && n.tier === 'lead' && n.pr < 13) continue; if (!f && n.pr < 12) continue; if (f && n !== f && (n.pr < 9 || n.dim < 0.4)) continue;
 const L = n.lab; if (!L) continue; let done = false;
@@ -385,7 +385,7 @@ const cp = labAt(n, ci, f); const lx = cp[0]; const ly = cp[1];
 const la = (f ? 1 : n.realm.a) * edgeA(lx + 4, lx + L.w - 4) * clamp01((ly + 4 - topH) / 8) * clamp01((H - 60 - ly - L.h + 4) / 8); if (la < (pas ? 0.5 * (f ? 1 : n.realm.a) : 0.9 * (f ? 1 : n.realm.a))) continue;
 const ty = ly + L.h / 2 - 7; let ok = true; for (const p of placed) if (hit(lx - 4, ty - 4, L.w + 8, 22, p[0], p[1], p[2], p[3])) { ok = false; break; }   // [fixGC] a little more air between two names
 const mg = pas === 2 || ci === 0 ? 0 : ci === 1 ? 4 : 10;
-if (ok && n !== f) for (const m of nodes) if (m !== n && !(pas === 2 && m.rank > n.rank) && m.vis && m.in > 0.3 && hit(lx + 6 - mg, ty + 1 - mg, L.w - 12 + mg * 2, 12 + mg * 2, m.px - m.dr * 0.9, m.py - m.dr * 0.9, m.dr * 1.8, m.dr * 1.8)) { ok = false; break; }
+if (ok && n !== f) for (const m of nodes) { if (m === n || !m.vis || m.in <= 0.3) continue; const rim = pas === 2 && m.rank > n.rank ? 0.5 : 0.9; /* [fixHC] the last-resort place may brush the rim of a lesser face, never lie across it */ if (hit(lx + 6 - mg, ty + 1 - mg, L.w - 12 + mg * 2, 12 + mg * 2, m.px - m.dr * rim, m.py - m.dr * rim, m.dr * rim * 2, m.dr * rim * 2)) { ok = false; break; } }
 if (!ok) continue; placed.push([lx, ty, L.w, 14]); n.want = la; n.lci = ci; done = true; nl++; break;
 }
 if (!done) n.lci = 0;
@@ -498,7 +498,7 @@ for (const b of sky.querySelectorAll('[data-st-view]')) b.setAttribute('aria-pre
 io.observe(sky);
 on(document, 'visibilitychange', () => { const v = !document.hidden; if (v && !shown) { shown = true; last = 0; wake(); } else if (!v) shown = false; });
 let metrics = false;
-const measureCtl = () => { ctlRects.length = 0; const s = stage.getBoundingClientRect(); for (const el of sky.querySelectorAll('.st-ctl, .st-wander, .st-cue')) { const z = el.getBoundingClientRect(); if (z.width) ctlRects.push([z.left - s.left - 6, z.top - s.top - 6, z.width + 12, z.height + 12]); } dirty = true; };
+const measureCtl = () => { ctlRects.length = 0; const s = stage.getBoundingClientRect(); for (const el of sky.querySelectorAll('.st-ctl, .st-wander, .st-cue, .st-hint')) { const z = el.getBoundingClientRect(); if (z.width) ctlRects.push([z.left - s.left - 6, z.top - s.top - 6, z.width + 12, z.height + 12]); } dirty = true; };
 on(sky, 'animationend', (e) => { if (e.target.matches('.st-top, .st-ctl, .st-foot')) { measureCtl(); wake(); } });
 const size = (force) => {
 const r = stage.getBoundingClientRect(); if (!r.width || !r.height) return;
@@ -536,6 +536,7 @@ if (px !== liftPx) { liftPx = px; sky.style.setProperty('--st-lift', px + 'px');
 };
 const liftSoon = () => { if (!liftF) liftF = requestAnimationFrame(() => { liftF = 0; lift(); }); clearTimeout(liftT); liftT = setTimeout(lift, 480); };
 on(window, 'scroll', liftSoon, { passive: true }); on(window, 'resize', liftSoon); on(document, 'click', liftSoon);
+on(document, 'spritual:consent-layout', liftSoon); liftSoon();   // [fixA G01] the question appears (or goes) after this script starts
 const showCard = (n, peek) => {
 if (!n) { card.hidden = true; cardFor = null; return; }
 if (cardFor === n && cardPeek === peek) return; cardFor = n; cardPeek = peek;
@@ -754,7 +755,12 @@ if (cue) { e.preventDefault(); scrollTo(document.getElementById('cast-wall')); }
 if (fb) { const f2 = fb.closest('.st-find'); f2.classList.add('is-open'); fb.setAttribute('aria-expanded', 'true'); q.focus(); }
 });
 const wallEl = document.getElementById('cast-wall'); let viewing = 'sky';
-const viewNow = (v) => { if (v === viewing) return; viewing = v; for (const b of sky.querySelectorAll('[data-st-view]')) b.setAttribute('aria-pressed', String(b.dataset.stView === v)); };
+const viewSay = sky.querySelector('[data-st-live]'); let viewSayT = 0;
+const viewNow = (v) => {
+if (v === viewing) return; viewing = v;
+for (const b of sky.querySelectorAll('[data-st-view]')) b.setAttribute('aria-pressed', String(b.dataset.stView === v));
+if (viewSay) { clearTimeout(viewSayT); viewSayT = setTimeout(() => { const bt = sky.querySelector('[data-st-view][aria-pressed="true"]'); const gl = bt && bt.parentElement.getAttribute('aria-label'); viewSay.textContent = bt ? (gl ? gl + ': ' : '') + bt.textContent : ''; }, 450); }
+};
 if (wallEl) { let vr = 0; const vcheck = () => { vr = 0; viewNow(wallEl.getBoundingClientRect().top < innerHeight * 0.55 ? 'wall' : 'sky'); }; on(window, 'scroll', () => { if (!vr) vr = requestAnimationFrame(vcheck); }, { passive: true }); }
 const form = sky.querySelector('[data-st-find]'); const q = form.querySelector('input'); const sug = form.querySelector('[data-st-sug]'); const note = form.querySelector('[data-st-note]');
 const FD = window.SpritualFind; if (FD) FD.setSyn(UI.syn);
