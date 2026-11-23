@@ -1233,7 +1233,7 @@
         ctx.fillStyle = '#b08227'; ctx.fillRect(pad, H - pad - 90, 80, 2);
         ctx.fillStyle = '#181512'; ctx.font = `600 ${Math.round(W * 0.04)}px Newsreader, Georgia, serif`; ctx.fillText('Spritual', pad, H - pad - 70);
         const wm = ctx.measureText('Spritual').width; ctx.fillStyle = '#9e2a2b'; ctx.fillText('.', pad + wm, H - pad - 70);
-        ctx.fillStyle = '#b08227'; ctx.font = `600 ${Math.round(W * 0.02)}px "Plus Jakarta Sans", system-ui, sans-serif`; ctx.textAlign = 'right'; ctx.fillText('spritual.co.in', W - pad, H - pad - 56); ctx.textAlign = 'left';
+        ctx.fillStyle = '#b08227'; ctx.font = `600 ${Math.round(W * 0.02)}px "Plus Jakarta Sans", system-ui, sans-serif`; ctx.textAlign = 'right'; ctx.fillText('spiritualshelf.com', W - pad, H - pad - 56); ctx.textAlign = 'left';
         try { dl.href = canvas.toDataURL('image/png'); } catch {}
       };
       // [fixS] "Send a line as a card" opens the same sheet as the share glyph on each scene (assets/share.js: the painting, a dark card, the story's source), on the scene of the story's closing line, which it starts on. The plain card below is only for a page where that sheet could not load.
