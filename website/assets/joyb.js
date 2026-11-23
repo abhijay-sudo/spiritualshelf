@@ -11,12 +11,14 @@
   const del = (k) => { try { localStorage.removeItem('spritual:' + k); } catch {} };
   const still = () => root.dataset.motion === 'reduce' || matchMedia('(prefers-reduced-motion: reduce)').matches;
   const S = hi ? {
-    pick: (n) => `दृश्य ${n} से आगे पढ़ें?`, again: 'फिर से आरंभ करें', arc: (n, t) => `दृश्य ${n} / ${t} तक पढ़ी`, done: 'पूरी पढ़ी हुई कथा',
+    pick: (n) => `दृश्य ${n} से आगे पढ़ें?`, again: 'फिर से आरंभ करें', arc: (n, t) => `दृश्य ${n} / ${t} तक पढ़ी`, done: 'पूरी पढ़ी हुई कथा', capArc: (n, t) => `दृश्य ${n} / ${t}`, capDone: 'पूरी पढ़ी',
     forgot: 'आपकी जगहें भुला दी गईं।', gone: 'हटा दिया गया।', remove: 'हटाएँ',
   } : {
-    pick: (n) => `Pick up at scene ${n}?`, again: 'Start again', arc: (n, t) => `Read to scene ${n} of ${t}`, done: 'A story you have finished',
+    pick: (n) => `Pick up at scene ${n}?`, again: 'Start again', arc: (n, t) => `Read to scene ${n} of ${t}`, done: 'A story you have finished', capArc: (n, t) => `Scene ${n} of ${t}`, capDone: 'Finished',
     forgot: 'Your places are forgotten.', gone: 'Removed.', remove: 'Remove',
   };
+  // [fixS] straight quotes and apostrophes, set as the page sets them (Rama's, "word"): a line kept before the build did this still reads right
+  const curl = (x) => String(x).replace(/(\p{L})'(?=\p{L}|\s|$)/gu, '$1\u2019').replace(/(^|[\s(\u2014])"(?=\S)/g, '$1\u201C').replace(/"/g, '\u201D').replace(/(^|[\s(\u2014])'(?=\S)/g, '$1\u2018').replace(/'/g, '\u2019');
   const nbsp = (x) => x.replace(/ (\S+)$/u, ' $1');
 
   /* ---------- places: one small record per story. The old single place ('last') is carried over once. ---------- */
@@ -35,10 +37,11 @@
       const key = p ? (p.d ? 'd' : p.s >= 2 && p.s < p.t ? p.s + '/' + p.t : '') : '';
       if (!key) { old?.remove(); continue; }
       if (old && old.dataset.k === key) continue; old?.remove();
-      const m = d.createElement('span'); m.className = 'pl-mark' + (p.d ? ' pl-mark--lamp' : ''); m.dataset.k = key; m.setAttribute('role', 'img');
+      const m = d.createElement('span'); m.className = 'pl-mark' + (p.d ? ' pl-mark--lamp' : ''); m.dataset.k = key; m.setAttribute('role', 'img');   // [fixS] a caption beside the ring or the lamp, so the mark is words and not a riddle
+      const cap = d.createElement('span'); cap.className = 'pl-mark-t'; cap.setAttribute('aria-hidden', 'true'); cap.textContent = p.d ? S.capDone : S.capArc(p.s, p.t);
       if (p.d) { m.setAttribute('aria-label', S.done); m.innerHTML = LAMP; }
       else { const f = Math.min(1, Math.max(.04, p.s / p.t)), r = 12, L = 2 * Math.PI * r; m.setAttribute('aria-label', S.arc(p.s, p.t)); m.innerHTML = `<svg viewBox="0 0 30 30" aria-hidden="true"><circle class="pl-arc-bg" cx="15" cy="15" r="${r}"/><circle class="pl-arc" cx="15" cy="15" r="${r}" stroke-dasharray="${(L * f).toFixed(1)} ${L.toFixed(1)}" transform="rotate(-90 15 15)"/></svg>`; }
-      art.append(m);
+      m.append(cap); art.append(m);
     }
   };
   { let q = 0; const go = () => { q = 0; mark(); }; const soon = () => { if (!q) q = requestAnimationFrame(go); };
@@ -111,7 +114,7 @@
     const render = () => {
       const all = get('kept', []).filter((e) => e && e.line); block.hidden = !all.length;
       list.replaceChildren(...all.map((e) => {
-        const li = d.createElement('li'); li.className = 'kept-line'; const q = d.createElement('q'); q.lang = e.lang || ''; q.textContent = e.line;
+        const li = d.createElement('li'); li.className = 'kept-line'; const q = d.createElement('q'); q.lang = e.lang || ''; q.textContent = curl(e.line);
         const n = d.createElement('p'); n.className = 'note'; n.textContent = `${e.title} · ${hi ? 'दृश्य' : 'Scene'} ${e.scene} · ${e.src}`;
         const b = d.createElement('button'); b.type = 'button'; b.textContent = S.remove; b.setAttribute('aria-label', `${S.remove}: ${e.line}`);
         b.addEventListener('click', () => { const a = get('kept', []).filter((x) => !(x.slug === e.slug && x.lang === e.lang)); set('kept', a); render(); (list.querySelector('button') || $('[data-pl-forget] button'))?.focus(); });

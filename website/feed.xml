@@ -5,10 +5,73 @@
 <id>https://spritual.co.in/feed.xml</id>
 <link rel="self" type="application/atom+xml" href="https://spritual.co.in/feed.xml"/>
 <link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/"/>
-<updated>2026-11-22T22:00:36Z</updated>
+<updated>2026-11-23T00:27:28Z</updated>
 <author><name>Spritual</name><uri>https://spritual.co.in/about/</uri></author>
 <icon>https://spritual.co.in/favicon.ico</icon>
 <logo>https://spritual.co.in/assets/icons/icon-512.png</logo>
+<entry>
+<title>Ramcharitmanas: Aranya Kand</title>
+<id>https://spritual.co.in/ramcharitmanas/aranya-kand/</id>
+<link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/ramcharitmanas/aranya-kand/"/>
+<link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/ramcharitmanas/aranya-kand/"/>
+<updated>2026-11-23T00:27:28Z</updated>
+<category term="ramcharitmanas"/>
+<summary>Tulsidas’s Ramcharitmanas, Aranya Kand: the complete verse text, dohas 1–46, with transliteration, online. Covers the forest, Sita’s abduction and Shabari.</summary>
+</entry>
+<entry>
+<title>Ramcharitmanas: Ayodhya Kand</title>
+<id>https://spritual.co.in/ramcharitmanas/ayodhya-kand/</id>
+<link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/ramcharitmanas/ayodhya-kand/"/>
+<link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/ramcharitmanas/ayodhya-kand/"/>
+<updated>2026-11-23T00:27:28Z</updated>
+<category term="ramcharitmanas"/>
+<summary>Tulsidas’s Ramcharitmanas, Ayodhya Kand: the complete verse text, dohas 1–326, with transliteration, online. Covers Rama’s exile and Bharata’s devotion.</summary>
+</entry>
+<entry>
+<title>Ramcharitmanas: Bal Kand</title>
+<id>https://spritual.co.in/ramcharitmanas/bal-kand/</id>
+<link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/ramcharitmanas/bal-kand/"/>
+<link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/ramcharitmanas/bal-kand/"/>
+<updated>2026-11-23T00:27:28Z</updated>
+<category term="ramcharitmanas"/>
+<summary>Tulsidas’s Ramcharitmanas, Bal Kand: the complete verse text, dohas 1–361, with transliteration, online. Covers Rama’s birth and Shiva’s bow.</summary>
+</entry>
+<entry>
+<title>Ramcharitmanas: Kishkindha Kand</title>
+<id>https://spritual.co.in/ramcharitmanas/kishkindha-kand/</id>
+<link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/ramcharitmanas/kishkindha-kand/"/>
+<link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/ramcharitmanas/kishkindha-kand/"/>
+<updated>2026-11-23T00:27:28Z</updated>
+<category term="ramcharitmanas"/>
+<summary>Tulsidas’s Ramcharitmanas, Kishkindha Kand: the complete verse text, dohas 1–30, with transliteration, online. Hanuman meets Rama; the alliance with Sugriva.</summary>
+</entry>
+<entry>
+<title>Ramcharitmanas: Lanka Kand</title>
+<id>https://spritual.co.in/ramcharitmanas/lanka-kand/</id>
+<link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/ramcharitmanas/lanka-kand/"/>
+<link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/ramcharitmanas/lanka-kand/"/>
+<updated>2026-11-23T00:27:28Z</updated>
+<category term="ramcharitmanas"/>
+<summary>Tulsidas’s Ramcharitmanas, Lanka Kand: the complete verse text, dohas 1–121, with transliteration, online. Covers the bridge, the war and Ravana’s end.</summary>
+</entry>
+<entry>
+<title>Ramcharitmanas: Sundar Kand</title>
+<id>https://spritual.co.in/ramcharitmanas/sundar-kand/</id>
+<link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/ramcharitmanas/sundar-kand/"/>
+<link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/ramcharitmanas/sundar-kand/"/>
+<updated>2026-11-23T00:27:28Z</updated>
+<category term="ramcharitmanas"/>
+<summary>The Sundar Kand of Tulsidas’s Ramcharitmanas, dohas 1–60, in Devanagari with transliteration and English meaning, in 16 episodes from the leap to the ocean.</summary>
+</entry>
+<entry>
+<title>Ramcharitmanas: Uttar Kand</title>
+<id>https://spritual.co.in/ramcharitmanas/uttar-kand/</id>
+<link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/ramcharitmanas/uttar-kand/"/>
+<link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/ramcharitmanas/uttar-kand/"/>
+<updated>2026-11-23T00:27:28Z</updated>
+<category term="ramcharitmanas"/>
+<summary>Tulsidas’s Ramcharitmanas, Uttar Kand: the complete verse text, dohas 1–130, with transliteration, online. Covers the return to Ayodhya and Kakbhushundi.</summary>
+</entry>
 <entry>
 <title>The Vel and the mango tree</title>
 <id>https://spritual.co.in/collections/ganesha/books/kanda-puranam/arcs/yuddha-kandam/stories/murugan-and-the-vel/</id>
@@ -16,7 +79,7 @@
 <link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/collections/ganesha/books/kanda-puranam/arcs/yuddha-kandam/stories/murugan-and-the-vel/"/>
 <updated>2026-11-22T22:00:36Z</updated>
 <category term="ganesha"/>
-<summary>A king of 1008 universes makes the gods carry fish. Shiva's six-faced son answers with one Vel, and a mango tree rises from the sea. Kanda Puranam.</summary>
+<summary>A king of 1008 universes makes the gods carry fish. Shiva’s six-faced son answers with one Vel, and a mango tree rises from the sea. Kanda Puranam.</summary>
 </entry>
 <entry>
 <title>The golden vessel from the fire</title>
@@ -25,7 +88,7 @@
 <link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/collections/ramayana/books/valmiki-ramayana/arcs/bala-kanda/stories/ramayana-birth-of-rama/"/>
 <updated>2026-11-22T22:00:36Z</updated>
 <category term="ramayana"/>
-<summary>A sonless king holds a great sacrifice; the gods need a man to end Ravana, and Vishnu chooses Dasharatha for his father. From Valmiki's Bala Kanda.</summary>
+<summary>A sonless king holds a great sacrifice; the gods need a man to end Ravana, and Vishnu chooses Dasharatha for his father. From Valmiki’s Bala Kanda.</summary>
 </entry>
 <entry>
 <title>The deer, the vulture, the elder</title>
@@ -34,7 +97,7 @@
 <link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/collections/ramayana/books/valmiki-ramayana/arcs/aranya-kanda/stories/ramayana-loss-and-hospitality/"/>
 <updated>2026-11-22T21:47:13Z</updated>
 <category term="ramayana"/>
-<summary>The golden deer, Ravana carrying Sita away, Jatayu's last fight and Shabari's welcome: the Aranya Kanda of the Valmiki Ramayana, illustrated.</summary>
+<summary>The golden deer, Ravana carrying Sita away, Jatayu’s last fight and Shabari’s welcome: the Aranya Kanda of the Valmiki Ramayana, illustrated.</summary>
 </entry>
 <entry>
 <title>Fourteen years, two sandals</title>
@@ -43,7 +106,7 @@
 <link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/collections/ramayana/books/valmiki-ramayana/arcs/ayodhya-kanda/stories/ramayana-promises-and-partings/"/>
 <updated>2026-11-22T21:47:13Z</updated>
 <category term="ramayana"/>
-<summary>Rama is sent to the forest on the eve of his crowning; Sita and Lakshmana follow, Guha keeps watch, and Bharata takes Rama's sandals back to the throne.</summary>
+<summary>Rama is sent to the forest on the eve of his crowning; Sita and Lakshmana follow, Guha keeps watch, and Bharata takes Rama’s sandals back to the throne.</summary>
 </entry>
 <entry>
 <title>The bow that broke the sky</title>
@@ -52,7 +115,7 @@
 <link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/collections/ramayana/books/valmiki-ramayana/arcs/bala-kanda/stories/ramayana-beginnings/"/>
 <updated>2026-11-22T21:47:13Z</updated>
 <category term="ramayana"/>
-<summary>Narada names the ideal man, Sita is found in a furrow, Vishvamitra teaches Rama, and in Mithila Shiva's bow breaks: Valmiki's Bala Kanda, illustrated.</summary>
+<summary>Narada names the ideal man, Sita is found in a furrow, Vishvamitra teaches Rama, and in Mithila Shiva’s bow breaks: Valmiki’s Bala Kanda, illustrated.</summary>
 </entry>
 <entry>
 <title>Two Ramas, one bow</title>
@@ -61,7 +124,7 @@
 <link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/collections/ramayana/books/valmiki-ramayana/arcs/bala-kanda/stories/ramayana-parashurama/"/>
 <updated>2026-11-22T21:47:13Z</updated>
 <category term="ramayana"/>
-<summary>Parashurama, the axe-bearing son of Jamadagni, bars the road home and dares young Rama to draw the bow of Vishnu. From Valmiki's Bala Kanda.</summary>
+<summary>Parashurama, the axe-bearing son of Jamadagni, bars the road home and dares young Rama to draw the bow of Vishnu. From Valmiki’s Bala Kanda.</summary>
 </entry>
 <entry>
 <title>The leap begins here</title>
@@ -79,7 +142,7 @@
 <link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/collections/ramayana/books/valmiki-ramayana/arcs/sundara-kanda/stories/ramayana-crossing-and-recognition/"/>
 <updated>2026-11-22T21:47:13Z</updated>
 <category term="ramayana"/>
-<summary>Hanuman leaps the ocean, escapes Surasa, enters Lanka and finds Sita in the Ashoka grove, giving her Rama's ring. From Valmiki's Sundara Kanda.</summary>
+<summary>Hanuman leaps the ocean, escapes Surasa, enters Lanka and finds Sita in the Ashoka grove, giving her Rama’s ring. From Valmiki’s Sundara Kanda.</summary>
 </entry>
 <entry>
 <title>The day Lanka burned</title>
@@ -88,7 +151,7 @@
 <link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/collections/ramayana/books/valmiki-ramayana/arcs/sundara-kanda/stories/ramayana-lanka-ablaze/"/>
 <updated>2026-11-22T21:47:13Z</updated>
 <category term="ramayana"/>
-<summary>Hanuman wrecks Ravana's grove, lets Indrajit bind him, sets Lanka on fire with his tail and brings Sita's jewel to Rama. Lanka Dahan, from the Ramayana.</summary>
+<summary>Hanuman wrecks Ravana’s grove, lets Indrajit bind him, sets Lanka on fire with his tail and brings Sita’s jewel to Rama. Lanka Dahan, from the Ramayana.</summary>
 </entry>
 <entry>
 <title>Through fire to Ayodhya</title>
@@ -97,7 +160,7 @@
 <link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/collections/ramayana/books/valmiki-ramayana/arcs/yuddha-kanda/stories/ramayana-home-and-responsibility/"/>
 <updated>2026-11-22T21:47:13Z</updated>
 <category term="ramayana"/>
-<summary>After Ravana's death, Sita's ordeal by fire, then the flying chariot carries Rama home to Ayodhya and to Bharata, who kept his sandals on the throne.</summary>
+<summary>After Ravana’s death, Sita’s ordeal by fire, then the flying chariot carries Rama home to Ayodhya and to Bharata, who kept his sandals on the throne.</summary>
 </entry>
 <entry>
 <title>The fall of Lanka’s king</title>
@@ -124,7 +187,7 @@
 <link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/collections/shiva/books/valmiki-ramayana/arcs/bala-kanda/stories/shiva-river/"/>
 <updated>2026-11-22T21:47:13Z</updated>
 <category term="shiva"/>
-<summary>King Bhagiratha's penance brings the river Ganga down from heaven; Shiva catches her in his matted hair. Ganga Avataran, from the Valmiki Ramayana.</summary>
+<summary>King Bhagiratha’s penance brings the river Ganga down from heaven; Shiva catches her in his matted hair. Ganga Avataran, from the Valmiki Ramayana.</summary>
 </entry>
 <entry>
 <title>The king who drank only water</title>
@@ -133,7 +196,7 @@
 <link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/collections/krishna/books/bhagavata-purana/arcs/skandha-9/stories/ambarisha-and-durvasa/"/>
 <updated>2026-11-22T19:16:55Z</updated>
 <category term="krishna"/>
-<summary>A fasting king drinks only water before his guest returns. The sage's fury makes a demon of fire, and the Lord's disc answers. Bhagavata Purana.</summary>
+<summary>A fasting king drinks only water before his guest returns. The sage’s fury makes a demon of fire, and the Lord’s disc answers. Bhagavata Purana.</summary>
 </entry>
 <entry>
 <title>Six faces for six mothers</title>
@@ -142,7 +205,7 @@
 <link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/collections/ganesha/books/shiva-purana/arcs/rudra-samhita/stories/kartikeya-six-faces/"/>
 <updated>2026-11-21T00:49:25Z</updated>
 <category term="ganesha"/>
-<summary>Shiva's fire is too fierce for Agni and for Ganga. In a thicket of reeds it becomes a boy, and six mothers quarrel over him. From the Shiva Purana.</summary>
+<summary>Shiva’s fire is too fierce for Agni and for Ganga. In a thicket of reeds it becomes a boy, and six mothers quarrel over him. From the Shiva Purana.</summary>
 </entry>
 <entry>
 <title>The dance on Kaliya's hoods</title>
@@ -160,7 +223,7 @@
 <link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/collections/ramayana/books/valmiki-ramayana/arcs/bala-kanda/stories/ramayana-tataka-and-ahalya/"/>
 <updated>2026-11-21T00:49:25Z</updated>
 <category term="ramayana"/>
-<summary>Young Rama follows Vishvamitra, faces a yakshi strong as a thousand elephants, then enters a hermitage near Mithila. From Valmiki's Ramayana.</summary>
+<summary>Young Rama follows Vishvamitra, faces a yakshi strong as a thousand elephants, then enters a hermitage near Mithila. From Valmiki’s Ramayana.</summary>
 </entry>
 <entry>
 <title>Only his mother's name</title>
@@ -169,7 +232,7 @@
 <link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/collections/sages/books/chandogya-upanishad/arcs/chandogya-4/stories/satyakama-and-the-truth/"/>
 <updated>2026-11-21T00:49:25Z</updated>
 <category term="sages"/>
-<summary>Asked his family, a boy gives his mother's plain answer word for word. A bull, a fire and two birds teach him the rest. Chandogya Upanishad.</summary>
+<summary>Asked his family, a boy gives his mother’s plain answer word for word. A bull, a fire and two birds teach him the rest. Chandogya Upanishad.</summary>
 </entry>
 <entry>
 <title>Krishna, or his army</title>
@@ -205,7 +268,7 @@
 <link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/collections/shiva/books/shiva-purana/arcs/rudra-samhita/stories/shiva-parvati-tapas/"/>
 <updated>2026-11-19T04:42:27Z</updated>
 <category term="shiva"/>
-<summary>Shiva burns Kama to ash and vanishes; the mountain's daughter answers with tapas, ringed by fire and standing in winter water. From the Shiva Purana.</summary>
+<summary>Shiva burns Kama to ash and vanishes; the mountain’s daughter answers with tapas, ringed by fire and standing in winter water. From the Shiva Purana.</summary>
 </entry>
 <entry>
 <title>A bed of arrows</title>
@@ -223,7 +286,7 @@
 <link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/collections/sages/books/katha-upanishad/arcs/adhyaya-1/stories/nachiketa-and-yama/"/>
 <updated>2026-11-19T03:20:17Z</updated>
 <category term="sages"/>
-<summary>Given to Death by his own father, the boy Nachiketa waits three nights in Yama's house, then refuses long life and wealth for one answer.</summary>
+<summary>Given to Death by his own father, the boy Nachiketa waits three nights in Yama’s house, then refuses long life and wealth for one answer.</summary>
 </entry>
 <entry>
 <title>Hanuman reaches for the sun</title>
@@ -232,7 +295,7 @@
 <link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/collections/ramayana/books/valmiki-ramayana/arcs/kishkindha-kanda/stories/hanuman-reaches-for-the-sun/"/>
 <updated>2026-11-18T21:49:48Z</updated>
 <category term="ramayana"/>
-<summary>Newborn Hanuman takes the rising sun for a fruit and leaps; Indra's thunderbolt strikes him down. Years later Jambavan reminds him who he is. From Valmiki.</summary>
+<summary>Newborn Hanuman takes the rising sun for a fruit and leaps; Indra’s thunderbolt strikes him down. Years later Jambavan reminds him who he is. From Valmiki.</summary>
 </entry>
 <entry>
 <title>In Holika's lap</title>
@@ -250,7 +313,7 @@
 <link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-and-sudama/"/>
 <updated>2026-11-18T14:00:52Z</updated>
 <category term="krishna"/>
-<summary>Sudama (Kuchela), Krishna's poor friend, walks to Dwarka with four handfuls of flat rice and asks for nothing. Retold from Bhagavata Purana 10.80-81.</summary>
+<summary>Sudama (Kuchela), Krishna’s poor friend, walks to Dwarka with four handfuls of flat rice and asks for nothing. Retold from Bhagavata Purana 10.80-81.</summary>
 </entry>
 <entry>
 <title>Four brides, one fire</title>
@@ -259,7 +322,7 @@
 <link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/collections/ramayana/books/valmiki-ramayana/arcs/bala-kanda/stories/ramayana-the-wedding/"/>
 <updated>2026-11-18T14:00:52Z</updated>
 <category term="ramayana"/>
-<summary>Messengers bring Ayodhya the news that Rama has won Sita; in Mithila four princes marry four brides. Sita Ram Vivah, from Valmiki's Bala Kanda.</summary>
+<summary>Messengers bring Ayodhya the news that Rama has won Sita; in Mithila four princes marry four brides. Sita Ram Vivah, from Valmiki’s Bala Kanda.</summary>
 </entry>
 <entry>
 <title>The boy who kept the door</title>
@@ -268,7 +331,7 @@
 <link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/collections/ganesha/books/shiva-purana/arcs/rudra-samhita/stories/ganesha-elephant-head/"/>
 <updated>2026-11-18T13:35:06Z</updated>
 <category term="ganesha"/>
-<summary>Parvati shapes a son to guard her door; he bars Shiva, fights all heaven and is beheaded, then revived with an elephant's head. From the Shiva Purana.</summary>
+<summary>Parvati shapes a son to guard her door; he bars Shiva, fights all heaven and is beheaded, then revived with an elephant’s head. From the Shiva Purana.</summary>
 </entry>
 <entry>
 <title>The night the doors opened</title>
@@ -277,7 +340,7 @@
 <link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-born-in-prison/"/>
 <updated>2026-11-18T13:35:06Z</updated>
 <category term="krishna"/>
-<summary>A voice names Kamsa's killer: his sister's eighth child. On the night Krishna is born, the bolted prison doors open by themselves. Bhagavata Purana.</summary>
+<summary>A voice names Kamsa’s killer: his sister’s eighth child. On the night Krishna is born, the bolted prison doors open by themselves. Bhagavata Purana.</summary>
 </entry>
 <entry>
 <title>A mountain for a churning rod</title>
@@ -287,69 +350,6 @@
 <updated>2026-11-18T13:35:06Z</updated>
 <category term="krishna"/>
 <summary>Samudra Manthan retold from the Bhagavata Purana: gods and asuras churn the Ocean of Milk; Halahala, Lakshmi, Dhanvantari, Mohini and Rahu, in 9 scenes.</summary>
-</entry>
-<entry>
-<title>Ramcharitmanas: Aranya Kand</title>
-<id>https://spritual.co.in/ramcharitmanas/aranya-kand/</id>
-<link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/ramcharitmanas/aranya-kand/"/>
-<link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/ramcharitmanas/aranya-kand/"/>
-<updated>2026-11-18T12:39:26Z</updated>
-<category term="ramcharitmanas"/>
-<summary>Tulsidas's Ramcharitmanas, Aranya Kand: the complete verse text, dohas 1–46, with transliteration, online. Covers the forest, Sita's abduction and Shabari.</summary>
-</entry>
-<entry>
-<title>Ramcharitmanas: Ayodhya Kand</title>
-<id>https://spritual.co.in/ramcharitmanas/ayodhya-kand/</id>
-<link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/ramcharitmanas/ayodhya-kand/"/>
-<link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/ramcharitmanas/ayodhya-kand/"/>
-<updated>2026-11-18T12:39:26Z</updated>
-<category term="ramcharitmanas"/>
-<summary>Tulsidas's Ramcharitmanas, Ayodhya Kand: the complete verse text, dohas 1–326, with transliteration, online. Covers Rama's exile and Bharata's devotion.</summary>
-</entry>
-<entry>
-<title>Ramcharitmanas: Bal Kand</title>
-<id>https://spritual.co.in/ramcharitmanas/bal-kand/</id>
-<link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/ramcharitmanas/bal-kand/"/>
-<link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/ramcharitmanas/bal-kand/"/>
-<updated>2026-11-18T12:39:26Z</updated>
-<category term="ramcharitmanas"/>
-<summary>Tulsidas's Ramcharitmanas, Bal Kand: the complete verse text, dohas 1–361, with transliteration, online. Covers Rama's birth and Shiva's bow.</summary>
-</entry>
-<entry>
-<title>Ramcharitmanas: Kishkindha Kand</title>
-<id>https://spritual.co.in/ramcharitmanas/kishkindha-kand/</id>
-<link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/ramcharitmanas/kishkindha-kand/"/>
-<link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/ramcharitmanas/kishkindha-kand/"/>
-<updated>2026-11-18T12:39:26Z</updated>
-<category term="ramcharitmanas"/>
-<summary>Tulsidas's Ramcharitmanas, Kishkindha Kand: the complete verse text, dohas 1–30, with transliteration, online. Hanuman meets Rama; the alliance with Sugriva.</summary>
-</entry>
-<entry>
-<title>Ramcharitmanas: Lanka Kand</title>
-<id>https://spritual.co.in/ramcharitmanas/lanka-kand/</id>
-<link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/ramcharitmanas/lanka-kand/"/>
-<link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/ramcharitmanas/lanka-kand/"/>
-<updated>2026-11-18T12:39:26Z</updated>
-<category term="ramcharitmanas"/>
-<summary>Tulsidas's Ramcharitmanas, Lanka Kand: the complete verse text, dohas 1–121, with transliteration, online. Covers the bridge, the war and Ravana's end.</summary>
-</entry>
-<entry>
-<title>Ramcharitmanas: Sundar Kand</title>
-<id>https://spritual.co.in/ramcharitmanas/sundar-kand/</id>
-<link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/ramcharitmanas/sundar-kand/"/>
-<link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/ramcharitmanas/sundar-kand/"/>
-<updated>2026-11-18T12:39:26Z</updated>
-<category term="ramcharitmanas"/>
-<summary>The Sundar Kand of Tulsidas's Ramcharitmanas, dohas 1–60, in Devanagari with transliteration and English meaning, in 16 episodes from the leap to the ocean.</summary>
-</entry>
-<entry>
-<title>Ramcharitmanas: Uttar Kand</title>
-<id>https://spritual.co.in/ramcharitmanas/uttar-kand/</id>
-<link rel="alternate" type="text/html" hreflang="en" href="https://spritual.co.in/ramcharitmanas/uttar-kand/"/>
-<link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/ramcharitmanas/uttar-kand/"/>
-<updated>2026-11-18T12:39:26Z</updated>
-<category term="ramcharitmanas"/>
-<summary>Tulsidas's Ramcharitmanas, Uttar Kand: the complete verse text, dohas 1–130, with transliteration, online. Covers the return to Ayodhya and Kakbhushundi.</summary>
 </entry>
 <entry>
 <title>Shiva Tandava Stotram</title>
@@ -403,7 +403,7 @@
 <link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/collections/krishna/books/bhagavata-purana/arcs/skandha-8/stories/vamana-three-steps/"/>
 <updated>2026-11-17T18:42:23Z</updated>
 <category term="krishna"/>
-<summary>Vamana, a boy, asks Bali, king of the three worlds, for three paces of land; Bali's guru says refuse, and Bali gives anyway. From the Bhagavata Purana.</summary>
+<summary>Vamana, a boy, asks Bali, king of the three worlds, for three paces of land; Bali’s guru says refuse, and Bali gives anyway. From the Bhagavata Purana.</summary>
 </entry>
 <entry>
 <title>Alone inside the wheel</title>
@@ -412,7 +412,7 @@
 <link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/collections/mahabharata/books/vyasa-mahabharata/arcs/drona-parva/stories/mahabharata-abhimanyu/"/>
 <updated>2026-11-17T18:42:23Z</updated>
 <category term="mahabharata"/>
-<summary>Abhimanyu knew how to enter Drona's Chakravyuha, not how to leave it: one boy against an army until six warriors close in. From the Drona Parva.</summary>
+<summary>Abhimanyu knew how to enter Drona’s Chakravyuha, not how to leave it: one boy against an army until six warriors close in. From the Drona Parva.</summary>
 </entry>
 <entry>
 <title>Savitri follows death</title>
@@ -457,7 +457,7 @@
 <link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/collections/mahabharata/books/vyasa-mahabharata/arcs/mahaprasthanika-parva/stories/mahabharata-the-companion/"/>
 <updated>2026-11-13T11:33:20Z</updated>
 <category term="mahabharata"/>
-<summary>Indra's chariot comes to take Yudhishthira to heaven in his own body, on one condition: leave the dog at his side. From the Mahabharata.</summary>
+<summary>Indra’s chariot comes to take Yudhishthira to heaven in his own body, on one condition: leave the dog at his side. From the Mahabharata.</summary>
 </entry>
 <entry>
 <title>The unmoving star</title>
@@ -466,7 +466,7 @@
 <link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/collections/krishna/books/bhagavata-purana/arcs/skandha-4/stories/dhruva-star/"/>
 <updated>2026-11-13T08:32:15Z</updated>
 <category term="krishna"/>
-<summary>Denied his father's lap at five, Dhruva goes to the forest and meditates until Vishnu appears and grants him the place of the pole star.</summary>
+<summary>Denied his father’s lap at five, Dhruva goes to the forest and meditates until Vishnu appears and grants him the place of the pole star.</summary>
 </entry>
 <entry>
 <title>Hanuman Chalisa</title>
@@ -493,7 +493,7 @@
 <link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/collections/mahabharata/books/vyasa-mahabharata/arcs/adi-parva/stories/mahabharata-the-archers-eye/"/>
 <updated>2026-11-13T04:31:25Z</updated>
 <category term="mahabharata"/>
-<summary>Drona tests his pupils and Arjuna alone sees only the bird's head; Ekalavya, refused by Drona, gives his thumb as guru dakshina. From the Adi Parva.</summary>
+<summary>Drona tests his pupils and Arjuna alone sees only the bird’s head; Ekalavya, refused by Drona, gives his thumb as guru dakshina. From the Adi Parva.</summary>
 </entry>
 <entry>
 <title>Flowers fell on Devavrata</title>
@@ -520,7 +520,7 @@
 <link rel="alternate" type="text/html" hreflang="hi" href="https://spritual.co.in/hi/collections/mahabharata/books/vyasa-mahabharata/arcs/sabha-parva/stories/mahabharata-the-dice-hall/"/>
 <updated>2026-11-13T04:31:25Z</updated>
 <category term="mahabharata"/>
-<summary>Yudhishthira loses everything to Shakuni's dice, Draupadi is dragged into the hall and her robe cannot be stripped. The Sabha Parva of the Mahabharata.</summary>
+<summary>Yudhishthira loses everything to Shakuni’s dice, Draupadi is dragged into the hall and her robe cannot be stripped. The Sabha Parva of the Mahabharata.</summary>
 </entry>
 <entry>
 <title>The armour, still dripping</title>

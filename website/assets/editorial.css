@@ -408,6 +408,16 @@ main:not(.ed-home) > .wrap:last-child, main:not(.ed-home) > .block:last-child { 
 .save { border-radius: 2px; background: rgb(255 255 255 / .92); color: #181513; border-color: transparent; }
 .grid { gap: 2.5rem 1.5rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr)); }
 .filters { border-radius: 0; background: transparent; border: 0; border-top: 1px solid var(--ed-line-2); border-bottom: 1px solid var(--ed-line-2); padding: 1.6rem 0; margin-bottom: 2.5rem; }
+/* [fixS] the library's search, on a phone: the count sits under the box (it moved up in the markup), the moods are one row to swipe, and the two selects share a line,
+   so the first cards are within a thumb's reach of the box and the result of typing shows at once */
+@media (max-width: 640px) {
+  .ed-lib .filters { gap: 1rem; padding-block: 1.2rem; margin-bottom: 1.75rem; }
+  .ed-lib .filters .chips { flex-wrap: nowrap; overflow-x: auto; margin-inline: -1rem; padding: .2rem 1rem .35rem; scrollbar-width: none; overscroll-behavior-x: contain; scroll-padding-inline: 1rem; }
+  .ed-lib .filters .chips::-webkit-scrollbar { display: none; }
+  .ed-lib .filters .chip { flex: none; }
+  .ed-lib .filters .filter-row { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .75rem; }
+}
+.ed-lib .filters .result-row { margin-top: -.35rem; }
 .input, .select { border-radius: 4px; border-width: 1px; background: var(--ed-surface); }
 .chip span { border-radius: 4px; border-width: 1px; border-color: var(--ed-line-2); font-weight: 500; font-size: .88rem; }
 .chip input:checked + span { background: var(--ed-btn); color: var(--ed-on-btn); border-color: var(--ed-btn); }

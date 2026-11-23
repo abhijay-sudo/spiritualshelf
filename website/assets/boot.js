@@ -76,13 +76,19 @@
     function measured() {
       try {
         var big = performance.getEntriesByType('resource').filter(function (r) { return r.transferSize > 20000 && r.responseEnd > r.responseStart; });
-        if (big.length < 2) return false;
-        var b = 0, a = 1e9, z = 0; big.forEach(function (r) { b += r.transferSize; a = Math.min(a, r.responseStart); z = Math.max(z, r.responseEnd); });
-        return z > a && b / (z - a) * 1000 < 150000;
+        if (big.length < 3) return false;
+        // [perf] bytes over the time the line was actually busy (overlapping downloads counted once, gaps between them not at all),
+        // so a quiet moment on a fast line is never read as a slow one
+        var iv = big.map(function (r) { return [r.responseStart, r.responseEnd]; }).sort(function (a, b) { return a[0] - b[0]; });
+        var b = 0, busy = 0, cs = iv[0][0], ce = iv[0][1];
+        big.forEach(function (r) { b += r.transferSize; });
+        for (var i = 1; i < iv.length; i++) { if (iv[i][0] > ce) { busy += ce - cs; cs = iv[i][0]; ce = iv[i][1]; } else if (iv[i][1] > ce) ce = iv[i][1]; }
+        busy += ce - cs;
+        return busy > 400 && b / busy * 1000 < 150000;
       } catch (e) { return false; }
     }
     return {
-      slow: function () { return !!c.saveData || /^(slow-)?[23]g$/.test(c.effectiveType || '') || (c.downlink > 0 && c.downlink < 1.2) || (!c.effectiveType && measured()); },
+      slow: function () { return !!c.saveData || /^(slow-)?[23]g$/.test(c.effectiveType || '') || (c.downlink > 0 && c.downlink < 1.2) || measured(); },
       pick: function (set, cw, narrow) {
         var need = cw * Math.min(window.devicePixelRatio || 1, narrow ? 1 : 1.5) * .93; if (this.slow()) need *= .62;
         for (var i = 0; i < set.length; i++) if (set[i][1] >= need) return set[i][0];
@@ -90,6 +96,21 @@
       }
     };
   })();
+  // [perf] Save-Data or a reported 2g/3g line: a painting that waits to be fetched (loading="lazy") is asked for no wider than 960 px, rewritten as the
+  // parser inserts it, i.e. before the browser decides to fetch it (site.js repeats this for any that slipped by, and for lines measured slow later)
+  try {
+    var cn = navigator.connection || {};
+    if (d.classList.contains('ep-lite') || /^(slow-)?[23]g$/.test(cn.effectiveType || '')) {
+      var capImg = function (im) {
+        if (im.nodeType !== 1 || im.tagName !== 'IMG' || im.loading !== 'lazy' || !im.getAttribute('srcset') || im.dataset.capped) return;
+        var keep = im.getAttribute('srcset').split(',').filter(function (x) { return (parseInt(x.trim().split(/\s+/)[1], 10) || 0) <= 960; });
+        im.dataset.capped = '1'; if (keep.length) im.setAttribute('srcset', keep.join(','));
+      };
+      var capMo = new MutationObserver(function (ms) { ms.forEach(function (m) { m.addedNodes.forEach(function (n) { if (n.nodeType !== 1) return; capImg(n); if (n.querySelectorAll) n.querySelectorAll('img[srcset][loading=lazy]').forEach(capImg); }); }); });
+      capMo.observe(d, { childList: true, subtree: true });
+      addEventListener('DOMContentLoaded', function () { capMo.disconnect(); });
+    }
+  } catch (e) {}
   // [perf] A shared scene link (#page-N): the painting of that scene is asked for first, at high priority, at the width the
   // film will pick, so the title is never held over an empty stage while the story's cover loads first.
   var deepLink = false;
@@ -100,9 +121,13 @@
       if (sset) {
         var ent = sset.split(',').map(function (x) { x = x.trim().split(/\s+/); return [x[0], parseInt(x[1], 10) || 0]; }).sort(function (a, b) { return a[1] - b[1]; });
         var sw = innerWidth, sh = innerHeight, scw = 16 * Math.max(sw / 16, sh / 9);
-        var sp = document.createElement('link'); sp.rel = 'preload'; sp.as = 'image'; sp.href = window.SpritualNet.pick(ent, scw, sw < 900); sp.setAttribute('fetchpriority', 'high'); document.head.appendChild(sp);
+        // [perf] the smallest cut (about 20 KB) is asked for first and shown blurred (film.css, .fm-deep::before) while the full painting
+        // comes, so a shared scene never opens on a black screen; the full width is chosen from the rest
+        var ph = ent.length > 1 ? ent.shift() : null, pl2 = null;
+        if (ph) { var pl2 = document.createElement('link'); pl2.rel = 'preload'; pl2.as = 'image'; pl2.href = ph[0]; pl2.setAttribute('fetchpriority', 'high'); document.head.appendChild(pl2); d.style.setProperty('--fm-ph', 'url("' + new URL(ph[0], location.href).href + '")'); }
+        var sp = document.createElement('link'); sp.rel = 'preload'; sp.as = 'image'; sp.href = window.SpritualNet.pick(ent, scw, sw < 900); sp.setAttribute('fetchpriority', 'high'); document.head.appendChild(sp); window.SpritualDeepPic = [+hm[1], sp.getAttribute('href')];   // film.js shows this very file for that scene (never a second cut of it)
         // the story's cover is not what this reader came for: its early request is dropped, and the words wait (film.css) for the painting
-        var cp = document.querySelector('link[rel=preload][as=image][fetchpriority]'); if (cp && cp !== sp && cp.getAttribute('imagesrcset')) cp.parentNode.removeChild(cp);
+        var cp = document.querySelector('link[rel=preload][as=image][fetchpriority][imagesrcset]'); if (cp && cp !== sp && cp !== pl2 && cp.getAttribute('imagesrcset')) cp.parentNode.removeChild(cp);
         deepLink = true;
       }
     }
@@ -114,7 +139,9 @@
     if (sj && !d.classList.contains('ep-lite')) {
       var pl = document.createElement('link'); pl.rel = 'preload'; pl.as = 'script'; pl.href = sj; document.head.appendChild(pl);
       var sa = me.dataset.skyAtlas;
-      if (sa && window.fetch && window.createImageBitmap) { var pa = document.createElement('link'); pa.rel = 'preload'; pa.as = 'fetch'; pa.crossOrigin = 'anonymous'; pa.href = sa; document.head.appendChild(pa); }
+      // [perf] the sky's small sheet of faces is fetched (and decoded off the main thread) right here, once; stars.js takes this same
+      // request (window.SpritualAtlas) instead of a preload that it may or may not match, which had left the sheet downloaded twice
+      if (sa && window.fetch && window.createImageBitmap) { try { var pa = { src: sa, used: false }; pa.p = fetch(sa, { priority: 'high' }).then(function (r) { return r.ok ? r.blob() : Promise.reject(); }).then(function (b) { return createImageBitmap(b); }); pa.p.catch(function () {}); window.SpritualAtlas = pa; } catch (e) {} }
     }
   } catch (e) {}
   // The Unbroken Shot (film.js, film.css): a story page is laid out as a film from its first paint, so a reader arriving
@@ -241,5 +268,16 @@
     e.viewTransition.finished.then(clear, clear);
   });
   var sw = me && me.dataset.sw;
-  if (sw && 'serviceWorker' in navigator) addEventListener('load', function () { navigator.serviceWorker.register(sw); });
+  // [perf] The service worker's first install (its shell is a few hundred KB) waits until the page has loaded and gone quiet, so it never
+  // shares a weak line with the painting the reader came for; the extra core pages are warmed only on a line that is not slow (sw.js).
+  var later = function (fn, ms) { var go = function () { (window.requestIdleCallback || function (f) { setTimeout(f, 200); })(fn, { timeout: ms }); }; if (document.readyState === 'complete') go(); else addEventListener('load', go); };
+  if (sw && 'serviceWorker' in navigator) later(function () {
+    navigator.serviceWorker.register(sw).then(function () { return navigator.serviceWorker.ready; }).then(function (reg) {
+      if (!window.SpritualNet.slow() && reg.active) setTimeout(function () { try { reg.active.postMessage('spritual:warm'); } catch (e) {} }, 4000);
+    }).catch(function () {});
+  }, 6000);
+  // [perf] the Devanagari faces of the English home are decoration there (the names beside the characters): fetched once the page has
+  // loaded, never on Save-Data or a slow line (the device's own Devanagari stands in), instead of ~245 KB competing with the first screen
+  var lateCss = me && me.dataset.lateCss;
+  if (lateCss && !window.SpritualNet.slow() && !d.classList.contains('ep-lite')) later(function () { var l = document.createElement('link'); l.rel = 'stylesheet'; l.href = lateCss; document.head.appendChild(l); }, 3000);
 })();

@@ -46,3 +46,32 @@ html[data-input="pointer"] dialog :focus-visible { outline: none; box-shadow: no
   .cx-film-open[data-tside="right"]:not(.mx-open) .cx-film-card { padding: 0 clamp(40px, 6.5vw, 120px) clamp(3.5rem, 9svh, 6rem) 2rem; }
   .cx-film-open[data-tside="right"]:not(.mx-open) .cx-open-shade { background: linear-gradient(to left, rgb(18 9 3 / .78) 0, rgb(18 9 3 / .5) 30%, rgb(18 9 3 / 0) 58%), linear-gradient(to top, rgb(18 9 3 / .8) 0, rgb(18 9 3 / 0) 46%), linear-gradient(to bottom, rgb(30 14 4 / .4), transparent 18%); }
 }
+
+/* --- [fixL G34] the end of a story into the footer, with no seam ---
+   (1) a film story's afterword is the tint of its last painting; the dock's clearance below it was main's own padding, which showed
+   the film's night (a black band) between the two. The clearance now lies inside the afterword, so its colour runs to the footer.
+   (2) the footer's soft rise began from the light paper colour (a pale wash over a dark page); on a film page it begins from the
+   afterword's own tint. */
+@media (max-width: 759px), (orientation: landscape) and (max-height: 520px) {
+  :root.fm .cx-film .reader-main, :root.fm[data-read] .cx-film .reader-main { padding-bottom: 0; }
+  :root.fm .story-end { padding-bottom: calc(5rem + 58px + 1.6rem + env(safe-area-inset-bottom, 0px)); }
+}
+:root.fm .reader-main ~ * .cx-credits::before, :root.fm .cx-credits::before { background: linear-gradient(to bottom, var(--fm-end, rgb(22 19 14)), transparent); }
+
+/* --- [fixL G40] the glossary's jump row: initial letters, 44px targets, wraps, no scrolling sideways --- */
+.gl-az { margin: 1.1rem 0 .4rem; }
+.gl-az ul { display: flex; flex-wrap: wrap; gap: .3rem; margin: 0; padding: 0; list-style: none; }
+.gl-az a, .cx-plain-text .gl-az a { text-decoration: none; background-image: none; display: inline-grid; place-items: center; min-width: 44px; min-height: 44px; box-sizing: border-box; padding: 0 .55rem; border: 1px solid var(--cx-line-2, rgb(60 40 20 / .28)); border-radius: 999px; color: var(--cx-ink, inherit); text-decoration: none; font: 600 1rem/1 var(--cx-ui, inherit); transition: background-color .16s var(--ease-lamp, ease), border-color .16s var(--ease-lamp, ease); -webkit-tap-highlight-color: transparent; }
+html[lang="hi"] .gl-az a { font-family: "Mukta", var(--cx-ui, inherit); font-size: 1.08rem; }
+.gl-az a:active { background: var(--cx-sand, rgb(60 40 20 / .1)); }
+.gl-az a:focus-visible { outline: 2px solid var(--cx-saffron, #c9742c); outline-offset: 3px; }
+@media (hover: hover) and (pointer: fine) { .gl-az a:hover { background: var(--cx-sand, rgb(60 40 20 / .08)); border-color: var(--cx-saffron, #c9742c); } }
+.cx-term { scroll-margin-top: 5.5rem; }
+.fest-list time .nw { white-space: nowrap; }   /* [fixL G40] */
+
+/* --- [fixL G42] the character select: on a wide screen the heading stands over the words' column (left), not across the middle where the
+   painted face is; the rule on its left is dropped so it reads as the column's own label --- */
+@media (min-width: 900px) and (min-height: 520.02px) {
+  .cx-sel-head { justify-items: start; }
+  .cx-sel-h::before, .cx-sel-h::after { display: none; }
+}

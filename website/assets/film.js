@@ -70,14 +70,15 @@ add(head, intro, 'head', 0);
 scenes.forEach((s, i) => {
 const fig = $('.shot', s), sc = $('.shot-card', s), im = fig && $('img', fig);
 if (fig && sc) add(fig, sc, 'title', i + 1);
-if (im?.alt && !$('.fm-alt', fig)) { const a = d.createElement('span'); a.className = 'visually-hidden fm-alt'; a.textContent = im.alt; fig.prepend(a); }
+const dsc = im && d.getElementById(im.getAttribute('aria-describedby') || '-')?.textContent;   // [gfixA] the image's short alt is its name; its long description is what the film reads
+if (im?.alt && !$('.fm-alt', fig)) { const a = d.createElement('span'); a.className = 'visually-hidden fm-alt'; a.textContent = dsc || im.alt; fig.prepend(a); }
 $$('.scene-text > .pair', s).forEach((p) => { if (p.firstElementChild) add(p, p.firstElementChild, 'p', i + 1); });
 tints[i + 1] = s.dataset.tint || '18 10 7';
 });
 tints[0] = hero.dataset.tint || tints[1];
 if (endP) { const sp = d.createElement('span'); sp.innerHTML = LAMP('fme', 'fm-end-lamp'); while (endP.firstChild && endP.firstChild !== sp) sp.append(endP.firstChild); endP.append(sp); endP.classList.add('fm-end'); endLamp = $('.fm-lampx', sp); add(endP, sp, 'end', N); }
 if (closeEl && $('.cb-in', closeEl)) add(closeEl, $('.cb-in', closeEl), 'close', N);
-endSec?.style.setProperty('--t', tints[N]);
+endSec?.style.setProperty('--t', tints[N]); document.documentElement.style.setProperty('--fm-end', 'rgb(' + tints[N] + ')');   // [fixL G34] the footer's rise starts from the afterword's own tint
 const on = ctx.sound.on(), beads = $$('[data-bead]', reader), lbl = on ? UI.soundDrone : UI.soundOffLong;
 rail = d.createElement('nav'); rail.className = 'fm-rail'; rail.setAttribute('aria-label', F.fScenes || '');
 rail.innerHTML = `<button type="button" class="fm-lamp" data-sound aria-pressed="${on}" title="${esc(lbl)}">${DIYA()}<span class="visually-hidden">${esc(lbl)}</span></button><ol>${scenes.map((s, i) => `<li><a href="#page-${i + 1}" draggable="false" aria-label="${esc(beads[i]?.getAttribute('aria-label') || i + 1)}"><i></i></a></li>`).join('')}</ol><button type="button" data-fm="off" aria-label="${esc(F.fPaper)}" title="${esc(F.fPaper)}">${PAGE}</button>${langChip()}`;
@@ -91,6 +92,7 @@ thread.addEventListener('focusout', () => { if (!drag?.on) showPeek(-1); });
 thread.addEventListener('keydown', (e) => { const i = bi(e.target), j = e.key === 'ArrowDown' ? i + 1 : e.key === 'ArrowUp' ? i - 1 : e.key === 'Home' ? 0 : e.key === 'End' ? N - 1 : -2; if (i < 0 || j < -1) return; e.preventDefault(); links[clamp(j, 0, N - 1)].focus(); });
 d.addEventListener('pointerdown', (e) => { ptr = e.pointerType; armed = railIn; }, true);
 rail.addEventListener('click', (e) => { if (e.isTrusted && e.detail && ptr === 'touch' && !armed) { e.preventDefault(); e.stopPropagation(); } }, true);
+rail.addEventListener('touchend', () => { if (active && live) wake(3200); }, { passive: true });
 thread.addEventListener('pointerdown', (e) => { if (e.button || e.pointerType === 'touch') return; drag = { id: e.pointerId, y: e.clientY, on: false }; });
 thread.addEventListener('pointermove', (e) => {
 if (!drag || e.pointerId !== drag.id) return;
@@ -166,6 +168,7 @@ layers.forEach((l) => { if (l.k >= 0) pose(l, poseOf(l.k), false); if (l.deep) l
 };
 const srcOf = (k) => {
 if (!k) return heroImg.currentSrc || heroImg.src;
+if (window.SpritualDeepPic && window.SpritualDeepPic[0] === k) return window.SpritualDeepPic[1];   // [perf] the cut boot.js already asked for at a shared scene link
 const im = $('.shot > img', scenes[k - 1]); if (!im) return heroImg.currentSrc || heroImg.src;
 const set = (im.getAttribute('srcset') || '').split(',').map((x) => x.trim().split(/\s+/)).filter((x) => x[0]).map(([u, w]) => [u, parseInt(w, 10) || 0]).sort((a, b) => a[1] - b[1]);
 if (!set.length) return im.getAttribute('src');
@@ -217,7 +220,13 @@ const r = thread.getBoundingClientRect(), h = r.height / N, t = clamp((py - r.to
 freeT = performance.now() + 500;
 scrollTo({ top: Math.max(0, a + (t - k + 1) * Math.max(0, cut[k + 1] - a - 4) - innerHeight), behavior: 'instant' }); showPeek(k - 1); wake();
 };
-const pre = (k) => { if (k >= 1 && k <= N) { const im = new Image(); im.src = srcOf(k); } };
+const pre = (k) => { if (k >= 1 && k <= N) { const go = () => { const im = new Image(); im.src = srcOf(k); }; if (k === 1 && window.SpritualNet && window.SpritualNet.slow()) setTimeout(go, 3500); else go(); } };
+const sharpen = (l, k) => {
+const c = navigator.connection || {}; if (!k || vw >= 900 || l.deep || c.saveData || (window.SpritualNet && window.SpritualNet.slow()) || (c.effectiveType && c.effectiveType !== '4g') || (c.downlink != null && c.downlink < 5)) return;
+const im = $('.shot > img', scenes[k - 1]); const set = (im?.getAttribute('srcset') || '').split(',').map((x) => x.trim().split(/\s+/)).filter((x) => x[0]).map(([u, w]) => [u, parseInt(w, 10) || 0]).sort((a, b) => b[1] - a[1]);
+const full = set[0] && set[0][0]; if (!full || l.img.getAttribute('src') === full) return;
+setTimeout(() => { if (l.k !== k || !active || l.deep) return; const pic = new Image(); pic.src = full; (pic.decode ? pic.decode() : Promise.resolve()).then(() => { if (l.k === k && active && !l.deep && l.img.getAttribute('src') !== full) l.img.src = full; }).catch(() => {}); }, 1400);
+};
 const cutTo = (k) => {
 if (busy || loading) { pending = k; return; }
 if (layers[top].k === k) return;
@@ -230,7 +239,7 @@ pose(inc, poseOf(k), false); if (dzT) deepen(inc); inc.el.style.zIndex = 2; out.
 const done = () => { out.el.classList.remove('on', 'fade'); out.k = -1; flat(out); busy = false; if (pending != null) { const p = pending; pending = null; cutTo(p); } };
 if (was) { first = false; live = true; root.classList.add('fm-live'); fitRail(); done(); kick(); }
 else { busy = true; if (ctx.sound.on()) ctx.sound.swell?.(); setTimeout(done, dis + 40); }
-pre(k + 1);
+pre(k + 1); sharpen(inc, k);
 });
 };
 const at = () => { const Y = scrollY + innerHeight; let k = 0; while (k < N && Y >= cut[k + 1]) k++; return k + Math.min(.9999, clamp((Y - cut[k]) / Math.max(1, cut[k + 1] - cut[k]))); };
@@ -277,10 +286,17 @@ if (y !== lastY) { if (lastY >= 0) wake(); lastY = y; } railSync();
 ticks.forEach((t, j) => { const f = clamp(cur - (j + 1)).toFixed(1); if (t._f !== f) { t._f = f; t.style.setProperty('--f', f); } });
 const tp = (Math.round(clamp((cur - 1) / Math.max(1, N - 1)) * 150) / 150).toFixed(4), nk = cur >= 1 ? Math.min(N, Math.floor(cur)) - 1 : -1;
 if (tp !== lastP) { lastP = tp; thread.style.setProperty('--p', tp); }
-if (nk !== nowK) { links[nowK]?.removeAttribute('aria-current'); links[nk]?.setAttribute('aria-current', 'step'); nowK = nk; }
+if (nk !== nowK) { links[nowK]?.removeAttribute('aria-current'); links[nk]?.setAttribute('aria-current', 'step'); nowK = nk; keyHere(nk); }
 }
 if (cur !== target) raf = requestAnimationFrame(draw);
 };
+let kbAt = -1e9; addEventListener('keydown', (e) => { if (e.key === ' ' || /^(Page(Up|Down)|Arrow(Up|Down)|Home|End)$/.test(e.key)) kbAt = performance.now(); }, { passive: true });
+const keyHere = (k) => { try {
+const sc = scenes[k], a = d.activeElement; if (!sc || performance.now() - kbAt > 6000) return;
+if (a && a !== d.body && a !== root) { const r = a.getBoundingClientRect(); if (r.bottom > 0 && r.top < innerHeight) return; }
+const had = sc.getAttribute('tabindex'); sc.tabIndex = -1; sc.focus({ preventScroll: true }); sc.blur();
+if (had === null) sc.removeAttribute('tabindex'); else sc.setAttribute('tabindex', had);
+} catch (x) { /* the starting point is a nicety */ } };
 const kick = () => { if (!raf && active) raf = requestAnimationFrame(draw); };
 let rt = 0, lastW = 0, ro = null;
 const remeasure = () => { if (!active) return; measure(); kick(); };

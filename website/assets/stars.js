@@ -171,12 +171,14 @@ vel.x = vel.y = 0; wake();
 };
 const stopFlight = () => { if (flight) { flight = null; Object.assign(to, cam); } };
 let faces = null; let cell = 0; const cols = +sky.dataset.cols || 10; let hd = !sky.dataset.atlasHd; let xl = !sky.dataset.atlasXl;
-const loadFaces = (src) => {
-if (!src) return; const ok = (pic) => { if (faces && faces.width >= pic.width) return; faces = pic; cell = pic.width / cols; bakeAll(); };
+const netSlow = () => !!(window.SpritualNet && window.SpritualNet.slow());
+const loadFaces = (src, then) => {
+if (!src) return; const ok = (pic) => { if (!faces || faces.width < pic.width) { faces = pic; cell = pic.width / cols; bakeAll(); } if (then) then(); };
 const plain = () => { const im = new Image(); im.decoding = 'async'; im.onload = () => ok(im); im.src = src; };
+const early = window.SpritualAtlas; if (early && early.src === src && !early.used) { early.used = true; early.p.then(ok, plain); return; }
 if (window.createImageBitmap && window.fetch) fetch(src).then((r) => (r.ok ? r.blob() : Promise.reject())).then((bl) => createImageBitmap(bl)).then(ok, plain); else plain();
 };
-const wantHd = () => { if (hd) return; hd = true; setTimeout(() => (window.requestIdleCallback || setTimeout)(() => loadFaces(sky.dataset.atlasHd)), 400); };
+const wantHd = (now) => { if (hd) return; hd = true; if (now === true) { loadFaces(sky.dataset.atlasHd); return; } setTimeout(() => (window.requestIdleCallback || setTimeout)(() => loadFaces(sky.dataset.atlasHd)), 400); };   // [perf] now: asked for the moment the small sheet is in, one after the other (never two sheets sharing a weak line)
 const wantXl = () => { if (xl) return; xl = true; (window.requestIdleCallback || setTimeout)(() => loadFaces(sky.dataset.atlasXl)); };
 on(sky, 'pointerup', wantHd, { capture: true, passive: true }); on(sky, 'keyup', wantHd, { capture: true, passive: true });
 const SPR = { legend: 256, lead: 224, cast: 192 };
@@ -186,7 +188,7 @@ const paint = (n, D, old) => {
 const c = old && old.width === D ? old : document.createElement('canvas'); c.width = c.height = D; const g = c.getContext('2d'); g.clearRect(0, 0, D, D); g.imageSmoothingQuality = 'high';
 const r = D / 2 - 1; const rw = Math.max(1.6, D * 0.016, D < 60 ? 3 : 0);
 g.save(); g.beginPath(); g.arc(D / 2, D / 2, r - rw * 0.4, 0, TAU); g.clip();
-if (faces && n.cell >= 0) g.drawImage(faces, (n.cell % cols) * cell, Math.floor(n.cell / cols) * cell, cell, cell, 0, 0, D, D); else { g.fillStyle = '#2a1b11'; g.fillRect(0, 0, D, D); }
+if (faces && n.cell >= 0) g.drawImage(faces, (n.cell % cols) * cell, Math.floor(n.cell / cols) * cell, cell, cell, 0, 0, D, D); else { const dg = g.createRadialGradient(D / 2, D / 2, 0, D / 2, D / 2, D / 2); dg.addColorStop(0, '#fff3d6'); dg.addColorStop(0.38, n.light); dg.addColorStop(1, '#2a1b11'); g.fillStyle = dg; g.fillRect(0, 0, D, D); }   // [perf] before the faces arrive: a glowing dot in the person's own light, never an empty dark disc
 const gr = g.createRadialGradient(D / 2, D / 2, r * 0.6, D / 2, D / 2, r); gr.addColorStop(0, 'rgba(8,4,12,0)'); gr.addColorStop(1, 'rgba(8,4,12,.42)'); g.fillStyle = gr; g.fillRect(0, 0, D, D); g.restore();
 g.beginPath(); g.arc(D / 2, D / 2, r - rw * 0.5, 0, TAU); g.strokeStyle = n.light; g.globalAlpha = 0.9; g.lineWidth = rw; g.stroke(); return c;
 };
@@ -356,14 +358,22 @@ titles.length = 0; placed.length = 0;
 const far = clamp01((rest.k * 1.5 - k) / (rest.k * 0.5)); const ta = far * 0.78 * (f ? 0.3 : 1) * clamp01(intro * 3 - 1.4);
 if (ta > 0.01) {
 const base = Math.max(13, Math.min(narrow ? 21 : 30, 40 * k)); ctx.fillStyle = `rgb(${GOLD})`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.font = `500 ${base.toFixed(1)}px ${font}`; try { ctx.letterSpacing = hi ? '0px' : '0.16em'; } catch (e) {}
-for (const r of realms) { const s = hi ? r.name : r.name.toUpperCase(); const ck = s + base.toFixed(1); const w = (rwid[ck] || (rwid[ck] = ctx.measureText(s).width)) + 10; const x0 = sx(r.cx); const xc = clamp(x0, w / 2 + 10, W - w / 2 - 10); const x = Math.abs(xc - x0) < w * 0.7 ? xc : x0; const y = sy(r.cy - r.hh - (TITLE - 20)); const a = ta * r.a * edgeA(x - w / 2, x + w / 2) * clamp01((y - base - topH) / 12) * clamp01((H - 80 - y) / 12); if (a < 0.02) continue; ctx.globalAlpha = a; ctx.lineJoin = 'round'; ctx.lineWidth = 6; ctx.strokeStyle = 'rgba(8,5,16,.88)'; ctx.strokeText(s, x, y); ctx.fillText(s, x, y); titles.push([x - w / 2, y - base / 2, w, base]); }
+let bs = base; let items = [];
+for (let it = 0; it < 7; it++) {
+ctx.font = `500 ${bs.toFixed(1)}px ${font}`;
+items = realms.map((r) => { const s = hi ? r.name : r.name.toUpperCase(); const ck = s + bs.toFixed(1); const w = (rwid[ck] || (rwid[ck] = ctx.measureText(s).width)) + 10; const x0 = sx(r.cx); const xc = clamp(x0, w / 2 + 12, W - w / 2 - 12); const pin = Math.abs(xc - x0) < w * 0.7; return { r, s, w, x: pin ? xc : x0, pin, y: sy(r.cy - r.hh - (TITLE - 20)) }; });
+const vis = items.filter((u) => u.pin && u.r.a > 0.3); let ok = true;
+for (const u of vis) for (const v of vis) if (u !== v && u.x < v.x && u.x + u.w / 2 + 8 > v.x - v.w / 2 && Math.abs(u.y - v.y) < bs * 2.4) ok = false;
+if (ok || bs <= 11) break; bs *= 0.88;
+}
+for (const u of items) { const r = u.r; const { s, w, x, y } = u; const a = ta * r.a * (u.pin ? 1 : edgeA(x - w / 2, x + w / 2)) * clamp01((y - bs - topH) / 12) * clamp01((H - 80 - y) / 12); if (a < 0.02) continue; ctx.globalAlpha = a; ctx.lineJoin = 'round'; ctx.lineWidth = 6; ctx.strokeStyle = 'rgba(8,5,16,.88)'; ctx.strokeText(s, x, y); ctx.fillText(s, x, y); titles.push([x - w / 2, y - bs / 2, w, bs]); }
 try { ctx.letterSpacing = '0px'; } catch (e) {}
 }
 if (labels) {
 for (const p of titles) placed.push(p);
 if (narrow && sel) placed.push([0, boxHpx * 0.52 - 6, W, 400]);   // a phone's card holds the lower half: no name is set across its edge
 for (const q of ctlRects) placed.push(q); if (capR && capF > 0.01) placed.push(capR);
-const order = f ? [f, ...f.kinL, ...f.nearL] : byRank; const sfar = 1;
+const touring = f && wander.run && !sel && !hover; const order = touring ? [f, ...(wander.nxt ? [wander.nxt] : []), ...f.kinL].filter((n, i, a) => a.indexOf(n) === i) : f ? [f, ...f.kinL, ...f.nearL] : byRank; const sfar = 1;
 for (const n of nodes) n.want = 0; let nl = 0; const lmax = f || !narrow ? 99 : k < home.k * 1.35 ? 8 : 12;   // (a phone's whole sky names only the few best known; a realm, a dozen)
 for (const n of order) {
 if (nl >= lmax) break; if (!n.vis || n.in < 0.5) continue; if (!f && n.tier === 'cast' && n.pr < 15) continue; if (!f && n.tier === 'lead' && n.pr < 13) continue; if (!f && n.pr < 12) continue; if (f && n !== f && (n.pr < 9 || n.dim < 0.4)) continue;
@@ -373,7 +383,7 @@ const top = n.rank <= 1 && !f;
 for (let pas = 0; pas < (top ? 3 : 2) && !done; pas++) for (const ci of pas === 2 ? [4, 0, 1] : seq) {
 const cp = labAt(n, ci, f); const lx = cp[0]; const ly = cp[1];
 const la = (f ? 1 : n.realm.a) * edgeA(lx + 4, lx + L.w - 4) * clamp01((ly + 4 - topH) / 8) * clamp01((H - 60 - ly - L.h + 4) / 8); if (la < (pas ? 0.5 * (f ? 1 : n.realm.a) : 0.9 * (f ? 1 : n.realm.a))) continue;
-const ty = ly + L.h / 2 - 7; let ok = true; for (const p of placed) if (hit(lx - 3, ty - 3, L.w + 6, 20, p[0], p[1], p[2], p[3])) { ok = false; break; }
+const ty = ly + L.h / 2 - 7; let ok = true; for (const p of placed) if (hit(lx - 4, ty - 4, L.w + 8, 22, p[0], p[1], p[2], p[3])) { ok = false; break; }   // [fixGC] a little more air between two names
 const mg = pas === 2 || ci === 0 ? 0 : ci === 1 ? 4 : 10;
 if (ok && n !== f) for (const m of nodes) if (m !== n && !(pas === 2 && m.rank > n.rank) && m.vis && m.in > 0.3 && hit(lx + 6 - mg, ty + 1 - mg, L.w - 12 + mg * 2, 12 + mg * 2, m.px - m.dr * 0.9, m.py - m.dr * 0.9, m.dr * 1.8, m.dr * 1.8)) { ok = false; break; }
 if (!ok) continue; placed.push([lx, ty, L.w, 14]); n.want = la; n.lci = ci; done = true; nl++; break;
@@ -437,10 +447,10 @@ const ctlRects = [];
 const update = (now, dt, still) => {
 if (morphBusy()) { const step = still ? 1 : dt / 1.1; for (const r of realms) { const tg = r === unf ? 1 : 0; r.m = r.m < tg ? Math.min(tg, r.m + step) : Math.max(tg, r.m - step * 1.2); } morph(); }
 if (!introDone) {
-const hold = !faces && introT > 1.05 && introHold < 3.5 && !introFast; if (hold) introHold += dt; else introT += dt * (introFast ? 6 : 1);
+const hold = !faces && introT > 1.05 && introHold < 1.2 && !introFast; if (hold) introHold += dt; else introT += dt * (introFast ? 6 : 1);
 if (introT >= 5.7 || still) { introDone = true; introT = 7; }
 }
-if (!hd && cam.k > 1.3) wantHd(); if (!xl && introDone && (cam.k > 1.4 || sel || wander.run)) wantXl();
+if (!hd && cam.k > 1.3 && !netSlow()) wantHd(); if (!xl && introDone && (cam.k > 1.4 || sel || wander.run) && (!netSlow() || sel)) wantXl();   // [perf] the sky's own drift never pulls the 0.4-0.65 MB sheets over a slow line; a touch or a chosen person still does
 if (flight) {
 let s = clamp01((now - flight.t0) / flight.dur); const e = flight.out ? easeOut(s) : ss(s); const F = flight; const k = Math.exp(lerp(Math.log(F.from.k), Math.log(F.to.k), e)) * (1 - F.bump * Math.sin(PI * e));
 if (F.edge) { const p = bez(F.edge, F.rev ? 1 - e : e); const c = camFor(p.x, p.y, k, F.r || freeRect(panel)); cam.x = c.x; cam.y = c.y; cam.k = c.k; }
@@ -488,13 +498,15 @@ for (const b of sky.querySelectorAll('[data-st-view]')) b.setAttribute('aria-pre
 io.observe(sky);
 on(document, 'visibilitychange', () => { const v = !document.hidden; if (v && !shown) { shown = true; last = 0; wake(); } else if (!v) shown = false; });
 let metrics = false;
+const measureCtl = () => { ctlRects.length = 0; const s = stage.getBoundingClientRect(); for (const el of sky.querySelectorAll('.st-ctl, .st-wander, .st-cue')) { const z = el.getBoundingClientRect(); if (z.width) ctlRects.push([z.left - s.left - 6, z.top - s.top - 6, z.width + 12, z.height + 12]); } dirty = true; };
+on(sky, 'animationend', (e) => { if (e.target.matches('.st-top, .st-ctl, .st-foot')) { measureCtl(); wake(); } });
 const size = (force) => {
 const r = stage.getBoundingClientRect(); if (!r.width || !r.height) return;
 const d0 = Math.min(QP[Q].dpr, window.devicePixelRatio || 1); const d = Math.min(d0, Math.sqrt(QP[Q].px / (r.width * r.height)));
 if (!force && r.width === W && r.height === H && d === dpr) return;
 const was = W; boxHpx = boxEl.getBoundingClientRect().height || r.height; W = r.width; H = r.height; dpr = d; cv.width = Math.round(W * d); cv.height = Math.round(H * d); narrow = W <= 700; FLOOR = narrow ? FLOORS.narrow : FLOORS.wide; glowS = Q >= 2 ? 4 : 3; glow.width = Math.ceil(W / glowS); glow.height = Math.ceil(H / glowS); gx.imageSmoothingQuality = 'low';
 { const tr = topEl.getBoundingClientRect(); const br = boxEl.getBoundingClientRect(); topH = Math.max(56, Math.round(tr.top - br.top + [...topEl.children].reduce((m, c) => Math.max(m, c.getBoundingClientRect().bottom - tr.top), 0) + 6)); sky.style.setProperty('--st-top', topH + 'px'); }
-ctlRects.length = 0; for (const el of sky.querySelectorAll('.st-ctl, .st-wander, .st-cue')) { const z = el.getBoundingClientRect(); const s = stage.getBoundingClientRect(); ctlRects.push([z.left - s.left - 6, z.top - s.top - 6, z.width + 12, z.height + 12]); }
+measureCtl();
 wide = W > H * 1.15; arrange(); const rearr = layoutKey !== lastKey; lastKey = layoutKey;
 kMin = fitK(ovBox, freeRect('none'), padOf()) * 0.9; const hm = fitBox(ovBox, freeRect('none'), padOf()); hm.k = Math.min(hm.k, narrow ? 1.3 : 1.6); Object.assign(home, camFor((ovBox.x0 + ovBox.x1) / 2, (ovBox.y0 + ovBox.y1) / 2, hm.k, freeRect('none')));
 { const rr = freeRect('none'); const b = realmBox(realms[0]); const kr = clamp(fitK(b, rr, padOf()), kMin, K_MAX); restRealm = !wide && home.k * 54 < 46 && kr > home.k * 1.2 ? realms[0] : null;
@@ -506,7 +518,7 @@ Object.assign(cam, rest); Object.assign(to, rest); if (restRealm) quietRealm(res
 else { introDone = true; introT = 7; }
 if (document.fonts && document.fonts.status !== 'loaded') document.fonts.ready.then(makeLabels); else makeLabels();
 dustInit(); bakeAll();
-loadFaces(sky.dataset.atlas); if (Q < 2 && !(window.SpritualNet && window.SpritualNet.slow())) (window.requestIdleCallback || setTimeout)(wantHd);
+loadFaces(sky.dataset.atlas, () => { if (Q < 2 && !(window.SpritualNet && window.SpritualNet.slow())) wantHd(true); });
 } else {
 if (rearr || atHome) { stopFlight(); const g = !atHome && unf ? camOfRealm(unf) : homeSel === 'sky' ? home : rest; Object.assign(to, g); Object.assign(cam, g); } else if (sel) { fly(nodeCam(sel), 0.6); } else clampCam(to);
 dustInit(); if (labelDpr !== dpr) makeLabels(); if (nodes[0].spr && nodes[0].spr.width !== sprD(nodes[0])) bakeAll();
@@ -531,7 +543,7 @@ card.textContent = ''; card.classList.toggle('is-peek', peek); card.hidden = fal
 const top = el('div', 'st-card-top'); const pic = el('span', 'st-card-pic'); const face = n.el.querySelector('.st-face > *'); if (face) { const c = face.cloneNode(true); c.querySelector('img')?.removeAttribute('loading'); pic.append(c); }
 if (n.id === 'vishvamitra' || n.id === 'shurpanakha') pic.style.filter = getComputedStyle(n.el.querySelector('.st-face img')).filter;
 const h = el('h2', 'st-card-n', n.name); h.id = 'st-card-n'; const o = el('span', '', n.other); o.lang = hi ? 'en' : 'hi'; h.append(o);
-top.append(pic, h, el('p', 'st-card-k', n.title)); card.append(top, el('p', 'st-card-l', nb(n.line))); card.classList.remove('is-more');
+top.append(pic, h, el('p', 'st-card-k', n.title)); card.append(top, el('p', 'st-card-l', nb(n.line))); { const al = n.el.querySelector('.st-p-also'); if (al) card.append(el('p', 'st-card-also', al.textContent)); } card.classList.remove('is-more');   // [fixGC] also in another epic's stories
 card.setAttribute('aria-labelledby', 'st-card-n'); lift();
 if (peek) return;
 const more = el('div', 'st-card-more'); const open = el('a', 'st-card-open', fill(UI.open, { name: short(n) })); open.href = n.href; more.append(open);
@@ -557,12 +569,13 @@ return Math.max(k, kMin);
 };
 const nodeCam = (n, nxt, mode, hopNo) => {
 const r = freeRect(mode || panel);
-if (!nxt || mode !== 'cap') return camFor(n.x, n.y, nodeK(n, nxt, r), r);
+const tcap = (k) => (mode === 'cap' && wander.run ? Math.max(kMin, Math.min(k, 2 * home.k)) : k);
+if (!nxt || mode !== 'cap') return camFor(n.x, n.y, tcap(nodeK(n, nxt, r)), r);
 const sc = scOf(); const kc = TPX[n.tier] * sc / n.r; const m = 18; const hw = (r.x1 - r.x0) / 2; const hh = (r.y1 - r.y0) / 2;
 const dx = Math.abs(nxt.x - n.x) || 1; const dy = Math.abs(nxt.y - n.y) || 1; const re = Math.max(n.r, nxt.r);
 const kfit = Math.min((2 * hw - 2 * m) / (dx + 2 * re), (2 * hh - 2 * m) / (dy + 2 * re));
 const wide = (hopNo | 0) % 3 === 0;
-const k = Math.max(kMin, Math.min(K_MAX, wide ? clamp(kfit * 0.75, 0.58 * kc, 0.9 * kc) : clamp(kfit, (narrow ? 0.78 : 0.7) * kc, 1.1 * kc)));
+const k = tcap(Math.max(kMin, Math.min(K_MAX, wide ? clamp(kfit * 0.75, 0.58 * kc, 0.9 * kc) : clamp(kfit, (narrow ? 0.78 : 0.7) * kc, 1.1 * kc))));
 const tx = (hw - n.r * k - m) / (dx * k); const ty = (hh - n.r * k - m) / (dy * k); const t = clamp(Math.min(0.5, tx, ty), 0, 0.5);
 return camFor(lerp(n.x, nxt.x, t), lerp(n.y, nxt.y, t), k, r);
 };
@@ -727,6 +740,7 @@ else if (e.key === '+' || e.key === '=') { e.preventDefault(); zoomAt(W / 2, H /
 else if (e.key === '-' || e.key === '_') { e.preventDefault(); zoomAt(W / 2, H / 2, 1 / 1.35, 0.3); }
 else if (e.key === 'Home' || e.key === '0') { e.preventDefault(); goHome(); }
 });
+on(document, 'keydown', (e) => { if (e.key !== 'Escape' || e.defaultPrevented || !wander.run || !shown || sel || document.querySelector('dialog[open]')) return; if (document.activeElement && document.activeElement !== document.body && !sky.contains(document.activeElement) && document.activeElement.closest('[role="dialog"], [aria-modal="true"], nav details[open]')) return; lastInput = performance.now(); wander.user = true; wStop(); wLabel(); });
 on(sky, 'keydown', (e) => { if ((e.key === 'w' || e.key === 'W') && !e.altKey && !e.ctrlKey && !e.metaKey && !/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)) { e.preventDefault(); wanderToggle(); } });
 on(card, 'keydown', (e) => { if (e.key === 'Escape') { e.preventDefault(); pick(null); stage.focus({ preventScroll: true }); } });
 const scrollTo = (el2) => { const calmNow = calm(); if (el2) { const y = el2.getBoundingClientRect().top + window.scrollY - (parseFloat(getComputedStyle(root).getPropertyValue('--ed-head-h')) || 68) - 8; window.scrollTo({ top: y, behavior: calmNow ? 'instant' : 'smooth' }); } else window.scrollTo({ top: 0, behavior: calmNow ? 'instant' : 'smooth' }); };

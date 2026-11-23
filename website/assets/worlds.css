@@ -170,7 +170,7 @@ html[lang="hi"] .wl-out { font-size: 1.05rem; }
 @media (max-aspect-ratio: 4/5) { .wl-on .wl--lokas .wl-stage--title { top: var(--wl-strip); height: auto; bottom: 0; } .wl-on .wl--lokas .wl-stage--title .wl-pic { top: 0; height: 100%; } }
 
 /* the Fourteen Lokas' first stage stands on a pale gradient: its label, title and lede sit on a dark foot of their own, so each reads at 4.5:1 or more */
-.wl-on .wl--lokas .wl-stage--title::after { display: block; z-index: 1; background: linear-gradient(to top, rgb(13 8 6 / .97) 0, rgb(13 8 6 / .94) 52%, rgb(13 8 6 / .7) 68%, rgb(13 8 6 / 0) 88%); }
+.wl-on .wl--lokas .wl-stage--title::after { display: block; z-index: 1; background: linear-gradient(to top, rgb(13 8 6 / .95) 0, rgb(13 8 6 / .86) 34%, rgb(13 8 6 / .5) 52%, rgb(13 8 6 / 0) 76%); }   /* [fixGC] was .97 / .94 / .7 up to 88%: the painting lay under a dark lid; the words keep a dark foot of their own */
 .wl--lokas .wl-kicker { color: #f6dfa6; }
 @media (max-aspect-ratio: 4/5) {
   .wl-on .wl--lokas .wl-stage--title .wl-text::before { content: ""; position: absolute; z-index: -1; pointer-events: none; left: calc(-1 * var(--wl-text-l)); right: calc(-1 * var(--wl-gut-r)); top: -4.6rem; bottom: -4rem; background: linear-gradient(to bottom, rgb(13 8 6 / 0), rgb(13 8 6 / .6) 1.8rem, rgb(13 8 6 / .93) 3.6rem, rgb(13 8 6 / .96)); }
@@ -192,8 +192,8 @@ html[lang="hi"] .wl-out { font-size: 1.05rem; }
 .wl-on .wl--lokas .wl-canvas { mix-blend-mode: normal; }
 
 /* a borrowed painting names the story it comes from, at the foot of the words it sits behind */
-.wl-text .wl-credit { margin: .35rem 0 0; font-size: .78rem; line-height: 1.4; font-style: italic; color: rgb(243 231 215 / .72); }
-html[lang="hi"] .wl-text .wl-credit { font-size: .86rem; line-height: 1.55; font-style: normal; }
+.wl-text .wl-credit { margin: .5rem 0 0; font-size: .92rem; line-height: 1.45; font-style: italic; color: rgb(243 231 215 / .86); }   /* [fixGC] was .78rem at .72: a caption you could not read */
+html[lang="hi"] .wl-text .wl-credit { font-size: 1rem; line-height: 1.6; font-style: normal; }
 
 /* [A] the leap's two measures (Hanuman, Surasa's mouth): their names were a default "small" inside a small line (about 10px, dim);
    now a readable label on its own dark plate, over any water */
@@ -201,3 +201,11 @@ html[lang="hi"] .wl-text .wl-credit { font-size: .86rem; line-height: 1.55; font
 html[lang="hi"] .wl-m small { font-family: "Mukta", var(--cx-ui); font-size: 1.02rem; }
 /* [A] the descent's thread runs in the dark margin where the Library link stands: the link is a solid chip, so the line passes behind it, not through its words */
 .wl-on .wl--ganga .wl-out { background: rgb(13 8 6 / .97); border: 1px solid rgb(231 194 122 / .28); }
+
+/* [fixGC] the opening's words stand away from the painted subject. On a wide screen the Leap and the Descent put them on the right
+   (Hanuman, and Bhagiratha under Shiva, are painted left of centre; the right foot of both paintings is dark ground and sea). */
+@media (min-aspect-ratio: 4/5) {
+  .wl-stage--title[data-side="r"] .wl-text, .wl-on .wl--ganga .wl-stage--title[data-side="r"] .wl-text { left: auto; right: var(--wl-gut-r); width: min(40rem, 52vw); max-width: none; }
+  .wl-stage--title[data-side="r"] .wl-h1 { font-size: clamp(2.5rem, 1.4rem + 3.8vw, 4.6rem); }
+  .wl-stage--title[data-side="r"]::after { background: linear-gradient(to top, rgb(13 8 6 / .94), rgb(13 8 6 / .78) 26%, rgb(13 8 6 / .34) 50%, rgb(13 8 6 / 0) 68%), linear-gradient(to left, rgb(13 8 6 / .5), rgb(13 8 6 / 0) 55%), linear-gradient(to bottom, rgb(13 8 6 / .5), rgb(13 8 6 / 0) 22%); }
+}

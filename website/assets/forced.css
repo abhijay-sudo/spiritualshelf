@@ -5,11 +5,20 @@
    only removes an effect or opens a little room; colours are left to the system. */
 @media (forced-colors: active) {
   /* words revealed by a mask or coloured by a gradient show in the system's text colour, whole, at once */
-  .cx-film-title .wr, .cx-film-title .wr *, .cast-name-t, .cast-name .ep-l, .cast-name .ep-w, .cx-name, .cx-credits-name, [class*="ty-"] .wr {
+  .cx-film-title .wr, .cx-film-title .wr *, .cast-name-t, .cast-name .ep-l, .cast-name .ep-w, .cx-name, .cx-credits-name, .ep-shine, [class*="ty-"] .wr {
     -webkit-mask: none !important; mask: none !important; background: none !important; -webkit-background-clip: border-box !important; background-clip: border-box !important;
     -webkit-text-fill-color: currentColor !important; color: CanvasText !important; animation: none !important; opacity: 1 !important; filter: none !important; text-shadow: none !important; }
   /* the hero and the person's title: lines far enough apart that one line's backing does not cover the line above */
   .cx-film-title, .cast-name, .ed-page-head h1, .cx-open-line, .cx-ol-a { line-height: 1.22 !important; }
+  /* [gfixA] the Spritual wordmark: one word on one plate, not a black box round every letter; its light sweep (a gradient clipped to the
+     letters), the drop shadow and the blend layers are effects the system's colours cannot carry, so they are put away */
+  .cx-wm-l, .cx-wm-l > span, .ed-wm-l, .ed-wm-l > span { display: inline !important; overflow: visible !important; padding: 0 !important; margin: 0 !important; transform: none !important; opacity: 1 !important; animation: none !important; }
+  .cx-wm, .ed-wm { text-shadow: none !important; color: CanvasText !important; }
+  .cx-wm-letters { filter: none !important; }
+  .cx-film-title .wr { display: inline !important; padding: 0 !important; margin: 0 !important; translate: none !important; }   /* (a title is one plate too) */
+  .ed-wm-sheen, .grain, .th-embers, .th-lamp, .cx-sky-rays { display: none !important; }
+  .cx-wm-line path, .ed-wm-line path { stroke: CanvasText; }
+  .cx-wm-line circle, .ed-wm-line circle { fill: CanvasText; filter: none; }
   /* glow, grain and decorative light layers add nothing to a high-contrast page and sit between the text and its backing */
   .cast-name::before, .cast-name::after, .cast-title::before, .cast-title::after, .cx-ol-a::before, .cx-ol-a::after { display: none !important; }
   /* the opening's own words are always on: no sequence to wait for */

@@ -132,7 +132,7 @@
   // scrolling on down tucks it away, at every width, and it comes back only where nothing is being read: at the top of
   // the page or at its foot. It is never tucked from under a finger or focus, nor when the reader asked for it
   // ("Privacy choices"). On every other page it stays where it is until it is answered.
-  var reading = !!d.querySelector('[data-reader], [data-manas]');
+  var reading = true;   // [fixL G12] every page: the question was lying over the page's own content on nearly every first visit. It is seen on arrival; scrolling on tucks it away, and it returns at the top and at the foot (it is never tucked from under focus).
   var away = false, lastY = 0, run = 0, footOn = false;
   var foot = d.querySelector('.cx-credits');
   // [A] One placement everywhere: fixed to the foot of the screen (a slim strip on a phone, a small card in the lower corner
@@ -186,7 +186,7 @@
   // a full-screen stage (the home opening, the character select, a person's own stage) keeps its whole screen, composed
   // to fit it: the question waits beside it, not over it (on a person's page it would lie on the figure's feet, the study
   // row or "Begin their story"), and appears once the reader moves on
-  var stages = [].slice.call(d.querySelectorAll('.cx-home .cx-open, .cx-select, .cast-hero, .cx-film-open, [data-wl-view]' /* [worlds] a pinned scroll world is a stage too */));
+  var stages = [].slice.call(d.querySelectorAll('.cx-home .cx-open, .cx-select, .cast-hero, .cx-film-open, .cx-lost .cx-finale /* [fixL G12] the not-found page keeps its screen */, [data-wl-view]' /* [worlds] a pinned scroll world is a stage too */));
   var watchStage = function () {
     if (!stages.length) return;
     var seenSet = [], inside = false;

@@ -278,3 +278,14 @@ html[lang="hi"] .at-more > summary { letter-spacing: 0; font-size: .84rem; }
   .at-flying .at-fly-bar { translate: 0 0; }
   @media (prefers-reduced-motion: reduce) { .at-live .at-fly-bar { transition: none; } }
 }
+
+/* [fixGC] the controls under the sheet, not over it (assets/atlas.js builds .at-dock): the road's play button and its steps at the left, the zoom at the right. Nothing of them lies on a place name. */
+.at-dock { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .6rem 1rem; margin-top: .85rem; }
+.at-dock:empty { display: none; }
+.at-live .at-dock .at-fly-bar { position: static; translate: none; transition: none; flex: 1 1 auto; left: auto; right: auto; top: auto; min-width: 0; }
+.at-dock .at-tools { position: static; display: flex; gap: 8px; right: auto; top: auto; }
+.at-dock .at-tools button { width: 44px; height: 44px; }
+.at-dock .at-tools button svg { width: 20px; height: 20px; }
+.at-flying .at-dock .at-tools { opacity: 1; visibility: visible; }
+.at-still .at-dock .at-fly-bar { display: none; }
+@media print { .at-dock { display: none !important; } }

@@ -22,7 +22,7 @@
 
 /* ---------- The stage ---------- */
 .cast-hero { position: relative; isolation: isolate; display: grid; align-items: center; box-sizing: border-box;
-  min-height: min(100svh, max(36rem, 56.25vw)); padding: calc(var(--ed-head-h) + env(safe-area-inset-top, 0px) + 1.25rem) 0 clamp(2.5rem, 7svh, 5rem); background: var(--cx-paper); }
+  min-height: max(36rem, 100svh); padding: calc(var(--ed-head-h) + env(safe-area-inset-top, 0px) + 1.25rem) 0 clamp(2.5rem, 7svh, 5rem); background: var(--cx-paper); }
 .cast-stage { position: absolute; z-index: -2; inset: 0 0 auto; height: min(100%, max(100svh, 38rem)); overflow: hidden; container-type: size;
   --zoom-now: var(--zoom, 1); --at-x-now: var(--at-x, .7); --at-y-now: var(--at-y, .36); --head-top-now: var(--head-top, .5);
   /* the painting covers the stage, pushed in by the zoom; it is 16:9 */
@@ -335,3 +335,22 @@ html[lang="hi"] .cast-tile-k { font: 500 1rem/1.4 "Mukta", var(--cx-ui); letter-
 .cast-stars { margin: clamp(1.5rem, 1rem + 2vw, 2.75rem) 0 0; }
 .cast-stars .cx-btn { gap: .6rem; }
 .cast-stars .ic { width: 1.1em; height: 1.1em; fill: none; stroke: currentColor; stroke-width: 1.6; }
+
+/* [fixL G28] a soft top scrim: the bar's words (Quiet moment, the language pill, Your reading) hold on a bright painting (Arjuna's forest,
+   Krishna's sky) without a bar being drawn. It lies over the painting and under the words. */
+.cast-hero::after { content: ""; position: absolute; z-index: -1; left: 0; right: 0; top: 0; height: calc(var(--ed-head-h, 68px) + 2.2rem); pointer-events: none; background: linear-gradient(to bottom, rgb(20 10 4 / .74) 0, rgb(20 10 4 / .5) 46%, rgb(20 10 4 / 0) 100%); }
+@media print, (forced-colors: active) { .cast-hero::after { display: none; } }
+/* [fixGC] a card's one-line description: no single word left alone on a line (the build also joins its last two words) */
+.cast-tile-l, .cast-row-l { text-wrap: pretty; }
+/* [fixT G37] the rest of a long introduction: one quiet tap further in (the wrapper is the .cast-about, so the hero's order and entrance still apply) */
+.cast-about--long > p { margin: 0; }
+.cast-about-more { margin: 0; }
+.cast-about-more > summary { display: inline-flex; align-items: center; min-height: 44px; padding: 0 .1rem; cursor: pointer; list-style: none; font: 600 .86rem/1 var(--cx-text); letter-spacing: .02em; color: var(--cx-ink); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .3em; text-decoration-color: color-mix(in srgb, currentColor 40%, transparent); transition: text-decoration-color 160ms var(--ease-settle, cubic-bezier(.22, .8, .2, 1)); }
+.cast-about-more > summary::-webkit-details-marker { display: none; }
+.cast-about-more > summary:hover { text-decoration-color: currentColor; }
+.cast-about-more > summary:focus-visible { outline: 2px solid var(--gold, #e0b252); outline-offset: 4px; border-radius: 4px; }
+.cast-about-more[open] > summary { display: none; }
+.cast-about-more > p { animation: cast-about-rise 320ms var(--ease-settle, cubic-bezier(.22, .8, .2, 1)) both; }
+@keyframes cast-about-rise { from { opacity: 0; transform: translateY(6px); } }
+@media (prefers-reduced-motion: reduce) { .cast-about-more > p { animation: none; } }
+:root[data-motion="reduce"] .cast-about-more > p { animation: none; }

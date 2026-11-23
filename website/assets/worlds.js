@@ -129,7 +129,7 @@
     track.style.height = 'calc(' + (total * unit * 100).toFixed(1) + 'svh + 100svh)';
     G.forEach(hold);
     // only one painting is on screen at a time, so a screen reader is given each painting's description with its stage's words
-    G.forEach(function (g) { var tx = S[g.first].text; if (!g.img || !g.img.alt || !tx || g.alt) return; g.alt = d.createElement('span'); g.alt.className = 'visually-hidden'; g.alt.textContent = g.img.alt; tx.insertBefore(g.alt, tx.firstChild); g.pic.setAttribute('aria-hidden', 'true'); });
+    G.forEach(function (g) { var tx = S[g.first].text; if (!g.img || !g.img.alt || !tx || g.alt) return; g.alt = d.createElement('span'); g.alt.className = 'visually-hidden'; g.alt.textContent = (d.getElementById(g.img.getAttribute('aria-describedby') || '-') || g.img).textContent || g.img.alt; tx.insertBefore(g.alt, tx.firstChild); g.pic.setAttribute('aria-hidden', 'true'); });
     // the consent question waits beside a full-screen stage (consent.js); it is set aside here at once so it never flashes over the words
     var ask = d.querySelector('.cx-consent'); if (ask && !ask.hidden && !ask.contains(d.activeElement)) { ask.classList.add('is-aside'); ask.inert = true; }
     measure(); progress(); pp = target;

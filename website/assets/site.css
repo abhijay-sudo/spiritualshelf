@@ -1144,3 +1144,8 @@ html[lang="hi"] .intertitle span { font-style: normal; font-family: var(--font-h
 :root[data-lamp="on"] .cmf-wait { display: block; }
 .cmf-lamp-note { margin: .45rem 0 0; font-size: .86rem; }
 .chip.is-wait { opacity: .45; }
+
+/* [gfixA] While a modal sheet is open (comfort, share, the film's door) the page behind it neither scrolls nor moves: wheel, keys and touch
+   all stop at the sheet. The gutter is kept so the page does not shift sideways when a scrollbar goes. */
+:root:has(dialog:modal) { overflow: hidden; scrollbar-gutter: stable; }
+dialog:modal { overscroll-behavior: contain; }

@@ -72,9 +72,13 @@ if (src !== key) { gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, 
 } catch { return kill(); }
 pic?.close?.();
 cv.style.transition = scrub ? 'opacity .35s linear' : 'opacity .8s ease'; host.append(cv); size(); if (scrub) return paint(); t0 = performance.now(); run = true; go();
-}, go1 = () => { if (scrub && src !== key && window.createImageBitmap) fetch(key).then((r) => r.blob()).then((b) => createImageBitmap(b)).then(use, () => use()); else use(); };
+}, go1 = () => { if (src !== key && window.createImageBitmap) fetch(key).then((r) => r.blob()).then((b) => createImageBitmap(b)).then(use, () => use()); else use(); };
 if (dsrc === depth) go1();
-else { const d = new Image(); d.onload = () => { if (dead) return; try { gl.activeTexture(gl.TEXTURE1); gl.bindTexture(gl.TEXTURE_2D, texD); gl.texImage2D(gl.TEXTURE_2D, 0, gl.LUMINANCE, gl.LUMINANCE, gl.UNSIGNED_BYTE, d); dsrc = depth; } catch { return kill(); } go1(); }; d.src = depth; }
+else {
+const upD = (d) => { if (dead) return d?.close?.(); try { gl.activeTexture(gl.TEXTURE1); gl.bindTexture(gl.TEXTURE_2D, texD); gl.texImage2D(gl.TEXTURE_2D, 0, gl.LUMINANCE, gl.LUMINANCE, gl.UNSIGNED_BYTE, d); dsrc = depth; } catch { return kill(); } d?.close?.(); go1(); };
+const viaImg = () => { const d = new Image(); d.onload = () => upD(d); d.src = depth; };
+if (window.createImageBitmap) fetch(depth).then((r) => (r.ok ? r.blob() : Promise.reject())).then((b) => createImageBitmap(b)).then(upD, viaImg); else viaImg();
+}
 return true;
 };
 addEventListener('resize', () => { if (host && !dead && !scrub) size(); });

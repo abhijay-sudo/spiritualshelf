@@ -38,10 +38,12 @@
   const zoomAt = (nk, cx, cy, smooth) => { nk = clamp(nk, 1, KMAX); const px = (cx - x) / k, py = (cy - y) / k; ease(smooth); k = nk; x = cx - px * k; y = cy - py * k; apply(); closeCard(); };
   const centreOn = (sx, sy, smooth) => { ease(smooth); x = W / 2 - sx * W * k; y = H / 2 - sy * H * k; apply(); };
   let bIn, bOut, bAll;
+  // [fixGC] the map's controls (follow the road, step, zoom) stand in a bar under the sheet, not on it: they used to lie over place names
+  const dock = el('div', 'at-dock'); view.after(dock);
   { const tools = el('div', 'at-tools'); const ic = { in: '<path d="M4 12h16M12 4v16"/>', out: '<path d="M4 12h16"/>', all: '<path d="M5 9V5h4M19 9V5h-4M5 15v4h4M19 15v4h-4"/>' };
     const btn = (key, label, fn) => { const b = el('button', '', `<svg viewBox="0 0 24 24" aria-hidden="true">${ic[key]}</svg><span class="visually-hidden">${label}</span>`); b.type = 'button'; b.title = label; b.addEventListener('click', fn); tools.append(b); return b; };
     bIn = btn('in', D.t.zoomIn, () => zoomAt(k * 1.6, W / 2, H / 2, true)); bOut = btn('out', D.t.zoomOut, () => zoomAt(k / 1.6, W / 2, H / 2, true)); bAll = btn('all', D.t.reset, () => zoomAt(1, W / 2, H / 2, true));
-    map.append(tools); }
+    dock.append(tools); }
   const ptrs = new Map(); let drag = null, moved = false, engaged = false;
   const local = (e) => { const r = view.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
   view.addEventListener('pointerdown', (e) => { if (e.button) return; engaged = true; ptrs.set(e.pointerId, local(e)); moved = false; ease(false);
@@ -127,7 +129,7 @@
   const mk = (cls, label, ico, text) => { const b = el('button', cls, icon(ico) + (text ? `<span>${text}</span>` : '')); b.type = 'button'; if (!text) { b.setAttribute('aria-label', label); b.title = label; } return b; };
   const bMain = mk('at-fly-main', D.t.fly, 'play', D.t.fly), bPrev = mk('at-fly-sm', D.t.prev, 'prev'), bNext = mk('at-fly-sm', D.t.next, 'next'), bEnd = mk('at-fly-sm', D.t.flyEnd, 'end');
   const tags = el('div', 'at-fly-tags'); const tag = el('p', 'at-fly-tag', D.t.routeTag); const tagOff = el('p', 'at-fly-tag at-fly-off', D.t.offTag); tags.append(tag, tagOff); const mainLabel = (ico, text) => { bMain.innerHTML = icon(ico) + `<span>${text}</span>`; };
-  bar.append(bMain, bPrev, bNext, bEnd); layer.append(bar, tags, sheetUp, say); map.append(layer);
+  bar.append(bMain, bPrev, bNext, bEnd); layer.append(tags, sheetUp, say); dock.prepend(bar); map.append(layer);
   const fl = { st: 'idle', i: 0, ph: '', t: 0, dur: 0, v0: 0, fk: 1, oy: 0, oyT: 0, kT: 1, last: 0, raf: 0, blend: 1, ucam: null, dirty: false, hold: 0 };
   const KF = () => clamp(W < 520 ? 2.3 : 2.05, 1, KMAX);
   const dwellFor = (i) => { const q = stops[i].querySelector('.at-stop-q'); return clamp(3.6 + (q ? q.textContent.length : 60) * .055, 5.6, 9.6); };

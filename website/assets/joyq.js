@@ -12,7 +12,8 @@
   const titles = playing();
 
   /* ---- glimpses: the paintings arrive only when the titles are going to play ---- */
-  if (titles) for (const img of open.querySelectorAll('img.cx-glim[data-src]')) { img.srcset = img.dataset.srcset; img.src = img.dataset.src; }
+  // [perf] ...and not on Save-Data or a slow line: the glimpses are faint flashes, never worth the data there
+  if (titles && !(window.SpritualNet && window.SpritualNet.slow())) for (const img of open.querySelectorAll('img.cx-glim[data-src]')) { img.srcset = img.dataset.srcset; img.src = img.dataset.src; }
 
   /* ---- the sequence's own clock: the line of light's animation (it started with the page) ---- */
   const spark = open.querySelector('.cx-spark');

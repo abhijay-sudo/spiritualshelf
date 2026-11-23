@@ -266,8 +266,11 @@ html[lang="hi"] .fm-door button { font-size: 1.08rem; }
 
 /* the site's header over the film keeps the film's dark, never a paper bar */
 .fm body.has-hero .ed-head.is-solid:not(.is-open) { background: linear-gradient(to bottom, rgb(11 7 6 / .82), rgb(11 7 6 / .6) 60%, rgb(11 7 6 / 0)); color: #fff6e8; border-color: transparent !important; box-shadow: none; }
+/* ...in EVERY colour scheme: the glass layer (::after, paper cream in the light scheme) sat over that dark gradient and left cream words on cream
+   (about 1.1:1). Over the film it is the film's own dark glass, as in the dark scheme. */
+.fm body.has-hero .ed-head.is-solid:not(.is-open)::after { background: rgb(27 20 15 / .97); }
 /* (the story's first words take the focus after "Begin the story" so a screen reader goes on from there: they are not a control) */
-.fm .story-intro:focus { outline: 0; }
+.fm .story-intro:focus, .fm .scene:focus { outline: 0; }
 
 /* ---------- Lamp light (film.js): gold takes a moving highlight. --lx and --ly are where the light is, across and down
    the screen; unset (the light out) every rule below draws exactly what it drew before. ---------- */
@@ -308,6 +311,14 @@ html[lang="hi"] .fm #gloss .gloss-row i { letter-spacing: 0; text-transform: non
    come in together with it. Before this the page showed its plain layout over an empty stage, then jumped into the film's. */
 .fm-deep:not(.fm-live) [data-reader] .scenes { visibility: hidden; }
 .fm-deep.fm-live [data-reader] .scenes { animation: fm-deep-in var(--d3, 640ms) var(--ease-settle, cubic-bezier(.22, .8, .2, 1)) both; }
+/* [perf] ...and while it waits, the scene's own smallest cut (boot.js sets --fm-ph), soft and dark, so the page is never black; it lifts away as the painting arrives */
+.fm-deep::before { content: ""; position: fixed; inset: -6%; z-index: 3; pointer-events: none; background: linear-gradient(rgb(11 7 6 / .35), rgb(11 7 6 / .6)), var(--fm-ph, none) center / cover no-repeat; filter: blur(16px); animation: fm-ph-in var(--d3, 640ms) var(--ease-settle, cubic-bezier(.22, .8, .2, 1)) both; }
+.fm-deep.fm-live::before { animation: fm-ph-out var(--d3, 640ms) var(--ease-settle, cubic-bezier(.22, .8, .2, 1)) forwards; }
+@keyframes fm-ph-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes fm-ph-out { from { opacity: 1; visibility: visible; } to { opacity: 0; visibility: hidden; } }
+:root[data-motion="reduce"] .fm-deep::before { animation: none; }
+:root[data-motion="reduce"] .fm-deep.fm-live::before { display: none; }
+@media (prefers-reduced-motion: reduce) { .fm-deep::before { animation: none; } .fm-deep.fm-live::before { display: none; } }
 @keyframes fm-deep-in { from { opacity: 0; } to { opacity: 1; } }
 :root[data-motion="reduce"] .fm-deep.fm-live [data-reader] .scenes { animation: none; }
 @media (prefers-reduced-motion: reduce) { .fm-deep.fm-live [data-reader] .scenes { animation: none; } }
@@ -315,3 +326,35 @@ html[lang="hi"] .fm #gloss .gloss-row i { letter-spacing: 0; text-transform: non
 .fm:not(.hero-ok) .cx-film-open-pic:not(.is-ready) { opacity: 0; }
 .fm .cx-film-open-pic { transition: opacity var(--d3, 640ms) var(--ease-settle, cubic-bezier(.22, .8, .2, 1)); }
 :root[data-motion="reduce"] .fm .cx-film-open-pic { transition: none; }
+
+/* ===== [fixR2] reader fixes from the second customer round (G05, G33, G43) ===== */
+/* G05 + G33: the strip at a phone's edge. Its buttons stand 4px in from the edge (the language chip used to touch the edge and its outline was cut), the Aa chip above it
+   is moved to the same column (comfort.css), and the words end 8px before the strip's left edge (56px, was 46px: the text came to within 2 to 6px of the chips). */
+@media (max-width: 699.98px) {
+  .fm { --fm-xr: 56px; }
+  .fm-live .fm-rail { right: max(4px, env(safe-area-inset-right, 0px)); }
+}
+/* A finger lands on the strip even while it is resting (it is not shown, to leave the painting clear): film.js wakes it with that first touch and
+   keeps the touch from doing anything yet, so the chip can always be found and is never "under the words". A mouse and the keyboard are unchanged. */
+@media (hover: none) and (pointer: coarse) { .fm-live .fm-rail:not(.is-gone):not(.is-off) { pointer-events: auto; } }
+/* the language chip is one of the strip's round, dark, gold-ringed family, and gives the Devanagari its full line (the matras above and below were cut by a one-line height) */
+.fm-live .fm-rail .fm-lang.fm-lang { width: 44px; min-width: 44px; min-height: 64px; padding: 5px 0; gap: 3px; border: 0; border-radius: 22px; background: rgb(10 6 3 / .5); box-shadow: 0 0 0 1px rgb(233 201 140 / .22); opacity: .92; }
+.fm-live .fm-rail .fm-lang.fm-lang:is(:hover, :focus-visible) { opacity: 1; box-shadow: 0 0 0 1px rgb(233 201 140 / .6); }
+.fm-rail .fm-lang-o { justify-self: stretch; display: flex; align-items: center; justify-content: center; min-height: 26px; padding: 0; line-height: 1; box-sizing: border-box; }
+.fm-rail .fm-lang-o[lang="hi"] { font: 600 .9rem/1.5 "Mukta", var(--cx-ui); padding: 1px 0 3px; }
+.fm-rail .fm-lang-o.is-cur { border-radius: 13px; }
+
+/* G43: on a phone a paragraph's words are held across less scroll (52svh, was 60), so a thumb flick lands on the next words sooner and the painting is not left empty;
+   the scene tempos keep their proportions. A quiet chevron rises when the screen has rested without words for a moment (once the opening has gone by). */
+@media (max-width: 699.98px) {
+  .fm { --fm-pin: 52svh; --fm-pin-t: 44svh; }
+  .fm .scene[data-tempo="quiet"] { --fm-pin: 66svh; --fm-pin-t: 54svh; }
+  .fm .scene[data-tempo="fall"] { --fm-pin: 44svh; --fm-pin-t: 35svh; }
+  .fm .scene[data-tempo="arrival"] { --fm-pin-t: 52svh; }
+}
+.fm-live:has(.cx-film-open.fm-out) .fm-stage:not(.lit):not(.is-off)::after { content: ""; position: absolute; z-index: 6; left: 50%; bottom: calc(env(safe-area-inset-bottom, 0px) + 26px); width: 11px; height: 11px; margin-left: -6px; border: solid rgb(246 236 218 / .9); border-width: 0 2px 2px 0; rotate: 45deg; opacity: 0; pointer-events: none; box-shadow: 2px 2px 3px rgb(0 0 0 / .45); animation: fm-cue 2.8s var(--ease-lamp, ease) 1.6s infinite; }
+@keyframes fm-cue { 0% { opacity: 0; translate: 0 -8px; } 35% { opacity: .85; translate: 0 0; } 72% { opacity: .85; translate: 0 6px; } 100% { opacity: 0; translate: 0 10px; } }
+@keyframes fm-cue-in { from { opacity: 0; } to { opacity: .7; } }
+@media (prefers-reduced-motion: reduce) { .fm-live:has(.cx-film-open.fm-out) .fm-stage:not(.lit):not(.is-off)::after { animation: fm-cue-in .6s linear 1.6s both; translate: 0 0; } }
+:root[data-motion="reduce"].fm-live:has(.cx-film-open.fm-out) .fm-stage:not(.lit):not(.is-off)::after { animation: fm-cue-in .6s linear 1.6s both; translate: 0 0; }
+@media print { .fm-stage::after { display: none !important; } }

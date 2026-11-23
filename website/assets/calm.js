@@ -22,7 +22,12 @@
   const follow = () => { if (root.dataset.motion === 'light') { if (root.dataset.light !== 'manual') root.dataset.light = 'manual'; } else if (root.dataset.light) { delete root.dataset.light; if (ss.get() === 'rest') ss.set('back'); } };
   // the Motion switch in Reading comfort shows what is true: Light mode is marked while this tab is resting its motion, so
   // choosing "Match my device" there is a change, and is the way back (a choice that changes nothing would not be heard)
-  const paint = () => { const f = d.querySelector('[data-comfort]'); if (!f) return; const r = f.querySelector(`input[name="motion"][value="${root.dataset.light ? 'light' : root.dataset.motion || ''}"]`); if (r) r.checked = true; };
+  // [gfixA] ...but it shows the READER's choice. A device that asks for less motion sets data-motion="reduce" itself (boot.js); that is not
+  // something the reader picked, so "Match my device" stays marked and a line says what the device is doing.
+  const mine = () => { try { return JSON.parse(localStorage.getItem('spritual:prefs') || '{}').motion || ''; } catch { return root.dataset.motion === 'reduce' && !matchMedia('(prefers-reduced-motion: reduce)').matches ? 'reduce' : ''; } };
+  const paint = () => { const f = d.querySelector('[data-comfort]'); if (!f) return; const r = f.querySelector(`input[name="motion"][value="${root.dataset.light ? 'light' : mine()}"]`); if (r) r.checked = true;
+    const os = f.querySelector('.motion-os'); if (os) os.hidden = !matchMedia('(prefers-reduced-motion: reduce)').matches || mine() === 'reduce'; };
+  try { matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', paint); } catch {}
   new MutationObserver(follow).observe(root, { attributes: true, attributeFilter: ['data-motion'] });
   new MutationObserver(paint).observe(root, { attributes: true, attributeFilter: ['data-light'] });
   d.addEventListener('change', (e) => { if (e.target && e.target.name === 'motion') setTimeout(follow, 0); });

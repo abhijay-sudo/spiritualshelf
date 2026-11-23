@@ -188,6 +188,7 @@
     if (k >= list.length) return finish(); i = k; const u = list[k], my = ++tok; started = 0;
     if (root.dataset.mode === 'leaf' && u.first && u.k === 0) R.goTo(u.n, 1);
     const ut = utter(u);
+    light(u);   // [fixR2 G44] the sentence is lit when it is handed to the voice, not when the engine reports that it began (some voices report it 300 to 900 ms late, and the first words stood unlit)
     ut.onstart = () => { if (my !== tok) return; started = Date.now(); retried = 0; light(u); follow(u); mid(S.scene(u.n, total)); bar?.style.setProperty('--lst-p', ((u.n - 1 + (u.k + 1) / Math.max(1, u.kinds)) / total).toFixed(4)); };
     ut.onend = () => { if (my !== tok || st !== 'playing') return; if (sleepDue) return stop(S.slept); speakAt(k + 1); };
     ut.onerror = (e) => {

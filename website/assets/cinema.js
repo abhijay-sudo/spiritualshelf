@@ -221,8 +221,10 @@
       if (!reduced()) { void next.offsetWidth; next.classList.add('is-in'); }
       clearTimeout(outT); outT = setTimeout(() => { if (my === token) { prev.classList.remove('is-out'); next.classList.remove('is-in'); } }, 800);
       front = 1 - front;
-      const vw = `${Math.round(100 * (parseFloat(d.z) || 1))}vw`; const big = new Image(); big.sizes = vw; big.srcset = d.picset; big.src = d.pic;
-      (big.decode ? big.decode() : Promise.resolve()).then(() => { if (my === token) { next.sizes = vw; next.srcset = d.picset; next.src = d.pic; } }).catch(() => {});
+      // [perf] on a slow or metered line the full painting is asked for no wider than 960 px (the widest cuts are a sharpness a weak line should not pay for)
+      const picset = window.SpritualNet && window.SpritualNet.slow() ? (d.picset.split(',').filter((x) => (parseInt(x.trim().split(/\s+/)[1], 10) || 0) <= 960).join(',') || d.picset) : d.picset;
+      const vw = `${Math.round(100 * (parseFloat(d.z) || 1))}vw`; const big = new Image(); big.sizes = vw; big.srcset = picset; big.src = d.pic;
+      (big.decode ? big.decode() : Promise.resolve()).then(() => { if (my === token) { next.sizes = vw; next.srcset = picset; next.src = d.pic; } }).catch(() => {});
       if (!reduced()) { sel.classList.remove('is-swap'); void sel.offsetWidth; sel.classList.add('is-swap'); }
       if (grid.scrollWidth > grid.clientWidth + 4) {
         // [joyh] a hand on the strip (mouse over a tile, a key) only scrolls it when that tile is not wholly in view, so the strip does not slide under the pointer

@@ -22,7 +22,9 @@
 
   // stories you are in: a place was kept (assets/site.js) and the story is not finished; the one you read last first
   var places = {}; try { places = JSON.parse(localStorage.getItem('spritual:places') || '{}') || {}; } catch (e) {}
-  show(secIn, Object.keys(places).filter(function (k) { var p = places[k]; return IDX[k] && p && !p.d && +p.s < +p.t && +p.s >= 1; })
+  // [fixS] the story the Continue card above already offers (the one read last, not finished) is not listed a second time
+  var lastK = null; try { var lp = JSON.parse(localStorage.getItem('spritual:last') || 'null'); if (lp && lp.slug && +lp.scene < +lp.total) lastK = lp.slug; } catch (e) {}
+  show(secIn, Object.keys(places).filter(function (k) { var p = places[k]; return k !== lastK && IDX[k] && p && !p.d && +p.s < +p.t && +p.s >= 1; })
     .sort(function (a, b) { return (places[b].at || 0) - (places[a].at || 0); })
     .map(function (k, i) { var p = places[k], s = IDX[k], n = Math.max(1, +p.s), t = Math.max(1, +p.t); return item(s, i, s.h.split('#')[0] + '#page-' + n, fmt(ui.sceneOf, { n: n, t: t }), n / t); }));
 

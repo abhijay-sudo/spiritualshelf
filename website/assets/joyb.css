@@ -52,7 +52,8 @@ html[lang="hi"] .cb-ds { font-size: .94rem; }
 .fm .cb-in.fm-t { justify-items: start; text-align: left; gap: .85rem; max-width: calc(var(--fm-w) + var(--fm-x) + var(--fm-xr)); }
 .fm .cb-fig { justify-items: start; }
 .fm .cb-line p { font-size: clamp(1.18rem, 1rem + 1vw, 1.75rem); color: #fff8ee; }
-.fm .cb-src { color: var(--fm-gold); text-shadow: 0 1px 2px rgb(0 0 0 / .9); }
+.fm .cb-src { color: #f3dca8; font-size: .92rem; font-weight: 500; text-shadow: 0 1px 2px rgb(0 0 0 / .95), 0 0 10px rgb(0 0 0 / .7); }   /* [fixR2 G23] a little larger and paler: the source line read faintly over bright paintings */
+html[lang="hi"] .fm .cb-src { font-size: 1rem; }
 .fm .cb-src a { text-decoration-color: rgb(233 201 140 / .55); }
 .fm .cb-keepwrap { justify-items: start; }
 .fm .cb-keep { color: var(--fm-gold); margin-left: -.5rem; }
@@ -102,8 +103,10 @@ html.pk-can:not(.pk-in) .kp--hero { margin-top: calc(.95rem + .55rem + 44px); }
 
 /* ---------- Library cards: a thin arc for a story part read, a small lit lamp for one finished (on this device only) ---------- */
 .card-art { position: relative; }
-.pl-mark { position: absolute; top: .7rem; left: .7rem; z-index: 2; display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: rgb(14 8 4 / .62); box-shadow: 0 0 0 1px rgb(233 201 140 / .18); pointer-events: none; opacity: 0; transform: scale(.85); animation: pl-in var(--d3) var(--ease-settle) .2s forwards; }
-.pl-mark svg { width: 30px; height: 30px; overflow: visible; }
+.pl-mark { position: absolute; top: .7rem; left: .7rem; z-index: 2; display: inline-flex; align-items: center; gap: .45rem; min-width: 30px; height: 30px; padding-inline-end: .75rem; border-radius: 15px; background: rgb(14 8 4 / .74); box-shadow: 0 0 0 1px rgb(233 201 140 / .18); pointer-events: none; opacity: 0; transform: scale(.85); animation: pl-in var(--d3) var(--ease-settle) .2s forwards; }
+.pl-mark svg { width: 30px; height: 30px; flex: none; overflow: visible; }
+.pl-mark-t { color: #f3e6cf; font: 600 .74rem/1 var(--font-ui, system-ui, sans-serif); letter-spacing: .02em; white-space: nowrap; }
+html[lang="hi"] .pl-mark-t { font-size: .8rem; letter-spacing: 0; }
 .pl-arc-bg { fill: none; stroke: rgb(233 201 140 / .22); stroke-width: 2; } .pl-arc { fill: none; stroke: #f3c47e; stroke-width: 2.4; stroke-linecap: round; }
 .pl-mark .cb-bw { fill: #c9a36a; } .pl-mark .cb-wk { stroke: #3b2616; } .pl-mark .cb-fl { opacity: 1; transform: none; fill: #ffc766; stroke: none; transition: none; }
 .pl-mark--lamp::after { content: ""; position: absolute; inset: -8px; border-radius: 50%; background: radial-gradient(circle, rgb(255 190 100 / .32), transparent 66%); z-index: -1; }
@@ -124,6 +127,8 @@ html.pk-can:not(.pk-in) .kp--hero { margin-top: calc(.95rem + .55rem + 44px); }
 
 /* the last painting is held clear for a moment before the dark gathers under the closing line */
 .fm-stage.cb-on .fm-scrim { transition: opacity var(--d4) var(--ease-settle) .5s; }
+/* [fixR2 G23] on a phone the closing words (line, source, Keep, three doors) fill the lower half: the dark rises to meet all of them, not only the first line */
+@media (max-width: 699.98px) { .fm-stage.cb-on .fm-scrim { background: linear-gradient(to top, rgb(var(--t) / .97) 0, rgb(var(--t) / .93) 44%, rgb(var(--t) / .84) 58%, rgb(var(--t) / .4) 72%, rgb(var(--t) / 0) 88%); } }
 
 /* ---------- Home, for someone who has a place in a story: the Continue slot is that story's own painting, with the place on it.
    (The plain card in cinema.css stays underneath: without script nothing shows here at all, and nothing is fetched early.) ---------- */

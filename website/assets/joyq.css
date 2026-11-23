@@ -21,7 +21,7 @@
 /* ---------- the diyas: lit one from another, from the middle outward, along the line where the curtain will part ---------- */
 .cx-diyas { position: absolute; left: 0; right: 0; top: var(--seam, 50%); height: 0; animation: cx-diyas-out calc(var(--tk) * 1s) var(--q-settle) calc(var(--tk) * 5s) forwards; }
 @keyframes cx-diyas-out { to { opacity: 0; translate: 0 -2.2rem; } }
-.cx-diya { --gap: clamp(2.4rem, 6.2vw, 6.2rem); --ig: calc(var(--tk) * (.3s + min(var(--n), 1) * .85s + max(var(--n) - 1, 0) * .25s)); position: absolute; left: 50%; top: 0; width: 0; height: 0; translate: calc(var(--dx) * var(--gap)) 0; scale: calc(var(--sc) * var(--dk, 1)); }
+.cx-diya { --gap: clamp(2.4rem, 6.2vw, 6.2rem); --ig: calc(var(--tk) * (.05s + min(var(--n), 1) * .85s + max(var(--n) - 1, 0) * .25s)); position: absolute; left: 50%; top: 0; width: 0; height: 0; translate: calc(var(--dx) * var(--gap)) 0; scale: calc(var(--sc) * var(--dk, 1)); }
 @media (max-width: 759px) { .cx-diya { --gap: 11.6vw; --dk: .56; } }
 .cx-diya u { position: absolute; left: -1.9rem; top: 0; width: 3.8rem; height: 1.45rem; border-radius: 0 0 3.8rem 3.8rem / 0 0 1.45rem 1.45rem; background: linear-gradient(180deg, #e9a24d, #a85a22 48%, #4f2711); box-shadow: inset 0 2px 0 rgb(255 226 160 / .85); opacity: 0; animation: cx-appear calc(var(--tk) * .8s) ease-out var(--ig) forwards; }
 .cx-diya u::after { content: ""; position: absolute; right: -.5rem; top: -.08rem; width: .95rem; height: .5rem; border-radius: 0 60% 0 0; background: linear-gradient(180deg, #f0b25c, #a85a22); }
@@ -51,11 +51,11 @@
 .cx-glims { position: absolute; inset: 0; }
 .cx-glim { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; -webkit-mask-image: radial-gradient(ellipse 54% 56% at 50% 46%, #000 12%, transparent 72%); mask-image: radial-gradient(ellipse 54% 56% at 50% 46%, #000 12%, transparent 72%); animation: cx-glim calc(var(--tk) * 1.2s) cubic-bezier(.3, .1, .3, 1) calc(var(--tk) * (2.5s + var(--k) * .45s)) both; }
 .cx-glim:last-child { animation-duration: calc(var(--tk) * 1.9s); }
-@keyframes cx-glim { 0% { opacity: 0; scale: 1.1; } 30% { opacity: .4; } 62% { opacity: .32; } 100% { opacity: 0; scale: 1; } }
+@keyframes cx-glim { 0% { opacity: 0; scale: 1.1; } 30% { opacity: .3; } 62% { opacity: .24; } 100% { opacity: 0; scale: 1; } }
 
 /* ---------- the four sources, recited ---------- */
 .cx-chant { position: absolute; left: 0; right: 0; bottom: calc(100% - var(--seam, 50%) + 4.6rem); display: grid; justify-items: center; padding-inline: var(--cx-gut-r) var(--cx-gut); }
-.cx-chant::before { content: ""; position: absolute; left: 50%; top: 50%; width: min(120vw, 70rem); height: 15rem; translate: -50% -50%; background: radial-gradient(closest-side, rgb(12 6 3 / .62), rgb(12 6 3 / .4) 50%, rgb(12 6 3 / 0)); opacity: 0; animation: cx-appear calc(var(--tk) * .9s) ease-out calc(var(--tk) * 2.4s) forwards, cx-chant-out calc(var(--tk) * .8s) ease-in calc(var(--tk) * 4.9s) forwards; }
+.cx-chant::before { content: ""; position: absolute; left: 50%; top: 50%; width: min(120vw, 70rem); height: 15rem; translate: -50% -50%; background: radial-gradient(closest-side, rgb(12 6 3 / .78), rgb(12 6 3 / .56) 52%, rgb(12 6 3 / 0)); opacity: 0; animation: cx-appear calc(var(--tk) * .9s) ease-out calc(var(--tk) * 2.4s) forwards, cx-chant-out calc(var(--tk) * .8s) ease-in calc(var(--tk) * 4.9s) forwards; }
 .cx-chant-in { position: relative; display: flex; justify-content: center; align-items: flex-start; gap: clamp(1.8rem, 5vw, 4.6rem); animation: cx-chant-out calc(var(--tk) * .8s) ease-in calc(var(--tk) * 4.9s) forwards; }
 @keyframes cx-chant-out { to { opacity: 0; translate: 0 -.7rem; } }
 .cx-ch { position: relative; display: block; text-align: center; opacity: 0; animation: cx-ink-line calc(var(--tk) * 1s) var(--q-settle) calc(var(--tk) * (2.5s + var(--k) * .36s)) both; }
@@ -65,7 +65,7 @@
 @keyframes cx-stroke { to { transform: scaleX(1); } }
 .cx-ch b { display: block; font: 500 clamp(1.7rem, 1rem + 2.3vw, 3rem)/1.15 var(--cx-text); letter-spacing: .01em; color: #f9d994; text-shadow: 0 0 22px rgb(255 168 66 / .5), 0 1px 14px rgb(14 6 0 / .85); }
 .cx-ch b[lang="hi"] { font-family: "Tiro Devanagari Hindi", var(--cx-text); font-weight: 400; font-size: clamp(1.9rem, 1.1rem + 2.6vw, 3.3rem); line-height: 1.3; letter-spacing: 0; }
-.cx-ch i { display: block; margin-top: .3rem; font-style: normal; opacity: .85; color: #f6d9a6; text-shadow: 0 1px 10px rgb(14 6 0 / .9); }
+.cx-ch i { display: block; margin-top: .3rem; font-style: normal; opacity: 1; color: #fbe6bd; text-shadow: 0 1px 10px rgb(14 6 0 / .9); }
 .cx-ch i[lang="hi"] { font: 500 clamp(1.1rem, .95rem + .55vw, 1.45rem)/1.4 "Mukta", var(--cx-ui); }
 
 .cx-ch i[lang="en"] { font: 500 clamp(.8rem, .72rem + .32vw, 1rem)/1.4 "Cinzel", var(--cx-title); letter-spacing: .24em; text-transform: uppercase; margin-right: -.24em; }

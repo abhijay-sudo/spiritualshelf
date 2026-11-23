@@ -258,6 +258,23 @@
       if (h) { d.scrollTop = 0; h.focus({ preventScroll: true }); }
     }
   });
+  /* [gfixA] A modal sheet keeps the keyboard inside it: Tab wraps from its last control to its first (and Shift+Tab back), so the browser's own bar is
+     never a dead stop. (The page behind is already inert, being behind showModal(); its scrolling is stopped in css, comfort.css.) */
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Tab' || e.defaultPrevented || e.ctrlKey || e.altKey || e.metaKey || !(e.target instanceof Element)) return;
+    const dlg = e.target.closest('dialog[open]'); if (!dlg) return;
+    let modal = true; try { modal = dlg.matches(':modal'); } catch (x) { /* an old browser: treat an open dialog as modal */ }
+    if (!modal) return;
+    const list = [...dlg.querySelectorAll('a[href], button, input, select, textarea, summary, [tabindex]')].filter((el) => {
+      if (el.disabled || el.tabIndex < 0 || el.hidden || el.closest('[inert], [hidden]') || !el.getClientRects().length) return false;
+      if (el.type === 'radio' && el.name) { const g = [...dlg.querySelectorAll(`input[type="radio"]`)].filter((r) => r.name === el.name && !r.disabled); return el === (g.find((r) => r.checked) || g[0]); }
+      return true;
+    });
+    if (!list.length) return;
+    const first = list[0], last = list[list.length - 1], at = document.activeElement;
+    if (e.shiftKey && (at === first || at === dlg || !list.includes(at))) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && at === last) { e.preventDefault(); first.focus(); }
+  });
   if (!('closedBy' in HTMLDialogElement.prototype)) {
     const outside = (e, d) => { const r = d.getBoundingClientRect(); return e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom; };
     for (const d of $$('dialog[closedby="any"]')) {
@@ -563,17 +580,23 @@
     const FD = window.SpritualFind;
     const norm = FD ? FD.key : (s) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').normalize('NFC').replace(/[ङञणनम]्(?=[क-ह])/g, 'ं').replace(/ँ/g, 'ं');
     if (FD) { try { FD.setSyn(JSON.parse($('#find-syn')?.textContent || '{}')); } catch {} }
-    for (const el of [...cards, ...$$('[data-more] li')]) el.dataset.search = norm(el.dataset.search || '');
+    for (const el of [...cards, ...$$('[data-more] li')]) { el.dataset.search = norm(el.dataset.search || ''); if (el.dataset.head != null) { el.dataset.head = norm(el.dataset.head); el.dataset.cast = norm(el.dataset.cast || ''); } }
+    const home = new Map(cards.map((c, i) => [c, i]));   // [fixS] the library's own order, which a search without a ranking leaves as it was
     const FILLER = new Set(('i im i\'m i’m am is are was were be been being a an the to of in on at for and or my me mine it its this that these those so do does you your we our with about some very really just how what why when who want wanna need like feel feeling please tell show find read story stories ' + 'मैं मुझे मुझको हूं हूँ हैं है था थी थे का की के को में से और या पर एक यह वह तो भी ही मेरा मेरी मेरे कि कुछ बहुत रहा रही रहे कैसे क्या क्यों चाहिए चाहता चाहती').split(' ').map((w) => norm(w.toLowerCase())).filter(Boolean));
     const apply = () => {
       const f = new FormData(filters);
-      const rawQ = String(f.get('q') || '').trim(); const q = FD ? rawQ.toLowerCase() : norm(rawQ.toLowerCase()); const value = f.get('value') || ''; const coll = f.get('coll') || ''; const time = f.get('time') || '';
+      const rawQ = String(f.get('q') || '').trim();
+      // [fixS] markup typed into the box is not a search, and punctuation is not part of a word: "<b>x</b>" is the letter x, "???" is nothing at all
+      const plain = rawQ.replace(/<[^>]*>/g, ' ').toLowerCase(); const q = FD ? plain : norm(plain);
+      const toks = q.replace(/[^\p{L}\p{M}\p{N}\s]+/gu, ' ').split(/\s+/).filter(Boolean);
+      const letters = toks.some((w) => [...w].length > 1) ? [] : toks.filter((w) => /\p{L}/u.test(w));   // only a single letter so far: the word has not been typed yet, so nothing is filtered and a hint is shown
+      const junk = !!rawQ && !letters.length && !toks.some((w) => [...w].length > 1); const value = f.get('value') || ''; const coll = f.get('coll') || ''; const time = f.get('time') || '';
       let n = 0;
-      let words = q ? q.split(/\s+/).filter((w) => w.length > 1 || /[^\x00-\x7f]/.test(w)) : [];
+      let words = toks.filter((w) => [...w].length > 1);
       // [joyB] filler words do not search ("I am angry" looks for "angry", not for every story with an "am" in it); a query made only of them searches for nothing
       { const rest = words.filter((w) => !FILLER.has(w.replace(/^[^\p{L}\p{M}]+|[^\p{L}\p{M}]+$/gu, ''))); words = FD ? FD.words(rest.join(' ')) : rest; }   // (a query of nothing but filler, "i am", "the", is not a search: the whole library stays)
       let fz = false; const has = (hay, w) => (FD ? FD.find(hay, w, fz) > 0 : hay.includes(w));   // fz: a slip of a letter is forgiven, only once nothing matches as typed
-      const passes = (c, every) => { const m = +c.dataset.minutes; return (!words.length || words[every ? 'every' : 'some']((w) => has(c.dataset.search, w))) && (!value || c.dataset.values.split(' ').includes(value)) && (!coll || c.dataset.c === coll)
+      const passes = (c, every) => { const m = +c.dataset.minutes; return !junk && (!words.length || words[every ? 'every' : 'some']((w) => has(c.dataset.search, w))) && (!value || c.dataset.values.split(' ').includes(value)) && (!coll || c.dataset.c === coll)
         && (!time || (time === '6' ? m <= 6 : time === '7' ? m === 7 : m >= 8)); };
       let some = false; let m2 = 0;
       const more = $('[data-more]'); const someNote = $('[data-some]');
@@ -597,6 +620,13 @@
         }
       };
       run(); if (FD && words.length && !n && !m2) { fz = true; run(); }
+      // [fixS] ranked, not only filtered: a story named by the words (its name, its title) comes before one that has a person of that name,
+      // and that before one that only mentions it; between equals the library's own order stands. Nothing typed: the library's order.
+      { const sc = (c) => { let t = 0; for (const w of words) { const h = FD ? FD.find(c.dataset.head, w, fz) : +c.dataset.head.includes(w) * 4, p = FD ? FD.find(c.dataset.cast, w, fz) : +c.dataset.cast.includes(w) * 4, b = FD ? FD.find(c.dataset.search, w, fz) : +c.dataset.search.includes(w) * 3; t += h * 100 + p * 20 + b + (FD && FD.find(norm(c.dataset.lead || ''), w, false) >= 4 ? 60 : 0); }   // (and the story whose leading person it is)
+          return t; };
+        const by = words.length ? new Map(cards.map((c) => [c, sc(c)])) : null;
+        const order = cards.slice().sort((a, b) => (by ? by.get(b) - by.get(a) : 0) || home.get(a) - home.get(b));
+        if (order.some((c, i) => grid.children[i] !== c)) grid.append(...order); }
       // the empty box: "not on Spritual yet" only when nothing anywhere has the words; if the reader's own filters hid the
       // matching stories it says to clear them; and the suggestions only show when there is nothing better below
       const emptyMsg = $('[data-empty-msg]'); const filtered = !!(value || coll || time);
@@ -605,11 +635,11 @@
       if (emptyMsg) {
         emptyMsg.dataset.base ??= emptyMsg.textContent;
         const none = q && !n && !m2 && !(filtered && anyText);
-        const msg = (none ? (empty.dataset.none || '').replace('{q}', () => rawQ) : !filtered && q && m2 ? (empty.dataset.below || emptyMsg.dataset.base).replace('{q}', () => rawQ) : emptyMsg.dataset.base).replace(/ (\S+)$/, '\u00a0$1');
+        const msg = (junk ? (empty.dataset.junk || empty.dataset.none || '') : none ? (empty.dataset.none || '').replace('{q}', () => rawQ) : !filtered && q && m2 ? (empty.dataset.below || emptyMsg.dataset.base).replace('{q}', () => rawQ) : emptyMsg.dataset.base).replace(/ (\S+)$/, '\u00a0$1');
         emptyMsg.textContent = msg;
         const tryRow = $$('.lib-try, .lib-try-links', empty); tryRow.forEach((x) => { x.hidden = !!m2; });
         // [fixC] the answer is said where the reader is typing (a polite live note right under the field), not only in a box far below the results
-        const note = $('[data-nomatch]'); if (note) { emptyMsg.hidden = true; if (n) { if (!note.hidden) { note.hidden = true; note.textContent = ''; } } else { note.hidden = false; if (note.textContent !== msg) note.textContent = msg; } }
+        const note = $('[data-nomatch]'); const hint = letters.length ? empty.dataset.junk || '' : ''; if (note) { emptyMsg.hidden = true; if (n && hint) { if (note.hidden || note.textContent !== hint) { note.hidden = false; note.textContent = hint; } } else if (n) { if (!note.hidden) { note.hidden = true; note.textContent = ''; } } else { note.hidden = false; if (note.textContent !== msg) note.textContent = msg; } }
       }
       const prev = +(count.dataset.n ?? cards.length); count.dataset.n = n;
       const res = (v) => fmt(v === 1 ? UI.results1 || UI.results : UI.results, { n: v, t: cards.length });
@@ -620,6 +650,11 @@
       empty.hidden = n > 0;
     };
     filters.addEventListener('input', apply); filters.addEventListener('change', apply);
+    // [fixS] the hero is tall, so the results start far below the first screen: the first time words are typed, the search and its count come up under the header
+    { let lifted = false; $('#q')?.addEventListener('input', (e) => { if (lifted || !e.target.value.trim()) return; lifted = true;
+        const top = e.target.closest('.field').getBoundingClientRect().top; if (top < innerHeight * .45) return;
+        const bar = $('[data-ed-head]'), nav = bar && getComputedStyle(bar).position === 'fixed' ? bar.offsetHeight : 0;
+        scrollTo({ top: Math.max(0, scrollY + top - nav - 14), behavior: reduced() ? 'auto' : 'smooth' }); }); }
     filters.addEventListener('submit', (e) => e.preventDefault()); filters.addEventListener('reset', () => setTimeout(apply));
     $('[data-reset]')?.addEventListener('click', () => filters.reset());
     addEventListener('keydown', (e) => { if (e.key === '/' && !/input|textarea/i.test(document.activeElement?.tagName)) { e.preventDefault(); $('#q')?.focus(); } });
@@ -685,6 +720,8 @@
       const w = gloss.offsetWidth || 292, h = gloss.offsetHeight || 120;
       gloss.style.left = Math.max(16, Math.min(r.left, vw - w - gut)) + 'px';
       gloss.style.top = (r.bottom + 8 + h > innerHeight - 16 ? Math.max(16, r.top - 8 - h) : r.bottom + 8) + 'px';
+      // [fixR2 G23] in the film the words lie in the lower third and the card used to open over the lines of the very sentence it explains: it opens above the whole block of words when there is room (over the painting, never over the text)
+      if (film) { const blk = btn.closest('.fm-t'); if (blk) { const br = blk.getBoundingClientRect(), up = br.top - 10 - h; if (up >= 72) gloss.style.top = Math.round(up) + 'px'; } }
     }
     function openSheet(d, btn) {
         const b = $('[data-lens-body]', sheet); b.innerHTML = `<ol class="lens-list">${cardHtml(d)}</ol>`;
@@ -1178,7 +1215,7 @@
         ctx.fillStyle = '#786f65'; ctx.font = `600 ${Math.round(W * 0.022)}px "Plus Jakarta Sans", system-ui, sans-serif`; ctx.textBaseline = 'top';
         ctx.fillText((UI.collName || '').toUpperCase(), pad + es + 30, pad + 56);
         ctx.fillStyle = '#181512'; ctx.font = `500 ${Math.round(W * 0.03)}px Newsreader, Georgia, serif`; ctx.fillText(reader.dataset.title, pad + es + 30, pad + 56 + Math.round(W * 0.034));
-        const primary = lineOf(readLang()); const other = lineOf(readLang() === 'en' ? 'hi' : 'en');
+        const primary = lineOf(readLang()); const other = readLang() === 'hi' ? '' : lineOf('hi');   // [fixS] a Hindi card carries no English line
         let y = format === 'story' ? Math.round(H * 0.34) : Math.round(H * 0.36);
         ctx.fillStyle = '#9e2a2b'; ctx.font = `500 ${Math.round(W * 0.09)}px Newsreader, Georgia, serif`; ctx.fillText('“', pad - 10, y - Math.round(W * 0.07));
         ctx.fillStyle = '#181512';
@@ -1192,7 +1229,12 @@
         ctx.fillStyle = '#b08227'; ctx.font = `600 ${Math.round(W * 0.02)}px "Plus Jakarta Sans", system-ui, sans-serif`; ctx.textAlign = 'right'; ctx.fillText('spritual.co.in', W - pad, H - pad - 56); ctx.textAlign = 'left';
         try { dl.href = canvas.toDataURL('image/png'); } catch {}
       };
-      $$('[data-verse-open]').forEach((b) => b.addEventListener('click', () => { verse.showModal(); draw(); haptic(); if (!otherIn) loadOther().then(draw, () => {}); }));
+      // [fixS] "Send a line as a card" opens the same sheet as the share glyph on each scene (assets/share.js: the painting, a dark card, the story's source), on the scene of the story's closing line, which it starts on. The plain card below is only for a page where that sheet could not load.
+      $$('[data-verse-open]').forEach((b) => b.addEventListener('click', async () => {
+        let ok = false; try { const cb = $('[data-closing]'); ok = !!(window.spritualShare && await window.spritualShare({ scene: +(cb?.dataset.scene) || scenes.length, text: cb?.dataset.line || '', from: b })); } catch {}
+        if (ok) return;
+        verse.showModal(); draw(); haptic(); if (!otherIn) loadOther().then(draw, () => {});
+      }));
       $$('[data-verse-format]', verse).forEach((b) => b.addEventListener('click', () => { format = b.dataset.verseFormat; $$('[data-verse-format]', verse).forEach((x) => x.setAttribute('aria-pressed', String(x === b))); draw(); }));
       $('[data-verse-copy]', verse)?.addEventListener('click', async () => { try { const blob = await new Promise((r) => canvas.toBlob(r, 'image/png')); await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]); toast.textContent = UI.verseCopied; Sound.bell(988, 0.1); } catch { toast.textContent = UI.listenNA || ''; } setTimeout(() => { toast.textContent = ''; }, 3000); });
     }
@@ -1245,11 +1287,11 @@
   }
 
   /* [perf] On a line the browser reports as slow or metered (Save-Data, 2g/3g), the paintings still waiting to be fetched are asked
-     for no wider than 1600 px: the largest candidate (2400) is a sharpness a weak line should not pay for. */
+     for no wider than 960 px (boot.js does the same as the page is parsed): the wider candidates are a sharpness a weak line should not pay for. */
   if (window.SpritualNet && window.SpritualNet.slow()) {
     $$('img[loading="lazy"][srcset]').forEach((im) => {
       if (im.complete) return;
-      const keep = im.getAttribute('srcset').split(',').filter((x) => (parseInt(x.trim().split(/\s+/)[1], 10) || 0) <= 1600);
+      const keep = im.getAttribute('srcset').split(',').filter((x) => (parseInt(x.trim().split(/\s+/)[1], 10) || 0) <= 960);   // [perf] 960 (was 1600): a painting is soft, a wait is not
       if (keep.length) im.setAttribute('srcset', keep.join(','));
     });
   }
@@ -1317,7 +1359,7 @@
           return { key, url: fileOf(v, port, size, codec) };
         }
       }
-      return { key: String(all[0]), url: fileOf(v, false, (v.dataset.ladder || '1080').split(',')[0], 'h264') };
+      return { key: port ? `p${all[0]}` : String(all[0]), url: fileOf(v, port, all[0], 'h264') };   // [perf] the smallest plain cut of the shape asked for (a phone's portrait one), not always the landscape one
     };
     const src = async (v) => {
       if (v.dataset.ladder) { const pick = await ladder(v); v.dataset.rung = pick.key; v.dataset.shape = pick.key[0] === 'p' ? 'p' : 'l'; return pick.url; }
@@ -1352,12 +1394,22 @@
       v.addEventListener('waiting', () => {});
       v.addEventListener('error', () => {
         hide(v);
-        // a 4K, portrait, HEVC or AV1 cut that will not load or decode is remembered, and the film falls back once to the
-        // plain 1080p H.264 cut (decided by the file that failed, not by its size label)
-        const bad = v.currentSrc || v.getAttribute('src') || ''; const plain = `${v.dataset.video}-1080.mp4${verOf(v)}`;
+        // a 4K, portrait, HEVC or AV1 cut that will not load or decode is remembered (by the file that failed), and the ladder is asked again:
+        // it steps to another codec of the same size, then to a smaller cut, so a phone that cannot play HEVC gets the portrait H.264 cut
+        // (about 1.4 MB), never the 4.4 MB landscape 1080p one. At most three tries; then the still stays.
+        const bad = v.currentSrc || v.getAttribute('src') || '';
         const base = (u) => u.split('?')[0].split('/').pop();
         if (v.dataset.ladder && bad) failed.add(base(bad));
-        if (v.dataset.ladder && !v.dataset.fellBack && base(bad) !== base(plain)) { v.dataset.fellBack = '1'; v.dataset.rung = '1080'; v.dataset.shape = 'l'; v.src = plain; v.load(); if (v.dataset.near) v.play().catch(() => {}); return; }
+        const tries = +(v.dataset.retry || 0);
+        if (v.dataset.ladder && bad && tries < 3) {
+          v.dataset.retry = String(tries + 1); v.dataset.fellBack = '1'; v.dataset.picking = '1';
+          src(v).then((u) => {
+            delete v.dataset.picking; if (v.dataset.dead) return;
+            if (base(u) === base(bad)) { v.removeAttribute('src'); v.dataset.dead = '1'; return; }
+            v.src = u; v.load(); if (v.dataset.near) v.play().catch(() => {});
+          }).catch(() => { delete v.dataset.picking; v.removeAttribute('src'); v.dataset.dead = '1'; });
+          return;
+        }
         v.removeAttribute('src'); v.dataset.dead = '1';
       });
     });
