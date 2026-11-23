@@ -99,6 +99,17 @@
   ],
   "redirects": [
     {
+      "source": "/((?!google4d97f61f39624bb2\\.html$).*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "(www\\.)?spritual\\.co\\.in"
+        }
+      ],
+      "destination": "https://spiritualshelf.com/$1",
+      "statusCode": 301
+    },
+    {
       "source": "/books/read/what-makes-a-person-admirable{/}?",
       "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/bala-kanda/stories/ramayana-beginnings/",
       "statusCode": 301
