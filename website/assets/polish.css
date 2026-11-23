@@ -75,3 +75,6 @@ html[lang="hi"] .gl-az a { font-family: "Mukta", var(--cx-ui, inherit); font-siz
   .cx-sel-head { justify-items: start; }
   .cx-sel-h::before, .cx-sel-h::after { display: none; }
 }
+
+/* [k3] Daylight: the festival list's "Coming up" tag was pale gold on a pale card (about 1.9:1); use the page's ink-3 there */
+:root[data-theme="light"] .fest-list li.next strong::after { color: var(--cx-ink-3, #6b4a2a); }

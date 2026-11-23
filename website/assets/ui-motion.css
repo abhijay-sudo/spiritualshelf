@@ -22,11 +22,19 @@
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --ui-ring: #f3c47e; --ui-ring-soft: rgb(243 196 126 / .3); --ui-wash: var(--ui-wash-dark); --ui-wash-empty: linear-gradient(rgb(24 16 11 / .8), rgb(24 16 11 / .92)); } }
 :root[data-theme="dark"], :root[data-theme="sanctum"], :root[data-room="theatre"]:not([data-theme="light"]) { --ui-ring: #f3c47e; --ui-ring-soft: rgb(243 196 126 / .3); --ui-wash: var(--ui-wash-dark); --ui-wash-empty: linear-gradient(rgb(24 16 11 / .8), rgb(24 16 11 / .92)); }
 
+/* ---------- Paintings arrive whole ([K2]) ----------
+   A hero painting marked data-arrive (boot.js adds html.arr, then .is-here on the image when the whole file is in) waits at
+   opacity 0 over its inline placeholder and fades in. Without the script nothing is hidden. */
+[data-arrive] { transition: opacity var(--dur-3) var(--ease-settle); }
+:root.arr [data-arrive]:not(.is-here) { opacity: 0; }
+:root[data-motion="reduce"] [data-arrive] { transition-duration: var(--dur-1); }
+@media (prefers-reduced-motion: reduce) { [data-arrive] { transition-duration: var(--dur-1); } }
+
 @keyframes ui-rise { from { opacity: 0; translate: 0 var(--ui-rise); } }
 @keyframes ui-fade { from { opacity: 0; } }
 @keyframes ui-draw { from { scale: 0 1; opacity: 0; } }
 @keyframes ui-lens { from { opacity: .55; scale: 1.045; } }
-@keyframes ui-vt-in { from { opacity: 0; translate: 0 10px; } }
+@keyframes ui-vt-in { from { opacity: 0; translate: 0 8px; } }
 @keyframes ui-vt-fade { from { opacity: 0; } }
 @keyframes ui-shimmer { from { translate: -100% 0; } to { translate: 100% 0; } }
 
@@ -36,7 +44,7 @@
    while the page changes under it. The painting that opens into a story (cx-hero) and a person's tile (data-vt="who") keep
    their shared-element morph, retuned to the same easing. */
 ::view-transition-old(root) { animation: none; mix-blend-mode: normal; }
-::view-transition-new(root) { animation: ui-vt-in var(--dur-3) var(--ease-settle) both; mix-blend-mode: normal; }
+::view-transition-new(root) { animation: ui-vt-in var(--dur-2) var(--ease-settle) both; mix-blend-mode: normal; }   /* [K2] 320 ms (was 640): the next page is readable at once, the rise is a hair */
 :root[data-nav="back"]::view-transition-new(root) { animation: ui-vt-fade var(--dur-2) var(--ease-lamp) both; }
 ::view-transition-group(cx-hero) { animation-duration: 760ms; animation-timing-function: var(--ease-settle); }
 ::view-transition-group(ui-head) { animation-duration: var(--dur-2); animation-timing-function: var(--ease-lamp); }

@@ -88,7 +88,12 @@ body {
   font-family: var(--font-ui); font-size: 1rem; line-height: 1.6;
   text-rendering: optimizeLegibility; font-feature-settings: "kern", "liga";
 }
-:lang(hi) { line-height: 1.75; }
+/* [k3] (the legacy `.next` "next story" card rules were removed here: nothing renders that card any more, and the class only leaked onto the festival list's coming-up row, painting its text cream on cream in Daylight) */
+/* [k3] Devanagari's own leading. This used to be a bare `:lang(hi)` (specificity 0,1,0 on EVERY element), which beat element rules and
+   reached the inline links and spans inside headings and card titles: a two-line Hindi heading came out with ~2.5-line gaps
+   (measured 152px leading on an 87px title). Now only the root and body carry it, so classes and the parent's own leading
+   win and inline children simply inherit. */
+:where(html:lang(hi)), :where(html:lang(hi)) body { line-height: 1.75; }   /* set on the root and body only: every element below inherits it */
 img { max-width: 100%; display: block; }
 /* archival paper grain across the viewport */
 body::after { content: ""; position: fixed; inset: 0; z-index: 60; pointer-events: none; opacity: .028; mix-blend-mode: multiply; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0'/></filter><rect width='300' height='300' filter='url(%23n)'/></svg>"); background-size: 300px 300px; }
@@ -405,13 +410,6 @@ html[lang="hi"] .scene-no { text-transform: none; letter-spacing: 0; font-size: 
 .plan { display: grid; gap: .6rem; }
 .plan .cta-row .btn { min-width: 8rem; }
 .done-line { color: var(--moss); font-weight: 600; min-height: 1.5em; }
-.next { display: grid; gap: .3rem; padding: 1.6rem 1.7rem; border-radius: var(--radius); text-decoration: none; background: var(--forest); color: var(--on-forest); box-shadow: var(--shadow); position: relative; overflow: hidden; }
-.next::after { content: ""; position: absolute; right: -8%; top: -40%; width: 45%; aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle, color-mix(in oklab, var(--gold) 25%, transparent), transparent 70%); }
-.next small { font-weight: 700; font-size: .78rem; letter-spacing: .08em; text-transform: uppercase; color: var(--gold); }
-html[lang="hi"] .next small { text-transform: none; letter-spacing: 0; font-size: .9rem; }
-.next strong { font-family: var(--font-display); font-weight: 500; font-size: 1.7rem; line-height: 1.2; }
-.next span { opacity: .85; }
-.next:hover strong { text-decoration: underline; text-underline-offset: .2em; }
 .sources { margin: .75rem 0 0; padding-left: 1.2rem; display: grid; gap: .4rem; }
 .people { display: flex; flex-wrap: wrap; gap: .5rem; list-style: none; margin: 0; padding: 0; }
 .people a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 1rem; border: 1.5px solid var(--line); border-radius: 999px; text-decoration: none; background: var(--surface); font-weight: 600; transition: border-color .2s, transform .2s var(--ease); }
@@ -578,8 +576,8 @@ html[lang="hi"] .ritual h2 { text-transform: none; letter-spacing: 0; font-size:
 @keyframes breathe-art { 0%, 100% { transform: translateY(0) scale(1); } 50% { transform: translateY(-3px) scale(1.012); } }
 
 /* ===================== Motion: quick, physical, everywhere, and off when asked ===================== */
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .today-strip, :root:not([data-theme="light"]) .site-foot, :root:not([data-theme="light"]) .next, :root:not([data-theme="light"]) .reader-bar { outline: 1px solid var(--line); } }
-:root[data-theme="dark"] .today-strip, :root[data-theme="dark"] .site-foot, :root[data-theme="dark"] .next, :root[data-theme="dark"] .reader-bar { outline: 1px solid var(--line); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .today-strip, :root:not([data-theme="light"]) .site-foot, :root:not([data-theme="light"]) .reader-bar { outline: 1px solid var(--line); } }
+:root[data-theme="dark"] .today-strip, :root[data-theme="dark"] .site-foot, :root[data-theme="dark"] .reader-bar { outline: 1px solid var(--line); }
 .reveal { opacity: 1; }
 @keyframes rise { from { opacity: 0; translate: 0 14px; } to { opacity: 1; translate: 0; } }
 @keyframes reveal-in { from { opacity: 0; translate: 0 22px; } to { opacity: 1; translate: 0; } }

@@ -57,6 +57,9 @@
 .ep-legend > .cast-row .cast-row-pic { box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ep-a) 80%, transparent), 0 0 14px -2px color-mix(in srgb, var(--ep-a) 45%, transparent); }
 .cx-sel-grid > li.ep-legend .cx-sel-tile:not(.is-on) { box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--t-glow) 58%, transparent), 0 0 12px -4px color-mix(in srgb, var(--t-glow) 60%, transparent); }
 
+/* [K2] looping lights rest out of sight (epic.js sets .ep-rest from an IntersectionObserver): the compositor and the main thread
+   keep no clock for what nobody can see. The animations resume where they were when the section is reached. */
+.ep-rest :is(.cx-sky-bloom, .cx-sky-rays, .cx-sky-mist, .cx-sky-flock, .cx-sky-flock b, .cx-lamp, .cx-sel-bg img, .cx-sel-fig, img.art, .face--arch > img) { animation-play-state: paused !important; }
 /* ---------- 2. Arrivals for what stood still ---------- */
 /* waiting things are faint, never invisible: a fast scroll never lands on an empty frame (the cinema layer's own rule) */
 .ep-rv { opacity: .32; }

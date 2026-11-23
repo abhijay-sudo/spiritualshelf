@@ -167,8 +167,6 @@
     const narrow = matchMedia('(max-width: 699px)');
     let outT = 0;
     let cur = 0, front = 0, token = 0, stopped = reduced(), lastPointer = 'mouse', timer = 0, leaving = false;
-    // where the strip must scroll to bring a tile to its middle (measured on screen: the strip is not the tile's offsetParent)
-    const centreOf = (li) => { const g = grid.getBoundingClientRect(), r = li.getBoundingClientRect(); return grid.scrollLeft + (r.left - g.left) - (grid.clientWidth - r.width) / 2; };
     // how much of the screen the words leave above them (a phone held upright lays a close portrait's whole head in that band: cinema.css, .is-fit)
     const info = $('.cx-sel-info', sel); const band = () => { if (!info || !narrow.matches) return; const b = Math.round(info.getBoundingClientRect().top - sel.getBoundingClientRect().top); if (b > 0) sel.style.setProperty('--sel-band', b + 'px'); };
     band(); addEventListener('resize', band, { passive: true }); document.fonts?.ready.then(band);
@@ -228,11 +226,6 @@
       const vw = `${Math.round(100 * (parseFloat(d.z) || 1))}vw`; const big = new Image(); big.sizes = vw; big.srcset = picset; big.src = d.pic;
       (big.decode ? big.decode() : Promise.resolve()).then(() => { if (my === token) { next.sizes = vw; next.srcset = picset; next.src = d.pic; } }).catch(() => {});
       if (!reduced()) { sel.classList.remove('is-swap'); void sel.offsetWidth; sel.classList.add('is-swap'); }
-      if (grid.scrollWidth > grid.clientWidth + 4) {
-        // [joyh] a hand on the strip (mouse over a tile, a key) only scrolls it when that tile is not wholly in view, so the strip does not slide under the pointer
-        const g = grid.getBoundingClientRect(), r = t.parentElement.getBoundingClientRect();
-        if (!byUser || r.left < g.left + 8 || r.right > g.right - 8) grid.scrollTo({ left: centreOf(t.parentElement), behavior: reduced() || byUser ? 'auto' : 'smooth' });
-      }
     };
     // left alone, the screen shows each story in turn; any choice by hand stops it, and the button starts it again
     // one fixed name ("Pause the showcase") with aria-pressed as its state: a toggle whose name also changes contradicts itself
@@ -258,6 +251,8 @@
       setTimeout(() => { location.href = url.href; }, 430);
     };
     addEventListener('pageshow', (e) => { if (e.persisted) { leaving = false; sel.classList.remove('is-go'); } });
+    // [roster] the wall can lie below the stage (a phone): a first tap chooses, and the screen rises to show who was chosen
+    const lookUp = () => { const r = sel.getBoundingClientRect(); const st = $('.cx-sel-stage', sel).getBoundingClientRect(); if (st.top < 0 && st.bottom < innerHeight * .6 || r.top < -innerHeight * .15) scrollTo({ top: scrollY + r.top, behavior: reduced() ? 'auto' : 'smooth' }); };
     let downCur = 0;   // what was in hand when the finger came down (the tap's own focus changes it before the click arrives)
     sel.addEventListener('pointerdown', (e) => { lastPointer = e.pointerType || 'mouse'; downCur = cur; }, true);
     tiles.forEach((t, i) => {
@@ -265,19 +260,35 @@
       t.addEventListener('focus', () => pick(i, true));
       t.addEventListener('click', (e) => {
         // by touch, the first tap looks and the second begins; a mouse or the keyboard is already looking
-        if (lastPointer !== 'mouse' && e.detail > 0 && i !== downCur) { e.preventDefault(); pick(i, true); return; }
+        if (lastPointer !== 'mouse' && e.detail > 0 && i !== downCur) { e.preventDefault(); pick(i, true); lookUp(); return; }
         if (i !== cur) pick(i, true);
         begin(e, t.href);
       });
       t.addEventListener('keydown', (e) => {
         if (e.altKey || e.metaKey || e.ctrlKey || e.shiftKey) return;
         // the arrows move among the characters of the realm on show
-        const v = inGrp(); const at = v.indexOf(i); const cols = v.filter((k) => tiles[k].offsetTop === tiles[v[0]].offsetTop).length || v.length;
-        const to = { ArrowRight: at + 1, ArrowLeft: at - 1, ArrowDown: at + cols, ArrowUp: at - cols, Home: 0, End: v.length - 1 }[e.key];
+        // (the wall wraps: a row is every tile level with the first; Down from a short last row lands on its last tile)
+        const v = inGrp(); const at = v.indexOf(i); const top = (k) => tiles[k].parentElement.getBoundingClientRect().top;
+        const cols = v.filter((k) => Math.abs(top(k) - top(v[0])) < 8).length || v.length;
+        const down = at + cols < v.length ? at + cols : (Math.floor(at / cols) < Math.floor((v.length - 1) / cols) ? v.length - 1 : at);
+        const to = { ArrowRight: at + 1, ArrowLeft: at - 1, ArrowDown: down, ArrowUp: at - cols, Home: 0, End: v.length - 1 }[e.key];
         if (to === undefined) return;
         e.preventDefault(); if (to >= 0 && to < v.length) tiles[v[to]].focus();
       });
     });
+    // [roster] the wall: every character of the realm on show, in even rows that fill the width. The widest row that keeps each
+    // tile at least --tile-min wide gives the number of rows; the characters are then divided evenly among them
+    // (35 on a wide screen is three rows of 12, never 13, 13 and 9). Without scripts, roster.css's own --cols stands.
+    let probe = null;
+    const minTile = () => { if (!probe) { probe = document.createElement('i'); probe.style.cssText = 'position:absolute;visibility:hidden;pointer-events:none;height:0;width:var(--tile-min)'; } if (!probe.isConnected) sel.append(probe); return probe.getBoundingClientRect().width || 88; };
+    const fitWall = () => {
+      const k = tiles.filter((t) => !t.parentElement.hidden).length; if (!k) return;
+      const cs = getComputedStyle(grid); const w = grid.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight); const gap = parseFloat(cs.columnGap) || 6;
+      const maxC = Math.max(2, Math.floor((w + gap) / (minTile() + gap))); const rows = Math.ceil(k / maxC);
+      grid.style.setProperty('--cols', String(Math.ceil(k / rows)));
+    };
+    if ('ResizeObserver' in window) new ResizeObserver(() => fitWall()).observe(grid); else addEventListener('resize', fitWall);
+    document.fonts?.ready.then(fitWall);
     // choosing a realm: its characters take the roster, and its first one takes the stage (unless the one in hand is already of it)
     const total = T('total');
     // on a phone the realms are a rail that scrolls sideways: the one chosen (or focused) is brought wholly into it
@@ -296,12 +307,8 @@
       let k = 0; tiles.forEach((t) => { const li = t.parentElement; const on = li.dataset.g === g; li.hidden = !on; if (on) li.style.setProperty('--gk', k++); });
       if (held) rBtns.find((b) => b.dataset.realm === g)?.focus({ preventScroll: true });
       if (total) total.textContent = String(k).padStart(2, '0');
-      // a realm of more than twelve (the Ramayana, with its antagonists) takes two rows: the heroes, then the antagonists
-      grid.dataset.many = String(k > 12); grid.dataset.huge = String(k > 16);
-      const v = inGrp(); grid.scrollLeft = 0;
+      const v = inGrp(); fitWall();
       if (v.includes(cur)) { out.n.textContent = String(v.indexOf(cur) + 1).padStart(2, '0'); if (byUser) halt(); } else pick(v[0], byUser);
-      // the one on stage is always in sight in a strip that scrolls (centred in it; the page itself does not move)
-      if (grid.scrollWidth > grid.clientWidth + 4) grid.scrollLeft = centreOf(tiles[cur].parentElement);
       if (byUser && !reduced() && !sel.classList.contains('sel-wait')) { grid.classList.remove('is-regroup'); void grid.offsetWidth; grid.classList.add('is-regroup'); }
     };
     if (realms && rBtns.length > 1) {
@@ -351,10 +358,12 @@
       // the select waits in the dark until it is reached, then its world fades up and its lead steps in, once
       if (!reduced() && sel.getBoundingClientRect().top > innerHeight * .5) sel.classList.add('sel-wait');
       new IntersectionObserver((es) => {
-        const en = es[0]; selOnScreen = en.intersectionRatio >= .5;
-        if (en.intersectionRatio >= .35 && sel.classList.contains('sel-wait')) { sel.classList.replace('sel-wait', 'is-lit'); }
+        const en = es[0];
+        // [roster] the select can be taller than the screen (the wall under the stage): half of it, or half the screen, counts as on screen
+        const seen = en.intersectionRect.height; selOnScreen = seen >= Math.min(en.boundingClientRect.height * .5, innerHeight * .5);
+        if (seen >= Math.min(en.boundingClientRect.height * .35, innerHeight * .35) && sel.classList.contains('sel-wait')) { sel.classList.replace('sel-wait', 'is-lit'); }
         selWake();
-      }, { threshold: [0, .35, .5, .75] }).observe(sel);
+      }, { threshold: [0, .1, .2, .35, .5, .75] }).observe(sel);
     } else selOnScreen = true;
   }
 

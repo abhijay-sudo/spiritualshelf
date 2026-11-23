@@ -76,7 +76,8 @@
 /* the name, letter by letter (the JS splits it; until then, or without it, it is whole) */
 .cast-name .ep-l { display: inline-block; padding: .12em .03em .2em; margin: -.12em -.03em -.2em; }
 html[lang="hi"] .cast-name .ep-l { padding: .22em .04em .3em; margin: -.22em -.04em -.3em; }
-.cast-name.ha-split .cast-name-t { background: none; }
+/* [k3] image only: `background: none` also reset background-clip to border-box, so Daylight's gradient (cast.css, :root[data-theme="light"]) painted as a dark box over the name */
+:root .cast-name.ha-split .cast-name-t { background-image: none; }
 .cast-page[data-char="hanuman"] .cast-name { position: relative; }
 .cast-page[data-char="hanuman"] .cast-name::before, .cast-page[data-char="hanuman"] .cast-name::after { content: ""; position: absolute; left: 0; width: 100%; height: 1.5px; pointer-events: none; opacity: 0; translate: -70% 0;
   background: linear-gradient(90deg, transparent, rgb(255 236 190 / .85) 50%, transparent); }

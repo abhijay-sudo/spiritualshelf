@@ -105,7 +105,11 @@
      The build marks them in every line-up (.ep-star with their light; .ep-legend for the legends): epic.css lights them, and nothing there moves. */
   var castRow = $('.cx-cast-row');
   if (castRow) { castRow.classList.add('ep-float'); $$(':scope > li', castRow).forEach(function (li, k) { li.style.setProperty('--ep-n', k % 5); }); }
-  var wm = $('.cx-credits-name'); if (wm) wm.classList.add('ep-shine');
+  // [K2] the home's looping lights (the sky, the cast row's slow float, the select's drift) rest while they are out of sight
+  if ('IntersectionObserver' in window) { var rest = new IntersectionObserver(function (es) { es.forEach(function (e) { e.target.classList.toggle('ep-rest', !e.isIntersecting); }); }); ['.cx-sky', '.cx-cast-row', '.cx-select'].forEach(function (q) { var el = $(q); if (el) rest.observe(el); }); }
+  // [K2] the name's passing light runs only while the credits are on screen (it animates a text-clipped background, which the page
+  // repaints every frame: left running it kept the main thread awake on every page, all day, with the credits far below the fold)
+  var wm = $('.cx-credits-name'); if (wm && 'IntersectionObserver' in window) new IntersectionObserver(function (es) { wm.classList.toggle('ep-shine', es[0].isIntersecting); }).observe(wm);
 
   /* ---------- 2. Arrivals: what the cinema layer left still comes in once, when it is reached, then stays put ---------- */
   // (none of it with Save-Data either: nothing waits faint, everything is simply there)

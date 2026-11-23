@@ -326,10 +326,10 @@ html[lang="hi"] .fm #gloss .gloss-row i { letter-spacing: 0; text-transform: non
 @keyframes fm-deep-in { from { opacity: 0; } to { opacity: 1; } }
 :root[data-motion="reduce"] .fm-deep.fm-live [data-reader] .scenes { animation: none; }
 @media (prefers-reduced-motion: reduce) { .fm-deep.fm-live [data-reader] .scenes { animation: none; } }
-/* [perf] the opening painting fades up once it is decoded (film.js adds is-ready); boot.js lifts the wait after 6 s whatever happens */
-.fm:not(.hero-ok) .cx-film-open-pic:not(.is-ready) { opacity: 0; }
-.fm .cx-film-open-pic { transition: opacity var(--d3, 640ms) var(--ease-settle, cubic-bezier(.22, .8, .2, 1)); }
-:root[data-motion="reduce"] .fm .cx-film-open-pic { transition: none; }
+/* [perf] [K2] the opening painting arrives whole: the image fades up once it is decoded (boot.js sets .is-here on a data-arrive image;
+   ui-motion.css does the fade), over the painting's own colours (--lq, written by the build), so the cover is never a dark empty field
+   and never drawn down the screen. (This used to wait for film.js, a second download, before anything showed.) */
+.cx-film-open-pic::before { content: ""; position: absolute; inset: 0; z-index: -1; background: var(--lq, none) var(--ppos, 50% 45%) / cover no-repeat; }
 
 /* ===== [fixR2] reader fixes from the second customer round (G05, G33, G43) ===== */
 /* G05 + G33: the strip at a phone's edge. Its buttons stand 4px in from the edge (the language chip used to touch the edge and its outline was cut), the Aa chip above it

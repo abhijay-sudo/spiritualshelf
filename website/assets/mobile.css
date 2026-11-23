@@ -114,18 +114,8 @@
 
   /* the strip of characters: to the screen's edge, one name under each face, the next tile peeking in */
   .cx-sel-roster { flex-wrap: wrap; align-items: center; row-gap: .35rem; }
-  .cx-sel-grid { flex: 1 1 0; min-width: 0; display: grid; grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: 96px; gap: .5rem; overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory; scroll-padding-inline: var(--cx-gut); scrollbar-width: none; margin-inline-start: calc(-1 * var(--cx-gut)); padding: .9rem .9rem .3rem var(--cx-gut); -webkit-mask-image: linear-gradient(90deg, #000 85%, transparent); mask-image: linear-gradient(90deg, #000 85%, transparent); }
-  .cx-sel-grid > li { scroll-snap-align: start; }
-  .cx-sel-tile, .cx-sel-grid[data-many="true"] .cx-sel-tile, .cx-sel-grid[data-huge="true"] .cx-sel-tile { aspect-ratio: auto; width: 96px; height: 124px; min-height: 44px; container-type: normal; }
-  .cx-sel-tile-bg, .cx-sel-tile-face { bottom: 32px; }
-  .cx-sel-tile-face img { width: 84%; top: 4%; }
-  .cx-sel-tile::after { background: linear-gradient(to top, rgb(5 3 2 / .96) 0 32px, transparent 60%); }
-  .cx-sel-tile-n, html[lang="hi"] .cx-sel-tile-n, .cx-sel-grid[data-huge="true"] .cx-sel-tile-n { left: 6px; right: 14px; bottom: 0; height: 32px; display: flex; align-items: center; justify-content: center; text-align: center; font: 600 13px/1.1 var(--cx-ui); letter-spacing: 0; text-transform: none; white-space: nowrap; overflow: hidden; text-overflow: clip; overflow-wrap: normal; }
-  html[lang="hi"] .cx-sel-tile-n { font-family: "Mukta", var(--cx-ui); font-size: 14px; }
   /* a name is never broken inside a word: a long one (Parashurama, Hiranyakashipu) is set a little smaller, on one line
      (--nl is how many letters it has; the label is 80px of a 96px tile) */
-  html:not([lang="hi"]) .cx-sel-grid .cx-sel-tile-n { left: 5px; right: 11px; font-size: min(13px, calc(80px / (var(--nl, 8) * .58))); }
-  .cx-sel-tile.is-on { translate: 0 -.45rem; scale: 1.04; }
   .cx-sel-auto { width: 44px; height: 44px; }
 
   /* what they are, in two lines; and both ways in, side by side, never wrapping into a second row */
@@ -162,13 +152,6 @@
   .cx-sel-roster { flex-wrap: nowrap; padding-block: .25rem .4rem; }
   .cx-sel-realms { flex: 0 1 38%; min-width: 0; -webkit-mask-image: linear-gradient(90deg, #000 85%, transparent); mask-image: linear-gradient(90deg, #000 85%, transparent); }
   .cx-sel-realm-pic { width: 28px; height: 28px; }
-  .cx-sel-grid { margin-inline-start: 0; padding: .55rem .9rem .2rem .2rem; grid-auto-columns: 92px; }
-  .cx-sel-tile, .cx-sel-grid[data-many="true"] .cx-sel-tile, .cx-sel-grid[data-huge="true"] .cx-sel-tile { width: 92px; height: 74px; }
-  .cx-sel-tile-bg, .cx-sel-tile-face { bottom: 24px; }
-  .cx-sel-tile-face img { width: 62%; top: 0; }
-  .cx-sel-tile::after { background: linear-gradient(to top, rgb(5 3 2 / .96) 0 24px, transparent 70%); }
-  .cx-sel-tile-n, html[lang="hi"] .cx-sel-tile-n, .cx-sel-grid[data-huge="true"] .cx-sel-tile-n { height: 24px; white-space: nowrap; }
-  html:not([lang="hi"]) .cx-sel-grid .cx-sel-tile-n { font-size: min(13px, calc(76px / (var(--nl, 8) * .58))); }
   .cx-sel-stage { max-width: 58%; gap: .3rem; }
   /* a face painted on the left: the words take the right of the short screen, as they do on a wide one (they lay across the face) */
   .cx-select.is-left > .cx-sel-stage { justify-self: end; }
@@ -510,13 +493,6 @@ html[lang="hi"] .cx-sel-btns .cx-btn { line-height: 1.5; }
   .cx-sel-world { text-shadow: 0 0 2px rgb(8 4 2 / .95), 0 1px 3px rgb(8 4 2 / .9), 0 0 12px rgb(8 4 2 / .8); }
 }
 /* (not a phone on its side: there the names stand on their own plate under the faces, section 6) */
-@media (min-width: 700px) and (min-height: 520.02px), (min-width: 700px) and (orientation: portrait) {
-  .cx-sel-tile::after { background: linear-gradient(to top, rgb(5 3 2 / .88) 0, rgb(5 3 2 / .72) 1rem, transparent 44%); }
-  .cx-sel-tile-n { text-shadow: 0 0 2px rgb(0 0 0 / .95), 0 0 4px rgb(0 0 0 / .9), 0 1px 6px rgb(0 0 0 / .9); }
-  html:not([lang="hi"]) .cx-sel-grid .cx-sel-tile .cx-sel-tile-n { left: .25rem; right: .05rem; bottom: .22rem; font-family: var(--cx-ui); font-weight: 600; line-height: 1.25; letter-spacing: 0; font-size: clamp(9px, calc((100cqi - .4rem) / (var(--nl, 8) * .64)), calc(.7rem * var(--cx-k, 1))); }
-  html:not([lang="hi"]) .cx-sel-grid .cx-sel-tile .cx-sel-tile-n[data-long] { left: .08rem; right: 0; letter-spacing: -.065em; } /* Hiranyakashipu, whole at 9px on the narrowest tile */
-  html[lang="hi"] .cx-sel-grid .cx-sel-tile .cx-sel-tile-n { font-size: clamp(10px, calc((100cqi - .8rem) / var(--nl, 5)), calc(.68rem * var(--cx-k, 1))); }
-}
 .cx-sel-wk { text-shadow: 0 0 2px rgb(8 4 2 / .95), 0 1px 3px rgb(8 4 2 / .9), 0 0 12px rgb(8 4 2 / .8); }
 .cx-sel-story { background: rgb(12 7 3 / .5); }
 /* the select's summary is cut to a few lines by its own box, and that box also shaved the last matra of a Hindi line

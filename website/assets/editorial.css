@@ -129,6 +129,12 @@ html[lang="hi"] .ed-saved { font-size: .98rem; }
   html:not([lang="hi"]) .ed-nav, html:not([lang="hi"]) .ed-saved { display: none; }
   html:not([lang="hi"]) .ed-menu-btn { display: inline-flex; }
 }
+/* [k3] Hindi section names are shorter but still ran into the language chip between 1000 and 1050px (measured: 12px of overlap at
+   1024): keep the Menu button until there is a clear gap beside the tools */
+@media (min-width: 62.5em) and (max-width: 67.49em) {
+  html[lang="hi"] .ed-nav, html[lang="hi"] .ed-saved { display: none; }
+  html[lang="hi"] .ed-menu-btn { display: inline-flex; }
+}
 @media (min-width: 72em) { html:not([lang="hi"]) .ed-nav { gap: clamp(1rem, min(3.2vw, 8.2vw - 4.1rem), 3.4rem); } }
 @media (min-width: 80em) and (max-width: 83.99em) {
   html:not([lang="hi"])[data-size="l"] .ed-nav, html:not([lang="hi"])[data-size="l"] .ed-saved { display: none; }
@@ -580,7 +586,8 @@ html[lang="hi"] .ed-card-k { font-size: .85rem; letter-spacing: 0; }
 :root:not([data-motion="reduce"]) .ed-hero-side > :nth-child(3) { animation-delay: 1.85s; }
 :root:not([data-motion="reduce"]) .ed-hero-side > .ed-continue { animation-delay: 1.6s; }
 @keyframes ed-slide { from { opacity: 0; transform: translateX(32px); } }
-:root:not([data-motion="reduce"]).has-hero .ed-head, :root:not([data-motion="reduce"]) .has-hero .ed-head { animation: ed-fade-down .9s var(--ed-ease) .1s both; }
+/* [K2] only on a fresh arrival: when the visitor came from another page of the site the header stands still (ui-motion.css holds it as its own layer), so it no longer blinks dim on every click */
+:root:not([data-motion="reduce"]):not(.nav-in).has-hero .ed-head, :root:not([data-motion="reduce"]):not(.nav-in) .has-hero .ed-head { animation: ed-fade-down var(--dur-3, .64s) var(--ease-settle, var(--ed-ease)) .1s both; }
 @keyframes ed-fade-down { from { opacity: 0; translate: 0 -12px; } }
 /* the old one-word title animation does not apply any more */
 .ed-hero-side { animation: none !important; }

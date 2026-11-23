@@ -55,6 +55,15 @@
   try { if (me && me.hasAttribute('data-read')) { var pkS = location.pathname.replace(/\/+$/, '').split('/').pop(), pkP = (JSON.parse(localStorage.getItem('spritual:places') || 'null') || {})[pkS];
     if (pkP && !pkP.d && pkP.s >= 2 && pkP.s <= pkP.t && !/^#page-/.test(location.hash)) d.classList.add('pk-can'); } } catch (e) {}
   d.classList.add('lst-js');   // [lane F] script is running: the Listen buttons may show
+  // [K2] Paintings arrive whole. A hero painting marked data-arrive waits invisible (html.arr) over its tiny inline placeholder and
+  // fades in the moment the browser has the whole file, instead of being drawn top to bottom over a bare dark page on a slow line.
+  // load and error do not bubble, so one capture listener (registered before any image exists) sees them all; nothing else runs.
+  // Whatever happens, nothing stays hidden: an error shows the alt text, and after 6 s every waiting painting is shown as it is.
+  d.classList.add('arr');
+  try { if (document.referrer.indexOf(location.origin + '/') === 0) d.classList.add('nav-in'); } catch (e) {}   // arrived from another page of this site: the header does not replay its entrance
+  var here = function (e) { var t = e.target; if (!t || t.tagName !== 'IMG' || !t.hasAttribute('data-arrive')) return; var on = function () { t.classList.add('is-here'); }; if (e.type === 'load' && t.decode) t.decode().then(on, on); else on(); };   // decoded first: the fade never stalls on a big painting
+  document.addEventListener('load', here, true); document.addEventListener('error', here, true);
+  setTimeout(function () { var w = document.querySelectorAll('img[data-arrive]:not(.is-here)'); for (var i = 0; i < w.length; i++) w[i].classList.add('is-here'); }, 6000);
   if (!calm && !mq.matches) d.classList.add('cx-js');
   // [calm] Light mode (assets/calm.js, calm.css): the reader's own choice (Reading comfort > Motion), or this tab's own
   // "resting the motion" after the device struggled (calm.js keeps only that word, for this tab: never a measurement).
@@ -264,7 +273,7 @@
     if (!e.viewTransition) return;
     var w; try { w = sessionStorage.getItem('cx-vt'); sessionStorage.removeItem('cx-vt'); } catch (x) { return; }
     if (!w || w !== location.pathname) return;
-    var t = document.querySelector('[data-vt-target] img,img[data-vt-target]'); if (!t) return;
+    var t = document.querySelector('[data-vt-target]'); if (!t) return;   // [K2] the whole opening (painting, scrim and words) is the shared element: a bare painting travelled above its own scrim and popped dark when it landed
     t.style.viewTransitionName = 'cx-hero';
     var who = ''; try { who = sessionStorage.getItem('cx-vtk'); sessionStorage.removeItem('cx-vtk'); } catch (x) {}
     d.dataset.vt = who ? 'who' : 'story'; /* lane E: ui-motion.css lets the painting's morph land before the page rises */

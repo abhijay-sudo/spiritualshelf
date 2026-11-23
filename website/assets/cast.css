@@ -42,6 +42,10 @@
 /* (the painting stops one pixel short of the stage's foot, where the page's own colour has already taken over: on screens
    with a fractional pixel ratio the last row of the painting otherwise showed through as a hairline) */
 .cast-plate { position: absolute; inset: 0 0 1px; overflow: hidden; }
+/* [K2] The painting's own colours, 32 px wide (the build writes them into --lq), lie in the painting's box until the real file has
+   arrived and fades in over them (ui-motion.css [data-arrive]): a slow line shows light and a figure at once, never a dark empty hero. */
+.cast-plate::before { content: ""; position: absolute; left: var(--img-l); top: var(--img-t); width: var(--img-w); height: var(--img-h); background: var(--lq, none) 0 0 / 100% 100% no-repeat;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 2.4%); mask-image: linear-gradient(to bottom, transparent 0, #000 2.4%); }
 .cast-plate-img { position: absolute; display: block; max-width: none; left: var(--img-l); top: var(--img-t); width: var(--img-w); height: var(--img-h);
   -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 2.4%); mask-image: linear-gradient(to bottom, transparent 0, #000 2.4%);
   transform-origin: calc(var(--face-x, .5) * 100%) calc(var(--face-y, .3) * 100%); }
@@ -66,6 +70,7 @@
 
 /* a painted cut-out stands in front of their world, which is only light and colour behind them */
 .cast-world { position: absolute; inset: 0 0 1px; overflow: hidden; }
+.cast-world::before { content: ""; position: absolute; left: -8%; top: -8%; width: 116%; height: 116%; background: var(--lq, none) var(--world-pos, 50% 40%) / cover no-repeat; filter: saturate(1.15) brightness(.8); }
 .cast-world img { position: absolute; left: -8%; top: -8%; width: 116%; height: 116%; max-width: none; object-fit: cover; object-position: var(--world-pos, 50% 40%); filter: blur(22px) saturate(1.15) brightness(.8); }
 /* (the whole figure stands inside the first screen, under the bar: its height is the stage's or the screen's, whichever is less) */
 /* .ha-box: Hanuman's arrival rig stands in exactly the figure's box (assets/hanuman-arrival.css) */
@@ -208,6 +213,7 @@ html[lang="hi"] .cast-hymn-k { font: 400 .92rem/1.4 "Mukta", var(--cx-ui); lette
 
 /* by daylight (the paper theme) the world behind a cut-out is kept light */
 :root[data-theme="light"] .cast-world img { filter: blur(22px) saturate(1.1) brightness(1.08); }
+:root[data-theme="light"] .cast-world::before { filter: saturate(1.1) brightness(1.08); }
 :root[data-theme="light"] .cast-cut { filter: drop-shadow(0 24px 26px rgb(60 30 10 / .28)); }
 :root[data-theme="light"] .cast-title { color: color-mix(in srgb, var(--ep-a) 30%, var(--cx-saffron-2)); }
 /* (and the bar over the stage is a veil of the same paper with ink on it, not smoke with white words over cream) */

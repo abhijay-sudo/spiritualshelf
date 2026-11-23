@@ -1,0 +1,127 @@
+/* [roster] Home: "Choose your character", the character wall.
+   Loaded after cinema.css / mobile.css / joyh.css / joyhh.css, on the home page only. It is the one place that lays out the
+   roster; the older strip rules (a single sideways-scrolling line of tiles) were deleted from those files, not overridden.
+
+   Every character of the realm on show stands on the wall at once, wrapping to rows that fill the width, with no sideways
+   scroll and nothing cut off (cinema.js sets --cols so the rows are even: 35 is three rows of 12, not 13, 13 and 9).
+   Wide screens fit stage and wall on one screen; where they cannot (a phone, a short laptop) the page simply goes on
+   below the stage: the first screen is always the stage and the tabs, the wall is what scrolls into view.
+   Motion: transform and opacity only, the site's own easing, both reduce-motion switches respected. */
+
+.cx-select {
+  --rw-gap: clamp(5px, .5vw, 8px);
+  --tile-min: calc(88px * var(--cx-k, 1));
+  --tile-ar: 4 / 3;
+  --cols: 4;
+}
+@media (min-width: 560px) { .cx-select { --cols: 6; --tile-min: 92px; } }
+@media (min-width: 760px) { .cx-select { --cols: 8; } }
+@media (min-width: 1000px) { .cx-select { --cols: 10; --tile-ar: 4 / 2.85; } }
+@media (min-width: 1280px) { .cx-select { --cols: 12; } }
+/* a laptop-height screen: the tiles are a little flatter, so the 45 of the gods keep four rows nearer the fold (the face and the name still show whole) */
+@media (min-width: 1000px) and (max-height: 1100px) { .cx-select { --tile-ar: 4 / 2.5; } }
+@media (max-width: 559px) { .cx-select { --tile-min: 72px; --tile-ar: 1 / .94; --rw-gap: 6px; } }
+
+/* ---------- the section: as tall as its stage and its wall, never less than the screen ---------- */
+:root .cx-select { height: auto; min-height: max(100svh, 32rem); grid-template-rows: auto minmax(auto, 1fr) auto; }
+/* the stage is as tall as its words need (it used to be allowed to shrink below them, and they rose into the heading) */
+:root .cx-select .cx-sel-stage { min-height: auto; }
+/* the painting, its shade and the lamps stay one screen tall however long the wall makes the section: the picture is
+   composed for the screen, and a taller frame would only crop it harder */
+:root .cx-select .cx-sel-bg, :root .cx-select .cx-sel-shade, :root .cx-select .ha-sel-rig { bottom: auto; height: min(100%, 100svh); }
+/* a tablet held upright: stage, then the heading, then the wall */
+@media (min-width: 700px) and (max-width: 1099px) and (orientation: portrait) { :root .cx-select { grid-template-rows: minmax(auto, 1fr) auto auto; } }
+/* a phone held upright: the first screen is the stage, the heading, the worlds and the first row of faces (--sel-peek) */
+@media (max-width: 699px) and (min-height: 521px) {
+  :root .cx-select { --sel-peek: 11.25rem; min-height: 0; grid-template-rows: calc(100svh - var(--ed-head-h) - var(--sel-peek)) auto auto; }
+}
+/* a phone on its side: the stage fills the screen above the worlds; the wall follows */
+@media (orientation: landscape) and (max-height: 520px) {
+  :root .cx-select { --sel-peek: 6.25rem; min-height: 0; grid-template-rows: calc(100svh - var(--ed-head-h) - var(--sel-peek)) auto; }
+}
+
+/* ---------- the roster: the worlds and the pause control on one line, the wall under them ---------- */
+:root .cx-select .cx-sel-roster {
+  display: grid; grid-template-columns: 44px minmax(0, 1fr) 44px; grid-template-areas: ". realms auto" "grid grid grid"; align-items: center; column-gap: .6rem; row-gap: .55rem;
+  padding: clamp(.7rem, 1.6svh, 1rem) max(var(--cx-gut-r), calc((100vw - 88rem * var(--cx-k, 1)) / 2 + var(--cx-gut-r))) clamp(1rem, 2.4svh, 1.5rem) max(var(--cx-gut), calc((100vw - 88rem * var(--cx-k, 1)) / 2 + var(--cx-gut)));
+  /* the painting above fades into the wall's own dark, so there is no edge where the picture stops */
+  background: linear-gradient(to bottom, color-mix(in oklab, var(--sel-base) 62%, transparent), color-mix(in oklab, var(--sel-base) 94%, #000) 3.5rem, color-mix(in oklab, var(--sel-base) 96%, #000));
+}
+:root .cx-select .cx-sel-realms { grid-area: realms; justify-self: center; flex: none; max-width: 100%; margin: 0; padding: 0; }
+:root .cx-select .cx-sel-realms[hidden] { display: none; }
+:root .cx-select .cx-sel-auto { grid-area: auto; justify-self: end; }
+:root .cx-select .cx-sel-grid[data-sel-grid] { grid-area: grid; }
+@media (max-width: 699px), (max-height: 520px) and (orientation: landscape) {
+  :root .cx-select .cx-sel-roster { grid-template-columns: minmax(0, 1fr) 44px; grid-template-areas: "realms auto" "grid grid"; column-gap: .4rem; }
+  :root .cx-select .cx-sel-realms { justify-self: stretch; overflow: visible; -webkit-mask-image: none; mask-image: none; }
+}
+/* no scripts: the worlds stay [hidden] (cinema.js shows them) and the wall spans the row by itself. cx-js only means "motion is allowed", so reduced-motion and Light viewers keep the same layout and the worlds */
+
+/* ---------- the wall ---------- */
+:root .cx-select .cx-sel-grid[data-sel-grid] {
+  display: flex; flex-wrap: wrap; justify-content: center; align-content: flex-start; gap: var(--rw-gap); list-style: none; margin: 0; padding: .35rem .5rem .2rem;
+  overflow: visible; -webkit-mask-image: none; mask-image: none; min-width: 0; scroll-snap-type: none;
+}
+:root .cx-select .cx-sel-grid > li { flex: 0 0 calc((100% - (var(--cols) - 1) * var(--rw-gap)) / var(--cols)); min-width: 0; margin: 0; position: relative; }
+:root .cx-select .cx-sel-grid > li[hidden] { display: none; }
+
+.cx-sel-tile {
+  position: relative; display: block; width: 100%; aspect-ratio: var(--tile-ar); min-height: 44px; overflow: hidden; container-type: inline-size;
+  background: #120a05; color: #fff; text-decoration: none; transform: skewX(-7deg); border-radius: 2px;
+  box-shadow: inset 0 0 0 1px rgb(243 231 215 / .22);
+  transition: translate .32s var(--ease-settle, cubic-bezier(.22, .8, .2, 1)), scale .32s var(--ease-settle, cubic-bezier(.22, .8, .2, 1)), box-shadow .32s ease;
+}
+.cx-sel-tile-bg, .cx-sel-tile-face { position: absolute; inset: 0 -14%; transform: skewX(7deg); overflow: hidden; }
+.cx-sel-tile-bg img { width: 100%; height: 100%; object-fit: cover; display: block; filter: brightness(.6); }
+.cx-sel-tile--scene .cx-sel-tile-bg img { filter: brightness(.82); }
+.cx-sel-tile-face img { position: absolute; left: 50%; top: 5%; width: 74%; height: auto; translate: -50% 0; filter: drop-shadow(0 4px 6px rgb(0 0 0 / .65)); transition: scale .4s var(--ease-settle, cubic-bezier(.22, .8, .2, 1)); transform-origin: 50% 0; }
+/* the dim of a tile that is not in hand: one veil that fades (cheaper than animating a filter on forty-five pictures) */
+.cx-sel-tile::before { content: ""; position: absolute; inset: 0; z-index: 1; background: rgb(8 5 3 / .3); opacity: 1; transition: opacity .3s ease; pointer-events: none; }
+.cx-sel-tile::after { content: ""; position: absolute; inset: 0; z-index: 1; background: linear-gradient(to top, rgb(5 3 2 / .94) 0, rgb(5 3 2 / .62) 30%, transparent 58%); pointer-events: none; }
+.cx-sel-tile-n {
+  position: absolute; z-index: 2; left: 3px; right: 3px; bottom: 3px; display: block; transform: skewX(7deg); text-align: center;
+  font: 600 clamp(10.5px, calc(100cqi * .9 / (var(--nl, 8) * .58)), 12.5px)/1.14 var(--cx-ui); letter-spacing: .005em; text-transform: none; color: #fff4dc;
+  text-shadow: 0 0 2px rgb(0 0 0 / .95), 0 1px 5px rgb(0 0 0 / .9); overflow-wrap: normal; word-break: keep-all; text-wrap: balance; font-variant-numeric: lining-nums;
+}
+html[lang="hi"] .cx-sel-tile-n { font: 500 clamp(11.5px, calc(100cqi * .9 / (var(--nl, 6) * .66)), 14px)/1.3 "Mukta", var(--cx-ui); letter-spacing: 0; }
+
+/* hand: hovered, focused, or the one on the stage */
+@media (hover: hover) { .cx-sel-tile:hover::before { opacity: 0; } .cx-sel-tile:hover .cx-sel-tile-face img { scale: 1.06; } }
+.cx-sel-tile:focus-visible::before, .cx-sel-tile.is-on::before { opacity: 0; }
+.cx-sel-tile.is-on {
+  translate: 0 -2px; scale: 1.05; z-index: 2;
+  box-shadow: inset 0 0 0 2px var(--t-glow), 0 0 0 1px rgb(5 3 2 / .9), 0 0 20px 1px color-mix(in oklab, var(--t-glow) 62%, transparent), 0 10px 18px -8px rgb(0 0 0 / .85);
+}
+.cx-sel-tile.is-on .cx-sel-tile-face img { scale: 1.08; }
+.cx-sel-tile.is-on .cx-sel-tile-n { color: #fff; }
+/* a generous gold ring that nothing clips: the wall has room round it */
+.cx-select .cx-sel-grid .cx-sel-tile:focus-visible { outline: 2px solid #ffd9a0; outline-offset: 3px; z-index: 3; }
+/* the antagonists keep their ember edge (they follow the heroes on the same wall) */
+.cx-sel-grid > li.is-foe .cx-sel-tile:not(.is-on) { box-shadow: inset 0 0 0 1px rgba(255, 112, 80, .55), 0 0 12px -4px rgba(255, 96, 60, .55); }
+.cx-sel-grid > li.is-foe .cx-sel-tile-n { color: #ffd9c9; }
+
+/* ---------- arriving: the wall comes up row by row, quick enough that nobody waits for it ---------- */
+:root.cx-js:not([data-motion="reduce"]) .cx-select.is-lit .cx-sel-grid > li { animation: roster-in .6s var(--ease-settle, cubic-bezier(.22, .8, .2, 1)) both; animation-delay: calc(.3s + min(var(--gk, 0), 40) * 16ms); }
+:root.cx-js:not([data-motion="reduce"]) .cx-select .cx-sel-grid.is-regroup > li { animation: roster-in .45s var(--ease-settle, cubic-bezier(.22, .8, .2, 1)) both; animation-delay: calc(min(var(--gk, 0), 40) * 12ms); }
+@keyframes roster-in { from { opacity: 0; translate: 0 .6rem; } }
+@media (prefers-reduced-motion: reduce) { .cx-sel-tile, .cx-sel-tile-face img, .cx-sel-tile::before { transition: none; } }
+:root[data-motion="reduce"] :is(.cx-sel-tile, .cx-sel-tile-face img, .cx-sel-tile::before) { transition: none; }
+
+/* a very wide screen: the whole select grows with the page (--cx-k), tiles included */
+@media (min-width: 2200px) { .cx-sel-tile-n { font-size: clamp(10.5px, calc(100cqi * .9 / (var(--nl, 8) * .58)), calc(12.5px * var(--cx-k, 1))); } }
+@media print { .cx-sel-grid { display: none; } }
+
+/* a screen that is not tall: the stage keeps its whole name, line and buttons, so the story's chips (each is also a link inside its
+   story) come down to two, and to none on a laptop; the wall then fits under the stage, or comes close */
+@media (min-width: 700px) and (min-height: 521px) and (max-height: 1100px) { .cx-select .cx-sel-chips { max-height: none; overflow: visible; } .cx-select .cx-sel-chips > li:nth-child(n+3) { display: none; } }
+@media (min-width: 700px) and (min-height: 521px) and (max-height: 900px) { .cx-select .cx-sel-chips { display: none; } }
+@media (min-width: 700px) and (min-height: 521px) and (max-height: 1000px) { html[lang="hi"] .cx-select .cx-sel-chips { display: none; } }
+/* room between the heading and the words, whatever the screen */
+:root .cx-select .cx-sel-stage { padding-top: clamp(.6rem, 2svh, 1.4rem); }
+/* the heading keeps to the same left edge as the words under it on a wide screen, and is bright enough over a pale painting (a tablet held upright lays it on the picture's foot) */
+@media (min-width: 1100px) { :root .cx-select .cx-sel-head { padding-left: calc(max(var(--cx-gut), (100vw - 88rem * var(--cx-k, 1)) / 2 + var(--cx-gut)) / var(--cx-k, 1)); } }
+:root .cx-select .cx-sel-h { color: color-mix(in oklab, var(--sel-glow) 35%, #fff4e0); text-shadow: 0 0 2px rgb(8 4 2 / .9), 0 1px 8px rgb(8 4 2 / .85), 0 0 22px color-mix(in oklab, var(--sel-base) 80%, transparent); }
+/* Hindi stands taller than English at the same size; on a laptop its name is set a little smaller so the wall keeps its place under it */
+@media (min-width: 700px) and (min-height: 521px) and (max-height: 1100px) { html[lang="hi"] .cx-select .cx-sel-title { --sel-ts: min(clamp(3rem, 1.4rem + 6vw, 7.5rem), 7.6svh); } }
+/* the narrowest phones: four faces still fit a 360 px screen; the one very long name (Hiranyakashipu) is set a touch smaller there rather than cut */
+@media (max-width: 389px) { .cx-select .cx-sel-grid[data-sel-grid] { padding-inline: .3rem; } html:not([lang="hi"]) .cx-sel-tile-n { font-size: clamp(9.5px, calc(100cqi * .9 / (var(--nl, 8) * .58)), 12.5px); letter-spacing: 0; } }

@@ -373,9 +373,12 @@ html[lang="hi"] :is(.cx-poster-m, .cx-poster-k) { font-family: "Mukta", var(--cx
 .cx-cast { padding-block: var(--cx-sec) calc(var(--cx-sec) * .55); background: var(--cx-paper); }
 .cx-cast-ways { display: flex; flex-wrap: wrap; justify-content: center; gap: .75rem; }
 .cx-cast + .cx-more { padding-top: calc(var(--cx-sec) * .55); border-top: 1px solid var(--cx-line); }
-.cx-cast-row { list-style: none; margin: 0 auto 2.5rem; padding: .5rem var(--cx-gut-r) 1rem var(--cx-gut); display: flex; gap: clamp(.75rem, .4rem + 1vw, 1.5rem); overflow-x: auto; scroll-snap-type: x proximity; scrollbar-width: thin; scrollbar-color: var(--cx-sand) transparent; max-width: 92rem; box-sizing: border-box; }
-@media (min-width: 1200px) { .cx-cast-row { justify-content: flex-start; } .cx-cast-row > li:first-child { margin-left: auto; } .cx-cast-row > li:last-child { margin-right: auto; } .cx-cast-row > li { flex: 0 1 8.75rem; min-width: 6.25rem; } }
-.cx-cast-row > li { flex: 0 0 clamp(7.5rem, 26vw, 8.75rem); scroll-snap-align: center; }
+/* [roster] the starring row is a wall too: every lead on screen at once, in even rows that fill the width (ten across a desktop, five across
+   a tablet, four across a phone), never a strip that runs off the edge. --cc is how many to a row. */
+.cx-cast-row { --cc: 4; --cg: clamp(.5rem, .3rem + 1vw, 1.25rem); list-style: none; margin: 0 auto 2.5rem; padding: .5rem var(--cx-gut-r) 1rem var(--cx-gut); display: flex; flex-wrap: wrap; justify-content: center; gap: clamp(1rem, .6rem + 1.4vw, 1.75rem) var(--cg); max-width: 92rem; box-sizing: border-box; }
+@media (min-width: 700px) { .cx-cast-row { --cc: 5; } }
+@media (min-width: 1200px) { .cx-cast-row { --cc: 10; } }
+.cx-cast-row > li { flex: 0 0 calc((100% - (var(--cc) - 1) * var(--cg)) / var(--cc)); }
 .cx-cast-row a { display: grid; justify-items: center; gap: .25rem; text-align: center; text-decoration: none; color: var(--cx-ink); }
 .cx-cast-pic { width: 100%; display: block; border-radius: 50% 50% 4px 4px / 40% 40% 4px 4px; background: radial-gradient(ellipse 80% 55% at 50% 100%, color-mix(in oklab, var(--cx-marigold) 26%, var(--cx-paper-2)), var(--cx-paper-2) 72%); overflow: hidden; }
 .cx-cast-pic img.art { display: block; width: 100%; padding-top: .5rem; box-sizing: border-box; transition: translate .6s var(--cx-ease); }
@@ -392,8 +395,8 @@ html[lang="hi"] :is(.cx-poster-m, .cx-poster-k) { font-family: "Mukta", var(--cx
 .face-pic { display: block; aspect-ratio: 1; }
 .empty--fig .empty-face { width: 6rem; grid-row: span 2; }
 .story-fig:has(> .face) { aspect-ratio: 1; }
-.cx-cast-name { margin-top: .5rem; font: 500 1.12rem/1.2 var(--cx-title); }
-.cx-cast-alt { font: 400 .92rem/1.2 "Tiro Devanagari Hindi", var(--cx-text); color: var(--cx-ink-3); }
+.cx-cast-name { margin-top: .5rem; font: 500 clamp(.8rem, .55rem + 1.1vw, 1.12rem)/1.2 var(--cx-title); overflow-wrap: normal; }
+.cx-cast-alt { font: 400 clamp(.75rem, .6rem + .6vw, .92rem)/1.2 "Tiro Devanagari Hindi", var(--cx-text); color: var(--cx-ink-3); }
 html[lang="hi"] .cx-cast-alt { font-family: var(--cx-text); font-style: italic; }
 
 /* ---------- Ways to read ---------- */
@@ -508,7 +511,7 @@ html[lang="hi"] .chip span { font-family: "Mukta", var(--cx-ui); }
 .cx-film-open-pic img { width: 100%; height: 100%; object-fit: cover; }
 :root:not([data-motion="reduce"]) .cx-film-open-pic img { animation: cx-film-dawn 2.2s cubic-bezier(.2, .7, .15, 1) both; }
 /* (scale and opacity over the dusk ground: the same dawn as before, drawn by the compositor, not a filter repainted each frame) */
-@keyframes cx-film-dawn { from { scale: 1.06; opacity: .8; } }
+@keyframes cx-film-dawn { from { scale: 1.06; } }   /* [K2] scale only: the arrival fade ([data-arrive], ui-motion.css) owns the opacity */
 .cx-film-open .cx-open-shade { background: radial-gradient(ellipse 75% 50% at 50% 78%, rgb(40 18 4 / .55), rgb(40 18 4 / 0) 75%), linear-gradient(to top, rgb(30 14 4 / .65), rgb(30 14 4 / 0) 55%), linear-gradient(to bottom, rgb(30 14 4 / .35), transparent 22%); }
 .cx-film-card { display: grid; justify-items: center; gap: 1rem; max-width: 64rem; padding: calc(var(--ed-head-h) + 2rem) var(--cx-gut-r) calc(var(--cx-bar) + 2.25rem) var(--cx-gut); text-align: center; }
 .cx-film-k { margin: 0; font: 500 1rem/1.3 var(--cx-ui); color: var(--cx-gold); text-shadow: 0 1px 10px rgb(40 16 0 / .7); }
@@ -734,14 +737,10 @@ html[lang="hi"] .cx-film .scene h2, .cx-film .scene h2[lang="hi"] { font-family:
 @view-transition { navigation: auto; }
 /* (the page being left holds still, whole, while the next one comes up over it: the dissolve never thins to whatever is
    behind both, so there is no pale or dark frame between two pages) */
-::view-transition-old(root) { animation: none; mix-blend-mode: normal; }
-::view-transition-new(root) { animation: cx-vt-in .42s ease both; mix-blend-mode: normal; }
-@keyframes cx-vt-out { to { opacity: 0; } }
-@keyframes cx-vt-in { from { opacity: 0; } }
-::view-transition-group(cx-hero) { animation-duration: .7s; animation-timing-function: cubic-bezier(.3, .7, .2, 1); }
-::view-transition-old(cx-hero), ::view-transition-new(cx-hero) { height: 100%; object-fit: cover; overflow: clip; }
-/* a person's tile opens into their page: the growing picture has the soft brushed edge of the figures themselves (no hard rectangle), and the page it leaves steps back quickly */
-:root[data-vt="who"]::view-transition-old(cx-hero), :root[data-vt="who"]::view-transition-new(cx-hero) { -webkit-mask-image: radial-gradient(ellipse 72% 72% at 50% 50%, #000 58%, transparent 100%); mask-image: radial-gradient(ellipse 72% 72% at 50% 50%, #000 58%, transparent 100%); }
+/* [K2] the root dissolve and the cx-hero timing live in ui-motion.css only (three layers used to set them, the last one winning silently) */
+::view-transition-old(cx-hero), ::view-transition-new(cx-hero) { height: 100%; object-fit: cover; overflow: clip; mix-blend-mode: normal; }   /* normal, not the default plus-lighter: the two pictures cross-fade, they do not add up to a flash */
+/* a person's tile opens into their page: the tile leaving has the soft brushed edge of the figures themselves (no hard rectangle); the page it grows into stays whole, so nothing snaps at the end */
+:root[data-vt="who"]::view-transition-old(cx-hero) { -webkit-mask-image: radial-gradient(ellipse 72% 72% at 50% 50%, #000 58%, transparent 100%); mask-image: radial-gradient(ellipse 72% 72% at 50% 50%, #000 58%, transparent 100%); }
 :root[data-vt="who"]::view-transition-old(root) { animation-duration: .2s; }
 @media (prefers-reduced-motion: reduce) { @view-transition { navigation: none; } }
 :root[data-motion="reduce"]::view-transition-group(*), :root[data-motion="reduce"]::view-transition-old(*), :root[data-motion="reduce"]::view-transition-new(*) { animation: none !important; }
@@ -774,7 +773,6 @@ html[lang="hi"] .cx-film .rail-kicker { font-family: "Mukta", var(--cx-ui); font
 }
 .cx-link { display: inline-flex; align-items: center; min-height: 44px; }
 @media (pointer: coarse) { .cx-credits-list dd a, .cx-credits-bar a { min-width: 44px; justify-content: center; } }
-@media (min-width: 1200px) { .cx-cast .cx-cast-row > li { flex: 0 1 8.75rem; min-width: 6.25rem; } }
 .story-actions .save, .story-actions .save.btn-quiet { background: transparent; color: var(--cx-ink); border: 1px solid var(--cx-line-2); }
 .story-actions .save[aria-pressed="true"] { background: var(--ed-sun-soft); }
 .cx-cast-row > li, .cx-cast-row a { min-width: 0; }
@@ -1235,8 +1233,6 @@ html[lang="hi"] .cast-row-l { font-family: "Mukta", var(--cx-ui); font-size: .98
    light's own 45% width) */
 @keyframes th-sweep { 0% { translate: 0 0; opacity: 0; } 20% { opacity: 1; } 100% { translate: 422% 0; opacity: 0; } }
 /* pages cut through the dark base (boot.js), the new one settling forward: opacity and scale only, so the compositor plays it */
-@keyframes cx-vt-out { to { opacity: 0; scale: 1.02; } }
-@keyframes cx-vt-in { from { opacity: 0; scale: .985; } }
 /* dust in the projector's light, and a lamp that follows the hand (both drawn by cinema.js; theatre pages only) */
 .th-embers { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 4; pointer-events: none; mix-blend-mode: screen; opacity: .9; }
 .th-lamp { position: fixed; inset: 0; z-index: 4; pointer-events: none; mix-blend-mode: screen; opacity: 0; transition: opacity .8s var(--cx-ease);
@@ -1394,7 +1390,7 @@ html[lang="hi"]:root.cx-js:not(.cx-seen) .cx-home .cx-ol-b { animation-name: cx-
 .cx-home :is(.cx-open, .cx-select) { scroll-margin-top: -5rem; }
 
 /* ---------- Choose your story ----------
-   A character select. The roster of twelve runs along the bottom, each tile the story's lead in front of their world.
+   A character select. The roster (the character wall, roster.css) stands under the stage, each tile the story's lead in front of their world.
    Take one, and the whole screen becomes theirs: the painting wipes across behind a blade of light, the scene relights
    in that story's own colour (ocean, starlight, ice, crimson, lamp-gold), their name stands up behind them in giant
    letters, and they step into the light. Point, focus or tap to look; click, Enter, a second tap or Begin to enter.
@@ -1459,19 +1455,6 @@ html[lang="hi"] .cx-sel-title { line-height: 1.22; letter-spacing: 0; }
 .cx-sel-go:focus-visible { outline: 2px solid #fff8ee; outline-offset: 3px; }
 /* the roster */
 .cx-sel-roster { position: relative; z-index: 3; display: flex; align-items: center; gap: clamp(.6rem, 1.5vw, 1.25rem); padding: clamp(.6rem, 1.6svh, 1.1rem) max(var(--cx-gut-r), calc((100vw - 88rem * var(--cx-k, 1)) / 2 + var(--cx-gut-r))) clamp(.8rem, 2.4svh, 1.6rem) max(var(--cx-gut), calc((100vw - 88rem * var(--cx-k, 1)) / 2 + var(--cx-gut))); border-top: 1px solid color-mix(in oklab, var(--sel-glow) 35%, transparent); background: linear-gradient(to bottom, color-mix(in oklab, var(--sel-base) 55%, transparent), color-mix(in oklab, var(--sel-base) 92%, #000)); }
-.cx-sel-grid { flex: 1; min-width: 0; list-style: none; margin: 0; padding: .9rem .4rem .3rem; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: clamp(.3rem, .7vw, .6rem); }
-.cx-sel-grid > li { min-width: 0; }
-.cx-sel-tile { position: relative; display: block; aspect-ratio: 4 / 4.6; overflow: hidden; transform: skewX(-8deg); background: #120a05; box-shadow: inset 0 0 0 1px rgb(243 231 215 / .2); text-decoration: none; color: #fff; transition: translate .4s cubic-bezier(.16, 1, .3, 1), box-shadow .4s, filter .4s; filter: saturate(.75) brightness(.72); }
-.cx-sel-tile-bg, .cx-sel-tile-face { position: absolute; inset: 0 -16%; transform: skewX(8deg); overflow: hidden; }
-.cx-sel-tile-bg img { width: 100%; height: 100%; object-fit: cover; display: block; filter: brightness(.55); }
-.cx-sel-tile-face img { position: absolute; left: 50%; top: 4%; width: 92%; height: auto; translate: -50% 0; filter: drop-shadow(0 6px 8px rgb(0 0 0 / .7)); transition: scale .45s cubic-bezier(.16, 1, .3, 1); transform-origin: 50% 0; }
-.cx-sel-tile::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to top, rgb(5 3 2 / .85), transparent 45%); pointer-events: none; }
-.cx-sel-tile-n { position: absolute; z-index: 1; left: .5rem; bottom: .25rem; transform: skewX(8deg); font: 600 .74rem/1 "Cinzel", var(--cx-title); letter-spacing: .08em; color: #fff4dc; text-shadow: 0 1px 6px rgb(0 0 0 / .9); font-variant-numeric: lining-nums; }
-.cx-sel-tile:hover { filter: none; }
-.cx-sel-tile.is-on { filter: none; translate: 0 -.6rem; box-shadow: inset 0 0 0 2px var(--t-glow), 0 0 0 1px rgb(5 3 2 / .9), 0 0 28px 3px color-mix(in oklab, var(--t-glow) 70%, transparent), 0 16px 24px -8px rgb(0 0 0 / .9); z-index: 1; }
-.cx-sel-tile.is-on .cx-sel-tile-face img { scale: 1.1; }
-.cx-sel-tile.is-on::before { content: ""; position: absolute; z-index: 2; left: 50%; top: 0; width: 0; height: 0; translate: -50% 0; transform: skewX(8deg); border: 6px solid transparent; border-top-color: var(--t-glow); }
-.cx-sel-tile:focus-visible { outline: 2px solid #fff8ee; outline-offset: 3px; }
 .cx-sel-auto { flex: none; width: 44px; height: 44px; display: grid; place-items: center; border-radius: 50%; border: 1px solid rgb(255 240 220 / .4); background: rgb(12 6 3 / .6); color: #fff8ee; cursor: pointer; transition: background-color .3s, border-color .3s; }
 .cx-sel-auto:hover { background: rgb(12 6 3 / .9); border-color: #fff8ee; }
 .cx-sel-auto svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
@@ -1496,7 +1479,6 @@ html[lang="hi"] .cx-sel-title { line-height: 1.22; letter-spacing: 0; }
 :root.cx-js:not([data-motion="reduce"]) .cx-select.is-lit .cx-sel-bg { animation: sel-dawn 1.6s ease-out both; }
 @keyframes sel-dawn { from { opacity: 0; filter: brightness(0); } to { opacity: 1; filter: none; } }
 :root.cx-js:not([data-motion="reduce"]) .cx-select.is-lit .cx-sel-head { animation: sel-up .9s cubic-bezier(.16, 1, .3, 1) .3s both; }
-:root.cx-js:not([data-motion="reduce"]) .cx-select.is-lit .cx-sel-grid > li { animation: sel-drop .7s cubic-bezier(.16, 1, .3, 1) both; animation-delay: calc(.45s + var(--k, 0) * 45ms); }
 @keyframes sel-drop { from { opacity: 0; translate: 0 1.6rem; } }
 :root.cx-js:not([data-motion="reduce"]) .cx-select.is-lit .cx-sel-auto { animation: cx-fade .6s ease-out 1.1s both; }
 :root.cx-js:not([data-motion="reduce"]) .cx-select.is-lit:not(.is-swap) .cx-sel-hero { animation: sel-hero-in 1.1s cubic-bezier(.16, 1, .3, 1) .55s both; }
@@ -1520,9 +1502,6 @@ html[lang="hi"] .cx-sel-title { line-height: 1.22; letter-spacing: 0; }
   .cx-sel-hero { right: -2%; width: 68vw; height: 100%; bottom: 0; place-items: start center; padding-top: 6%; box-sizing: border-box; }
   .cx-sel-hero img { height: auto; max-height: 100%; object-position: 50% 0; -webkit-mask-image: linear-gradient(to bottom, #000 50%, transparent 86%); mask-image: linear-gradient(to bottom, #000 50%, transparent 86%); }
   .cx-sel-floor { display: none; }
-  .cx-sel-grid { gap: .3rem; padding: .7rem .3rem .2rem; }
-  .cx-sel-tile { aspect-ratio: 1 / 1.08; min-height: 44px; }
-  .cx-sel-tile-face img { width: 96%; top: 3%; }
   .cx-sel-roster { gap: .4rem; }
   .cx-sel-who { display: none; }
 }
@@ -1531,9 +1510,6 @@ html[lang="hi"] .cx-sel-title { line-height: 1.22; letter-spacing: 0; }
 @media (orientation: landscape) and (max-height: 520px) {
   .cx-select { grid-template-rows: minmax(0, 1fr) auto; min-height: 0; }
   .cx-sel-head { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
-  .cx-sel-grid { grid-template-columns: repeat(12, minmax(0, 1fr)); padding-top: .6rem; }
-  .cx-sel-tile { aspect-ratio: auto; height: 46px; }
-  .cx-sel-tile-face img { width: 70%; top: 0; }
   .cx-sel-count i, .cx-sel-facts, .cx-sel-who { display: none; }
   .cx-sel-info { grid-template-columns: auto minmax(0, 1fr); column-gap: .6rem; align-items: baseline; }
   .cx-sel-info > :not(.cx-sel-count, .cx-sel-coll) { grid-column: 1 / -1; }
@@ -1547,7 +1523,6 @@ html[lang="hi"] .cx-sel-title { line-height: 1.22; letter-spacing: 0; }
 /* the site's own reduce-motion switch counts the same as the device setting */
 :root[data-motion="reduce"] .cx-select { transition: none; }
 :root[data-motion="reduce"] :is(.cx-sel-bg img, .cx-sel-hero img, .cx-sel-floor, .cx-sel-name, .cx-sel-title) { animation: none !important; }
-:root[data-motion="reduce"] :is(.cx-sel-tile, .cx-sel-tile-face img) { transition: none; }
 @media print { .cx-sel-bg, .cx-sel-hero, .cx-sel-auto, .cx-sel-name { display: none; } .cx-select { height: auto; color: #000; background: none; } }
 /* small screens: the opening stays one screen with the longer line */
 @media (orientation: landscape) and (max-height: 520px) {
@@ -1701,12 +1676,8 @@ html[lang="hi"] .cx-sel-chips a { font-family: "Mukta", var(--cx-ui); font-size:
 .cx-select .cx-sel-info { pointer-events: auto; }
 .cx-sel-btns { position: relative; z-index: 2; display: flex; flex-wrap: wrap; gap: .7rem; margin: 0; }
 .cx-sel-story { color: #fdf6ea; border-color: color-mix(in oklab, var(--sel-glow) 60%, transparent); }
-.cx-sel-tile-n { left: .4rem; right: .3rem; bottom: .3rem; font: 600 .66rem/1.1 "Cinzel", var(--cx-title); letter-spacing: .04em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 /* (Devanagari stands taller than its line: the marks above the headline, the reph of शुक्राचार्य or the matra of हिरण्यकशिपु,
    were cut off by the label's own box at a line height of 1.1) */
-html[lang="hi"] .cx-sel-tile-n { font-family: "Mukta", var(--cx-ui); font-size: .78rem; letter-spacing: 0; line-height: 1.6; bottom: .15rem; }
-.cx-sel-grid { grid-template-columns: repeat(10, minmax(0, 1fr)); }
-.cx-sel-tile.is-on { translate: 0 -.8rem; scale: 1.08; }
 @media (max-width: 1099px) { .cx-sel-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
 @media (max-width: 699px) {
   .cx-select > .cx-sel-hero { right: -4%; width: 72vw; top: calc(var(--ed-head-h) + 2.6rem); bottom: auto; height: calc(100svh - var(--ed-head-h) - var(--sel-roster-h, 9rem) - 2.6rem); }
@@ -1714,14 +1685,12 @@ html[lang="hi"] .cx-sel-tile-n { font-family: "Mukta", var(--cx-ui); font-size: 
   .cx-select > .cx-sel-name { top: calc(var(--ed-head-h) + 2.4rem); font-size: min(30vw, calc(92vw / (var(--nl, 4) * .9))); }
   .cx-sel-title { --sel-ts: clamp(2.6rem, 1rem + 9vw, 3.6rem); }
   .cx-sel-chips { display: none; }
-  .cx-sel-tile { aspect-ratio: 1 / 1.15; }
 }
 @media (orientation: landscape) and (max-height: 520px) {
   .cx-select > .cx-sel-hero { width: 28vw; right: 6vw; top: calc(var(--ed-head-h) + .5rem); }
   .cx-select > .cx-sel-name { display: none; }
   .cx-sel-title { --sel-ts: clamp(2rem, 1rem + 3vw, 2.8rem); }
   .cx-sel-chips { display: none; }
-  .cx-sel-grid { grid-template-columns: repeat(10, minmax(0, 1fr)); }
 }
 :root.cx-js:not([data-motion="reduce"]) .cx-select.sel-wait :is(.cx-sel-btns) { opacity: 0; }
 :root.cx-js:not([data-motion="reduce"]) .cx-select.is-lit:not(.is-swap) .cx-sel-btns { animation: sel-up .9s cubic-bezier(.16, 1, .3, 1) .95s both; }
@@ -1822,26 +1791,10 @@ html[lang="hi"] .cx-sel-tile-n { font-family: "Mukta", var(--cx-ui); font-size: 
 @media (prefers-reduced-motion: reduce) { .cx-sel-fig { animation: none !important; } }
 :root[data-motion="reduce"] .cx-sel-fig { animation: none !important; }
 /* the roster: two rows of eleven on a wide screen; one sideways-scrolling row on a phone */
-.cx-sel-grid { grid-template-columns: repeat(var(--cols, 11), minmax(0, 1fr)); row-gap: .5rem; padding-top: 1rem; }
-.cx-sel-tile { aspect-ratio: 5 / 4; }
 .cx-sel-tile-bg img { object-position: var(--fx, 50%) var(--fy, 50%); transform-origin: var(--fx, 50%) var(--fy, 50%); scale: var(--z, 1); --tx: 50%; --ty: 46%;
   translate: clamp(calc((var(--z, 1) - 1) * (var(--fx, 50%) - 100%)), calc(var(--tx) - var(--fx, 50%)), calc((var(--z, 1) - 1) * var(--fx, 50%))) clamp(calc((var(--z, 1) - 1) * (var(--fy, 50%) - 100%)), calc(var(--ty) - var(--fy, 50%)), calc((var(--z, 1) - 1) * var(--fy, 50%))); }
-.cx-sel-tile--scene .cx-sel-tile-bg img { filter: none; }
-.cx-sel-tile-face img { width: 78%; }
 @media (max-width: 1099px) { .cx-sel-grid { grid-template-columns: repeat(8, minmax(0, 1fr)); } .cx-sel-tile { aspect-ratio: 5 / 4; } .cx-sel-tile-face img { width: 60%; } }
-@media (max-width: 699px), (orientation: landscape) and (max-height: 520px) {
-  .cx-sel-grid { display: grid; grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: 4.1rem; overflow-x: auto; overflow-y: hidden; scroll-snap-type: x proximity; scrollbar-width: none; padding: .9rem .6rem .4rem; gap: .4rem; }
-  .cx-sel-grid::-webkit-scrollbar { display: none; }
-  .cx-sel-grid > li { scroll-snap-align: center; }
-  .cx-sel-tile { aspect-ratio: 1 / 1.12; height: auto; min-height: 44px; }
-  .cx-sel-tile-face img { width: 96%; }
-}
 /* a phone held sideways has very little height: a shorter roster, so the counter stays clear of the header */
-@media (orientation: landscape) and (max-height: 520px) {
-  .cx-sel-grid { grid-auto-columns: 4.6rem; padding: .5rem .6rem .3rem; }
-  .cx-sel-tile { aspect-ratio: auto; height: 52px; }
-  .cx-sel-tile-face img { width: 62%; }
-}
 @media (max-width: 699px) {
   .cx-select.is-left .cx-sel-stage { justify-items: start; text-align: left; padding-right: var(--cx-gut-r); }
   .cx-select.is-left .cx-sel-count, .cx-select.is-left .cx-sel-btns { justify-content: flex-start; } .cx-select.is-left .cx-sel-sum { margin-left: 0; }
@@ -1889,7 +1842,6 @@ html[lang="hi"] .cx-sel-tile-n { font-family: "Mukta", var(--cx-ui); font-size: 
   .cx-sel-chips a { min-height: 30px; }
 }
 /* a small, short window with the three-row roster: the story chips keep to one row (whole chips only) */
-@media (min-width: 700px) and (max-width: 1099px) and (max-height: 800px) { .cx-sel-chips { max-height: max(32px, 1.75rem); overflow: hidden; } .cx-sel-chips a { box-sizing: border-box; height: max(32px, 1.75rem); min-height: 0; } }   /* (the row is as tall as a chip at any text size, so no chip is shaved) */
 
 /* ---------- The three realms: Ramayana, Mahabharata, the gods ----------
    A row of three names above the roster. The one in hand is lit by a line of the lead's own light; resting the pointer
@@ -1913,20 +1865,11 @@ html[lang="hi"] .cx-sel-realm-t { margin-right: 0; }
 :root.cx-js:not([data-motion="reduce"]) .cx-select.is-lit .cx-sel-realms { animation: sel-up .9s cubic-bezier(.16, 1, .3, 1) .35s both; }
 @media (prefers-reduced-motion: reduce) { .cx-sel-realm, .cx-sel-realm::after { transition: none; } }
 :root[data-motion="reduce"] :is(.cx-sel-realm, .cx-sel-realm::after) { transition: none; }
-.cx-sel-grid > li[hidden] { display: none; }
 /* a realm has at most eleven characters: one row, centred, each tile the same size whatever the realm's count */
 @media (min-width: 700px) and (min-height: 521px) {
-  .cx-sel-grid { display: flex; flex-wrap: nowrap; justify-content: center; }
-  .cx-sel-grid > li { flex: 0 1 calc((100% - (var(--cols, 11) - 1) * clamp(.3rem, .7vw, .6rem)) / var(--cols, 11)); }
-  .cx-sel-realms[hidden] ~ .cx-sel-grid { flex-wrap: wrap; }
-  .cx-sel-tile-face img { width: 78%; }
   /* a realm of 37 or more sets 19-20 tiles in a row: the gaps close to the smallest, so a long name still stands whole on its tile */
-  .cx-sel-grid[data-tight] { column-gap: .3rem; }
-  .cx-sel-grid[data-tight] > li { flex-basis: calc((100% - (var(--cols, 11) - 1) * .3rem) / var(--cols, 11)); }
-  html:not([lang="hi"]) .cx-sel-grid[data-tight] .cx-sel-tile .cx-sel-tile-n { left: .15rem; right: 0; letter-spacing: -.02em; }
 }
 /* the realm's characters arrive one after another */
-:root.cx-js:not([data-motion="reduce"]) .cx-select .cx-sel-grid.is-regroup > li { animation: sel-regroup .5s cubic-bezier(.2, .7, .2, 1) both; animation-delay: calc(var(--gk, 0) * 30ms); }
 @keyframes sel-regroup { from { opacity: .3; translate: 0 .5rem; } }
 /* a phone on its side: the three names sit beside the roster, not above it */
 @media (min-width: 700px) and (min-height: 521px) { .cx-sel-tile { min-height: 44px; } }
@@ -1934,18 +1877,7 @@ html[lang="hi"] .cx-sel-realm-t { margin-right: 0; }
 /* the realm row stays above the lit tile, which rises a little toward it */
 .cx-sel-realms { position: relative; z-index: 2; }
 /* tablets and small laptops: two centred rows of six, so every name can be read */
-@media (min-width: 700px) and (max-width: 1099px) and (min-height: 521px) {
-  .cx-sel-grid { flex-wrap: wrap; row-gap: .5rem; }
-  .cx-sel-grid > li { flex-basis: calc((100% - 5 * clamp(.3rem, .7vw, .6rem)) / 6); }
-  .cx-sel-tile-face img { width: 60%; }
-}
 /* without scripts every character is listed in even rows of at most 22, so a tile never shrinks below its name */
-@media (min-width: 700px) and (min-height: 521px) {
-  .cx-sel-realms[hidden] ~ .cx-sel-grid { display: grid; grid-template-columns: repeat(var(--cols-all, 12), minmax(0, 1fr)); }
-}
-@media (min-width: 700px) and (max-width: 1099px) and (min-height: 521px) {
-  .cx-sel-realms[hidden] ~ .cx-sel-grid { grid-template-columns: repeat(8, minmax(0, 1fr)); }
-}
 /* very large screens: the realm names grow with the rest of the select */
 @media (min-width: 2200px) {
   .cx-sel-realm { font-size: calc(1rem * var(--cx-k, 1)); min-height: calc(44px * var(--cx-k, 1)); }
@@ -1953,10 +1885,7 @@ html[lang="hi"] .cx-sel-realm-t { margin-right: 0; }
 }
 /* a long name (Yudhishthira, Vishvamitra) is set a little smaller so it is shown whole on its tile; the tile is the
    measure (container units), and where those are not understood the name is cut with an ellipsis as before */
-.cx-sel-tile { container-type: inline-size; }
 @supports (font-size: 1cqw) {
-  .cx-sel-tile-n { font-size: clamp(.5rem, calc((100cqw - .9rem) / (var(--nl, 8) * .8)), .66rem); }
-  html[lang="hi"] .cx-sel-tile-n { font-size: clamp(.6rem, calc((100cqw - .9rem) / (var(--nl, 5) * .82)), .78rem); }
 }
 @media (min-width: 2200px) { @supports (font-size: 1cqw) { .cx-sel-tile-n { font-size: clamp(.5rem, calc((100cqw - .9rem) / (var(--nl, 8) * .8)), calc(.74rem * var(--cx-k, 1))); } } }
 
@@ -2060,26 +1989,12 @@ html[lang="hi"] .cx-sel-world { font-family: var(--cx-title); letter-spacing: .0
 .cx-sel-realm:focus-visible { border-radius: 99px; }
 
 /* the antagonists stand at the end of their own epic's row, past an ember divider, each tile edged in ember */
-.cx-sel-grid > li.is-foe-first { position: relative; margin-left: clamp(.5rem, 1.4vw, 1.4rem); }
-.cx-sel-grid > li.is-foe-first::before { content: ""; position: absolute; left: calc(-1 * clamp(.35rem, .9vw, .9rem)); top: 6%; bottom: 6%; width: 1px; background: linear-gradient(180deg, transparent, #ff7a52 30%, #ffb08a 50%, #ff7a52 70%, transparent); box-shadow: 0 0 10px 1px rgba(255, 110, 70, .55); pointer-events: none; }
-.cx-sel-grid > li.is-foe .cx-sel-tile:not(.is-on) { box-shadow: inset 0 0 0 1px rgba(255, 112, 80, .55), 0 0 14px -4px rgba(255, 96, 60, .6); }
-.cx-sel-grid > li.is-foe .cx-sel-tile-n { color: #ffd2c2; }
 @media (max-width: 699px) { .cx-sel-grid > li.is-foe-first { margin-left: .9rem; } .cx-sel-grid > li.is-foe-first::before { left: -.55rem; } }
 /* a realm of more than twelve wraps: on wide screens its antagonists take a centred second row, on tablets eight a row */
 @media (min-width: 700px) and (min-height: 521px) {
-  .cx-sel-grid[data-many="true"] { flex-wrap: wrap; row-gap: clamp(.35rem, .8svh, .6rem); }
   /* the lit tile rises toward the row above: in the second row it rises less, so it never covers a name there */
-  .cx-sel-grid[data-many="true"] > li.is-foe .cx-sel-tile.is-on { translate: 0 -.2rem; }
-}
-@media (min-width: 700px) and (max-width: 1099px) and (min-height: 521px) {
-  .cx-sel-grid[data-many="true"] > li { flex-basis: calc((100% - 7 * clamp(.3rem, .7vw, .6rem)) / 8); }
-  .cx-sel-grid[data-many="true"] > li.is-foe-first { margin-left: 0; }
-  .cx-sel-grid[data-many="true"] > li.is-foe-first::before { display: none; }
 }
 /* narrower tablets (portrait): six a row, three rows, so every name is whole; they have the height for it */
-@media (min-width: 700px) and (max-width: 899px) and (min-height: 521px) {
-  .cx-sel-grid[data-many="true"] > li { flex-basis: calc((100% - 5 * clamp(.3rem, .7vw, .6rem)) / 6); }
-}
 
 /* ---------- The Shiva Tandava Stotram ----------
    Each verse is a lit panel: its number, the Sanskrit in four padas (with the roman transliteration for English
@@ -2192,30 +2107,13 @@ html[lang="hi"] .fest-list li.next.is-today strong::after { content: "  ·  आ�
 @media (max-width: 700px) { .cx-chalisa::before { background: linear-gradient(to top, rgb(22 8 2 / .96) 0%, rgb(22 8 2 / .72) 45%, transparent 80%); } }
 /* landscape tablets with little height (1024x768): a realm of seven to twelve takes two rows of six, so its tiles go
    wide and low (as the long Ramayana roster does on short laptops) and the words above keep clear of the header */
-@media (min-width: 900px) and (max-width: 1099px) and (min-height: 521px) and (max-height: 800px) and (orientation: landscape) {
-  .cx-sel-grid:not([data-many="true"]) .cx-sel-tile { aspect-ratio: 16 / 10; }
-}
 /* the long Ramayana roster (more than twenty) on tablets: landscape keeps two rows (twelve a row), portrait three
    (eight a row); the tiles go low and wide, and each name scales to its tile so even "Vishvamitra" stays whole */
-@media (min-width: 900px) and (max-width: 1099px) and (min-height: 521px) {
-  .cx-sel-grid[data-many="true"][data-huge="true"] > li { flex-basis: calc((100% - 12 * clamp(.3rem, .7vw, .6rem)) / 13); }
-}
-@media (min-width: 700px) and (max-width: 899px) and (min-height: 521px) {
-  .cx-sel-grid[data-many="true"][data-huge="true"] > li { flex-basis: calc((100% - 8 * clamp(.3rem, .7vw, .6rem)) / 9); }
-}
-@media (min-width: 700px) and (max-width: 1099px) and (min-height: 521px) {
-  .cx-sel-grid[data-huge="true"] .cx-sel-tile { aspect-ratio: 16 / 11; container-type: inline-size; }
-  .cx-sel-grid[data-huge="true"] .cx-sel-tile-n { left: .3rem; font-size: min(.62rem, 10.5cqi); letter-spacing: .03em; }
-}
 /* long rosters (more than twelve) on every screen: each name scales to its tile, so "Dhritarashtra" and
    "Bhishma (Devavrata)" stay whole however many share the row */
-.cx-sel-grid[data-many="true"] .cx-sel-tile { container-type: inline-size; }
-.cx-sel-grid[data-many="true"] .cx-sel-tile-n { font-size: min(.74rem, 7.6cqi); letter-spacing: .02em; }
 /* ... and no smaller than it has to be: a name is set as large as its own length allows in its tile (--nl letters), up to
    a common size, and never below the size above, so short names are no longer as small as the longest one must be */
 @supports (font-size: 1cqi) {
-  .cx-sel-grid[data-many="true"] .cx-sel-tile-n { font-size: clamp(min(.74rem, 7.6cqi), calc((100cqi - .8rem) / (var(--nl, 8) * .86)), .6rem); }
-  html[lang="hi"] .cx-sel-grid[data-many="true"] .cx-sel-tile-n { font-size: clamp(min(.74rem, 7.6cqi), calc((100cqi - .8rem) / (var(--nl, 5) * 1)), .68rem); }
 }
 
 /* ---------- The analytics question (consent.js): calm, never over the reader dock ----------
