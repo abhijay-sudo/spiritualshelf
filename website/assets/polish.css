@@ -7,7 +7,7 @@
 @media (forced-colors: active) { .cx-credits::before { display: none; } }
 
 /* --- a separator that would stand at the start of a wrapped line is hidden (assets/polish.js marks the first item on each line) --- */
-.sep-first::before { display: none !important; }
+.sep-first::before { visibility: hidden !important; }   /* hidden, not removed: the width stays put, so hiding it can never re-wrap the line and flip the mark back */
 .sep-first > i { visibility: hidden; }
 
 /* --- rails: the first card stands one gutter in from the screen's edge (the snap used to pull it to x = 0) --- */

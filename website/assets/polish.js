@@ -21,7 +21,7 @@
     var run = function () { boxes.forEach(mark); }, tick = 0;
     var later = function () { if (tick) return; tick = requestAnimationFrame(function () { tick = 0; run(); }); };
     run();
-    if (window.ResizeObserver) { var ro = new ResizeObserver(later); boxes.forEach(function (b) { ro.observe(b); }); } else addEventListener('resize', later);
+    if (window.ResizeObserver) { var lastW = {}, ro = new ResizeObserver(function (es) { var ch = false; es.forEach(function (e) { var w = Math.round(e.contentRect.width), i = boxes.indexOf(e.target); if (lastW[i] !== w) { lastW[i] = w; ch = true; } }); if (ch) later(); }); boxes.forEach(function (b) { ro.observe(b); }); } else addEventListener('resize', later);
     if (d.fonts && d.fonts.ready) d.fonts.ready.then(later);
   }
   addEventListener('pointerdown', function () { if (root.dataset.input !== 'pointer') root.dataset.input = 'pointer'; }, true);
