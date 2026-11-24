@@ -2374,3 +2374,6 @@ html[lang="hi"] .lib-zero-k { font: 600 .95rem/1.3 var(--cx-title); letter-spaci
 
 /* [fx] the lake's own lamps replace the painted ones while the live water runs; off, reduced or lost, the painted ones stay exactly as before */
 html[data-fx-water="live"] .cx-home .cx-lamps { opacity: 0; transition: opacity 1.2s ease; }
+
+/* the garland and the lamps are gone from the opening: no painted or floating lamps on the lake, no lamp row in the first-light sequence */
+.cx-open .cx-lamps, .cx-fest .cx-diyas { display: none !important; }

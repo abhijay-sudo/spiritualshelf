@@ -178,10 +178,10 @@ if (best !== host) { const was = host; place(best); hrDirty = true; ign = 6; wN 
 if (!live) go();
 };
 const MAP = [
-{ sel: 'section.cx-open[data-fx-water]', cfg: { rope: 'home', wind: 'hero' }, feats: ['wind', 'water', 'diya', 'light', 'rope'] },
-{ sel: 'section.cx-select', cfg: { rope: 'picker', wind: 'hero' }, feats: ['wind', 'rope'] },
-{ sel: '.fm-stage', when: 'live', cfg: { rope: 'pennant', wind: 'scene' }, feats: ['wind', 'relight', 'rope'] },
-{ sel: 'section.cx-film-open', when: 'still', cfg: { rope: 'pennant', wind: 'scene' }, feats: ['wind', 'relight', 'rope'] },
+{ sel: 'section.cx-open[data-fx-water]', cfg: { rope: 'home', wind: 'hero' }, feats: ['wind', 'water', 'light'] },
+{ sel: 'section.cx-select', cfg: { rope: 'picker', wind: 'hero' }, feats: ['wind'] },
+{ sel: '.fm-stage', when: 'live', cfg: { rope: 'pennant', wind: 'scene' }, feats: ['wind', 'relight'] },
+{ sel: 'section.cx-film-open', when: 'still', cfg: { rope: 'pennant', wind: 'scene' }, feats: ['wind', 'relight'] },
 { sel: 'figure.shot[data-media]', when: 'still', cfg: { wind: 'scene' }, feats: ['wind', 'relight'] },
 ];
 G.hostMap = MAP;
