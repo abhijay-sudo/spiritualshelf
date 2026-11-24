@@ -46,7 +46,7 @@ html[lang="hi"] .cx-select .cx-sel-btns .cx-btn { line-height: 1.5; padding-bloc
 /* the title's dusk: three radial blobs (card, kicker, line) stacked into one dark smudge with a visible rim. Now one wide, long-eased
    veil over the card (no rim: its last stops are near zero), and the small lines carry their own soft shadow instead of a blob each */
 .cx-welcome-k::before { inset: -2em -45%; background: radial-gradient(closest-side, rgb(24 10 2 / .36), rgb(24 10 2 / .33) 30%, rgb(24 10 2 / .24) 50%, rgb(24 10 2 / .13) 68%, rgb(24 10 2 / .05) 84%, rgb(24 10 2 / 0)); }
-.cx-open-card::before { background: radial-gradient(closest-side, rgb(24 10 2 / .56), rgb(24 10 2 / .55) 20%, rgb(24 10 2 / .5) 34%, rgb(24 10 2 / .42) 46%, rgb(24 10 2 / .32) 58%, rgb(24 10 2 / .22) 69%, rgb(24 10 2 / .13) 79%, rgb(24 10 2 / .06) 88%, rgb(24 10 2 / .017) 95%, rgb(24 10 2 / 0)); }
+.cx-open-card::before { background: radial-gradient(closest-side, rgb(24 10 2 / .392), rgb(24 10 2 / .385) 20%, rgb(24 10 2 / .35) 34%, rgb(24 10 2 / .294) 46%, rgb(24 10 2 / .224) 58%, rgb(24 10 2 / .154) 69%, rgb(24 10 2 / .091) 79%, rgb(24 10 2 / .042) 88%, rgb(24 10 2 / .012) 95%, rgb(24 10 2 / 0)); }
 .cx-open-sub::before { inset: -3em -55%; background: radial-gradient(closest-side, rgb(24 10 2 / .46), rgb(24 10 2 / .44) 26%, rgb(24 10 2 / .36) 42%, rgb(24 10 2 / .25) 58%, rgb(24 10 2 / .14) 72%, rgb(24 10 2 / .06) 85%, rgb(24 10 2 / .016) 95%, rgb(24 10 2 / 0)); }
 .cx-open-sub { text-shadow: 0 0 2px rgb(20 8 2 / .55), 0 1px 10px rgb(20 8 2 / .75), 0 0 26px rgb(20 8 2 / .55); }
 .cx-welcome-k { text-shadow: 0 0 2px rgb(20 8 2 / .5), 0 1px 10px rgb(20 8 2 / .7), 0 0 22px rgb(20 8 2 / .5); }

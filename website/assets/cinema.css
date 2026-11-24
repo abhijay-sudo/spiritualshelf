@@ -1310,7 +1310,7 @@ html[lang="hi"] .cast-row-l { font-family: "Mukta", var(--cx-ui); font-size: .98
 :root[data-motion="reduce"] :is(.cx-spark) { display: none !important; }
 :is(:root[data-motion="reduce"], :root.cx-seen) .cx-home .cx-open :is(.cx-wm, .cx-wm-letters) { animation: none !important; }
 /* the wider name reaches past the card's veil into bright cloud: it carries its own soft shade (measured, AA large text) */
-@media (min-width: 1000px) { .cx-home .cx-open .cx-wm::before { content: ""; position: absolute; z-index: -1; inset: -42% -14% -30%; pointer-events: none; background: radial-gradient(closest-side, rgb(24 10 2 / .44), rgb(24 10 2 / .4) 42%, rgb(24 10 2 / .24) 70%, rgb(24 10 2 / .08) 88%, rgb(24 10 2 / 0)); } }
+@media (min-width: 1000px) { .cx-home .cx-open .cx-wm::before { content: ""; position: absolute; z-index: -1; inset: -42% -14% -30%; pointer-events: none; background: radial-gradient(closest-side, rgb(24 10 2 / .299), rgb(24 10 2 / .272) 42%, rgb(24 10 2 / .163) 70%, rgb(24 10 2 / .054) 88%, rgb(24 10 2 / 0)); } }
 /* on a phone the name nearly fills the width: a gentler push-in, so no letter leaves the screen */
 @media (max-width: 999px) { @keyframes cx-title-settle { from { scale: 1.05; } to { scale: 1; } } }
 @media (orientation: landscape) and (max-height: 520px) { html[lang="hi"] .cx-home .cx-open .cx-wm { font-size: min(9.8vw, 15svh); } }

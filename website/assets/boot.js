@@ -239,7 +239,7 @@
         var z = zoomFix(), r = line.getBoundingClientRect(), y = Math.round((r.top + r.height / 2) * z - open.getBoundingClientRect().top);
         if (y > 0 && y !== seamAt) { seamAt = y; d.style.setProperty('--seam', y + 'px'); }
       }
-      if ((!seamFrom || Date.now() - seamFrom < 11000) && !d.classList.contains('cx-seen')) requestAnimationFrame(seam);
+      if ((!seamFrom || Date.now() - seamFrom < 11000) && !d.classList.contains('cx-seen') && !d.classList.contains('cx-fest-end')) requestAnimationFrame(seam);
     };
     requestAnimationFrame(seam);
   }

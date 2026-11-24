@@ -10,8 +10,12 @@
   if (!reduced()) root.classList.add('cx-js'); else root.classList.remove('cx-js');
   // phones and short landscape screens play a shorter title sequence (mobile.css): its clock runs at this pace here too
   const pocket = matchMedia('(max-width: 759px), (orientation: landscape) and (max-height: 520px)').matches;
-  const titlePace = pocket ? .6 : .7;   // [joyHH] 6 s on a desktop too (was 8.5)
-  // [joyQ] the festival-night sequence runs at this pace (--tk in joyq.css, overridden for desktop in joyhh.css)
+  // [First Light] the title sequence's one shared timeline: desktop seconds x pace (--tk in joyhh.css). The hand-off is when the page
+  // is usable again (skip listeners off, inert released); the teardown is when joyq.js takes the layer out. Both are also written
+  // to the opening's data-cx-hand / data-cx-end, which joyq.js reads, so no timing is spelled out twice.
+  const CX = { pace: pocket ? .62 : 1, handoffMs: pocket ? 4000 : 6000, teardownMs: pocket ? 5000 : 8200 };
+  const titlePace = CX.pace;
+  { const o = document.querySelector('.cx-home .cx-open'); if (o) { o.dataset.cxHand = String(CX.handoffMs); o.dataset.cxEnd = String(CX.teardownMs); } }
 
   /* ---------- One scroll loop for everything that follows the scroll ---------- */
   const jobs = [];
@@ -66,7 +70,7 @@
         o.style.cssText = 'position:absolute;left:0;top:0;width:0;height:0;zoom:2;visibility:hidden;pointer-events:none'; i.style.cssText = 'position:absolute;left:0;top:50px;width:1px;height:1px';
         o.appendChild(i); document.body.appendChild(o); zf = (i.getBoundingClientRect().top - o.getBoundingClientRect().top) < 75 ? 2 : 1; o.remove(); }
       return zf === 2 ? (parseFloat(root.style.getPropertyValue('--cx-k')) || 1) : 1; };
-    let W = 0, H = 0, motes = [], sparks = [], raf = 0, seen = true, last = 0, born = performance.now(), lamp = null, lampAt = 0, carry = 0;
+    let W = 0, H = 0, motes = [], sparks = [], raf = 0, seen = true, last = 0, born = sparkAnim && typeof sparkAnim.startTime === 'number' ? sparkAnim.startTime : performance.now(), lamp = null, lampAt = 0, carry = 0;
     // a small repeatable generator: the field looks the same on every visit, and nothing here needs real randomness
     let seed = 20261112; const rnd = () => { seed = (seed * 1664525 + 1013904223) >>> 0; return seed / 4294967296; };
     const make = (anywhere) => { const z = .25 + .75 * rnd() * rnd(); return { x: rnd() * W, y: anywhere ? rnd() * H : H + 12 + rnd() * 30, z, r: 1 + 2.6 * z * z, vy: 5 + 20 * z, ph: rnd() * 6.283, f: .25 + rnd() * .5, tw: .6 + rnd() * 1.5, a: .22 + .6 * z }; };
@@ -75,7 +79,7 @@
       if (!w || !h) return;   // hidden (reduced motion): keep the last size
       W = w; H = h;
       dust.width = Math.round(W * k); dust.height = Math.round(H * k); g.setTransform(k, 0, 0, k, 0, 0);
-      const n = Math.round(clamp(W * H / 15000, 30, 110) * (light ? .5 : 1));
+      const n = Math.round(clamp(W * H / 15000, 30, 110) * (light ? .5 : 1) * (pocket ? .5 : 1));
       while (motes.length < n) motes.push(make(true)); motes.length = n;
     };
     const frame = (now) => {
@@ -86,32 +90,22 @@
       const dt = Math.min(.05, (now - (last || now)) / 1000); last = now; const t = now / 1000; const age = (now - born) / 1000 / titlePace;
       g.clearRect(0, 0, W, H);
       // in the dark the dust is at its brightest; once the curtain has opened it thins, so the river stays the picture
-      const amb = !titles || root.classList.contains('cx-seen') ? .55 : 1 - .45 * clamp((age - 5.6) / 2.6);   // [joyQ] dawn lifts at about 5 s
+      const amb = !titles || root.classList.contains('cx-seen') ? .55 : 1 - .45 * clamp((age - 3.4) / 2.6);   // [First Light] the dust thins as the sun rises (3.2 s) and the grade lifts (5.4 s)
       // the lamp's glow behind the name, while the screen is dark
-      if (titles && letters && age < 9.9 && !root.classList.contains('cx-seen')) {   // [joyQ] the name inks in at about 5.1 s: the lamp's glow behind it runs 3.85 s later than it did
+      if (titles && letters && age < 6.6 && !root.classList.contains('cx-seen')) {   // [First Light] the glow behind the name peaks as it inks in (4.2 s)
         if (!lamp || now - lampAt > 400) { const z = zoomFix(), r = letters.getBoundingClientRect(), o = openEl.getBoundingClientRect(); lamp = { x: (r.left + r.width / 2) * z - o.left, y: (r.top + r.height / 2) * z - o.top, r: Math.max(r.width * z * .95, 180) }; lampAt = now; }
-        const la = clamp((age - 5.05) / 1.4) * (1 - clamp((age - 6.95) / 1.9)) * (.9 + .1 * Math.sin(t * 5.1) * Math.sin(t * 1.7));
+        const la = clamp((age - 3.0) / 1.2) * (1 - clamp((age - 4.6) / 1.8)) * (.9 + .1 * Math.sin(t * 5.1) * Math.sin(t * 1.7));
         if (la > .01) {
           // a wide, low ellipse with a long soft falloff (many stops), so no edge of it can be seen on the dark
           g.save(); g.translate(lamp.x, lamp.y); g.scale(1, .55);
           const gr = g.createRadialGradient(0, 0, 0, 0, 0, lamp.r);
           [[0, .2], [.12, .17], [.26, .12], [.42, .07], [.58, .035], [.74, .014], [.88, .004], [1, 0]].forEach(([at, a]) => gr.addColorStop(at, `rgba(255,${Math.round(176 - 30 * at)},${Math.round(96 - 30 * at)},${(a * la).toFixed(4)})`));
           g.fillStyle = gr; g.fillRect(-lamp.r, -lamp.r, lamp.r * 2, lamp.r * 2);
-          // and the first rays of the morning behind it: thin, slowly turning, gone before the sunrise itself arrives
-          const R = lamp.r * 1.2 + 120; const rg = g.createRadialGradient(0, 0, lamp.r * .1, 0, 0, R);
-          rg.addColorStop(0, 'rgba(255,220,160,0)'); rg.addColorStop(.22, `rgba(255,208,140,${(.075 * la).toFixed(4)})`); rg.addColorStop(.6, `rgba(255,190,115,${(.03 * la).toFixed(4)})`); rg.addColorStop(1, 'rgba(255,180,100,0)');
-          g.fillStyle = rg;
-          // each ray is laid down three times, wide to narrow, so its sides are soft rather than ruled
-          for (const [wide, share] of [[1.9, .3], [1.15, .35], [.5, .35]]) {
-            g.globalAlpha = share; g.beginPath();
-            for (let i = 0; i < 18; i++) { const a0 = i / 18 * 6.2832 + t * .03 + Math.sin(i * 12.9898) * .09; const w = (.024 + .03 * ((i * 7) % 5) / 5) * wide; g.moveTo(0, 0); g.arc(0, 0, R, a0 - w, a0 + w); g.closePath(); }
-            g.fill();
-          }
           g.globalAlpha = 1; g.restore();
         }
       }
       // sparks lift off the line of light for as long as it is on screen, along exactly as much of it as has been drawn
-      if (titles && spark && age < 4) {
+      if (titles && spark && age < 1.8) {
         const r = spark.getBoundingClientRect();
         if (r.width > 6 && r.height > 0 && +getComputedStyle(spark).opacity > .3) {
           const o = openEl.getBoundingClientRect(); carry += dt * (light ? 26 : 60) * Math.min(1, r.width / 420);
@@ -516,11 +510,14 @@
       e.preventDefault(); e.stopImmediatePropagation(); skip.focus({ preventScroll: true });
     };
     addEventListener('keydown', hold, true);
-    const done = () => { const had = skip && document.activeElement === skip; root.classList.add('cx-seen'); rest(); removeEventListener('keydown', hold, true); if (had) { for (const to of [$('.cx-home .cx-cue'), $('.cx-home h1')]) { if (!to) continue; if (!to.matches('a,button')) to.tabIndex = -1; try { to.focus({ preventScroll: true }); } catch (e) {} if (document.activeElement === to) break; } } evs.forEach((n) => removeEventListener(n, done)); };
+    const land = () => { for (const to of [$('.cx-home .cx-cue'), $('.cx-home h1')]) { if (!to) continue; if (!to.matches('a,button')) to.tabIndex = -1; try { to.focus({ preventScroll: true }); } catch (e) {} if (document.activeElement === to) break; } };
+    const done = () => { const had = skip && document.activeElement === skip; root.classList.add('cx-seen'); rest(); removeEventListener('keydown', hold, true); if (had) land(); evs.forEach((n) => removeEventListener(n, done)); };
     evs.forEach((n) => addEventListener(n, done, { passive: true }));
     // the visible "Skip intro" pill (phones) does the same, and leaves once the sequence is over
     skip?.addEventListener('click', done);
-    setTimeout(() => { evs.forEach((n) => removeEventListener(n, done)); rest(); removeEventListener('keydown', hold, true); if (skip) skip.hidden = true; }, pocket ? Math.max(0, 5600 - performance.now()) : 6600);   // [joyQ] the sequence now runs about 8.5 s (5 s on a phone)
+    const sa = (() => { try { return $('.cx-home .cx-spark').getAnimations()[0]; } catch (e) { return null; } })();   // the sequence's own clock: the thread of light
+    const spent = sa && typeof sa.startTime === 'number' ? performance.now() - sa.startTime : sa ? (sa.currentTime || 0) : performance.now();   // time since the thread began (a late script, or a finished animation, still reads true)
+    setTimeout(() => { evs.forEach((n) => removeEventListener(n, done)); rest(); removeEventListener('keydown', hold, true); const had = skip && document.activeElement === skip; if (skip) skip.hidden = true; if (had) land(); }, Math.max(0, CX.handoffMs - spent));   // [First Light] hand-off at 6 s (4 s on a phone)
   }
 
   /* ---------- Theatre: the poster under the pointer leans toward it and catches the light ---------- */
