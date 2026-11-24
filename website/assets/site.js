@@ -294,6 +294,7 @@
     }
     form.addEventListener('change', (e) => {
       const { name, value } = e.target;
+      if (name === 'fx') return;   // [fx] the Effects choice is kept by assets/fx-stub.js under its own key
       const p = store.get('prefs', {});
       // [comfort] the saved choice is written now, not inside the view transition's later callback (it was saved before it was set)
       if (value) p[name] = value; else delete p[name];
@@ -547,6 +548,7 @@
     for (const k of ['size', 'theme', 'motion', 'lead', 'measure', 'hisize', 'lamp', 'aa'/* [comfort] */]) delete root.dataset[k];
     osCalm();
     for (const r of $$('[data-comfort] input[value=""]')) r.checked = true;
+    window.SpiritualGPU?.set('');   // [fx] Effects back to Auto (the key went with the rest of this site's storage)
     for (const r of $$('[data-comfort] input[name="theme"]')) { r.disabled = false; r.closest('.chip')?.classList.remove('is-wait'); }
     Sound.droneStop(); Sound.riverStop(); paintSound();
     lastRemoved = null; const undo = $('[data-journal-undo]'); if (undo) undo.hidden = true; const jm = $('[data-journal-msg]'); if (jm) jm.textContent = '';
