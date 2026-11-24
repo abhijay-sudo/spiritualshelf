@@ -220,7 +220,7 @@ el.cv.toBlob(function (b) {
 if (my !== S.token) return;
 el.busy.textContent = ''; dlg.classList.remove('is-busy');
 if (!b) { el.busy.textContent = T.failed; return; }
-S.blob = b; S.file = null; try { S.file = new File([b], 'spritual-' + slug + '-' + S.n + '.jpg', { type: 'image/jpeg' }); } catch (e) {}
+S.blob = b; S.file = null; try { S.file = new File([b], 'spiritual-' + slug + '-' + S.n + '.jpg', { type: 'image/jpeg' }); } catch (e) {}
 var sm = S.file && canShareFiles(S.file) ? 'share' : 'save'; el.go.textContent = sm === 'share' ? T.share : T.save; el.go.dataset.mode = sm; el.btns.dataset.mode = sm;
 el.save.hidden = sm === 'save'; el.go.disabled = false; el.save.disabled = false;
 }, 'image/jpeg', .92);
@@ -240,7 +240,7 @@ navigator.share(data).then(function () { say(T.sent); }, function (e) { if (e &&
 }
 function save() {
 if (!S.blob) return;
-var a = d.createElement('a'), u = URL.createObjectURL(S.blob); a.href = u; a.download = 'spritual-' + slug + '-' + S.n + '.jpg'; d.body.appendChild(a); a.click(); a.remove(); setTimeout(function () { URL.revokeObjectURL(u); }, 4000);
+var a = d.createElement('a'), u = URL.createObjectURL(S.blob); a.href = u; a.download = 'spiritual-' + slug + '-' + S.n + '.jpg'; d.body.appendChild(a); a.click(); a.remove(); setTimeout(function () { URL.revokeObjectURL(u); }, 4000);
 copyLink().then(function (ok) { say(ok ? T.saved : T.copied); });
 }
 function open(o) {

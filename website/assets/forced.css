@@ -10,7 +10,7 @@
     -webkit-text-fill-color: currentColor !important; color: CanvasText !important; animation: none !important; opacity: 1 !important; filter: none !important; text-shadow: none !important; }
   /* the hero and the person's title: lines far enough apart that one line's backing does not cover the line above */
   .cx-film-title, .cast-name, .ed-page-head h1, .cx-open-line, .cx-ol-a { line-height: 1.22 !important; }
-  /* [gfixA] the Spritual wordmark: one word on one plate, not a black box round every letter; its light sweep (a gradient clipped to the
+  /* [gfixA] the Spiritual wordmark: one word on one plate, not a black box round every letter; its light sweep (a gradient clipped to the
      letters), the drop shadow and the blend layers are effects the system's colours cannot carry, so they are put away */
   .cx-wm-l, .cx-wm-l > span, .ed-wm-l, .ed-wm-l > span { display: inline !important; overflow: visible !important; padding: 0 !important; margin: 0 !important; transform: none !important; opacity: 1 !important; animation: none !important; }
   .cx-wm, .ed-wm { text-shadow: none !important; color: CanvasText !important; }

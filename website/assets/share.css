@@ -1,4 +1,4 @@
-/* Spritual: Send this moment. The glyph in each scene's caption, the button on the film's rail, and the sheet. Loaded on
+/* Spiritual: Send this moment. The glyph in each scene's caption, the button on the film's rail, and the sheet. Loaded on
    story pages a moment after the page is ready (share.js). Motion: transform and opacity only, on the shared tokens. */
 :root {
   --ease-settle: cubic-bezier(.22, .8, .2, 1);

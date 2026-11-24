@@ -1,4 +1,4 @@
-/* Spritual [comfort]: reader comfort on a story page (assets/comfort.js, src/comfort-build.mjs).
+/* Spiritual [comfort]: reader comfort on a story page (assets/comfort.js, src/comfort-build.mjs).
    The Aa chip, the scene whisper, the richer comfort sheet (line spacing, line width, a separate Hindi size, Night Lamp),
    the "Read it as a page" button, and the typographic finish of the words. Linked in the head of a story page (render
    blocking, about 6 KB), so the choices boot.js sets on <html> before the first paint are already in force.

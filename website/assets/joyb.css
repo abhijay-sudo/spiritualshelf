@@ -1,4 +1,4 @@
-/* Spritual: the Closing Beat, "Pick up where you left off", and the quiet marks on the library cards (lane B).
+/* Spiritual: the Closing Beat, "Pick up where you left off", and the quiet marks on the library cards (lane B).
    One motion language for the new surfaces: things rise and settle (transform and opacity only), state changes cross-fade,
    focus is gold and generous, nothing blocks reading. Reduced motion: the same things, still. */
 :root { --ease-settle: cubic-bezier(.22, .8, .2, 1); --ease-lamp: cubic-bezier(.3, .1, .2, 1); --d1: 160ms; --d2: 320ms; --d3: 640ms; --d4: 1200ms; }

@@ -1,4 +1,4 @@
-/* Spritual: the Unbroken Shot (film.js). A story page read as one continuous film: the painting stays pinned behind the
+/* Spiritual: the Unbroken Shot (film.js). A story page read as one continuous film: the painting stays pinned behind the
    words, the camera travels across it with the reading, the words sit low in the frame, and each painting dissolves into
    the next. Everything here hangs off .fm on <html> (set by boot.js before the first paint, when motion and data allow)
    and .fm-live (set by film.js once the stage is built). Without them the page is the stacked reading page. */

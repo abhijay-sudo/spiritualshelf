@@ -1,4 +1,4 @@
-// Spritual [comfort]: the scene whisper ("Scene 4 of 9 · about 5 min left") and the comfort sheet's small behaviours.
+// Spiritual [comfort]: the scene whisper ("Scene 4 of 9 · about 5 min left") and the comfort sheet's small behaviours.
 // The choices themselves (text size, line spacing, width, Hindi size, Night Lamp, the Aa chip) are set on <html> by boot.js
 // before the first paint and changed by site.js's comfort form; the page is complete without this file.
 // The whisper: about 170 words a minute, always said as "about". In the film the reading position is film.js's own

@@ -1,4 +1,4 @@
-// Spritual: progressive enhancement only. Every page reads and navigates without this file.
+// Spiritual: progressive enhancement only. Every page reads and navigates without this file.
 (() => {
   const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => [...r.querySelectorAll(s)];
@@ -611,7 +611,7 @@
         // nothing matches every word: show the stories that match some, and say so
         if (!n && words.length > 1) { for (const c of cards) { const ok = passes(c, false); c.hidden = !ok; if (ok) { n++; some = true; } } }
         if (someNote) someNote.hidden = !some;
-        // the rest of Spritual (the Ramcharitmanas, the hymns, the characters, the festivals) answers the same search:
+        // the rest of Spiritual (the Ramcharitmanas, the hymns, the characters, the festivals) answers the same search:
         // only the best answers, those matching the most words ("Sundar Kand" finds the Sundar Kand, not every kand), the
         // surest match first and, between equals, the person in the most stories ("kr": Krishna before Kritavarma)
         if (more) {
@@ -632,7 +632,7 @@
         const by = words.length ? new Map(cards.map((c) => [c, sc(c)])) : null;
         const order = cards.slice().sort((a, b) => (by ? by.get(b) - by.get(a) : 0) || home.get(a) - home.get(b));
         if (order.some((c, i) => grid.children[i] !== c)) grid.append(...order); }
-      // the empty box: "not on Spritual yet" only when nothing anywhere has the words; if the reader's own filters hid the
+      // the empty box: "not on Spiritual yet" only when nothing anywhere has the words; if the reader's own filters hid the
       // matching stories it says to clear them; and the suggestions only show when there is nothing better below
       const emptyMsg = $('[data-empty-msg]'); const filtered = !!(value || coll || time);
       const clearBtn = $('[data-clear]'); if (clearBtn) clearBtn.hidden = !filtered && !q;   // [A] "Clear filters" shows only when something is filtered
@@ -1001,7 +1001,7 @@
       // [share] the line worth copying is a whole sentence of this scene (assets/share.js: pick), not its first fragment; a line that is already a quoted speech is not quoted twice
       const SH = window.spritualShare; const best = SH && SH.pick && SH.pick(SH.sentences(paras));
       const line = best || (p.match(/[^.!?।]+[.!?।]/) || [p])[0].trim(); const quoted = /^[“"‘]/.test(line) ? line : `“${line}”`;
-      copyText(`${quoted}\n${document.title.replace(' | Spritual', '')} · Spritual\n${location.href.split('#')[0]}#page-${current}`, UI.quoteCopied, $('[data-copy-line]'));
+      copyText(`${quoted}\n${document.title.replace(/ \| Spiritual( Shelf)?$/, '')} · Spiritual Shelf\n${location.href.split('#')[0]}#page-${current}`, UI.quoteCopied, $('[data-copy-line]'));
     });
 
     // Reflection
@@ -1231,8 +1231,8 @@
         y = wrap(ctx, primary, pad, y, W - pad * 2, Math.round(big * (hi ? 1.7 : 1.35))) + Math.round(W * 0.03);
         if (other) { ctx.fillStyle = '#4a433c'; const sm = Math.round(W * 0.034); ctx.font = `${hi ? '400 italic' : '400'} ${sm}px ${hi ? 'Newsreader' : '"Tiro Devanagari Hindi"'}, Georgia, serif`; y = wrap(ctx, other, pad, y, W - pad * 2, Math.round(sm * (hi ? 1.4 : 1.75))); }
         ctx.fillStyle = '#b08227'; ctx.fillRect(pad, H - pad - 90, 80, 2);
-        ctx.fillStyle = '#181512'; ctx.font = `600 ${Math.round(W * 0.04)}px Newsreader, Georgia, serif`; ctx.fillText('Spritual', pad, H - pad - 70);
-        const wm = ctx.measureText('Spritual').width; ctx.fillStyle = '#9e2a2b'; ctx.fillText('.', pad + wm, H - pad - 70);
+        ctx.fillStyle = '#181512'; ctx.font = `600 ${Math.round(W * 0.04)}px Newsreader, Georgia, serif`; ctx.fillText('Spiritual Shelf', pad, H - pad - 70);
+        const wm = ctx.measureText('Spiritual Shelf').width; ctx.fillStyle = '#9e2a2b'; ctx.fillText('.', pad + wm, H - pad - 70);
         ctx.fillStyle = '#b08227'; ctx.font = `600 ${Math.round(W * 0.02)}px "Plus Jakarta Sans", system-ui, sans-serif`; ctx.textAlign = 'right'; ctx.fillText('spiritualshelf.com', W - pad, H - pad - 56); ctx.textAlign = 'left';
         try { dl.href = canvas.toDataURL('image/png'); } catch {}
       };

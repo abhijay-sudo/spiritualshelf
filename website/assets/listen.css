@@ -1,4 +1,4 @@
-/* Spritual (lane F): Listening that follows (listen.js). A sentence lit softly while it is spoken, and a small bar that rises
+/* Spiritual (lane F): Listening that follows (listen.js). A sentence lit softly while it is spoken, and a small bar that rises
    over the foot of the story: pause, speed, sleep timer and a plain Stop. Transform and opacity only; reduced motion keeps
    the lit sentence and drops every movement. */
 :root { --ease-settle: cubic-bezier(.22, .8, .2, 1); --ease-lamp: cubic-bezier(.4, 0, .2, 1); --d1: 160ms; --d2: 320ms; --d3: 640ms; --d4: 1200ms;

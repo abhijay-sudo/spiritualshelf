@@ -1,4 +1,4 @@
-/* Spritual: reader hardening (third round, lane R). Loaded with `defer` on every story page. Small and self-contained.
+/* Spiritual: reader hardening (third round, lane R). Loaded with `defer` on every story page. Small and self-contained.
    - G05: the meaning card of a tapped word (#gloss) stands by its word. It was position: fixed and stayed where it was put while the
      page scrolled, so it ended up over other words. It now closes when its word moves away (the page scrolled it more than a few lines),
      leaves the screen, or the words are no longer lit (a film beat that has gone). Escape and a tap outside already close it (native popover). */

@@ -1,4 +1,4 @@
-/* Spritual: "The Arrival", Hanuman's signature entrance. Loaded on his page only (/characters/hanuman/, /hi/...), after cast.css.
+/* Spiritual: "The Arrival", Hanuman's signature entrance. Loaded on his page only (/characters/hanuman/, /hi/...), after cast.css.
    Everything here is scoped to main[data-char="hanuman"]; no other person has it. Markup is written by src/build.mjs, the rest
    is assets/hanuman-arrival.js (embers, tilt, skip, the letters of the name).
 

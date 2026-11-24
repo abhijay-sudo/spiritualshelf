@@ -1,4 +1,4 @@
-// Spritual (lane B): "Pick up where you left off", the quiet marks on the library cards, and the Closing Beat's Keep and
+// Spiritual (lane B): "Pick up where you left off", the quiet marks on the library cards, and the Closing Beat's Keep and
 // leave-taking. Everything stays on this device (localStorage, in try/catch: the page is whole without it). No counts of
 // days, no streaks, no "you haven't read in N days": a place is only a bookmark.
 (() => {

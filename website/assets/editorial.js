@@ -1,4 +1,4 @@
-// Spritual editorial layer: the bar, the collections panel, scroll reveals, the six worlds, the figures,
+// Spiritual editorial layer: the bar, the collections panel, scroll reveals, the six worlds, the figures,
 // the featured strip and the rail. Progressive enhancement only; every page reads without it.
 (() => {
   const $ = (s, r = document) => r.querySelector(s);

@@ -47,3 +47,13 @@ html[lang="hi"] .cx-select .cx-sel-btns .cx-sel-story .cx-sel-story-n { font: 50
 }
 /* the chosen tile keeps to its own cell: it lifts, and no longer also grows into its neighbour */
 @media (max-width: 699px) { :root.cx-js .cx-select .cx-sel-grid[data-sel-grid] .cx-sel-tile.is-on { scale: 1; } }
+
+/* ---------- the name is Spiritual Shelf: "SPIRITUAL" stays the large wordmark, and "SHELF" sits under the brush line in small, widely spaced capitals ---------- */
+.cx-home .cx-open .cx-wm { padding-bottom: .64em; }
+.cx-home .cx-open .cx-wm-line { bottom: .42em; }
+.cx-wm-sub { position: absolute; left: 0; right: 0; bottom: 0; display: block; text-align: center; font: 500 max(.19em, .78rem)/1 "Cinzel", var(--cx-title); letter-spacing: .62em; text-indent: .62em; text-transform: uppercase; color: #ffd9a0; text-shadow: 0 2px 14px rgb(40 16 0 / .7), 0 0 2px rgb(40 16 0 / .6); white-space: nowrap; }
+:root.cx-js:not(.cx-seen) .cx-home .cx-open .cx-wm-sub { opacity: 0; animation: cx-sub-in calc(var(--tk) * .9s) cubic-bezier(.2, .7, .2, 1) calc(var(--tk) * 6.5s) both; }
+@keyframes cx-sub-in { from { opacity: 0; transform: translateY(.5em); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .cx-home .cx-open .cx-wm-sub { animation: none !important; opacity: 1 !important; transform: none !important; } }
+:is(:root[data-motion="reduce"], :root.cx-seen) .cx-home .cx-open .cx-wm-sub { animation: none !important; opacity: 1 !important; transform: none !important; }
+

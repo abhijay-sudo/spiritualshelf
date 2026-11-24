@@ -1,4 +1,4 @@
-/* Spritual, epic layer. Loaded after cinema.css and mobile.css. Three parts:
+/* Spiritual, epic layer. Loaded after cinema.css and mobile.css. Three parts:
    1. a person's own page (the stage itself is cast.css) moves as much as that person carries in the stories:
       main.cast-page[data-tier] is "legend", "lead" or "cast" (content/cast.json) and --ep-a is their light.
         legend  the painting settles slowly (1.05 to 1 over 2.4 s), their light blooms behind them and then breathes

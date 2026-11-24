@@ -1,4 +1,4 @@
-// Spritual (lane F): Listening that follows. The device's own voice (speechSynthesis; nothing is recorded, nothing leaves the
+// Spiritual (lane F): Listening that follows. The device's own voice (speechSynthesis; nothing is recorded, nothing leaves the
 // phone: only voices the device runs itself are used) reads the story one SENTENCE at a time. The sentence being spoken is
 // softly lit in the text (CSS Custom Highlight API: a quiet gold underline and glow; never a bouncing word), the film moves on
 // with the voice, and a small bar offers pause, speed, a sleep timer and a plain Stop. It takes over the [data-listen] buttons

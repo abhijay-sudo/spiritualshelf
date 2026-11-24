@@ -1,4 +1,4 @@
-// Spritual epic layer (styles: epic.css). Progressive enhancement only: it reads what the page already says and adds light
+// Spiritual epic layer (styles: epic.css). Progressive enhancement only: it reads what the page already says and adds light
 // and motion around it. Three jobs: a person's own page (their light, for a person painted in a scene, and a legend's
 // atmosphere and depth), the small living touches where the leads stand elsewhere (the cast row drifts, the wordmark
 // catches the light), and arrivals for everything the cinema layer left still. Who is a legend or a lead, their light and

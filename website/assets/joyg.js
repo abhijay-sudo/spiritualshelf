@@ -1,4 +1,4 @@
-/* Spritual: the look-closer glint (lane G). Loaded with `defer` on the stories that have a brass lens (about 3 KB).
+/* Spiritual: the look-closer glint (lane G). Loaded with `defer` on the stories that have a brass lens (about 3 KB).
    In the film, while the painting on screen is one the lens has sourced details for (content/lens.json: the story's opening
    painting, a scene that borrows it, or a scene the file lists), one small gold glint rests at the edge of the screen.
    A tap (or Enter) opens the lens in a sheet over the film; Back, Esc, the close button or a tap beside it brings the

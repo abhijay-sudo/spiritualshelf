@@ -1,4 +1,4 @@
-/* Spritual: Keep this story on this phone, and the one install card. Loaded by keep.js a moment after a story page is ready.
+/* Spiritual: Keep this story on this phone, and the one install card. Loaded by keep.js a moment after a story page is ready.
    Motion: transform and opacity only, on the shared tokens. */
 :root {
   --ease-settle: cubic-bezier(.22, .8, .2, 1);

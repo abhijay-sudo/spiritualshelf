@@ -1,4 +1,4 @@
-/* Spritual cinema edition: phones and short landscape screens.
+/* Spiritual cinema edition: phones and short landscape screens.
    One block, loaded after cinema.css. Phone rules sit under (max-width: 759px); a phone on its side (any width, at most
    520px tall) under (orientation: landscape) and (max-height: 520px). Wider screens are untouched by this file except
    where a rule says so (the Manas bar following the header, the plate framing variables).

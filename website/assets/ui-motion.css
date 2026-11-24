@@ -1,4 +1,4 @@
-/* Spritual UI motion system (lane E). Loaded last on every page (after epic.css), with ui-motion.js.
+/* Spiritual UI motion system (lane E). Loaded last on every page (after epic.css), with ui-motion.js.
    One motion language for the chrome of the site: page transitions, the header, the menu, buttons, cards, sheets, entrances,
    empty and loading states. It animates transform (translate, scale) and opacity only, never layout, and it never touches the
    reading surfaces (the film reader, a story's text): those stay still so nothing competes with the words.

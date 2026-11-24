@@ -1,4 +1,4 @@
-/* Spritual v7: editorial edition, sunlit. A warm cream page, a grotesk that speaks in short sentences, one italic serif word
+/* Spiritual v7: editorial edition, sunlit. A warm cream page, a grotesk that speaks in short sentences, one italic serif word
    per headline in sun-orange, full-bleed paintings that move, and a sunset footer. No blue anywhere.
    Loaded after site.css: it re-tokens the shared components and adds the editorial layer (ed-*). */
 :root {
@@ -125,7 +125,7 @@ html[lang="hi"] .ed-saved { font-size: .98rem; }
 }
 /* English names the sections in longer words than Hindi does: there the bar keeps its Menu button until they fit beside
    the tools (they ran into "EN / हिं" between 1000 and 1140px), and comes in with a closer gap that opens as it widens */
-@media (min-width: 62.5em) and (max-width: 71.99em) {
+@media (min-width: 62.5em) and (max-width: 79.99em) {
   html:not([lang="hi"]) .ed-nav, html:not([lang="hi"]) .ed-saved { display: none; }
   html:not([lang="hi"]) .ed-menu-btn { display: inline-flex; }
 }
@@ -495,7 +495,7 @@ img.art { aspect-ratio: 4 / 5; height: auto; object-fit: contain; object-positio
 .ed-stat dd { color: var(--ed-sun-ink); }
 .ed-figures { background: var(--ed-tint); }
 
-/* ================= Welcome to Spritual: the opening title sequence =================
+/* ================= Welcome to Spiritual: the opening title sequence =================
    0.0s  the dawn river settles out of a warm haze (picture and clip together)
    0.25s "Welcome to" gathers, letter by letter, from wide tracking
    0.45s S-p-r-i-t-u-a-l rise out of a mask, sharp from a soft blur, one after another

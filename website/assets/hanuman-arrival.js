@@ -1,4 +1,4 @@
-// Spritual: "The Arrival", Hanuman's signature entrance (styles: hanuman-arrival.css). Two places, one person:
+// Spiritual: "The Arrival", Hanuman's signature entrance (styles: hanuman-arrival.css). Two places, one person:
 //   1. his page (/characters/hanuman/, /hi/...): the sky, the flight and the landing are CSS from the first paint; this script adds
 //      what CSS cannot: the letters of his name, the embers (one small canvas), a phone's tilt, the wait for the picture to decode, and
 //      "press a key or touch the stage and it ends at once".

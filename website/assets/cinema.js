@@ -1,4 +1,4 @@
-// Spritual cinema layer: letterbox bars that open and close with the scroll, the film-strip rails,
+// Spiritual cinema layer: letterbox bars that open and close with the scroll, the film-strip rails,
 // the sound invitation and the poster that opens into its story. Progressive enhancement only.
 (() => {
   const $ = (s, r = document) => r.querySelector(s);

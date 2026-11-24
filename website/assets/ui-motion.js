@@ -1,4 +1,4 @@
-// Spritual UI motion system (lane E): the small script behind ui-motion.css. Progressive: every page works without it.
+// Spiritual UI motion system (lane E): the small script behind ui-motion.css. Progressive: every page works without it.
 // 1. a soft gold lamp that follows a mouse across a card's painting (pointer devices only, never touch)
 // 2. one behaviour for every bottom sheet: swipe down to put it away (touch), with the finger carrying the sheet
 // 3. paintings that are still arriving rest as a warm sheen (.ui-ph) until they land

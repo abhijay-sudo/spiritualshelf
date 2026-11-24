@@ -1,4 +1,4 @@
-/* Spritual: the look-closer glint and its sheet (lane G; behaviour in assets/joyg.js). Transform and opacity only, on the shared
+/* Spiritual: the look-closer glint and its sheet (lane G; behaviour in assets/joyg.js). Transform and opacity only, on the shared
    motion tokens. Fetched the first time the glint is wanted, never with the story's first screens. */
 :root {
   --ease-settle: cubic-bezier(.22, .8, .2, 1);

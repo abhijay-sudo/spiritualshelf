@@ -7,7 +7,7 @@ if (retry) retry.addEventListener('click', function () { location.reload(); });
 var asked = /\/stories\/[\w-]+\/?$/.test(location.pathname) ? location.pathname.replace(/\/?$/, '/') : '';
 if (asked && ui.nsTitle) {
 var h = document.querySelector('.cx-h2'); if (h) h.textContent = ui.nsTitle;
-document.title = ui.nsTitle + ' | Spritual';
+document.title = ui.nsTitle + ' | Spiritual Shelf';
 if (some) some.textContent = ui.nsBody; if (none) none.textContent = ui.nsBody;
 } else if (none && ui.noneBody) none.textContent = ui.noneBody;
 if (!list || !ui.stories || !('caches' in window)) return;

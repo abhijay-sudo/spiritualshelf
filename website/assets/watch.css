@@ -1,4 +1,4 @@
-/* Spritual Watch: the story as a film (watch.js). Fetched only when the theatre opens. A black stage, each scene's painting
+/* Spiritual Watch: the story as a film (watch.js). Fetched only when the theatre opens. A black stage, each scene's painting
    full-bleed under a slow directed camera, a title card per scene, the words as subtitles, a dissolve between scenes.
    Opacity and transform only, so the compositor plays every move. Motion obeys the device setting and the site's switch. */
 .wt { position: fixed; inset: 0; width: 100vw; height: 100vh; height: 100dvh; max-width: none; max-height: none; margin: 0; padding: 0; border: 0; background: #070403; color: #f6ead8; overflow: hidden; overscroll-behavior: contain; touch-action: manipulation; -webkit-tap-highlight-color: transparent; -webkit-user-select: none; user-select: none; color-scheme: dark; outline: 0; }

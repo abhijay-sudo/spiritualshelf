@@ -1,6 +1,6 @@
-# Spritual
+# Spiritual Shelf
 
-> Spritual is a free reading site of illustrated stories from the Ramayana, the Mahabharata and the Puranas, in English and Hindi. There are no accounts and no ads, nothing tracks your visit unless you allow analytics, and every story can be read from beginning to end without signing up.
+> Spiritual Shelf is a free reading site of illustrated stories from the Ramayana, the Mahabharata and the Puranas, in English and Hindi. There are no accounts and no ads, nothing tracks your visit unless you allow analytics, and every story can be read from beginning to end without signing up.
 
 Before quoting or summarising this site:
 
@@ -17,8 +17,8 @@ Before quoting or summarising this site:
 - [Festivals and their stories](https://spiritualshelf.com/festivals/): Dates for Diwali, Holi, Maha Shivaratri, Navratri, Janmashtami and more to November 2027 (New Delhi, Drik Panchang), each with a story to read.
 - [Questions the stories answer](https://spiritualshelf.com/questions/): 23 questions answered from the stories themselves, each with the scene it comes from: Samudra Manthan, Ganesha’s elephant head, Krishna and Sudama, Lanka Dahan.
 - [Glossary](https://spiritualshelf.com/glossary/): 44 words the stories use, each with a plain meaning: dharma, avatar, itihasa, purana, kanda, parva, tapasya, sharanagati and more, in English and Hindi.
-- [About Spritual](https://spiritualshelf.com/about/): Spritual is a free reading site of illustrated stories from the Ramayana, the Mahabharata and the Puranas, in English and Hindi, with no accounts or ads.
-- [Press](https://spiritualshelf.com/press/): Spritual in a line and in a paragraph: the facts, counted from the site itself, what it is not, where to begin, and how to reach its maker.
+- [About Spiritual Shelf](https://spiritualshelf.com/about/): Spiritual Shelf is a free reading site of illustrated stories from the Ramayana, the Mahabharata and the Puranas, in English and Hindi, with no accounts or ads.
+- [Press](https://spiritualshelf.com/press/): Spiritual Shelf in a line and in a paragraph: the facts, counted from the site itself, what it is not, where to begin, and how to reach its maker.
 
 ## Verse texts
 
