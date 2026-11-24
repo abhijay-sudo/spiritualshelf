@@ -90,7 +90,8 @@
       const dt = Math.min(.05, (now - (last || now)) / 1000); last = now; const t = now / 1000; const age = (now - born) / 1000 / titlePace;
       g.clearRect(0, 0, W, H);
       // in the dark the dust is at its brightest; once the curtain has opened it thins, so the river stays the picture
-      const amb = !titles || root.classList.contains('cx-seen') ? .55 : 1 - .45 * clamp((age - 3.4) / 2.6);   // [First Light] the dust thins as the sun rises (3.2 s) and the grade lifts (5.4 s)
+      let amb = !titles || root.classList.contains('cx-seen') ? .55 : 1 - .45 * clamp((age - 3.4) / 2.6);   // [First Light] the dust thins as the sun rises (3.2 s) and the grade lifts (5.4 s)
+      { const Lk = window.SpiritualGPU && window.SpiritualGPU.lake; if (Lk && Lk.ready && Lk.fade > 0 && (!titles || age > 6.4 || root.classList.contains('cx-seen'))) amb *= 1 - .8 * clamp(Lk.fade); }   // once the live lake is shown the lingering gold dust all but goes: specks over the water read as confetti, not as light
       // the lamp's glow behind the name, while the screen is dark
       if (titles && letters && age < 6.6 && !root.classList.contains('cx-seen')) {   // [First Light] the glow behind the name peaks as it inks in (4.2 s)
         if (!lamp || now - lampAt > 400) { const z = zoomFix(), r = letters.getBoundingClientRect(), o = openEl.getBoundingClientRect(); lamp = { x: (r.left + r.width / 2) * z - o.left, y: (r.top + r.height / 2) * z - o.top, r: Math.max(r.width * z * .95, 180) }; lampAt = now; }

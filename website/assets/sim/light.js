@@ -31,7 +31,7 @@ env.bind(rR); gl.useProgram(pr.p); gl.activeTexture(gl.TEXTURE0); gl.bindTexture
 gl.uniform4fv(pr.loc('uCover'), L.cover); gl.uniform2fv(pr.loc('uSun'), L.sun); gl.uniform1f(pr.loc('uAsp'), L.asp); gl.uniform2f(pr.loc('uHost'), W, Hh); env.tri();
 }
 const br = 0.85 + 0.15 * Math.sin(e.t * Math.PI * 2 * 0.12);
-kb += (0.24 * f * e.intensity - kb) * 0.1; kr += ((tex ? 0.4 : 0) * br * f * e.intensity - kr) * 0.1;
+kb += (0.15 * f * e.intensity - kb) * 0.1; kr += ((tex ? 0.17 : 0) * br * f * e.intensity - kr) * 0.1;
 env.bind(null); gl.enable(gl.BLEND); gl.blendFunc(gl.ONE, gl.ONE); gl.useProgram(pc.p);
 const un = [['uB1', rA], ['uB2', rD], ['uR', rR]]; un.forEach(([n, r], i) => { gl.activeTexture(gl.TEXTURE0 + i); gl.bindTexture(gl.TEXTURE_2D, r.tex); gl.uniform1i(pc.loc(n), i); });
 gl.uniform4fv(pc.loc('uSafe'), safe); gl.uniform3f(pc.loc('uK'), kb, kr, 0); gl.uniform2f(pc.loc('uHost'), W, Hh); env.tri();

@@ -51,7 +51,7 @@ o = vec4(col * shade * vein * al * 1.6, al * 0.5);
 }`;
 let env0 = null, scene = false, tr = [], trT = 0, hostEl = null, w = 0, h = 0, N = 0, P = null, I = null, wg = new Float32Array(GX * GY * 2), gridT = -1, tt = 0, seed = 1, prog = null, vao = null, bq = null, bi = null, scale = 1, tierName = 'rich';
 const rnd = () => { seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0; return seed / 4294967296; };
-const count = (tier, W, H) => Math.max(24, Math.round((scene ? (tier === 'rich' ? 120 : 50) : (tier === 'rich' ? 220 : 90)) * clamp(Math.sqrt((W * H) / 1.1e6), .5, 1.1)));
+const count = (tier, W, H) => Math.max(20, Math.round((scene ? (tier === 'rich' ? 120 : 50) : (tier === 'rich' ? 56 : 28)) * clamp(Math.sqrt((W * H) / 1.1e6), .5, 1.1)));
 const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
 const kindOf = (s) => (s * 100 % 1 < .32 ? 1 : 0);
 const spawn = (i, fresh) => {

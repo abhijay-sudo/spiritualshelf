@@ -6,54 +6,74 @@ void main(){ vec2 p = vec2(float((gl_VertexID << 1) & 2), float(gl_VertexID & 2)
 const HASH = `float hash(vec2 p){ vec3 q = fract(vec3(p.xyx) * 0.1031); q += dot(q, q.yzx + 33.33); return fract((q.x + q.y) * q.z); }`;
 const water = (mode, bright) => V3 + `precision highp float;
 #define MODE ${mode}
+#define NW ${mode === 2 ? 16 : 8}
 ${bright ? '#define BRIGHT' : ''}
 uniform sampler2D uTex, uH, uM;
-uniform vec4 uCover, uBox, uL[14];
+uniform vec4 uCover, uBox;
 uniform vec2 uBuf, uTexel, uSun;
 uniform float uScale, uT, uFade, uWL, uAsp, uK, uChop;
 uniform vec3 uTint;
-uniform int uNL;
 out vec4 o;
 ${HASH}
+const float FOCAL = 0.9;          // the camera's focal length in picture heights (about a 58 degree view)
+const float GRAV = 5.8;           // gravity in camera heights per second squared (the camera sits about 1.7 m up)
+vec2 waves(vec2 P, float t, vec2 feet, float rms){
+vec2 S = vec2(0.0);
+float wind = 0.62 * sin(t * 0.0571) + 0.2 * sin(t * 0.0233 + 1.3);              // the wind turns about a hundred seconds round
+float gust = 0.62 + 0.38 * sin(P.x * 0.55 + 0.9 * sin(P.y * 0.42 + t * 0.05) + t * 0.03) * sin(P.y * 0.33 - 0.7 * sin(P.x * 0.27 + 1.1) + t * 0.021);
+float nrm = rms * sqrt(2.0 / float(NW));
+for (int i = 0; i < NW; i++) {
+float fi = float(i) / float(NW - 1);
+float lam = 3.4 * pow(0.085, fi);                                                // wavelength, long swell to short chop (3.4 down to 0.29)
+float k = 6.2832 / lam;
+float r1 = hash(vec2(float(i) * 1.37, 1.7)), r2 = hash(vec2(float(i) * 2.11, 9.1));
+float sp = mix(0.32, 0.95, fi);                                                  // chop scatters wider than swell
+float a = wind + 0.22 + (r1 * 2.0 - 1.0) * sp;
+vec2 d = vec2(sin(a), -cos(a));                                                  // toward the viewer, a little aslant
+float w = 0.25 * sqrt(GRAV * k);                                                 // deep-water dispersion, slowed so the whole lake stays calm
+float ph = k * dot(d, P) - w * t + r2 * 6.2832;
+float amp = nrm * pow(k / 6.0, 0.32) * mix(0.55, 1.0, smoothstep(0.0, 0.4, fi)) * mix(1.0, gust, smoothstep(0.25, 0.8, fi));
+float fade = 1.0 - smoothstep(0.3, 0.85, k * max(abs(d.x) * feet.x, abs(d.y) * feet.y));   // under about seven pixels: gone, not aliased or banded
+S += d * (amp * fade * cos(ph));
+}
+return S;
+}
 void main(){
 vec2 css = vec2(gl_FragCoord.x, uBuf.y - gl_FragCoord.y) / uScale;
 vec2 uv = (css - uCover.xy) / uCover.zw;
 vec2 g = (uv - uBox.xy) / (uBox.zw - uBox.xy);
 if (g.x < 0.0 || g.y < 0.0 || g.x > 1.0 || g.y > 1.0) discard;
-float depth = clamp((uv.y - uWL) / (1.0 - uWL), 0.0, 1.0);
-float ramp = texture(uM, g).r * smoothstep(0.0, 0.085, uv.y - uBox.y);
+float h = max(uv.y - uWL, 0.004);                                                   // below the horizon, in picture heights
+float depth = clamp(h / (1.0 - uWL), 0.0, 1.0);
+float ramp = texture(uM, g).r * smoothstep(0.0, 0.05, uv.y - uBox.y);
 float cov = ramp * uFade;
 if (cov < 0.003) discard;
-float hw = texture(uH, g - vec2(uTexel.x, 0.0)).r, he = texture(uH, g + vec2(uTexel.x, 0.0)).r;
-float hn = texture(uH, g - vec2(0.0, uTexel.y)).r, hs = texture(uH, g + vec2(0.0, uTexel.y)).r;
+float xi = (uv.x - 0.5) * uAsp;
+vec2 P = vec2(xi / h, FOCAL / h);
+float pix = 1.0 / (uCover.w / uAsp * uScale);                                       // one device pixel in picture heights
+vec2 feet = vec2(pix / h, pix * FOCAL / (h * h));              // a pixel's reach on the ground across and along the lake
+vec2 S = waves(P, uT, feet, uChop * (0.3 + 0.7 * smoothstep(0.0, 0.32, h)));
+float hw = texture(uH, g - vec2(uTexel.x * 1.5, 0.0)).r, he = texture(uH, g + vec2(uTexel.x * 1.5, 0.0)).r;
+float hn = texture(uH, g - vec2(0.0, uTexel.y * 1.5)).r, hs = texture(uH, g + vec2(0.0, uTexel.y * 1.5)).r;
 float hc = texture(uH, g).r;
-float per = mix(0.32, 1.0, depth);
-vec2 sl = vec2(hw - he, hn - hs) * uK * per;
-float z = 1.0 / (uv.y - uWL + 0.05);
-vec2 q = vec2((uv.x - 0.5) * z * uAsp * 2.2, z * 1.3);
-vec2 cn = vec2(sin(q.x * 3.1 + q.y * 1.3 + uT * 0.45) + sin(q.x * 5.7 - q.y * 2.1 - uT * 0.31), sin(q.x * 2.3 - q.y * 3.3 + uT * 0.37) + sin(q.x * 4.1 + q.y * 1.9 - uT * 0.27)) * 0.5;
-sl += cn * uChop * per;
-vec3 n = normalize(vec3(sl, 1.0));
-vec2 off = sl * vec2(0.05, 0.034) * ramp;
-vec3 add = vec3(0.0);
-vec2 sd = (uSun - uv) * vec2(uAsp / 1.78, 1.0);
-vec3 Lh = normalize(vec3(sd * vec2(0.22, 0.5), 0.9));
-vec3 Hh = normalize(Lh + vec3(0.0, 0.0, 1.0));
-float sp = pow(max(dot(n, Hh), 0.0), 700.0);
-float col_w = exp(-pow((uv.x - uSun.x) * uAsp / (0.14 + 0.3 * depth), 2.0));
-add += uTint * sp * 6.5 * col_w * (0.35 + 0.65 * depth) * clamp((length(sl) - 0.025) * 14.0, 0.0, 1.0);
-float trough = smoothstep(0.0, 0.05, -hc) * 0.5;
-for (int i = 0; i < 14; i++) {
-if (i >= uNL) break;
-vec4 L = uL[i];
-vec2 d = vec2((uv.x - L.x) * uAsp, uv.y - L.y);
-float r = L.w;
-float glow = L.z / (1.0 + dot(d, d) / (r * r) * 9.0);
-float sx = (d.x + sl.x * 0.05) / (r * 0.5);
-float streak = exp(-sx * sx) * exp(-max(d.y, 0.0) / (r * 4.0)) * smoothstep(-r * 0.3, r * 0.2, d.y) * (0.75 + 2.0 * length(sl));
-add += vec3(1.0, 0.5, 0.16) * (glow * 0.26 + streak * 0.5 * L.z) + vec3(1.0, 0.8, 0.45) * pow(max(glow, 0.0), 2.0) * 0.22;
-}
-add = min(add, vec3(1.6));
+vec2 wk = clamp(vec2(he - hw, hn - hs) * (uK * 0.22), vec2(-0.12), vec2(0.12));
+S += wk * mix(0.45, 1.0, depth);
+vec3 n = normalize(vec3(-S.x, 1.0, -S.y));
+vec3 Vv = normalize(vec3(-P.x, 1.0, -P.y));
+float cosT = max(dot(n, Vv), 0.0);
+float fres = 0.02 + 0.98 * pow(1.0 - cosT, 5.0);                                   // Schlick, F0 0.02 for an index of 1.333
+vec3 Ls = normalize(vec3((uSun.x - 0.5) * uAsp / FOCAL, (uWL - uSun.y) / FOCAL, 1.0));
+vec3 Hs = normalize(Ls + Vv);
+float ndh = max(dot(n, Hs), 0.0);
+float colw = exp(-pow(xi / (0.05 + 0.30 * h), 2.0));
+float glow = (pow(ndh, 70.0) * 0.30 + pow(ndh, 380.0) * 0.45);                     // broad soft glints, never pin-points
+float steep = length(S);
+float foam = smoothstep(0.075, 0.17, steep) * smoothstep(0.02, 0.2, h);
+float lobe = exp(-pow(xi / (0.05 + 0.34 * h), 2.0));                              // the path itself: a soft gold column, wider as it comes toward the viewer
+float sheen = clamp(0.62 + 7.0 * (-S.y), 0.25, 1.5);                              // brighter on the facets that lean toward the sun
+vec3 add = uTint * (glow * colw * 0.7 + foam * colw * 0.2) * (0.3 + 0.7 * smoothstep(0.0, 0.25, h));
+add += uTint * lobe * sheen * 0.045 * (1.0 - 0.55 * depth) * smoothstep(0.0, 0.05, h);
+add = min(add, vec3(0.7));
 #ifdef BRIGHT
 o = vec4(add * cov, 1.0);
 #else
@@ -63,19 +83,22 @@ col = uTint * (0.10 + 0.05 * depth) + add * 0.8;
 float a = min(cov, 0.35) * (0.55 + 0.45 * depth);
 o = vec4(col * a, a);
 #else
-col = texture(uTex, uv + off).rgb;
-#if MODE == 2
-vec2 ru = vec2(uv.x + off.x * 1.6, 2.0 * uWL - uv.y + off.y * 2.2);
-vec3 refl = textureLod(uTex, ru, 0.5 + depth * 2.2).rgb;
-float Y = dot(refl, vec3(0.299, 0.587, 0.114));
-float fres = 0.04 + 0.96 * pow(1.0 - n.z, 5.0);
-col = mix(col, refl, clamp(fres * 1.6, 0.0, 0.2));
-float rip = clamp((length(sl) - 0.08) * 8.0, 0.0, 1.0);
-add += uTint * pow(smoothstep(0.86, 1.0, Y), 2.0) * rip * 0.45 * (0.3 + 0.7 * depth);
-#endif
+float near = smoothstep(0.0, 0.34, h);
+vec2 duv = vec2(S.x * 0.03, S.y * 0.2) * (0.25 + 0.75 * near);
+vec3 body = textureLod(uTex, clamp(uv + duv, vec2(0.0), vec2(1.0)), 0.55 + 1.4 * (1.0 - near)).rgb;
+float lum = dot(body, vec3(0.299, 0.587, 0.114));
+float see = (1.0 - fres) * smoothstep(0.08, 0.8, h) * (1.0 - smoothstep(0.55, 0.9, lum));
+body = mix(body, body * vec3(0.84, 0.95, 1.1), 0.5 * see);
+float facet = clamp(-S.y * 2.6 - S.x * 0.5, -0.09, 0.09) * (0.35 + 0.65 * near);
+col = body * (1.0 + facet);
+col += uTint * max(facet, 0.0) * 0.45 * smoothstep(0.55, 0.0, lum);
+vec3 haze = textureLod(uTex, vec2(uv.x, uWL - 0.05), 4.0).rgb;
+float hz = 1.0 - smoothstep(0.0, 0.17, uv.y - uWL);
+col = mix(col, mix(textureLod(uTex, uv, 3.0).rgb, haze, 0.5), hz * 0.8);
+float trough = smoothstep(0.0, 0.05, -hc) * 0.5;
 col *= 1.0 - trough * 0.22;
 col += add;
-col += (hash(gl_FragCoord.xy + fract(uT)) - 0.5) / 255.0;
+col += (hash(gl_FragCoord.xy + fract(uT)) + hash(gl_FragCoord.yx * 1.7 + fract(uT * 0.7)) - 1.0) * (1.5 / 255.0);
 o = vec4(col * cov, cov);
 #endif
 #endif

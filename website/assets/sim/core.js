@@ -60,9 +60,9 @@ done(true);
 };
 if (!queue.length) return done(true);
 if (ext && ext.par) {
-for (const r of queue) make(r);
 const poll = () => { tmr = 0; if (!gl) return; if (queue.every((r) => gl.getProgramParameter(r.p, ext.par.COMPLETION_STATUS_KHR))) fin(); else tmr = setTimeout(poll, 8); };
-tmr = setTimeout(poll, 8);
+const hand = () => { tmr = 0; if (!gl) return; make(queue[k++]); tmr = setTimeout(k < queue.length ? hand : poll, k < queue.length ? 0 : 8); };
+hand();
 } else {
 const slice = () => { tmr = 0; if (!gl) return; make(queue[k++]); if (k < queue.length) tmr = window.requestIdleCallback ? (requestIdleCallback(slice, { timeout: 200 }), 0) : setTimeout(slice, 16); else fin(); };
 slice();
@@ -178,7 +178,7 @@ if (best !== host) { const was = host; place(best); hrDirty = true; ign = 6; wN 
 if (!live) go();
 };
 const MAP = [
-{ sel: 'section.cx-open[data-fx-water]', cfg: { rope: 'home', wind: 'hero' }, feats: ['wind', 'water', 'light'] },
+{ sel: 'section.cx-open[data-fx-water]', cfg: { rope: 'home', wind: 'hero' }, feats: ['wind', 'water', 'far', 'birds', 'light'] },
 { sel: 'section.cx-select', cfg: { rope: 'picker', wind: 'hero' }, feats: ['wind'] },
 { sel: '.fm-stage', when: 'live', cfg: { rope: 'pennant', wind: 'scene' }, feats: ['wind', 'relight'] },
 { sel: 'section.cx-film-open', when: 'still', cfg: { rope: 'pennant', wind: 'scene' }, feats: ['wind', 'relight'] },

@@ -1757,6 +1757,9 @@ html[lang="hi"] .cx-sel-chips a { font-family: "Mukta", var(--cx-ui); font-size:
 @media (max-width: 699px) { .cx-sky-rays { display: none; } .cx-sky-flock { top: 16%; scale: .7; } }
 @media (prefers-reduced-motion: reduce) { .cx-sky-flock { display: none; } .cx-sky * { animation: none !important; } }
 :root[data-motion="reduce"] .cx-sky-flock { display: none; }
+/* [fx] the GPU flocks (assets/sim/birds.js) fly instead of the CSS ones while they are live; Off, Light, reduced motion and no WebGL2 keep these */
+:root[data-fx-birds="1"] .cx-open .cx-sky-flock { display: none; }
+:root[data-fx-far="1"] .cx-open .cx-sky-mist { display: none; }
 @media print { .cx-sky { display: none; } }
 
 /* ---------- Characters found inside their scene ----------

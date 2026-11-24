@@ -112,8 +112,7 @@ gl.useProgram(P.p);
 gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, tex); gl.uniform1i(P.loc('uTex'), 0);
 gl.activeTexture(gl.TEXTURE1); gl.bindTexture(gl.TEXTURE_2D, texH); gl.uniform1i(P.loc('uH'), 1);
 gl.activeTexture(gl.TEXTURE2); gl.bindTexture(gl.TEXTURE_2D, texM); gl.uniform1i(P.loc('uM'), 2);
-progLoc(P, gl, { uCover: L.cover, uBox: L.box, uBuf: [bw, bh], uTexel: [1 / nx, 1 / ny], uSun: L.sun, uScale: sc, uT: t, uFade: fade, uWL: L.wl, uAsp: L.asp, uK: 11, uChop: 0.03, uTint: L.tint });
-gl.uniform1i(P.loc('uNL'), L.nl); if (L.nl) gl.uniform4fv(P.loc('uL[0]'), L.lights);
+progLoc(P, gl, { uCover: L.cover, uBox: L.box, uBuf: [bw, bh], uTexel: [1 / nx, 1 / ny], uSun: L.sun, uScale: sc, uT: t, uFade: fade, uWL: L.wl, uAsp: L.asp, uK: 11, uChop: 0.045, uTint: L.tint });
 };
 L.drawBright = (rt) => {
 const gl = env.gl, P = progs && progs.bright; if (!L.ready || !P || !P.ok || !texH) return;
@@ -161,7 +160,7 @@ for (let k = 1; k <= n; k++) L.disturb(ptr.px + dx * k / n, ptr.py + dy * k / n,
 ptr.px = ptr.x; ptr.py = ptr.y;
 }
 if (L.ambient && t > nextDrop) {
-nextDrop = t + 1.1 + rnd() * 1.4;
+nextDrop = t + 7 + rnd() * 9;
 if (G.lake.hero) { const z = L.zone, u = z[0] + rnd() * (z[2] - z[0]), v = clamp(z[1] + rnd() * (z[3] - z[1]), L.box[1] + 0.06, 0.98); L.disturb(L.cover[0] + u * L.cover[2], L.cover[1] + v * L.cover[3], 0.022 + rnd() * 0.03, 5 + rnd() * 5); }
 }
 const sv = inp ? inp.scrollVel : 0;

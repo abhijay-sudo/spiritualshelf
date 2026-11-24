@@ -169,3 +169,4 @@ html[lang="hi"] .cx-select .cx-sel-btns .cx-sel-story .cx-sel-story-n { font: 50
 :root.cx-seen :is(.cx-rig, .cx-streak, .cx-glims, .cx-chant), :root.cx-fest-end :is(.cx-rig, .cx-streak, .cx-glims, .cx-chant), :root.ep-lite :is(.cx-rig, .cx-streak, .cx-glims, .cx-chant), :root[data-motion="reduce"] :is(.cx-rig, .cx-streak, .cx-glims, .cx-chant) { display: none !important; }
 @media (prefers-reduced-motion: reduce) { .cx-rig, .cx-streak, .cx-glims, .cx-chant { display: none !important; } }
 @media (forced-colors: active), print { .cx-rig, .cx-streak, .cx-glims, .cx-chant { display: none !important; } }
+:root.cx-seen .cx-bell, :root.cx-fest-end .cx-bell { display: none !important; }
