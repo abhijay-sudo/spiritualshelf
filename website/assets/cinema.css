@@ -1821,7 +1821,7 @@ html[lang="hi"] .cx-sel-chips a { font-family: "Mukta", var(--cx-ui); font-size:
    reads where it crosses a hand or an instrument; and where someone else's face stands on the words' side (is-calm,
    from the tile), that side is closed further. */
 @media (min-width: 700px) {
-  .cx-select.is-scene .cx-sel-sum { border-radius: 1rem; background: color-mix(in oklab, var(--sel-base) 38%, transparent); box-shadow: 0 0 2.4rem 1.3rem color-mix(in oklab, var(--sel-base) 38%, transparent); }
+  .cx-select.is-scene .cx-sel-sum { background: none; box-shadow: none; text-shadow: 0 0 .5rem color-mix(in oklab, var(--sel-base) 85%, transparent), 0 1px 3px rgb(5 3 2 / .8), 0 2px 16px rgb(5 3 2 / .7); }   /* no box behind the words: a soft shade on the letters only */
   .cx-select.is-scene.is-calm .cx-sel-shade { background:
     linear-gradient(to right, color-mix(in oklab, var(--sel-base) 97%, transparent) 0%, color-mix(in oklab, var(--sel-base) 92%, transparent) 30%, color-mix(in oklab, var(--sel-base) 60%, transparent) 44%, transparent 60%),
     linear-gradient(to top, var(--sel-base) 0%, color-mix(in oklab, var(--sel-base) 78%, transparent) 15%, transparent 38%),
