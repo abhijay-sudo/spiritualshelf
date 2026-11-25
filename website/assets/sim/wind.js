@@ -148,6 +148,16 @@ gl.bindVertexArray(null);
 stats(inp) { let n = 0, vn = 0, f = 0, vf = 0, px = 0; for (let i = 0; i < N; i++) { const o = i * 6, sp = Math.hypot(P[o + 2], P[o + 3]), d = Math.hypot(P[o] - inp.x, P[o + 1] - inp.y); if (d < 120) { n++; vn += sp; } else { f++; vf += sp; } } return { n: N, textRects: tr.length, scene, near: n, vNear: n ? vn / n : 0, vFar: f ? vf / f : 0 }; },
 dispose() { if (trT) { clearInterval(trT); trT = 0; } tr = []; hostEl = env0 = null; P = I = null; N = 0; prog = vao = bq = bi = null; gridT = -1; },
 };
+G.wind = { takePetal(o, y0, y1) {
+if (!P || !N || !hostEl || scene) return false;
+const k0 = (rnd() * N) | 0;
+for (let n = 0; n < N; n++) {
+const i = (k0 + n) % N, q = i * 6; if (!kindOf(P[q + 5])) continue;
+const x = P[q], y = P[q + 1]; if (P[q + 4] < 2.5 || x < w * 0.08 || x > w * 0.92 || y < y0 || y > y1) continue;
+o[0] = x; o[1] = y; o[2] = P[q + 2]; o[3] = P[q + 3]; spawn(i, false); return true;
+}
+return false;
+} };
 G.windAt = (x, y, o) => { if (w) sample(x, y, o); else { o[0] = 24; o[1] = 0; } };
 G.register(fx);
 })();

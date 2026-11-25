@@ -8,7 +8,7 @@ precision highp float;
 uniform sampler2D uTex, uMist, uVid;
 uniform vec4 uCover;
 uniform vec2 uBuf, uSun;
-uniform float uScale, uT, uFade, uWL, uAsp, uQ, uHasV;
+uniform float uScale, uT, uFade, uWL, uAsp, uQ, uHasV, uU, uPost;   // uU: Ultra's strength (0 = exactly the Rich look); uPost: Ultra may redraw the bank from the poster when there is no film frame
 uniform vec3 uTint, uPar, uSw;                 // uPar: lean x, lean y, scroll; uSw: the crowns' push (sway x, sway y, gust)
 out vec4 o;
 float hash(vec2 p){ vec3 q = fract(vec3(p.xyx) * 0.1031); q += dot(q, q.yzx + 33.33); return fract((q.x + q.y) * q.z); }
@@ -20,22 +20,24 @@ vec2 uv = (css - uCover.xy) / uCover.zw;
 float v = uv.y;
 if (v < 0.36 || v > 0.6 || uv.x < 0.0 || uv.x > 1.0) discard;
 float pxu = 1.0 / uCover.z;                                                      // one css pixel across, in picture widths
+float farL = smoothstep(0.50, 0.415, v);                                          // 0 at the shore, 1 at the hills' tops
+float depthK = mix(1.0, 0.40 + 1.45 * (1.0 - farL), uU);                           // Ultra: three planes of depth, the near trees follow the pointer most and the hills hardly at all
 float prof = smoothstep(0.503, 0.455, v) * (1.0 - 0.72 * smoothstep(0.445, 0.405, v));
 float crown = 0.5 + 0.5 * sin(uv.x * 140.0 + vnoise(vec2(uv.x * 22.0, 1.0)) * 6.0);          // each crown its own phase
-float push = uSw.x * (0.55 + 0.45 * sin(uv.x * 61.0 + vnoise(vec2(uv.x * 9.0, 3.0)) * 4.0)) * (0.7 + 0.3 * crown) + uPar.x * 2.2;
-vec2 sh = vec2(push * prof, uSw.y * prof * 0.3 - uPar.y * 0.9 * prof - uPar.z * 1.5 * prof) * pxu * vec2(1.0, uAsp);
+float push = uSw.x * (0.55 + 0.45 * sin(uv.x * 61.0 + vnoise(vec2(uv.x * 9.0, 3.0)) * 4.0)) * (0.7 + 0.3 * crown) * (1.0 + 0.5 * uU) + uPar.x * 2.2 * depthK;
+vec2 sh = vec2(push * prof, uSw.y * prof * 0.3 - (uPar.y * 0.9 + uPar.z * 1.5) * prof * depthK) * pxu * vec2(1.0, uAsp);
 vec2 su = clamp(uv + sh, vec2(0.0), vec2(1.0));
 vec3 c = uHasV > 0.5 ? texture(uVid, su).rgb : texture(uTex, su).rgb;      // the film's own frame: its mist and its light are the picture, we only move the crowns
 vec3 sky = textureLod(uTex, vec2(uv.x, 0.395), 5.5).rgb;
 vec3 lake = textureLod(uTex, vec2(uv.x, 0.53), 5.5).rgb;                            // the pale lilac of the water just below the shore: the air over the lake is this colour
 vec3 glow = mix(sky, lake, 0.7) * 1.07;
-float far = smoothstep(0.50, 0.415, v);                                          // 0 at the shore, 1 at the hills' tops
-c = mix(c, glow * vec3(0.98, 0.97, 1.04), 0.30 * far * far + 0.06 * far);                                       // and drift toward the colour of the air they sit in
+float far = farL;
+c = mix(c, glow * vec3(0.98, 0.97, 1.04), (0.30 + 0.10 * uU) * far * far + 0.06 * far);                                       // and drift toward the colour of the air they sit in
 c = mix(c, c * vec3(0.93, 0.97, 1.09), far * 0.7);                               // the far hills a touch cooler
 float sx = exp(-pow((uv.x - uSun.x) / 0.3, 2.0));
 c += uTint * 0.03 * sx * smoothstep(0.43, 0.50, v) * (1.0 - smoothstep(0.50, 0.512, v));   // the sun side of the bank warms
 float top = smoothstep(0.372, 0.415, v), bot = 1.0 - smoothstep(0.506, 0.512, v);
-float a1 = top * bot * uFade * step(0.5, uHasV);          // (with no film frame the bank is left to the picture: only haze and mist)
+float a1 = top * bot * uFade * max(step(0.5, uHasV), uPost * uU);          // (with no film frame the bank is left to the picture: only haze and mist)
 float hb = exp(-pow((v - 0.493) / 0.024, 2.0));
 vec3 hz = glow * 1.06;
 float hn = 0.65 + 0.35 * vnoise(vec2(uv.x * uAsp * 5.0 - uT * 0.004, 7.0));
@@ -55,6 +57,15 @@ float hv = (0.24 * hh * dr1 + 0.26 * hl * dr2 + 0.16 * hb * hn) * bot * uFade * 
 vec3 hc = mix(glow, vec3(1.0, 0.93, 0.87), 0.62) * vec3(1.0, 0.99, 1.02);
 vec3 col = mc * am + (hc * hv + c * a1 * (1.0 - hv)) * (1.0 - am);
 float al = am + (hv + a1 * (1.0 - hv)) * (1.0 - am);
+if (uU > 0.001) {
+float e = pxu * 2.5 * uAsp;
+float up = lum(textureLod(uTex, vec2(uv.x, v - 2.0 * e), 1.0).rgb), dn = lum(c);
+float rim = smoothstep(0.05, 0.24, up - dn) * smoothstep(0.62, 0.30, dn);
+float sxw = 0.35 + 0.65 * exp(-pow((uv.x - uSun.x) / 0.42, 2.0));
+col += uTint * rim * sxw * 0.78 * uU * uFade * smoothstep(0.372, 0.41, v) * (1.0 - smoothstep(0.49, 0.505, v));
+float veil = exp(-pow((v - 0.452) / 0.018, 2.0)) * (0.55 + 0.45 * sin(x1 * 3.7 - uT * 0.019 + 1.0));
+col += hc * veil * 0.26 * uU * uFade * bot;
+}
 col += (hash(gl_FragCoord.xy + fract(uT)) - 0.5) * (2.0 / 255.0) * al;
 o = vec4(col, al);
 }`;
@@ -63,7 +74,7 @@ let D = null, D2 = null, M = null, t = 0, tSim = 0, acc = 0, seed = 11, leanX = 
 const rnd = () => { seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0; return seed / 4294967296; };
 const wv = [0, 0];
 const introOver = () => !R.classList.contains('cx-js') || R.classList.contains('cx-seen') || R.classList.contains('cx-fest-end');
-const F = G.far = { ready: false, freeze: false, lanes: () => Array.from(D || []) };
+const F = G.far = { ready: false, freeze: false, post: false, lanes: () => Array.from(D || []) };
 const lane = (y, tt) => {
 let s = 0;
 const a = [[0.22, 0.10, 0.017, 0.0], [0.52, 0.12, 0.021, 2.3], [0.80, 0.09, 0.013, 4.1]];
@@ -150,7 +161,7 @@ if (G.windAt) G.windAt(W * 0.5, H * 0.45, wv); else { wv[0] = 24; wv[1] = 0; }
 const gust = 0.55 + 0.45 * Math.sin(t * 0.16) * Math.sin(t * 0.093 + 1.1), tgt = clamp(wv[0] * 0.03, -1.2, 1.2) * gust + 0.9 * Math.sin(t * 0.52) * (0.4 + 0.6 * gust) + 0.5 * Math.sin(t * 0.97 + 2.0) * 0.5;
 const w0 = 2.2, k2 = w0 * w0, c2 = 2 * w0;
 let n = Math.max(1, Math.ceil(dt / 0.02)), h = dt / n; for (let i = 0; i < n; i++) { swV += (k2 * (tgt - sw) - c2 * swV) * h; sw += swV * h; const tg2 = 0.35 * Math.sin(t * 0.4 + 1.0); syV += (k2 * (tg2 - sy) - c2 * syV) * h; sy += syV * h; }
-acc += dt; const step = tier === 'rich' ? 1 / 12 : 1 / 8;
+acc += dt; const step = tier === 'rich' ? (env && env.U ? 1 / 24 : 1 / 12) : 1 / 8;
 if (acc >= step) { const a = Math.min(acc, 0.3); acc = 0; tSim += a; stepMist(a, tSim, wv[0]); dirty = true; }
 },
 draw(gl, e) {
@@ -168,6 +179,7 @@ gl.uniform2f(prog.loc('uBuf'), e.bw, e.bh); gl.uniform2f(prog.loc('uSun'), L.sun
 gl.uniform1f(prog.loc('uScale'), scale); gl.uniform1f(prog.loc('uT'), t); gl.uniform1f(prog.loc('uFade'), f);
 gl.uniform1f(prog.loc('uWL'), L.wl); gl.uniform1f(prog.loc('uAsp'), L.asp); gl.uniform1f(prog.loc('uQ'), tier === 'rich' ? 1 : 0);
 gl.uniform3f(prog.loc('uTint'), L.tint[0], L.tint[1], L.tint[2]);
+const U = e.U; gl.uniform1f(prog.loc('uU'), U && U.f.farDepth ? U.shade : 0); gl.uniform1f(prog.loc('uPost'), F.post ? 1 : 0);
 const fz = F.freeze ? 0 : 1; gl.uniform3f(prog.loc('uPar'), leanX * fz, leanY * fz, scroll * fz); gl.uniform3f(prog.loc('uSw'), sw * fz, sy * fz, 0);
 const x0 = Math.max(0, Math.floor(c0[0] * scale)), x1 = Math.min(e.bw, Math.ceil((c0[0] + c0[2]) * scale)), y0 = Math.max(0, Math.floor((c0[1] + 0.36 * c0[3]) * scale)), y1 = Math.min(e.bh, Math.ceil((c0[1] + 0.6 * c0[3]) * scale));
 if (x1 <= x0 || y1 <= y0) return;

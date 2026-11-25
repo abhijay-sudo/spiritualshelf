@@ -5,6 +5,7 @@ const DBG = /[?&]fxdebug=1/.test(location.search);
 const clamp = (v, a, b) => Math.min(b, Math.max(a, v)), mix = (a, b, t) => a + (b - a) * t, sstep = (a, b, x) => { const t = clamp((x - a) / (b - a), 0, 1); return t * t * (3 - 2 * t); };
 const TAU = Math.PI * 2, MAXB = 24, FL = 6, STRIDE = 12;
 const CAP = { rich: 20, balanced: 8 };
+const capNow = () => (env && env.U ? env.U.f.birds : CAP[tierName] || 8);   // Ultra: up to 24, and fewer as the governor steps down
 const VS = `#version 300 es
 precision highp float;
 layout(location=0) in vec4 a;   // x, y (host px), half span (px), tilt (rad)
@@ -13,7 +14,7 @@ layout(location=2) in vec4 c;   // far 0..1, direction (+1 right, -1 left), seed
 uniform vec2 uRes;
 uniform vec4 uCover;
 uniform sampler2D uTex;
-uniform float uHas;
+uniform float uHas, uMir, uT;   // uMir: 0, or the horizon's y (host px) when the flock is drawn again as its reflection in the lake (Ultra)
 flat out vec4 vCol;
 out vec3 vv;
 out float vSoft;
@@ -57,13 +58,19 @@ ev = vec3(u, 1.0);
 float rho = a.w + roll; float cr = cos(rho), sr = sin(rho);
 vec2 q2 = vec2(lp.x * cr - lp.y * sr, lp.x * sr + lp.y * cr);
 vec2 pos = a.xy + vec2(q2.x, -q2.y);
+float refl = 1.0;
+if (uMir > 0.0) {   // the same bird, upside down in the water, a little shorter, rippled sideways and fading with its depth in the lake
+float dd = uMir - pos.y;
+pos.y = uMir + dd * 0.86; pos.x += sin(dd * 0.05 + uT * 0.6 + seed * 6.0) * (1.0 + 1.8 * far) * 0.9;
+refl = 0.30 * (1.0 - smoothstep(60.0, 520.0, dd));
+}
 gl_Position = vec4(pos.x / uRes.x * 2.0 - 1.0, 1.0 - pos.y / uRes.y * 2.0, 0.0, 1.0);
 vv = ev;
 vec3 plum = vec3(0.33, 0.21, 0.24) + (seed - 0.5) * vec3(0.04, 0.02, 0.03);
 vec3 sky = vec3(0.80, 0.55, 0.52);
 if (uHas > 0.5) sky = textureLod(uTex, clamp((a.xy - uCover.xy) / uCover.zw, 0.0, 1.0), 4.5).rgb;
 vec3 skyD = sky * vec3(0.80, 0.70, 0.74);
-vCol = vec4(mix(plum, skyD, 0.34 + 0.46 * far), b.w);
+vCol = vec4(mix(plum, skyD, 0.34 + 0.46 * far) * (uMir > 0.0 ? vec3(0.9, 0.95, 1.05) : vec3(1.0)), b.w * refl);
 }`;
 const FS = `#version 300 es
 precision mediump float;
@@ -112,8 +119,8 @@ iv = nx;
 return iv.filter((v) => v[1] - v[0] > 26);
 };
 const spawn = (kind, o) => {
-const cap = CAP[tierName] || 8; let alive = 0; for (const b of B) alive += b.on;
-let n = kind === 'main' ? (tierName === 'rich' ? 5 + (rnd() * 4 | 0) : 4 + (rnd() * 2 | 0)) : kind === 'large' ? 10 + (rnd() * 4 | 0) : 2 + (rnd() * 2 | 0);
+const cap = capNow(), up = env && env.U ? 1 : 0; let alive = 0; for (const b of B) alive += b.on;
+let n = kind === 'main' ? (tierName === 'rich' ? 5 + (rnd() * 4 | 0) + up * 3 : 4 + (rnd() * 2 | 0)) : kind === 'large' ? 10 + (rnd() * 4 | 0) + up * 3 : 2 + (rnd() * 2 | 0) + up * 2;
 if (tierName !== 'rich') n = Math.min(n, kind === 'small' ? 2 : 5);
 n = Math.min(n, cap - alive, MAXB); if (n < 2) return false;
 const fi = F.findIndex((f) => !f.on); if (fi < 0) return false;
@@ -223,7 +230,7 @@ gl.bindVertexArray(vao); gl.bindBuffer(gl.ARRAY_BUFFER, bI); gl.bufferData(gl.AR
 for (let k = 0; k < 3; k++) { gl.enableVertexAttribArray(k); gl.vertexAttribPointer(k, 4, gl.FLOAT, false, STRIDE * 4, k * 16); gl.vertexAttribDivisor(k, 1); }
 gl.bindVertexArray(null);
 },
-resize(w, h, sc, tier) { W = w; H = h; tierName = tier; layout(); dirtyRects = true; const cap = CAP[tier] || 8; let n = 0; for (const b of B) { if (b.on) { n++; if (n > cap) { b.on = 0; b.fl = 0; } } } },
+resize(w, h, sc, tier) { W = w; H = h; tierName = tier; layout(); dirtyRects = true; const cap = capNow(); let n = 0; for (const b of B) { if (b.on) { n++; if (n > cap) { b.on = 0; b.fl = 0; } } } },
 enter() { hostEl = env.host; t = t || 0; clearAll(); on = true; firstDone = false; introDone = 0; dirtyRects = true; layout(); if (!tRects) tRects = setInterval(() => { dirtyRects = true; }, 2500); },
 leave() { on = false; hide(false); if (tRects) { clearInterval(tRects); tRects = 0; } clearAll(); hostEl = null; },
 pause() { if (tRects) { clearInterval(tRects); tRects = 0; } },
@@ -262,7 +269,9 @@ gl.uniform1f(prog.loc('uHas'), tex ? 1 : 0);
 if (tex) { gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, tex); gl.uniform1i(prog.loc('uTex'), 0); }
 gl.bindVertexArray(vao); gl.bindBuffer(gl.ARRAY_BUFFER, bI); gl.bufferSubData(gl.ARRAY_BUFFER, 0, I, 0, n * STRIDE);
 gl.enable(gl.BLEND); gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+gl.uniform1f(prog.loc('uT'), t); gl.uniform1f(prog.loc('uMir'), 0);
 gl.drawArraysInstanced(gl.TRIANGLES, 0, 42, n);
+if (e.U && e.U.f.birdsRefl && L && L.ready && horizon > 0) { gl.uniform1f(prog.loc('uMir'), horizon); gl.drawArraysInstanced(gl.TRIANGLES, 0, 42, n); gl.uniform1f(prog.loc('uMir'), 0); }
 gl.bindVertexArray(null);
 hide(true);
 },

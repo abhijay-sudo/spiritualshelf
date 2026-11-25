@@ -2,7 +2,7 @@
 const G = window.SpiritualGPU; if (!G) return;
 const d = document, R = d.documentElement, clamp = (v, a, b) => Math.min(b, Math.max(a, v)), sstep = (a, b, v) => { const t = clamp((v - a) / (b - a), 0, 1); return t * t * (3 - 2 * t); };
 const C2X = 0.40, ANIS = 0.32, DAMP = 0.006, SPONGE = 6, GAIN_PTR = 0.62;
-const L = G.lake = { ready: false, fade: 0, nx: 0, ny: 0, H: null, lights: new Float32Array(14 * 4), nl: 0, cover: [0, 0, 1, 1], box: [0, 0.5, 1, 1], W: 0, H_: 0, wl: 0.5, sun: [0.5, 0.45], tint: [1, 0.74, 0.46], zone: [0, 0, 1, 1], asp: 16 / 9, sx: 1, sy: 1, x0: 0, y0: 0, tier: 'rich', hero: null, ambient: true, coupling: true };
+const L = G.lake = { ready: false, fade: 0, nx: 0, ny: 0, H: null, lights: new Float32Array(14 * 4), nl: 0, cover: [0, 0, 1, 1], box: [0, 0.5, 1, 1], W: 0, H_: 0, wl: 0.5, sun: [0.5, 0.45], tint: [1, 0.74, 0.46], zone: [0, 0, 1, 1], asp: 16 / 9, sx: 1, sy: 1, x0: 0, y0: 0, tier: 'rich', hero: null, ambient: true, coupling: true, gl4: new Float32Array(8), tapHook: null };
 let cfg = null, el = null, env = null, tierName = 'rich', W = 0, Hh = 0, scale = 1, nx = 0, ny = 0;
 let A = null, B = null, Cn = null, MK = null, MKb = null, DM = null, CX = null, CY = null;
 let progs = null, tex = null, texH = null, texM = null, texKey = '', texState = 0, tw = 0, th = 0, gen = 0, gpu = 0;
@@ -50,8 +50,8 @@ const dw = W / Hh > asp ? W : Hh * asp, dh = dw / asp, l = (W - dw) * pct(op[0])
 L.cover = [l, tp, dw, dh]; L.W = W; L.H_ = Hh; L.scale = scale; L.wl = cfg.wl; L.sun = o.light || cfg.light; L.tint = cfg.color; L.zone = o.diyaZone || cfg.zone; L.hero = img;
 let u0 = 1, v0 = 1, u1 = 0, v1 = 0; for (const [u, v] of cfg.mask) { u0 = Math.min(u0, u); u1 = Math.max(u1, u); v0 = Math.min(v0, v); v1 = Math.max(v1, v); }
 L.box = [u0, v0, u1, v1];
-const bw = (u1 - u0) * dw, bh = (v1 - v0) * dh, budget = Math.min(tierName === 'rich' ? 36000 : 14000, bw * bh / 9);
-let gx = Math.round(Math.sqrt(budget * bw / bh)); gx = clamp(gx, 48, 440); let gy = Math.max(24, Math.round(budget / gx));
+/* Ultra: a finer grid, up to 384 across, so the wake and a petal's ring keep their shape */ const U = env && env.U && env.U.f.grid ? env.U : null, bw = (u1 - u0) * dw, bh = (v1 - v0) * dh, budget = Math.min(U ? 1.7e5 * Math.pow(U.f.grid / 384, 2) : tierName === 'rich' ? 36000 : 14000, bw * bh / 9);
+let gx = Math.round(Math.sqrt(budget * bw / bh)); gx = clamp(gx, 48, U ? U.f.grid : 440); let gy = Math.max(24, Math.round(budget / gx));
 if (!force && A && Math.abs(gx - nx) / nx < 0.08 && Math.abs(gy - ny) / ny < 0.08) { fixXY(); return; }
 nx = gx; ny = gy; alloc(); fixXY();
 };
@@ -112,10 +112,29 @@ gl.useProgram(P.p);
 gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, tex); gl.uniform1i(P.loc('uTex'), 0);
 gl.activeTexture(gl.TEXTURE1); gl.bindTexture(gl.TEXTURE_2D, texH); gl.uniform1i(P.loc('uH'), 1);
 gl.activeTexture(gl.TEXTURE2); gl.bindTexture(gl.TEXTURE_2D, texM); gl.uniform1i(P.loc('uM'), 2);
+gl.uniform4fv(P.loc('uGl'), L.gl4);
 progLoc(P, gl, { uCover: L.cover, uBox: L.box, uBuf: [bw, bh], uTexel: [1 / nx, 1 / ny], uSun: L.sun, uScale: sc, uT: t, uFade: fade, uWL: L.wl, uAsp: L.asp, uK: 11, uChop: 0.045, uTint: L.tint });
+if (P.ult) {   // Ultra's own: its strength (eased by ultra.js), its three switches and where the floating petals are (for the light under them)
+const U = env.U, f = U && U.f; gl.uniform1f(P.loc('uU'), U ? U.shade : 0); gl.uniform3f(P.loc('uUk'), f && f.fine ? 1 : 0, f && f.caustics ? 1 : 0, f && f.glitter ? 1 : 0);
+waveTable(t); gl.uniform4fv(P.loc('uWa'), WA); gl.uniform2fv(P.loc('uWb'), WB);
+ca.fill(0); if (U && f.caustics && G.rigid && G.rigid.spots) { const n = G.rigid.spots(sp); for (let i = 0; i < Math.min(4, n); i++) { ca[i * 4] = (sp[i * 2] - L.cover[0]) / L.cover[2]; ca[i * 4 + 1] = (sp[i * 2 + 1] - L.cover[1]) / L.cover[3]; ca[i * 4 + 2] = 0.05; ca[i * 4 + 3] = 1; } }
+gl.uniform4fv(P.loc('uCa'), ca);
+}
+};
+const ca = new Float32Array(16), sp = new Float32Array(12);
+const WA = new Float32Array(120), WB = new Float32Array(60), TAU = Math.PI * 2, GRAV = 5.8;
+const fr = (x) => x - Math.floor(x), hash2 = (px, py) => { let qx = fr(px * 0.1031), qy = fr(py * 0.1031), qz = qx; const dd = qx * (qy + 33.33) + qy * (qz + 33.33) + qz * (qx + 33.33); qx += dd; qy += dd; qz += dd; return fr((qx + qy) * qz); };
+const COMP = []; for (let i = 0; i < 30; i++) {
+const fine = i >= 16, j = fine ? i - 16 : i, fi = fine ? j / 13 : j / 15, lam = fine ? 0.30 * Math.pow(0.14, fi) : 3.4 * Math.pow(0.085, fi), k = TAU / lam;
+const r1 = fine ? hash2(j * 3.71, 5.3) : hash2(j * 1.37, 1.7), r2 = fine ? hash2(j * 1.93, 2.9) : hash2(j * 2.11, 9.1);
+COMP.push({ k, r2, w: (fine ? 0.15 : 0.25) * Math.sqrt(GRAV * k), spread: fine ? 0.55 : 0.32 + (0.95 - 0.32) * fi, r1, amp: fine ? 0.058 * Math.pow(k / 20, -0.08) : Math.pow(k / 6, 0.32) * (0.55 + 0.45 * sstep(0, 0.4, fi)), gm: fine ? 0 : sstep(0.25, 0.8, fi) });
+}
+const waveTable = (tt) => {
+const wind = 0.62 * Math.sin(tt * 0.0571) + 0.2 * Math.sin(tt * 0.0233 + 1.3);
+for (let i = 0; i < 30; i++) { const c = COMP[i], a = wind + 0.22 + (c.r1 * 2 - 1) * c.spread; WA[i * 4] = Math.sin(a); WA[i * 4 + 1] = -Math.cos(a); WA[i * 4 + 2] = c.k; WA[i * 4 + 3] = fr((c.r2 * TAU - c.w * tt) / TAU) * TAU; WB[i * 2] = c.amp; WB[i * 2 + 1] = c.gm; }
 };
 L.drawBright = (rt) => {
-const gl = env.gl, P = progs && progs.bright; if (!L.ready || !P || !P.ok || !texH) return;
+const gl = env.gl, U = env.U, P = progs && (U && (U.f.fine || U.f.caustics || U.f.glitter) && progs.b3 && progs.b3.ok ? progs.b3 : progs.bright); if (!L.ready || !P || !P.ok || !texH) return;
 env.bind(rt); gl.disable(gl.BLEND); gl.clearColor(0, 0, 0, 1); gl.clear(gl.COLOR_BUFFER_BIT);
 uniforms(P, gl, rt.w, rt.h, rt.w / W, L.fade); env.tri(); env.bind(null);
 };
@@ -129,6 +148,7 @@ const S = G.sh; if (!S) return;
 progs = { m2: e.prog(S.TRI, S.water(2, false)), m1: e.prog(S.TRI, S.water(1, false)), m0: e.prog(S.TRI, S.water(0, false)), bright: e.prog(S.TRI, S.water(2, true)) };
 if (G.debug) G.debug.water = debugApi;
 },
+up(gl, e) { const S = G.sh; if (!S || !progs || progs.m3) return; progs.m3 = e.prog(S.TRI, S.water(2, false, true)); progs.m3.ult = true; progs.b3 = e.prog(S.TRI, S.water(2, true, true)); progs.b3.ult = true; },
 resize(w, h, sc, tier) {
 W = w; Hh = h; scale = sc; tierName = tier; L.tier = tier; L.scale = sc;
 if (!el) return;
@@ -172,7 +192,7 @@ dirty = true; if (pk < 2e-5) { quiet = true; A.fill(0); B.fill(0); Cn.fill(0); }
 },
 draw(gl, e) {
 if (!A || !progs || !L.fade) { L.ready = false; return; }
-const mode = texState === 2 ? (tierName === 'rich' ? 'm2' : 'm1') : 'm0', P = progs[mode];
+const mode = texState === 2 ? (tierName === 'rich' ? (e.U && (e.U.f.fine || e.U.f.caustics || e.U.f.glitter) && progs.m3 && progs.m3.ok ? 'm3' : 'm2') : 'm1') : 'm0', P = progs[mode];
 if (!P || !P.ok) return;
 if (!gpu) gpuMake(gl);
 if (dirty) { gl.bindTexture(gl.TEXTURE_2D, texH); gl.texSubImage2D(gl.TEXTURE_2D, 0, 0, 0, nx, ny, gl.RED, gl.FLOAT, A); dirty = false; }
@@ -204,6 +224,7 @@ ptr.x = c[0]; ptr.y = c[1]; ptr.on = true; ptr.t = now; ptr.pend = true;
 const onDown = (e) => {
 if (!A || !seen || e.target.closest('a,button,input,select,textarea,summary,label,[role]')) return; L.toLocal(e.clientX, e.clientY, c);
 ptr.px = ptr.x = c[0]; ptr.py = ptr.y = c[1]; ptr.on = true; ptr.t = performance.now(); ptr.v = 0;
+if (L.tapHook && L.tapHook(c[0], c[1], e)) return;   // Ultra: the rigid-body layer takes the touch (a petal is offered, and its landing makes the ring)
 if (L.inWater(c[0], c[1])) L.disturb(c[0], c[1], 0.09, 3 * L.sx * Math.max(1, nx / 192) * 0.9);
 };
 const debugApi = {
