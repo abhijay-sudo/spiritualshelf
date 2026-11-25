@@ -121,7 +121,7 @@ float under = smoothstep(0.004, -0.03, vY);
 col = mix(col, vec3(0.12, 0.19, 0.23) * (0.6 + 0.4 * deep), under * 0.7);
 float fog = smoothstep(9.0, 42.0, vZ) * 0.6;
 col = mix(col, haze, fog);
-float a = al * deep * mix(1.0, 0.55, under);
+float a = al * deep * mix(1.0, 0.55, under) * smoothstep(0.0, 0.16, abs(dot(N, V)));   // (the skin is an exact ellipsoid: where the normal turns edge-on is its outline, feathered over about a pixel)
 if (uMirror > 0.5) { col *= vec3(0.58, 0.66, 0.76); a *= 0.34 * (1.0 - fog) * exp(-abs(vY) * 2.6); }
 o = vec4(col * a, a);
 }`;
@@ -278,10 +278,10 @@ const skyPetal = () => {
 if (!can('skyPetals') || count('sky') >= RC.maxSkyPetals || (bodyCap() - liveCount()) < 6) return;
 const yb = Math.min(Hh, L.cover[1] + L.cover[3] * L.box[3]) - 24, y0 = cal.wl + (yb - cal.wl) * 0.1, out = [0, 0, 0, 0], w = [0, 0];
 if (G.wind && G.wind.takePetal && G.wind.takePetal(out, y0, yb)) {
-const yh = 0.4 + rnd() * 0.5, z = clamp(cal.f * (cal.eye - yh) / Math.max(out[1] - cal.wl, 4), BND.zNear + 0.5, BND.zFar - 3), x = (out[0] - cal.cx) * z / cal.f;
+const yh = 0.4 + rnd() * 0.5, z = clamp(cal.f * (cal.eye - yh) / Math.max(out[1] - cal.wl, 4), BND.zNear + 0.5, 18), x = (out[0] - cal.cx) * z / cal.f;
 if (spawnPetal(x, yh, z, { src: 'sky', marigold: true, vx: out[2] * z / cal.f, vy: -0.25, ttl: 30 }) >= 0) cnt.sky++; return;
 }
-const z = 6 + rnd() * 16, x = (rnd() - 0.45) * (W * 0.8) * z / cal.f; G.windAt(cal.cx, cal.wl + cal.f * cal.eye / z, wp);
+const z = 6 + rnd() * 12, x = (rnd() - 0.45) * (W * 0.8) * z / cal.f; G.windAt(cal.cx, cal.wl + cal.f * cal.eye / z, wp);
 if (spawnPetal(x, 1.1, z, { src: 'sky', marigold: true, vx: wp[0] * z / cal.f, vy: -0.2, ttl: 30 }) >= 0) cnt.sky++;
 };
 const bodyCap = () => { const U = G.U; return U && U.on ? Math.min(P.maxBodies, U.f.bodies) : P.maxBodies; };   // (the governor lowers Ultra's allowance from 24 to 12 before it turns the physics off)

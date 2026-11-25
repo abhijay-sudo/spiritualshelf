@@ -20,6 +20,7 @@ mist: can('mist'), mistSteps: num('mist', 'steps', 8), farDepth: can('farDepth')
 motes: can('motes') ? num('motes', 'count', 120000) : 0, grid: can('waterGrid') ? num('waterGrid', 'nx', 384) : 0, dpr: num('hdr', 'dpr', 2), bodies: (C.physics && C.physics.maxBodies) || 24, physx: can('physx'),
 });
 U.f = base();
+U.ss = () => (G.get() === 'ultra' && !U.trial && U.level < 1 && can('hdr') ? 1.5 : 1);
 const apply = (lv) => {
 const f = U.f = base();
 if (lv >= 1) { f.caustics = false; f.mistSteps = Math.max(3, f.mistSteps >> 1); }
@@ -35,7 +36,7 @@ U.level++; apply(U.level); if (U.level === 5) physicsOff();
 if (DBG) { try { console.debug('[fx] ultra ladder', LEVELS[U.level], why); } catch (e) {} }
 G.run.reflow(); return true;
 };
-const mark = (k, why) => { try { localStorage.setItem('spritual:fxu', JSON.stringify({ [k]: Date.now(), why: String(why || '').slice(0, 80) })); } catch (e) {} };
+const mark = (k, why, soft) => { try { localStorage.setItem('spritual:fxu', JSON.stringify({ [k]: Date.now() - (soft ? (GATE.restDays - 1) * DAY : 0), why: String(why || '').slice(0, 80) })); } catch (e) {} };
 const resting = () => { try { const o = JSON.parse(localStorage.getItem('spritual:fxu') || 'null'); if (!o) return 0; const t = Math.max(o.fail || 0, o.no || 0, o.down || 0); return t && Date.now() - t < GATE.restDays * DAY ? t : 0; } catch (e) { return 0; } };
 U.left = (why) => { G.ultraHold = true; try { physicsOff(); } catch (e) {} mark('down', why); U.on = false; };   // (Ultra gave way to Rich: Auto does not return for a week)
 U.chosen = () => { G.ultraHold = false; gateRetried = false; U.level = 0; apply(0); booted = false; U.mode = ''; G.ultraAuto = false; setTimeout(boot, G.get() === '' ? 2500 : 0); };
@@ -247,7 +248,7 @@ const clear = !ultM || ultM.drawMs > GATE.drawMsMax * 1.4 || ratio > GATE.ratio 
 if (!ok && !clear && !gateRetried && !why) { gateRetried = true; U.trial = false; G.run.leave(); U.mode = ''; booted = true; gateInfo = { ok: null, reasons: ['measuring again'] }; setTimeout(gateRun, 4000); return; }
 gateInfo = { ok, drawMs: ultM && ultM.drawMs, stepMs: ultM && ultM.stepMs, p95: ultM && ultM.p95, rich: richM, ultra: ultM, instantiateMs: gateInfo.instantiateMs, reasons: ok ? [] : [why || ('over budget: draw ' + (ultM && ultM.drawMs) + ' ms (limit ' + GATE.drawMs + '), p95 ' + (ultM && ultM.p95) + ' ms (limit ' + GATE.p95 + ')')], budget: { drawMs: GATE.drawMs, stepMs: GATE.stepMs, p95: GATE.p95 } };
 U.trial = false;
-if (!ok) { G.run.leave(); mark('no', gateInfo.reasons[0]); return; }
+if (!ok) { G.run.leave(); mark('no', gateInfo.reasons[0], !clear); return; }
 U.mode = 'auto'; G.ultraAuto = true; G.run.gate(true);   // (Auto now runs Ultra; the graphics are eased in, and the physics is fetched)
 if (G.ultraPhysics) G.ultraPhysics();
 };

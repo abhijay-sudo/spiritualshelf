@@ -1,0 +1,55 @@
+/* Browse motion (lane 4): the library, collections, today, people pages, worlds, glossary, questions, festivals, my reading, about.
+   One language, "unhurried light": things rise a short way and settle; nothing loops, nothing moves inside a line of text.
+   It reads the shared tokens of ui-motion.css (--ease-settle, --ease-lamp, --dur-*, --stagger) and adds no second set.
+   Only translate, scale and opacity are animated. Every start state lives either in a CSS animation with a backwards fill
+   (so a page with no script still shows everything) or under a class that motion-browse.js adds (.mb-wait).
+   Off under prefers-reduced-motion and under the site's own setting (html[data-motion="reduce"]). */
+
+@keyframes mb-rise { from { opacity: 0; translate: 0 var(--mb-d, 16px); } }
+@keyframes mb-swap { from { opacity: .42; translate: 0 6px; } }
+@keyframes mb-chip { from { scale: .955; } }
+/* the results change hands: the old set dims, the grid re-forms while it is all but dark (site.css takes a hidden card out of
+   the layout 350 ms after the choice), and the new set comes up settled, so the jump itself is never seen */
+@keyframes mb-swap2 { 0% { opacity: 1; } 42% { opacity: .06; translate: 0 0; } 52% { opacity: .06; translate: 0 8px; } 100% { opacity: 1; translate: 0 0; } }
+
+/* where a thing stands in its row of arrivals: the first eight take turns, the rest come together */
+:is(.grid > .card, .fest-list > li, .cx-terms > .cx-term, .cx-qs > li, .mx-kand-grid > li) { --mb-i: 8; }
+:is(.grid > .card, .fest-list > li, .cx-terms > .cx-term, .cx-qs > li, .mx-kand-grid > li):nth-child(1) { --mb-i: 0; }
+:is(.grid > .card, .fest-list > li, .cx-terms > .cx-term, .cx-qs > li, .mx-kand-grid > li):nth-child(2) { --mb-i: 1; }
+:is(.grid > .card, .fest-list > li, .cx-terms > .cx-term, .cx-qs > li, .mx-kand-grid > li):nth-child(3) { --mb-i: 2; }
+:is(.grid > .card, .fest-list > li, .cx-terms > .cx-term, .cx-qs > li, .mx-kand-grid > li):nth-child(4) { --mb-i: 3; }
+:is(.grid > .card, .fest-list > li, .cx-terms > .cx-term, .cx-qs > li, .mx-kand-grid > li):nth-child(5) { --mb-i: 4; }
+:is(.grid > .card, .fest-list > li, .cx-terms > .cx-term, .cx-qs > li, .mx-kand-grid > li):nth-child(6) { --mb-i: 5; }
+:is(.grid > .card, .fest-list > li, .cx-terms > .cx-term, .cx-qs > li, .mx-kand-grid > li):nth-child(7) { --mb-i: 6; }
+:is(.grid > .card, .fest-list > li, .cx-terms > .cx-term, .cx-qs > li, .mx-kand-grid > li):nth-child(8) { --mb-i: 7; }
+
+@media (prefers-reduced-motion: no-preference) {
+  /* 1. Before the script: the first screen of a grid or list is drawn already on its way in (no flash, and no script needed).
+        The script then hands the same animation to the things that really are on screen (same name, same delay: it carries on). */
+  :root:not(.mb-js):not([data-motion="reduce"]) :is(.grid > .card, .fest-list > li, .cx-terms > .cx-term, .cx-qs > li, .mx-kand-grid > li):nth-child(-n+12),
+  :root:not([data-motion="reduce"]) .mb-in { animation: mb-rise var(--dur-3) var(--ease-settle) calc(var(--mb-t, 160ms) + var(--mb-i, 0) * var(--stagger)) backwards; }
+  /* 2. Below the first screen: waiting (the script adds this), then the same rise once, when a sixth of the thing is in view */
+  :root.mb-js:not([data-motion="reduce"]) .mb-wait { opacity: 0; translate: 0 var(--mb-d, 16px); }
+  .mb-text { --mb-d: 10px; }
+  /* 3. Filtering: the results breathe once as a whole, so cards never blink in and out one by one */
+  :root:not([data-motion="reduce"]) .mb-swap { animation: mb-swap var(--dur-2) var(--ease-settle); }
+  :root:not([data-motion="reduce"]) .mb-swap2 { animation: mb-swap2 800ms var(--ease-lamp); }
+  /* the card's own transitions (site.css), with scale added so a press eases instead of snapping */
+  :root:not([data-motion="reduce"]) .grid .card { transition: opacity .35s var(--ease), translate .35s var(--ease), transform .35s var(--ease), box-shadow .35s var(--ease), border-color .3s, scale var(--dur-1) var(--ease-settle), display .35s allow-discrete; }
+  /* a chosen chip settles into place (it used to pop past its size) */
+  :root:not([data-motion="reduce"]) .chip input:checked + span { animation: mb-chip var(--dur-2) var(--ease-settle); }
+}
+
+/* 3b. No flicker on the first screen. epic.js dims a block (.ep-rv) after it has been drawn and then brings it back; until
+   motion-browse.js has sorted the first screen from the rest (html.mb-js) that dimming is held off on browse pages, and the
+   script then takes it off what is on screen for good. Below the first screen epic.js keeps its own arrival. With no script
+   of ours, these blocks are simply there. */
+:root:not(.mb-js) :is(.cx-plain-in > h1, .cx-plain-text > *, .cx-plain-in > .cx-btn, .fest-list > li, .fest-item, .block-head, .legend, main > .wrap > .note).ep-rv { opacity: 1; animation: none; }
+
+/* 4. Press: a card gives a little under the finger, and comes back */
+.grid .card:active:not(:has(.save:active, .btn-quiet:active)) { scale: .985; }
+
+@media (prefers-reduced-motion: reduce) { .mb-wait, .mb-in, .mb-swap, .mb-swap2 { animation: none !important; opacity: 1 !important; translate: none !important; } .grid .card:active { scale: 1 !important; } }
+:root[data-motion="reduce"] :is(.mb-wait, .mb-in, .mb-swap, .mb-swap2) { animation: none !important; opacity: 1 !important; translate: none !important; }
+:root[data-motion="reduce"] .grid .card:active { scale: 1 !important; }
+@media print { .mb-wait, .mb-in { animation: none !important; opacity: 1 !important; translate: none !important; } }

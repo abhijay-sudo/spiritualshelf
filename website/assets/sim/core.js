@@ -95,7 +95,7 @@ host = h; env.host = h.el; env.cfg = h.cfg;
 };
 const size = (w, h) => {
 if (!cv || !w || !h) return;
-const T = TIER[NAME[rank]], dprCap = rank === 3 && G.U ? Math.min(T.dpr, G.U.f.dpr) : T.dpr; env.dpr = clamp(devicePixelRatio || 1, 1, dprCap);
+const T = TIER[NAME[rank]], dprCap = rank === 3 && G.U ? Math.min(T.dpr, G.U.f.dpr) : T.dpr; env.dpr = clamp(rank === 3 && G.U && G.U.ss ? Math.max(devicePixelRatio || 1, G.U.ss()) : devicePixelRatio || 1, 1, dprCap);   // (Ultra on a 1x screen draws at 1.5x and the browser scales it down: smoother edges and finer glitter)
 scale = Math.min(env.dpr, Math.sqrt(T.px / (w * h)));
 const bw = Math.max(1, Math.round(w * scale)), bh = Math.max(1, Math.round(h * scale));
 if (cv.width !== bw || cv.height !== bh) { cv.width = bw; cv.height = bh; }
