@@ -12,8 +12,8 @@ Before quoting or summarising this site:
 
 ## Start here
 
-- [All stories](https://spiritualshelf.com/library/): Search 66 illustrated retellings from the Ramayana, Mahabharata and Puranas by name, feeling, collection or reading time, in English and Hindi.
-- [People of the stories](https://spiritualshelf.com/characters/): 106 people of the Ramayana, Mahabharata and Puranas, from Rama, Sita and Hanuman to Karna, Draupadi and Bhishma, each linked to their stories.
+- [All stories](https://spiritualshelf.com/library/): Search 70 illustrated retellings from the Ramayana, Mahabharata and Puranas by name, feeling, collection or reading time, in English and Hindi.
+- [People of the stories](https://spiritualshelf.com/characters/): 114 people of the Ramayana, Mahabharata and Puranas, from Rama, Sita and Hanuman to Karna, Draupadi and Bhishma, each linked to their stories.
 - [Festivals and their stories](https://spiritualshelf.com/festivals/): Dates for Diwali, Holi, Maha Shivaratri, Navratri, Janmashtami and more to November 2027 (New Delhi, Drik Panchang), each with a story to read.
 - [Questions the stories answer](https://spiritualshelf.com/questions/): 23 questions answered from the stories themselves, each with the scene it comes from: Samudra Manthan, Ganesha’s elephant head, Krishna and Sudama, Lanka Dahan.
 - [Glossary](https://spiritualshelf.com/glossary/): 44 words the stories use, each with a plain meaning: dharma, avatar, itihasa, purana, kanda, parva, tapasya, sharanagati and more, in English and Hindi.
@@ -60,6 +60,7 @@ Before quoting or summarising this site:
 ### Vishnu & Krishna (Bhagavata Purana)
 
 - [The night the doors opened](https://spiritualshelf.com/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-born-in-prison/): A voice names Kamsa’s killer: his sister’s eighth child. On the night Krishna is born, the bolted prison doors open by themselves. Bhagavata Purana.
+- [The stranger at the cradle](https://spiritualshelf.com/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-putana/): A lovely stranger lifts baby Krishna on her lap, sent by Kamsa. Later Yashoda looks in his mouth and sees the world. Bhagavata Purana, Skandha 10.
 - [The rope two fingers short](https://spiritualshelf.com/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-butter-and-rope/): Yashoda catches Krishna, the butter thief, and tries to tie him; every rope in the house comes up two fingers short. Damodar Leela, Bhagavata Purana.
 - [The dance on Kaliya’s hoods](https://spiritualshelf.com/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-kaliya/): Venom boils a pool of the Yamuna. A cowherd boy climbs a kadamba tree, tightens his belt and jumps in. From the Bhagavata Purana, in plain words.
 - [The mountain lifted](https://spiritualshelf.com/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-mountain/): Indra sends storm clouds on Vraja and young Krishna lifts Govardhan hill on one hand, sheltering the village for seven days. From the Bhagavata Purana.
@@ -85,10 +86,11 @@ Before quoting or summarising this site:
 - [Through fire and snow](https://spiritualshelf.com/collections/shiva/books/shiva-purana/arcs/rudra-samhita/stories/shiva-parvati-tapas/): Shiva burns Kama to ash and vanishes; the mountain’s daughter answers with tapas, ringed by fire and standing in winter water. From the Shiva Purana.
 - [Stop, Kannappa](https://spiritualshelf.com/collections/shiva/books/periya-puranam/arcs/kannappa-nayanar-puranam/stories/shiva-kannappa-gives-his-eyes/): A young hunter finds the Lord alone on a hill and feeds him in his own way. On the sixth day he gives the Lord what he loves most. Periya Puranam, Tamil.
 
-### Devi (Devi Mahatmya)
+### Devi (Devi Mahatmya, Devi Bhagavata Purana)
 
 - [Mahishasura’s last roar](https://spiritualshelf.com/collections/devi/books/devi-mahatmya/arcs/madhyama-charita/stories/devi-mahishasura/): The fury of every god becomes one Goddess; against her stands Mahishasura, who seized heaven and changes shape as he fights. From the Devi Mahatmya.
 - [Clay, river, goddess](https://spiritualshelf.com/collections/devi/books/devi-mahatmya/arcs/uttama-charita/stories/devi-two-requests/): King Suratha and the merchant Samadhi shape the Goddess from clay by a river; after three years Devi appears. From the Devi Mahatmya.
+- [The leaf no worship is without](https://spiritualshelf.com/collections/devi/books/devi-bhagavata-purana/arcs/book-9/stories/devi-tulsi-and-shaligram/): Tulsi, born on the Kartika full moon, is deceived by a god and curses him. He answers: she will be a river and the Tulsi plant, he a stone. Devi Bhagavata.
 
 ### Ganesha & Family (Shiva Purana)
 
@@ -100,7 +102,9 @@ Before quoting or summarising this site:
 ### Mahabharata (Vyasa Mahabharata)
 
 - [Flowers fell on Devavrata](https://spiritualshelf.com/collections/mahabharata/books/vyasa-mahabharata/arcs/adi-parva/stories/mahabharata-the-vow/): Shantanu loves Satyavati; to win her for his father, Devavrata vows to give up the throne and never marry, and becomes Bhishma. From the Adi Parva.
+- [Vyasa, and how the epic was written down](https://spiritualshelf.com/collections/mahabharata/books/vyasa-mahabharata/arcs/adi-parva/stories/mahabharata-vyasa-and-the-epic/): The island-born sage Vyasa arranges the Vedas, composes the Mahabharata and sends a pupil to tell it. In one later version, Ganesha writes it down.
 - [Two rakshasas, one cartload](https://spiritualshelf.com/collections/mahabharata/books/vyasa-mahabharata/arcs/adi-parva/stories/mahabharata-bhima-hidimba-and-baka/): Bhima keeps watch over his sleeping family, and a rakshasi chooses him. Later, hiding in a town, he eats a rakshasa’s food and calls his name. Mahabharata.
+- [The bow no king could string](https://spiritualshelf.com/collections/mahabharata/books/vyasa-mahabharata/arcs/adi-parva/stories/mahabharata-draupadis-swayamvara/): Kings fail to string Drupada’s bow; in some tellings Karna is refused for his birth. A brahmin strings it, then his mother speaks a careless word.
 - [The bird, the thumb, the bow](https://spiritualshelf.com/collections/mahabharata/books/vyasa-mahabharata/arcs/adi-parva/stories/mahabharata-the-archers-eye/): Drona tests his pupils and Arjuna alone sees only the bird’s head; Ekalavya, refused by Drona, gives his thumb as guru dakshina. From the Adi Parva.
 - [Lo, I have won](https://spiritualshelf.com/collections/mahabharata/books/vyasa-mahabharata/arcs/sabha-parva/stories/mahabharata-the-dice-hall/): Yudhishthira loses everything to Shakuni’s dice, Draupadi is dragged into the hall and her robe cannot be stripped. The Sabha Parva of the Mahabharata.
 - [The tail that would not move](https://spiritualshelf.com/collections/mahabharata/books/vyasa-mahabharata/arcs/vana-parva/stories/mahabharata-bhima-meets-hanuman/): Bhima climbs Gandhamadana for a lotus and finds an old monkey across the road. He cannot lift its tail. It is Hanuman. Mahabharata, Vana Parva.

@@ -1903,6 +1903,116 @@
       "statusCode": 308
     },
     {
+      "source": "/s/krishna-putana/2{/}?",
+      "destination": "/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-putana/#page-2",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/krishna-putana/3{/}?",
+      "destination": "/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-putana/#page-3",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/krishna-putana/4{/}?",
+      "destination": "/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-putana/#page-4",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/krishna-putana/5{/}?",
+      "destination": "/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-putana/#page-5",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/krishna-putana/6{/}?",
+      "destination": "/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-putana/#page-6",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/krishna-putana/7{/}?",
+      "destination": "/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-putana/#page-7",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/krishna-putana/8{/}?",
+      "destination": "/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-putana/#page-8",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/krishna-putana/9{/}?",
+      "destination": "/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-putana/#page-9",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/krishna-putana/10{/}?",
+      "destination": "/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-putana/#page-10",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/krishna-putana/:n(0[0-9]*|[1-9][0-9][0-9]+|[2-9][0-9]|1[1-9]){/}?",
+      "destination": "/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-putana/",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/krishna-putana{/}?",
+      "destination": "/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-putana/",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/krishna-putana/2{/}?",
+      "destination": "/hi/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-putana/#page-2",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/krishna-putana/3{/}?",
+      "destination": "/hi/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-putana/#page-3",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/krishna-putana/4{/}?",
+      "destination": "/hi/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-putana/#page-4",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/krishna-putana/5{/}?",
+      "destination": "/hi/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-putana/#page-5",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/krishna-putana/6{/}?",
+      "destination": "/hi/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-putana/#page-6",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/krishna-putana/7{/}?",
+      "destination": "/hi/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-putana/#page-7",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/krishna-putana/8{/}?",
+      "destination": "/hi/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-putana/#page-8",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/krishna-putana/9{/}?",
+      "destination": "/hi/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-putana/#page-9",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/krishna-putana/10{/}?",
+      "destination": "/hi/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-putana/#page-10",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/krishna-putana/:n(0[0-9]*|[1-9][0-9][0-9]+|[2-9][0-9]|1[1-9]){/}?",
+      "destination": "/hi/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-putana/",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/krishna-putana{/}?",
+      "destination": "/hi/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-putana/",
+      "statusCode": 308
+    },
+    {
       "source": "/s/krishna-butter-and-rope/:n(0[0-9]*|[1-9][0-9][0-9]+|[1-9][0-9]){/}?",
       "destination": "/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-butter-and-rope/",
       "statusCode": 308
@@ -2763,6 +2873,116 @@
       "statusCode": 308
     },
     {
+      "source": "/s/devi-tulsi-and-shaligram/2{/}?",
+      "destination": "/collections/devi/books/devi-bhagavata-purana/arcs/book-9/stories/devi-tulsi-and-shaligram/#page-2",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/devi-tulsi-and-shaligram/3{/}?",
+      "destination": "/collections/devi/books/devi-bhagavata-purana/arcs/book-9/stories/devi-tulsi-and-shaligram/#page-3",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/devi-tulsi-and-shaligram/4{/}?",
+      "destination": "/collections/devi/books/devi-bhagavata-purana/arcs/book-9/stories/devi-tulsi-and-shaligram/#page-4",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/devi-tulsi-and-shaligram/5{/}?",
+      "destination": "/collections/devi/books/devi-bhagavata-purana/arcs/book-9/stories/devi-tulsi-and-shaligram/#page-5",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/devi-tulsi-and-shaligram/6{/}?",
+      "destination": "/collections/devi/books/devi-bhagavata-purana/arcs/book-9/stories/devi-tulsi-and-shaligram/#page-6",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/devi-tulsi-and-shaligram/7{/}?",
+      "destination": "/collections/devi/books/devi-bhagavata-purana/arcs/book-9/stories/devi-tulsi-and-shaligram/#page-7",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/devi-tulsi-and-shaligram/8{/}?",
+      "destination": "/collections/devi/books/devi-bhagavata-purana/arcs/book-9/stories/devi-tulsi-and-shaligram/#page-8",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/devi-tulsi-and-shaligram/9{/}?",
+      "destination": "/collections/devi/books/devi-bhagavata-purana/arcs/book-9/stories/devi-tulsi-and-shaligram/#page-9",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/devi-tulsi-and-shaligram/10{/}?",
+      "destination": "/collections/devi/books/devi-bhagavata-purana/arcs/book-9/stories/devi-tulsi-and-shaligram/#page-10",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/devi-tulsi-and-shaligram/:n(0[0-9]*|[1-9][0-9][0-9]+|[2-9][0-9]|1[1-9]){/}?",
+      "destination": "/collections/devi/books/devi-bhagavata-purana/arcs/book-9/stories/devi-tulsi-and-shaligram/",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/devi-tulsi-and-shaligram{/}?",
+      "destination": "/collections/devi/books/devi-bhagavata-purana/arcs/book-9/stories/devi-tulsi-and-shaligram/",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/devi-tulsi-and-shaligram/2{/}?",
+      "destination": "/hi/collections/devi/books/devi-bhagavata-purana/arcs/book-9/stories/devi-tulsi-and-shaligram/#page-2",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/devi-tulsi-and-shaligram/3{/}?",
+      "destination": "/hi/collections/devi/books/devi-bhagavata-purana/arcs/book-9/stories/devi-tulsi-and-shaligram/#page-3",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/devi-tulsi-and-shaligram/4{/}?",
+      "destination": "/hi/collections/devi/books/devi-bhagavata-purana/arcs/book-9/stories/devi-tulsi-and-shaligram/#page-4",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/devi-tulsi-and-shaligram/5{/}?",
+      "destination": "/hi/collections/devi/books/devi-bhagavata-purana/arcs/book-9/stories/devi-tulsi-and-shaligram/#page-5",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/devi-tulsi-and-shaligram/6{/}?",
+      "destination": "/hi/collections/devi/books/devi-bhagavata-purana/arcs/book-9/stories/devi-tulsi-and-shaligram/#page-6",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/devi-tulsi-and-shaligram/7{/}?",
+      "destination": "/hi/collections/devi/books/devi-bhagavata-purana/arcs/book-9/stories/devi-tulsi-and-shaligram/#page-7",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/devi-tulsi-and-shaligram/8{/}?",
+      "destination": "/hi/collections/devi/books/devi-bhagavata-purana/arcs/book-9/stories/devi-tulsi-and-shaligram/#page-8",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/devi-tulsi-and-shaligram/9{/}?",
+      "destination": "/hi/collections/devi/books/devi-bhagavata-purana/arcs/book-9/stories/devi-tulsi-and-shaligram/#page-9",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/devi-tulsi-and-shaligram/10{/}?",
+      "destination": "/hi/collections/devi/books/devi-bhagavata-purana/arcs/book-9/stories/devi-tulsi-and-shaligram/#page-10",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/devi-tulsi-and-shaligram/:n(0[0-9]*|[1-9][0-9][0-9]+|[2-9][0-9]|1[1-9]){/}?",
+      "destination": "/hi/collections/devi/books/devi-bhagavata-purana/arcs/book-9/stories/devi-tulsi-and-shaligram/",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/devi-tulsi-and-shaligram{/}?",
+      "destination": "/hi/collections/devi/books/devi-bhagavata-purana/arcs/book-9/stories/devi-tulsi-and-shaligram/",
+      "statusCode": 308
+    },
+    {
       "source": "/s/ganesha-elephant-head/:n(0[0-9]*|[1-9][0-9][0-9]+|[1-9][0-9]){/}?",
       "destination": "/collections/ganesha/books/shiva-purana/arcs/rudra-samhita/stories/ganesha-elephant-head/",
       "statusCode": 308
@@ -2840,6 +3060,96 @@
     {
       "source": "/hi/s/mahabharata-the-vow{/}?",
       "destination": "/hi/collections/mahabharata/books/vyasa-mahabharata/arcs/adi-parva/stories/mahabharata-the-vow/",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/mahabharata-vyasa-and-the-epic/2{/}?",
+      "destination": "/collections/mahabharata/books/vyasa-mahabharata/arcs/adi-parva/stories/mahabharata-vyasa-and-the-epic/#page-2",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/mahabharata-vyasa-and-the-epic/3{/}?",
+      "destination": "/collections/mahabharata/books/vyasa-mahabharata/arcs/adi-parva/stories/mahabharata-vyasa-and-the-epic/#page-3",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/mahabharata-vyasa-and-the-epic/4{/}?",
+      "destination": "/collections/mahabharata/books/vyasa-mahabharata/arcs/adi-parva/stories/mahabharata-vyasa-and-the-epic/#page-4",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/mahabharata-vyasa-and-the-epic/5{/}?",
+      "destination": "/collections/mahabharata/books/vyasa-mahabharata/arcs/adi-parva/stories/mahabharata-vyasa-and-the-epic/#page-5",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/mahabharata-vyasa-and-the-epic/6{/}?",
+      "destination": "/collections/mahabharata/books/vyasa-mahabharata/arcs/adi-parva/stories/mahabharata-vyasa-and-the-epic/#page-6",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/mahabharata-vyasa-and-the-epic/7{/}?",
+      "destination": "/collections/mahabharata/books/vyasa-mahabharata/arcs/adi-parva/stories/mahabharata-vyasa-and-the-epic/#page-7",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/mahabharata-vyasa-and-the-epic/8{/}?",
+      "destination": "/collections/mahabharata/books/vyasa-mahabharata/arcs/adi-parva/stories/mahabharata-vyasa-and-the-epic/#page-8",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/mahabharata-vyasa-and-the-epic/:n(0[0-9]*|[1-9][0-9][0-9]+|[1-9][0-9]|[9-9]){/}?",
+      "destination": "/collections/mahabharata/books/vyasa-mahabharata/arcs/adi-parva/stories/mahabharata-vyasa-and-the-epic/",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/mahabharata-vyasa-and-the-epic{/}?",
+      "destination": "/collections/mahabharata/books/vyasa-mahabharata/arcs/adi-parva/stories/mahabharata-vyasa-and-the-epic/",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/mahabharata-vyasa-and-the-epic/2{/}?",
+      "destination": "/hi/collections/mahabharata/books/vyasa-mahabharata/arcs/adi-parva/stories/mahabharata-vyasa-and-the-epic/#page-2",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/mahabharata-vyasa-and-the-epic/3{/}?",
+      "destination": "/hi/collections/mahabharata/books/vyasa-mahabharata/arcs/adi-parva/stories/mahabharata-vyasa-and-the-epic/#page-3",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/mahabharata-vyasa-and-the-epic/4{/}?",
+      "destination": "/hi/collections/mahabharata/books/vyasa-mahabharata/arcs/adi-parva/stories/mahabharata-vyasa-and-the-epic/#page-4",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/mahabharata-vyasa-and-the-epic/5{/}?",
+      "destination": "/hi/collections/mahabharata/books/vyasa-mahabharata/arcs/adi-parva/stories/mahabharata-vyasa-and-the-epic/#page-5",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/mahabharata-vyasa-and-the-epic/6{/}?",
+      "destination": "/hi/collections/mahabharata/books/vyasa-mahabharata/arcs/adi-parva/stories/mahabharata-vyasa-and-the-epic/#page-6",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/mahabharata-vyasa-and-the-epic/7{/}?",
+      "destination": "/hi/collections/mahabharata/books/vyasa-mahabharata/arcs/adi-parva/stories/mahabharata-vyasa-and-the-epic/#page-7",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/mahabharata-vyasa-and-the-epic/8{/}?",
+      "destination": "/hi/collections/mahabharata/books/vyasa-mahabharata/arcs/adi-parva/stories/mahabharata-vyasa-and-the-epic/#page-8",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/mahabharata-vyasa-and-the-epic/:n(0[0-9]*|[1-9][0-9][0-9]+|[1-9][0-9]|[9-9]){/}?",
+      "destination": "/hi/collections/mahabharata/books/vyasa-mahabharata/arcs/adi-parva/stories/mahabharata-vyasa-and-the-epic/",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/mahabharata-vyasa-and-the-epic{/}?",
+      "destination": "/hi/collections/mahabharata/books/vyasa-mahabharata/arcs/adi-parva/stories/mahabharata-vyasa-and-the-epic/",
       "statusCode": 308
     },
     {
@@ -2950,6 +3260,116 @@
     {
       "source": "/hi/s/mahabharata-bhima-hidimba-and-baka{/}?",
       "destination": "/hi/collections/mahabharata/books/vyasa-mahabharata/arcs/adi-parva/stories/mahabharata-bhima-hidimba-and-baka/",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/mahabharata-draupadis-swayamvara/2{/}?",
+      "destination": "/collections/mahabharata/books/vyasa-mahabharata/arcs/adi-parva/stories/mahabharata-draupadis-swayamvara/#page-2",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/mahabharata-draupadis-swayamvara/3{/}?",
+      "destination": "/collections/mahabharata/books/vyasa-mahabharata/arcs/adi-parva/stories/mahabharata-draupadis-swayamvara/#page-3",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/mahabharata-draupadis-swayamvara/4{/}?",
+      "destination": "/collections/mahabharata/books/vyasa-mahabharata/arcs/adi-parva/stories/mahabharata-draupadis-swayamvara/#page-4",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/mahabharata-draupadis-swayamvara/5{/}?",
+      "destination": "/collections/mahabharata/books/vyasa-mahabharata/arcs/adi-parva/stories/mahabharata-draupadis-swayamvara/#page-5",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/mahabharata-draupadis-swayamvara/6{/}?",
+      "destination": "/collections/mahabharata/books/vyasa-mahabharata/arcs/adi-parva/stories/mahabharata-draupadis-swayamvara/#page-6",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/mahabharata-draupadis-swayamvara/7{/}?",
+      "destination": "/collections/mahabharata/books/vyasa-mahabharata/arcs/adi-parva/stories/mahabharata-draupadis-swayamvara/#page-7",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/mahabharata-draupadis-swayamvara/8{/}?",
+      "destination": "/collections/mahabharata/books/vyasa-mahabharata/arcs/adi-parva/stories/mahabharata-draupadis-swayamvara/#page-8",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/mahabharata-draupadis-swayamvara/9{/}?",
+      "destination": "/collections/mahabharata/books/vyasa-mahabharata/arcs/adi-parva/stories/mahabharata-draupadis-swayamvara/#page-9",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/mahabharata-draupadis-swayamvara/10{/}?",
+      "destination": "/collections/mahabharata/books/vyasa-mahabharata/arcs/adi-parva/stories/mahabharata-draupadis-swayamvara/#page-10",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/mahabharata-draupadis-swayamvara/:n(0[0-9]*|[1-9][0-9][0-9]+|[2-9][0-9]|1[1-9]){/}?",
+      "destination": "/collections/mahabharata/books/vyasa-mahabharata/arcs/adi-parva/stories/mahabharata-draupadis-swayamvara/",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/mahabharata-draupadis-swayamvara{/}?",
+      "destination": "/collections/mahabharata/books/vyasa-mahabharata/arcs/adi-parva/stories/mahabharata-draupadis-swayamvara/",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/mahabharata-draupadis-swayamvara/2{/}?",
+      "destination": "/hi/collections/mahabharata/books/vyasa-mahabharata/arcs/adi-parva/stories/mahabharata-draupadis-swayamvara/#page-2",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/mahabharata-draupadis-swayamvara/3{/}?",
+      "destination": "/hi/collections/mahabharata/books/vyasa-mahabharata/arcs/adi-parva/stories/mahabharata-draupadis-swayamvara/#page-3",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/mahabharata-draupadis-swayamvara/4{/}?",
+      "destination": "/hi/collections/mahabharata/books/vyasa-mahabharata/arcs/adi-parva/stories/mahabharata-draupadis-swayamvara/#page-4",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/mahabharata-draupadis-swayamvara/5{/}?",
+      "destination": "/hi/collections/mahabharata/books/vyasa-mahabharata/arcs/adi-parva/stories/mahabharata-draupadis-swayamvara/#page-5",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/mahabharata-draupadis-swayamvara/6{/}?",
+      "destination": "/hi/collections/mahabharata/books/vyasa-mahabharata/arcs/adi-parva/stories/mahabharata-draupadis-swayamvara/#page-6",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/mahabharata-draupadis-swayamvara/7{/}?",
+      "destination": "/hi/collections/mahabharata/books/vyasa-mahabharata/arcs/adi-parva/stories/mahabharata-draupadis-swayamvara/#page-7",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/mahabharata-draupadis-swayamvara/8{/}?",
+      "destination": "/hi/collections/mahabharata/books/vyasa-mahabharata/arcs/adi-parva/stories/mahabharata-draupadis-swayamvara/#page-8",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/mahabharata-draupadis-swayamvara/9{/}?",
+      "destination": "/hi/collections/mahabharata/books/vyasa-mahabharata/arcs/adi-parva/stories/mahabharata-draupadis-swayamvara/#page-9",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/mahabharata-draupadis-swayamvara/10{/}?",
+      "destination": "/hi/collections/mahabharata/books/vyasa-mahabharata/arcs/adi-parva/stories/mahabharata-draupadis-swayamvara/#page-10",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/mahabharata-draupadis-swayamvara/:n(0[0-9]*|[1-9][0-9][0-9]+|[2-9][0-9]|1[1-9]){/}?",
+      "destination": "/hi/collections/mahabharata/books/vyasa-mahabharata/arcs/adi-parva/stories/mahabharata-draupadis-swayamvara/",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/mahabharata-draupadis-swayamvara{/}?",
+      "destination": "/hi/collections/mahabharata/books/vyasa-mahabharata/arcs/adi-parva/stories/mahabharata-draupadis-swayamvara/",
       "statusCode": 308
     },
     {
@@ -4043,6 +4463,21 @@
       "statusCode": 308
     },
     {
+      "source": "/characters/ekadashia{/}?",
+      "destination": "/characters/ekadashi/",
+      "statusCode": 308
+    },
+    {
+      "source": "/characters/hidimbia{/}?",
+      "destination": "/characters/hidimbi/",
+      "statusCode": 308
+    },
+    {
+      "source": "/characters/gargia{/}?",
+      "destination": "/characters/gargi/",
+      "statusCode": 308
+    },
+    {
       "source": "/characters/angad{/}?",
       "destination": "/characters/angada/",
       "statusCode": 308
@@ -4365,6 +4800,21 @@
     {
       "source": "/hi/characters/agnia{/}?",
       "destination": "/hi/characters/agni/",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/characters/ekadashia{/}?",
+      "destination": "/hi/characters/ekadashi/",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/characters/hidimbia{/}?",
+      "destination": "/hi/characters/hidimbi/",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/characters/gargia{/}?",
+      "destination": "/hi/characters/gargi/",
       "statusCode": 308
     },
     {
