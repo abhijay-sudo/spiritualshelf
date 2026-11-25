@@ -1,0 +1,53 @@
+/* Character select, physics (motion-select.js). Loaded on the home page only, after roster.css and motion-home.css.
+   1. the pop of the one in hand comes back: before the wall (23 Nov) the chosen tile rose 13.6 px at 1.08 and its picture
+      came up from a dimmed, desaturated rest; the wall kept only 2 px at 1.05. It rises 5 px at 1.07 again, and its
+      picture lights to full (static states: the site's own reduce switches already stop their transitions)
+   2. under a fine pointer motion-select.js drives each tile with critically damped springs (inline transform only): a
+      magnetic pull toward the hand, a tilt with inertia, the neighbours rippling apart. While it does, the tile's own lift
+      and scale stand down so the two never add up
+   3. a rim light and a sheen that follow the hand (one small layer, moved into the tile in hand; keyboard focus gets the
+      same light, held still)
+   4. the painting and the figure behind the wall answer the hand on springs (their transition-driven lean stands down)
+   5. gold motes (one canvas, drawn only while something moves)
+   6. a touch press
+   Reduced motion, Light mode and print: none of 2 to 6; the script does not run and nothing here moves. */
+
+/* ---------- 1. the one in hand ---------- */
+.cx-select .cx-sel-grid .cx-sel-tile.is-on { translate: 0 -5px; scale: 1.07; }
+.cx-select .cx-sel-tile-bg img { transition: filter .3s ease; }
+.cx-select .cx-sel-tile.is-on .cx-sel-tile-bg img { filter: brightness(1) saturate(1.08); }
+@media (hover: hover) { .cx-select .cx-sel-tile:hover .cx-sel-tile-bg img { filter: brightness(1) saturate(1.08); } }
+
+/* ---------- 2. springs own the tiles while the hand is on the wall ---------- */
+:root.ms-on .cx-select.ms-live .cx-sel-grid > li:not([hidden]) > .cx-sel-tile { will-change: transform; }
+:root.ms-on .cx-select.ms-live .cx-sel-grid .cx-sel-tile.is-on { translate: none; scale: none; }
+
+/* ---------- 3. rim light and sheen ---------- */
+.ms-fx { position: absolute; inset: 0; z-index: 3; pointer-events: none; overflow: hidden; border-radius: inherit; opacity: 0; transition: opacity .28s ease; contain: strict; }
+.ms-fx.is-in { opacity: 1; animation: ms-fade .28s ease both; }
+@keyframes ms-fade { from { opacity: 0; } }
+.ms-sheen { position: absolute; left: 0; top: 0; width: var(--ms-sw, 180px); height: var(--ms-sw, 180px); margin: calc(var(--ms-sw, 180px) / -2) 0 0 calc(var(--ms-sw, 180px) / -2); border-radius: 50%;
+  background: radial-gradient(closest-side, rgb(255 238 204 / .5), rgb(255 214 150 / .18) 46%, rgb(255 214 150 / 0)); mix-blend-mode: screen; will-change: transform; }
+.ms-rim { position: absolute; inset: 0; padding: 1.5px; border-radius: inherit;
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0); }
+.ms-rim-g { position: absolute; left: 50%; top: 50%; width: var(--ms-rd, 260px); height: var(--ms-rd, 260px); margin: calc(var(--ms-rd, 260px) / -2) 0 0 calc(var(--ms-rd, 260px) / -2); will-change: transform;
+  background: conic-gradient(from -60deg, rgb(255 240 210 / 0) 0deg, color-mix(in oklab, var(--t-glow, #f0c27c) 55%, #fff6e0) 60deg, rgb(255 240 210 / 0) 120deg, rgb(255 240 210 / 0) 360deg); }
+:root[data-fx="ultra"] .ms-sheen { background: radial-gradient(closest-side, rgb(255 240 210 / .6), rgb(255 214 150 / .24) 44%, rgb(255 214 150 / 0)); }
+:root[data-fx="ultra"] .ms-rim { padding: 2px; }
+@media (forced-colors: active) { .ms-fx, .ms-motes { display: none; } }
+
+/* ---------- 4. the painting and the figure: the script's springs replace the transition-driven lean ---------- */
+:root.ms-on .cx-select.ms-par .cx-sel-bg { translate: none; transition: none; will-change: transform; }
+:root.ms-on .cx-select.ms-par > .cx-sel-hero { translate: none; transition: opacity .42s cubic-bezier(.4, 0, .2, 1), visibility .42s; will-change: transform; }
+
+/* ---------- 5. motes ---------- */
+.ms-motes { position: absolute; left: 0; top: 0; z-index: 6; pointer-events: none; }
+
+/* ---------- 6. a touch press (the script adds it only when motion is allowed) ---------- */
+.cx-select .cx-sel-grid .cx-sel-tile.ms-press { scale: .95; transition-duration: .12s; }
+
+/* ---------- rest: reduced motion, Light mode, print ---------- */
+:root:is([data-motion="reduce"], [data-motion="light"], [data-light]) :is(.ms-fx, .ms-motes) { display: none !important; }
+:root:is([data-motion="reduce"], [data-motion="light"], [data-light]) .cx-select .cx-sel-tile-bg img { transition: none; }
+@media (prefers-reduced-motion: reduce) { .ms-fx, .ms-motes { display: none !important; } .cx-select .cx-sel-tile-bg img { transition: none; } }
+@media print { .ms-fx, .ms-motes { display: none !important; } }

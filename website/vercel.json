@@ -1453,6 +1453,106 @@
       "statusCode": 308
     },
     {
+      "source": "/s/ramayana-hanuman-and-the-herbs/2{/}?",
+      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/yuddha-kanda/stories/ramayana-hanuman-and-the-herbs/#page-2",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/ramayana-hanuman-and-the-herbs/3{/}?",
+      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/yuddha-kanda/stories/ramayana-hanuman-and-the-herbs/#page-3",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/ramayana-hanuman-and-the-herbs/4{/}?",
+      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/yuddha-kanda/stories/ramayana-hanuman-and-the-herbs/#page-4",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/ramayana-hanuman-and-the-herbs/5{/}?",
+      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/yuddha-kanda/stories/ramayana-hanuman-and-the-herbs/#page-5",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/ramayana-hanuman-and-the-herbs/6{/}?",
+      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/yuddha-kanda/stories/ramayana-hanuman-and-the-herbs/#page-6",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/ramayana-hanuman-and-the-herbs/7{/}?",
+      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/yuddha-kanda/stories/ramayana-hanuman-and-the-herbs/#page-7",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/ramayana-hanuman-and-the-herbs/8{/}?",
+      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/yuddha-kanda/stories/ramayana-hanuman-and-the-herbs/#page-8",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/ramayana-hanuman-and-the-herbs/9{/}?",
+      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/yuddha-kanda/stories/ramayana-hanuman-and-the-herbs/#page-9",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/ramayana-hanuman-and-the-herbs/:n(0[0-9]*|[1-9][0-9][0-9]+|[1-9][0-9]){/}?",
+      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/yuddha-kanda/stories/ramayana-hanuman-and-the-herbs/",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/ramayana-hanuman-and-the-herbs{/}?",
+      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/yuddha-kanda/stories/ramayana-hanuman-and-the-herbs/",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/ramayana-hanuman-and-the-herbs/2{/}?",
+      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/yuddha-kanda/stories/ramayana-hanuman-and-the-herbs/#page-2",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/ramayana-hanuman-and-the-herbs/3{/}?",
+      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/yuddha-kanda/stories/ramayana-hanuman-and-the-herbs/#page-3",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/ramayana-hanuman-and-the-herbs/4{/}?",
+      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/yuddha-kanda/stories/ramayana-hanuman-and-the-herbs/#page-4",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/ramayana-hanuman-and-the-herbs/5{/}?",
+      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/yuddha-kanda/stories/ramayana-hanuman-and-the-herbs/#page-5",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/ramayana-hanuman-and-the-herbs/6{/}?",
+      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/yuddha-kanda/stories/ramayana-hanuman-and-the-herbs/#page-6",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/ramayana-hanuman-and-the-herbs/7{/}?",
+      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/yuddha-kanda/stories/ramayana-hanuman-and-the-herbs/#page-7",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/ramayana-hanuman-and-the-herbs/8{/}?",
+      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/yuddha-kanda/stories/ramayana-hanuman-and-the-herbs/#page-8",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/ramayana-hanuman-and-the-herbs/9{/}?",
+      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/yuddha-kanda/stories/ramayana-hanuman-and-the-herbs/#page-9",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/ramayana-hanuman-and-the-herbs/:n(0[0-9]*|[1-9][0-9][0-9]+|[1-9][0-9]){/}?",
+      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/yuddha-kanda/stories/ramayana-hanuman-and-the-herbs/",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/ramayana-hanuman-and-the-herbs{/}?",
+      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/yuddha-kanda/stories/ramayana-hanuman-and-the-herbs/",
+      "statusCode": 308
+    },
+    {
       "source": "/s/ramayana-home-and-responsibility/:n(0[0-9]*|[1-9][0-9][0-9]+|[2-9][0-9]|1[2-9]){/}?",
       "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/yuddha-kanda/stories/ramayana-home-and-responsibility/",
       "statusCode": 308
@@ -2260,6 +2360,116 @@
     {
       "source": "/hi/s/mahabharata-the-golden-armour{/}?",
       "destination": "/hi/collections/mahabharata/books/vyasa-mahabharata/arcs/vana-parva/stories/mahabharata-the-golden-armour/",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/mahabharata-the-yakshas-questions/2{/}?",
+      "destination": "/collections/mahabharata/books/vyasa-mahabharata/arcs/vana-parva/stories/mahabharata-the-yakshas-questions/#page-2",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/mahabharata-the-yakshas-questions/3{/}?",
+      "destination": "/collections/mahabharata/books/vyasa-mahabharata/arcs/vana-parva/stories/mahabharata-the-yakshas-questions/#page-3",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/mahabharata-the-yakshas-questions/4{/}?",
+      "destination": "/collections/mahabharata/books/vyasa-mahabharata/arcs/vana-parva/stories/mahabharata-the-yakshas-questions/#page-4",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/mahabharata-the-yakshas-questions/5{/}?",
+      "destination": "/collections/mahabharata/books/vyasa-mahabharata/arcs/vana-parva/stories/mahabharata-the-yakshas-questions/#page-5",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/mahabharata-the-yakshas-questions/6{/}?",
+      "destination": "/collections/mahabharata/books/vyasa-mahabharata/arcs/vana-parva/stories/mahabharata-the-yakshas-questions/#page-6",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/mahabharata-the-yakshas-questions/7{/}?",
+      "destination": "/collections/mahabharata/books/vyasa-mahabharata/arcs/vana-parva/stories/mahabharata-the-yakshas-questions/#page-7",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/mahabharata-the-yakshas-questions/8{/}?",
+      "destination": "/collections/mahabharata/books/vyasa-mahabharata/arcs/vana-parva/stories/mahabharata-the-yakshas-questions/#page-8",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/mahabharata-the-yakshas-questions/9{/}?",
+      "destination": "/collections/mahabharata/books/vyasa-mahabharata/arcs/vana-parva/stories/mahabharata-the-yakshas-questions/#page-9",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/mahabharata-the-yakshas-questions/10{/}?",
+      "destination": "/collections/mahabharata/books/vyasa-mahabharata/arcs/vana-parva/stories/mahabharata-the-yakshas-questions/#page-10",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/mahabharata-the-yakshas-questions/:n(0[0-9]*|[1-9][0-9][0-9]+|[2-9][0-9]|1[1-9]){/}?",
+      "destination": "/collections/mahabharata/books/vyasa-mahabharata/arcs/vana-parva/stories/mahabharata-the-yakshas-questions/",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/mahabharata-the-yakshas-questions{/}?",
+      "destination": "/collections/mahabharata/books/vyasa-mahabharata/arcs/vana-parva/stories/mahabharata-the-yakshas-questions/",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/mahabharata-the-yakshas-questions/2{/}?",
+      "destination": "/hi/collections/mahabharata/books/vyasa-mahabharata/arcs/vana-parva/stories/mahabharata-the-yakshas-questions/#page-2",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/mahabharata-the-yakshas-questions/3{/}?",
+      "destination": "/hi/collections/mahabharata/books/vyasa-mahabharata/arcs/vana-parva/stories/mahabharata-the-yakshas-questions/#page-3",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/mahabharata-the-yakshas-questions/4{/}?",
+      "destination": "/hi/collections/mahabharata/books/vyasa-mahabharata/arcs/vana-parva/stories/mahabharata-the-yakshas-questions/#page-4",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/mahabharata-the-yakshas-questions/5{/}?",
+      "destination": "/hi/collections/mahabharata/books/vyasa-mahabharata/arcs/vana-parva/stories/mahabharata-the-yakshas-questions/#page-5",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/mahabharata-the-yakshas-questions/6{/}?",
+      "destination": "/hi/collections/mahabharata/books/vyasa-mahabharata/arcs/vana-parva/stories/mahabharata-the-yakshas-questions/#page-6",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/mahabharata-the-yakshas-questions/7{/}?",
+      "destination": "/hi/collections/mahabharata/books/vyasa-mahabharata/arcs/vana-parva/stories/mahabharata-the-yakshas-questions/#page-7",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/mahabharata-the-yakshas-questions/8{/}?",
+      "destination": "/hi/collections/mahabharata/books/vyasa-mahabharata/arcs/vana-parva/stories/mahabharata-the-yakshas-questions/#page-8",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/mahabharata-the-yakshas-questions/9{/}?",
+      "destination": "/hi/collections/mahabharata/books/vyasa-mahabharata/arcs/vana-parva/stories/mahabharata-the-yakshas-questions/#page-9",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/mahabharata-the-yakshas-questions/10{/}?",
+      "destination": "/hi/collections/mahabharata/books/vyasa-mahabharata/arcs/vana-parva/stories/mahabharata-the-yakshas-questions/#page-10",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/mahabharata-the-yakshas-questions/:n(0[0-9]*|[1-9][0-9][0-9]+|[2-9][0-9]|1[1-9]){/}?",
+      "destination": "/hi/collections/mahabharata/books/vyasa-mahabharata/arcs/vana-parva/stories/mahabharata-the-yakshas-questions/",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/mahabharata-the-yakshas-questions{/}?",
+      "destination": "/hi/collections/mahabharata/books/vyasa-mahabharata/arcs/vana-parva/stories/mahabharata-the-yakshas-questions/",
       "statusCode": 308
     },
     {
