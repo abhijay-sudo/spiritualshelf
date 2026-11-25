@@ -13,7 +13,6 @@
 @keyframes mj-dim { to { opacity: 0; } }
 @keyframes mj-in { from { opacity: 0; translate: 0 12px; } }
 @keyframes mj-in-back { from { opacity: 0; translate: 0 -8px; } }
-@keyframes mj-ring { from { outline-color: transparent; outline-offset: 7px; } }
 
 @media (prefers-reduced-motion: no-preference) {
   /* ---------- Every page change: the page being left eases away (180 ms), the next one rises 12 px and settles (520 ms).
@@ -32,19 +31,18 @@
   :root:is([data-vt="story"], [data-vt="who"]):not([data-motion="reduce"])::view-transition-new(root) { animation: mj-in var(--mj-in) var(--ease-settle) 200ms both; }
   /* ---------- Back reverses it: the opening folds down into the card it came from, a little quicker than it opened, and
      the shelf is already there to receive it. The opening's words leave first so only the painting travels. ---------- */
-  :root[data-vt="back"]:not([data-motion="reduce"])::view-transition-group(cx-hero) { animation-duration: 720ms; }
+  :root[data-vt="back"]:not([data-motion="reduce"])::view-transition-group(cx-hero) { animation-duration: 640ms; animation-timing-function: var(--ease-lamp); }   /* big to small needs a slow start: on the settle curve a whole screen collapsed in the first 100 ms and read as a cut */
   :root[data-vt="back"]:not([data-motion="reduce"])::view-transition-old(cx-hero) { animation-duration: 300ms; animation-timing-function: var(--ease-lamp); }
   :root[data-vt="back"]:not([data-motion="reduce"])::view-transition-new(cx-hero) { animation-duration: 300ms; animation-timing-function: var(--ease-lamp); }
   :root[data-vt="back"]:not([data-motion="reduce"])::view-transition-old(root) { animation: mj-dim 240ms var(--ease-lamp) both; }
   :root[data-vt="back"]:not([data-motion="reduce"])::view-transition-new(root) { animation: mj-dim 320ms var(--ease-lamp) reverse both; }
+  /* the card's words and Save button wait above the fold and come in as the picture lands */
+  :root[data-vt="back"]:not([data-motion="reduce"])::view-transition-new(mj-cap-1),
+  :root[data-vt="back"]:not([data-motion="reduce"])::view-transition-new(mj-cap-2),
+  :root[data-vt="back"]:not([data-motion="reduce"])::view-transition-new(mj-cap-3) { animation: mj-dim 260ms var(--ease-lamp) 380ms reverse both; }
+  /* an opening that finds no card to fold into (the shelf has moved on) simply leaves, quickly, so the page is free at once */
+  :root:not([data-motion="reduce"])::view-transition-old(cx-hero):only-child { animation: mj-dim 240ms var(--ease-leave) both; }
   :root:not([data-motion="reduce"])::view-transition-group(ui-head) { animation-duration: 320ms; animation-timing-function: var(--ease-settle); }
-
-  /* ---------- Touch: a press settles to .98 (it was .965: cloth gives, it does not dent) ---------- */
-  :root:not([data-motion="reduce"]) :where(.cx-btn, .ed-btn, .btn, .save, .chip, .ed-menu-btn, .ed-icon, .cx-round, .dial-fab, .cx-sound, .link-btn, .ed-lang, .ed-saved, .ed-nav-btn):active { scale: .98; }
-  :root:not([data-motion="reduce"]) .chip:active span { scale: .98; }
-
-  /* ---------- Focus: the gold ring eases in from a little further out; outline only, so nothing in the layout moves ---------- */
-  :root:not([data-motion="reduce"]) :where(a, button, summary, [role="button"]):focus-visible { animation: mj-ring 200ms var(--ease-settle) both; }
 
   /* ---------- Sheets (Aa, share, keep) and the menu: a short settle, 24 px at most ---------- */
   :root:not([data-motion="reduce"]) dialog.sheet:not([open]) { translate: 0 1.5rem; scale: .99; }
@@ -54,3 +52,8 @@
     :root:not([data-motion="reduce"]) .ed-menu[open] { opacity: 0; translate: 0 -1rem; scale: .99; }
   }
 }
+
+/* ---------- Touch: a press settles to .98 (it was .965: cloth gives, it does not dent). Same weight as the rule in
+   ui-motion.css it follows, so a control with its own pressed state keeps it. ---------- */
+:where(.cx-btn, .ed-btn, .btn, .save, .chip, .ed-menu-btn, .ed-icon, .cx-round, .dial-fab, .cx-sound, .link-btn):active { scale: .98; }
+.chip:active span { scale: .98; }

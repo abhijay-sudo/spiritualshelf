@@ -8,6 +8,7 @@
   const d = document, root = d.documentElement;
   const calm = () => root.dataset.motion === 'reduce' || matchMedia('(prefers-reduced-motion: reduce)').matches;
   const STORY = '.cx-poster-pic img, .cx-now-screen img, .card-art img, .ed-card-pic img, .cx-next-pic img';
+  const FRAME = '.card-art, .cx-poster-pic, .ed-card-pic, .cx-next-pic, .cx-now-screen';
   const WHO = '.cast-tile--scene .cast-tile-pic, .cast-tile-pic .art, .cx-cast-pic img';
   const isWho = (p) => /\/characters\/[^/]+\/$/.test(p);
   const isStory = (p) => /\/stories\//.test(p);
@@ -61,10 +62,24 @@
     const links = d.links;
     for (let i = 0; i < links.length && !pic; i++) {
       const a = links[i]; if (a.pathname !== from || a.origin !== location.origin) continue;
-      let p = who ? a.querySelector(WHO) : (a.querySelector(STORY) || (a.closest('.card') && a.closest('.card').querySelector('.card-art img')));
+      let p = who ? a.querySelector(WHO) : (a.querySelector(STORY) || (a.closest('.card') && a.closest('.card').querySelector('.card-art img')) || (a.matches('[data-vt-link], .cx-btn') ? d.querySelector('.cx-now-screen img') : null));
+      // a story card's picture is taller than its frame (the frame clips it): the frame is what the reader sees, so the frame
+      // is what the opening folds into; naming the picture itself landed it over the caption and popped when the morph ended
+      if (p && !who) p = p.closest(FRAME) || p;
       if (!p && who && a.matches('.cx-sel-go')) { const s = a.closest('[data-select]'); p = s && s.querySelector('[data-sel-hero]'); if (p && !p.currentSrc) p = null; }
       if (p && seen(p) > (who ? .6 : .98)) pic = p;
     }
-    if (pic) give(pic, vt, 'back');
+    if (!pic) return;
+    give(pic, vt, 'back');
+    // what lies over that picture on the shelf (a card's words, its Save button) rides above the fold on its own layer and
+    // comes in as the picture lands; left in the page it sat hidden under the travelling picture and popped at the end
+    const over = [], pr = pic.getBoundingClientRect(), sibs = pic.parentElement ? pic.parentElement.children : [];
+    for (let i = 0; i < sibs.length && over.length < 3; i++) {
+      const el = sibs[i]; if (el === pic || el.classList.contains('sheen') || el.style.viewTransitionName) continue;
+      const r = el.getBoundingClientRect(); if (r.width < 2 || r.height < 2 || r.right <= pr.left || r.left >= pr.right || r.bottom <= pr.top || r.top >= pr.bottom) continue;
+      el.style.viewTransitionName = 'mj-cap-' + (over.length + 1); over.push(el);
+    }
+    const tidy = () => over.forEach((el) => { el.style.viewTransitionName = ''; });
+    try { vt.finished.then(tidy, tidy); } catch (x) { tidy(); }
   });
 })();

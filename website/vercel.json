@@ -1233,6 +1233,106 @@
       "statusCode": 308
     },
     {
+      "source": "/s/ramayana-shravan-kumar/2{/}?",
+      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/ayodhya-kanda/stories/ramayana-shravan-kumar/#page-2",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/ramayana-shravan-kumar/3{/}?",
+      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/ayodhya-kanda/stories/ramayana-shravan-kumar/#page-3",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/ramayana-shravan-kumar/4{/}?",
+      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/ayodhya-kanda/stories/ramayana-shravan-kumar/#page-4",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/ramayana-shravan-kumar/5{/}?",
+      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/ayodhya-kanda/stories/ramayana-shravan-kumar/#page-5",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/ramayana-shravan-kumar/6{/}?",
+      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/ayodhya-kanda/stories/ramayana-shravan-kumar/#page-6",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/ramayana-shravan-kumar/7{/}?",
+      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/ayodhya-kanda/stories/ramayana-shravan-kumar/#page-7",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/ramayana-shravan-kumar/8{/}?",
+      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/ayodhya-kanda/stories/ramayana-shravan-kumar/#page-8",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/ramayana-shravan-kumar/9{/}?",
+      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/ayodhya-kanda/stories/ramayana-shravan-kumar/#page-9",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/ramayana-shravan-kumar/:n(0[0-9]*|[1-9][0-9][0-9]+|[1-9][0-9]){/}?",
+      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/ayodhya-kanda/stories/ramayana-shravan-kumar/",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/ramayana-shravan-kumar{/}?",
+      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/ayodhya-kanda/stories/ramayana-shravan-kumar/",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/ramayana-shravan-kumar/2{/}?",
+      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/ayodhya-kanda/stories/ramayana-shravan-kumar/#page-2",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/ramayana-shravan-kumar/3{/}?",
+      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/ayodhya-kanda/stories/ramayana-shravan-kumar/#page-3",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/ramayana-shravan-kumar/4{/}?",
+      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/ayodhya-kanda/stories/ramayana-shravan-kumar/#page-4",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/ramayana-shravan-kumar/5{/}?",
+      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/ayodhya-kanda/stories/ramayana-shravan-kumar/#page-5",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/ramayana-shravan-kumar/6{/}?",
+      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/ayodhya-kanda/stories/ramayana-shravan-kumar/#page-6",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/ramayana-shravan-kumar/7{/}?",
+      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/ayodhya-kanda/stories/ramayana-shravan-kumar/#page-7",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/ramayana-shravan-kumar/8{/}?",
+      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/ayodhya-kanda/stories/ramayana-shravan-kumar/#page-8",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/ramayana-shravan-kumar/9{/}?",
+      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/ayodhya-kanda/stories/ramayana-shravan-kumar/#page-9",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/ramayana-shravan-kumar/:n(0[0-9]*|[1-9][0-9][0-9]+|[1-9][0-9]){/}?",
+      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/ayodhya-kanda/stories/ramayana-shravan-kumar/",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/ramayana-shravan-kumar{/}?",
+      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/ayodhya-kanda/stories/ramayana-shravan-kumar/",
+      "statusCode": 308
+    },
+    {
       "source": "/s/ramayana-loss-and-hospitality/:n(0[0-9]*|[1-9][0-9][0-9]+|[1-9][0-9]|[8-9]){/}?",
       "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/aranya-kanda/stories/ramayana-loss-and-hospitality/",
       "statusCode": 308
@@ -1473,6 +1573,116 @@
       "statusCode": 308
     },
     {
+      "source": "/s/krishna-akrura-and-kamsa/2{/}?",
+      "destination": "/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-akrura-and-kamsa/#page-2",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/krishna-akrura-and-kamsa/3{/}?",
+      "destination": "/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-akrura-and-kamsa/#page-3",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/krishna-akrura-and-kamsa/4{/}?",
+      "destination": "/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-akrura-and-kamsa/#page-4",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/krishna-akrura-and-kamsa/5{/}?",
+      "destination": "/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-akrura-and-kamsa/#page-5",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/krishna-akrura-and-kamsa/6{/}?",
+      "destination": "/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-akrura-and-kamsa/#page-6",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/krishna-akrura-and-kamsa/7{/}?",
+      "destination": "/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-akrura-and-kamsa/#page-7",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/krishna-akrura-and-kamsa/8{/}?",
+      "destination": "/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-akrura-and-kamsa/#page-8",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/krishna-akrura-and-kamsa/9{/}?",
+      "destination": "/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-akrura-and-kamsa/#page-9",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/krishna-akrura-and-kamsa/10{/}?",
+      "destination": "/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-akrura-and-kamsa/#page-10",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/krishna-akrura-and-kamsa/:n(0[0-9]*|[1-9][0-9][0-9]+|[2-9][0-9]|1[1-9]){/}?",
+      "destination": "/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-akrura-and-kamsa/",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/krishna-akrura-and-kamsa{/}?",
+      "destination": "/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-akrura-and-kamsa/",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/krishna-akrura-and-kamsa/2{/}?",
+      "destination": "/hi/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-akrura-and-kamsa/#page-2",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/krishna-akrura-and-kamsa/3{/}?",
+      "destination": "/hi/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-akrura-and-kamsa/#page-3",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/krishna-akrura-and-kamsa/4{/}?",
+      "destination": "/hi/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-akrura-and-kamsa/#page-4",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/krishna-akrura-and-kamsa/5{/}?",
+      "destination": "/hi/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-akrura-and-kamsa/#page-5",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/krishna-akrura-and-kamsa/6{/}?",
+      "destination": "/hi/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-akrura-and-kamsa/#page-6",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/krishna-akrura-and-kamsa/7{/}?",
+      "destination": "/hi/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-akrura-and-kamsa/#page-7",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/krishna-akrura-and-kamsa/8{/}?",
+      "destination": "/hi/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-akrura-and-kamsa/#page-8",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/krishna-akrura-and-kamsa/9{/}?",
+      "destination": "/hi/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-akrura-and-kamsa/#page-9",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/krishna-akrura-and-kamsa/10{/}?",
+      "destination": "/hi/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-akrura-and-kamsa/#page-10",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/krishna-akrura-and-kamsa/:n(0[0-9]*|[1-9][0-9][0-9]+|[2-9][0-9]|1[1-9]){/}?",
+      "destination": "/hi/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-akrura-and-kamsa/",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/krishna-akrura-and-kamsa{/}?",
+      "destination": "/hi/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-akrura-and-kamsa/",
+      "statusCode": 308
+    },
+    {
       "source": "/s/krishna-and-sudama/:n(0[0-9]*|[1-9][0-9][0-9]+|[1-9][0-9]){/}?",
       "destination": "/collections/krishna/books/bhagavata-purana/arcs/skandha-10/stories/krishna-and-sudama/",
       "statusCode": 308
@@ -1550,6 +1760,106 @@
     {
       "source": "/hi/s/prahlada-the-pillar{/}?",
       "destination": "/hi/collections/krishna/books/bhagavata-purana/arcs/skandha-7/stories/prahlada-the-pillar/",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/vishnu-gajendra-moksha/2{/}?",
+      "destination": "/collections/krishna/books/bhagavata-purana/arcs/skandha-8/stories/vishnu-gajendra-moksha/#page-2",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/vishnu-gajendra-moksha/3{/}?",
+      "destination": "/collections/krishna/books/bhagavata-purana/arcs/skandha-8/stories/vishnu-gajendra-moksha/#page-3",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/vishnu-gajendra-moksha/4{/}?",
+      "destination": "/collections/krishna/books/bhagavata-purana/arcs/skandha-8/stories/vishnu-gajendra-moksha/#page-4",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/vishnu-gajendra-moksha/5{/}?",
+      "destination": "/collections/krishna/books/bhagavata-purana/arcs/skandha-8/stories/vishnu-gajendra-moksha/#page-5",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/vishnu-gajendra-moksha/6{/}?",
+      "destination": "/collections/krishna/books/bhagavata-purana/arcs/skandha-8/stories/vishnu-gajendra-moksha/#page-6",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/vishnu-gajendra-moksha/7{/}?",
+      "destination": "/collections/krishna/books/bhagavata-purana/arcs/skandha-8/stories/vishnu-gajendra-moksha/#page-7",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/vishnu-gajendra-moksha/8{/}?",
+      "destination": "/collections/krishna/books/bhagavata-purana/arcs/skandha-8/stories/vishnu-gajendra-moksha/#page-8",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/vishnu-gajendra-moksha/9{/}?",
+      "destination": "/collections/krishna/books/bhagavata-purana/arcs/skandha-8/stories/vishnu-gajendra-moksha/#page-9",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/vishnu-gajendra-moksha/:n(0[0-9]*|[1-9][0-9][0-9]+|[1-9][0-9]){/}?",
+      "destination": "/collections/krishna/books/bhagavata-purana/arcs/skandha-8/stories/vishnu-gajendra-moksha/",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/vishnu-gajendra-moksha{/}?",
+      "destination": "/collections/krishna/books/bhagavata-purana/arcs/skandha-8/stories/vishnu-gajendra-moksha/",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/vishnu-gajendra-moksha/2{/}?",
+      "destination": "/hi/collections/krishna/books/bhagavata-purana/arcs/skandha-8/stories/vishnu-gajendra-moksha/#page-2",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/vishnu-gajendra-moksha/3{/}?",
+      "destination": "/hi/collections/krishna/books/bhagavata-purana/arcs/skandha-8/stories/vishnu-gajendra-moksha/#page-3",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/vishnu-gajendra-moksha/4{/}?",
+      "destination": "/hi/collections/krishna/books/bhagavata-purana/arcs/skandha-8/stories/vishnu-gajendra-moksha/#page-4",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/vishnu-gajendra-moksha/5{/}?",
+      "destination": "/hi/collections/krishna/books/bhagavata-purana/arcs/skandha-8/stories/vishnu-gajendra-moksha/#page-5",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/vishnu-gajendra-moksha/6{/}?",
+      "destination": "/hi/collections/krishna/books/bhagavata-purana/arcs/skandha-8/stories/vishnu-gajendra-moksha/#page-6",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/vishnu-gajendra-moksha/7{/}?",
+      "destination": "/hi/collections/krishna/books/bhagavata-purana/arcs/skandha-8/stories/vishnu-gajendra-moksha/#page-7",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/vishnu-gajendra-moksha/8{/}?",
+      "destination": "/hi/collections/krishna/books/bhagavata-purana/arcs/skandha-8/stories/vishnu-gajendra-moksha/#page-8",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/vishnu-gajendra-moksha/9{/}?",
+      "destination": "/hi/collections/krishna/books/bhagavata-purana/arcs/skandha-8/stories/vishnu-gajendra-moksha/#page-9",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/vishnu-gajendra-moksha/:n(0[0-9]*|[1-9][0-9][0-9]+|[1-9][0-9]){/}?",
+      "destination": "/hi/collections/krishna/books/bhagavata-purana/arcs/skandha-8/stories/vishnu-gajendra-moksha/",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/vishnu-gajendra-moksha{/}?",
+      "destination": "/hi/collections/krishna/books/bhagavata-purana/arcs/skandha-8/stories/vishnu-gajendra-moksha/",
       "statusCode": 308
     },
     {
@@ -1973,6 +2283,116 @@
       "statusCode": 308
     },
     {
+      "source": "/s/mahabharata-krishnas-embassy/2{/}?",
+      "destination": "/collections/mahabharata/books/vyasa-mahabharata/arcs/udyoga-parva/stories/mahabharata-krishnas-embassy/#page-2",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/mahabharata-krishnas-embassy/3{/}?",
+      "destination": "/collections/mahabharata/books/vyasa-mahabharata/arcs/udyoga-parva/stories/mahabharata-krishnas-embassy/#page-3",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/mahabharata-krishnas-embassy/4{/}?",
+      "destination": "/collections/mahabharata/books/vyasa-mahabharata/arcs/udyoga-parva/stories/mahabharata-krishnas-embassy/#page-4",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/mahabharata-krishnas-embassy/5{/}?",
+      "destination": "/collections/mahabharata/books/vyasa-mahabharata/arcs/udyoga-parva/stories/mahabharata-krishnas-embassy/#page-5",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/mahabharata-krishnas-embassy/6{/}?",
+      "destination": "/collections/mahabharata/books/vyasa-mahabharata/arcs/udyoga-parva/stories/mahabharata-krishnas-embassy/#page-6",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/mahabharata-krishnas-embassy/7{/}?",
+      "destination": "/collections/mahabharata/books/vyasa-mahabharata/arcs/udyoga-parva/stories/mahabharata-krishnas-embassy/#page-7",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/mahabharata-krishnas-embassy/8{/}?",
+      "destination": "/collections/mahabharata/books/vyasa-mahabharata/arcs/udyoga-parva/stories/mahabharata-krishnas-embassy/#page-8",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/mahabharata-krishnas-embassy/9{/}?",
+      "destination": "/collections/mahabharata/books/vyasa-mahabharata/arcs/udyoga-parva/stories/mahabharata-krishnas-embassy/#page-9",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/mahabharata-krishnas-embassy/10{/}?",
+      "destination": "/collections/mahabharata/books/vyasa-mahabharata/arcs/udyoga-parva/stories/mahabharata-krishnas-embassy/#page-10",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/mahabharata-krishnas-embassy/:n(0[0-9]*|[1-9][0-9][0-9]+|[2-9][0-9]|1[1-9]){/}?",
+      "destination": "/collections/mahabharata/books/vyasa-mahabharata/arcs/udyoga-parva/stories/mahabharata-krishnas-embassy/",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/mahabharata-krishnas-embassy{/}?",
+      "destination": "/collections/mahabharata/books/vyasa-mahabharata/arcs/udyoga-parva/stories/mahabharata-krishnas-embassy/",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/mahabharata-krishnas-embassy/2{/}?",
+      "destination": "/hi/collections/mahabharata/books/vyasa-mahabharata/arcs/udyoga-parva/stories/mahabharata-krishnas-embassy/#page-2",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/mahabharata-krishnas-embassy/3{/}?",
+      "destination": "/hi/collections/mahabharata/books/vyasa-mahabharata/arcs/udyoga-parva/stories/mahabharata-krishnas-embassy/#page-3",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/mahabharata-krishnas-embassy/4{/}?",
+      "destination": "/hi/collections/mahabharata/books/vyasa-mahabharata/arcs/udyoga-parva/stories/mahabharata-krishnas-embassy/#page-4",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/mahabharata-krishnas-embassy/5{/}?",
+      "destination": "/hi/collections/mahabharata/books/vyasa-mahabharata/arcs/udyoga-parva/stories/mahabharata-krishnas-embassy/#page-5",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/mahabharata-krishnas-embassy/6{/}?",
+      "destination": "/hi/collections/mahabharata/books/vyasa-mahabharata/arcs/udyoga-parva/stories/mahabharata-krishnas-embassy/#page-6",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/mahabharata-krishnas-embassy/7{/}?",
+      "destination": "/hi/collections/mahabharata/books/vyasa-mahabharata/arcs/udyoga-parva/stories/mahabharata-krishnas-embassy/#page-7",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/mahabharata-krishnas-embassy/8{/}?",
+      "destination": "/hi/collections/mahabharata/books/vyasa-mahabharata/arcs/udyoga-parva/stories/mahabharata-krishnas-embassy/#page-8",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/mahabharata-krishnas-embassy/9{/}?",
+      "destination": "/hi/collections/mahabharata/books/vyasa-mahabharata/arcs/udyoga-parva/stories/mahabharata-krishnas-embassy/#page-9",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/mahabharata-krishnas-embassy/10{/}?",
+      "destination": "/hi/collections/mahabharata/books/vyasa-mahabharata/arcs/udyoga-parva/stories/mahabharata-krishnas-embassy/#page-10",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/mahabharata-krishnas-embassy/:n(0[0-9]*|[1-9][0-9][0-9]+|[2-9][0-9]|1[1-9]){/}?",
+      "destination": "/hi/collections/mahabharata/books/vyasa-mahabharata/arcs/udyoga-parva/stories/mahabharata-krishnas-embassy/",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/mahabharata-krishnas-embassy{/}?",
+      "destination": "/hi/collections/mahabharata/books/vyasa-mahabharata/arcs/udyoga-parva/stories/mahabharata-krishnas-embassy/",
+      "statusCode": 308
+    },
+    {
       "source": "/s/mahabharata-the-song/:n(0[0-9]*|[1-9][0-9][0-9]+|[1-9][0-9]){/}?",
       "destination": "/collections/mahabharata/books/vyasa-mahabharata/arcs/bhishma-parva/stories/mahabharata-the-song/",
       "statusCode": 308
@@ -2070,6 +2490,186 @@
     {
       "source": "/hi/s/nachiketa-and-yama{/}?",
       "destination": "/hi/collections/sages/books/katha-upanishad/arcs/adhyaya-1/stories/nachiketa-and-yama/",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/shibi-and-the-dove/2{/}?",
+      "destination": "/collections/sages/books/vyasa-mahabharata/arcs/vana-parva/stories/shibi-and-the-dove/#page-2",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/shibi-and-the-dove/3{/}?",
+      "destination": "/collections/sages/books/vyasa-mahabharata/arcs/vana-parva/stories/shibi-and-the-dove/#page-3",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/shibi-and-the-dove/4{/}?",
+      "destination": "/collections/sages/books/vyasa-mahabharata/arcs/vana-parva/stories/shibi-and-the-dove/#page-4",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/shibi-and-the-dove/5{/}?",
+      "destination": "/collections/sages/books/vyasa-mahabharata/arcs/vana-parva/stories/shibi-and-the-dove/#page-5",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/shibi-and-the-dove/6{/}?",
+      "destination": "/collections/sages/books/vyasa-mahabharata/arcs/vana-parva/stories/shibi-and-the-dove/#page-6",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/shibi-and-the-dove/7{/}?",
+      "destination": "/collections/sages/books/vyasa-mahabharata/arcs/vana-parva/stories/shibi-and-the-dove/#page-7",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/shibi-and-the-dove/8{/}?",
+      "destination": "/collections/sages/books/vyasa-mahabharata/arcs/vana-parva/stories/shibi-and-the-dove/#page-8",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/shibi-and-the-dove/:n(0[0-9]*|[1-9][0-9][0-9]+|[1-9][0-9]|[9-9]){/}?",
+      "destination": "/collections/sages/books/vyasa-mahabharata/arcs/vana-parva/stories/shibi-and-the-dove/",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/shibi-and-the-dove{/}?",
+      "destination": "/collections/sages/books/vyasa-mahabharata/arcs/vana-parva/stories/shibi-and-the-dove/",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/shibi-and-the-dove/2{/}?",
+      "destination": "/hi/collections/sages/books/vyasa-mahabharata/arcs/vana-parva/stories/shibi-and-the-dove/#page-2",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/shibi-and-the-dove/3{/}?",
+      "destination": "/hi/collections/sages/books/vyasa-mahabharata/arcs/vana-parva/stories/shibi-and-the-dove/#page-3",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/shibi-and-the-dove/4{/}?",
+      "destination": "/hi/collections/sages/books/vyasa-mahabharata/arcs/vana-parva/stories/shibi-and-the-dove/#page-4",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/shibi-and-the-dove/5{/}?",
+      "destination": "/hi/collections/sages/books/vyasa-mahabharata/arcs/vana-parva/stories/shibi-and-the-dove/#page-5",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/shibi-and-the-dove/6{/}?",
+      "destination": "/hi/collections/sages/books/vyasa-mahabharata/arcs/vana-parva/stories/shibi-and-the-dove/#page-6",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/shibi-and-the-dove/7{/}?",
+      "destination": "/hi/collections/sages/books/vyasa-mahabharata/arcs/vana-parva/stories/shibi-and-the-dove/#page-7",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/shibi-and-the-dove/8{/}?",
+      "destination": "/hi/collections/sages/books/vyasa-mahabharata/arcs/vana-parva/stories/shibi-and-the-dove/#page-8",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/shibi-and-the-dove/:n(0[0-9]*|[1-9][0-9][0-9]+|[1-9][0-9]|[9-9]){/}?",
+      "destination": "/hi/collections/sages/books/vyasa-mahabharata/arcs/vana-parva/stories/shibi-and-the-dove/",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/shibi-and-the-dove{/}?",
+      "destination": "/hi/collections/sages/books/vyasa-mahabharata/arcs/vana-parva/stories/shibi-and-the-dove/",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/shvetaketu-and-the-salt/2{/}?",
+      "destination": "/collections/sages/books/chandogya-upanishad/arcs/chandogya-6/stories/shvetaketu-and-the-salt/#page-2",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/shvetaketu-and-the-salt/3{/}?",
+      "destination": "/collections/sages/books/chandogya-upanishad/arcs/chandogya-6/stories/shvetaketu-and-the-salt/#page-3",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/shvetaketu-and-the-salt/4{/}?",
+      "destination": "/collections/sages/books/chandogya-upanishad/arcs/chandogya-6/stories/shvetaketu-and-the-salt/#page-4",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/shvetaketu-and-the-salt/5{/}?",
+      "destination": "/collections/sages/books/chandogya-upanishad/arcs/chandogya-6/stories/shvetaketu-and-the-salt/#page-5",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/shvetaketu-and-the-salt/6{/}?",
+      "destination": "/collections/sages/books/chandogya-upanishad/arcs/chandogya-6/stories/shvetaketu-and-the-salt/#page-6",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/shvetaketu-and-the-salt/7{/}?",
+      "destination": "/collections/sages/books/chandogya-upanishad/arcs/chandogya-6/stories/shvetaketu-and-the-salt/#page-7",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/shvetaketu-and-the-salt/8{/}?",
+      "destination": "/collections/sages/books/chandogya-upanishad/arcs/chandogya-6/stories/shvetaketu-and-the-salt/#page-8",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/shvetaketu-and-the-salt/:n(0[0-9]*|[1-9][0-9][0-9]+|[1-9][0-9]|[9-9]){/}?",
+      "destination": "/collections/sages/books/chandogya-upanishad/arcs/chandogya-6/stories/shvetaketu-and-the-salt/",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/shvetaketu-and-the-salt{/}?",
+      "destination": "/collections/sages/books/chandogya-upanishad/arcs/chandogya-6/stories/shvetaketu-and-the-salt/",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/shvetaketu-and-the-salt/2{/}?",
+      "destination": "/hi/collections/sages/books/chandogya-upanishad/arcs/chandogya-6/stories/shvetaketu-and-the-salt/#page-2",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/shvetaketu-and-the-salt/3{/}?",
+      "destination": "/hi/collections/sages/books/chandogya-upanishad/arcs/chandogya-6/stories/shvetaketu-and-the-salt/#page-3",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/shvetaketu-and-the-salt/4{/}?",
+      "destination": "/hi/collections/sages/books/chandogya-upanishad/arcs/chandogya-6/stories/shvetaketu-and-the-salt/#page-4",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/shvetaketu-and-the-salt/5{/}?",
+      "destination": "/hi/collections/sages/books/chandogya-upanishad/arcs/chandogya-6/stories/shvetaketu-and-the-salt/#page-5",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/shvetaketu-and-the-salt/6{/}?",
+      "destination": "/hi/collections/sages/books/chandogya-upanishad/arcs/chandogya-6/stories/shvetaketu-and-the-salt/#page-6",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/shvetaketu-and-the-salt/7{/}?",
+      "destination": "/hi/collections/sages/books/chandogya-upanishad/arcs/chandogya-6/stories/shvetaketu-and-the-salt/#page-7",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/shvetaketu-and-the-salt/8{/}?",
+      "destination": "/hi/collections/sages/books/chandogya-upanishad/arcs/chandogya-6/stories/shvetaketu-and-the-salt/#page-8",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/shvetaketu-and-the-salt/:n(0[0-9]*|[1-9][0-9][0-9]+|[1-9][0-9]|[9-9]){/}?",
+      "destination": "/hi/collections/sages/books/chandogya-upanishad/arcs/chandogya-6/stories/shvetaketu-and-the-salt/",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/shvetaketu-and-the-salt{/}?",
+      "destination": "/hi/collections/sages/books/chandogya-upanishad/arcs/chandogya-6/stories/shvetaketu-and-the-salt/",
       "statusCode": 308
     },
     {
