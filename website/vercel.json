@@ -1233,6 +1233,86 @@
       "statusCode": 308
     },
     {
+      "source": "/s/ramayana-kevat-the-boatman/2{/}?",
+      "destination": "/collections/ramayana/books/ramcharitmanas/arcs/ayodhya-kand/stories/ramayana-kevat-the-boatman/#page-2",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/ramayana-kevat-the-boatman/3{/}?",
+      "destination": "/collections/ramayana/books/ramcharitmanas/arcs/ayodhya-kand/stories/ramayana-kevat-the-boatman/#page-3",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/ramayana-kevat-the-boatman/4{/}?",
+      "destination": "/collections/ramayana/books/ramcharitmanas/arcs/ayodhya-kand/stories/ramayana-kevat-the-boatman/#page-4",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/ramayana-kevat-the-boatman/5{/}?",
+      "destination": "/collections/ramayana/books/ramcharitmanas/arcs/ayodhya-kand/stories/ramayana-kevat-the-boatman/#page-5",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/ramayana-kevat-the-boatman/6{/}?",
+      "destination": "/collections/ramayana/books/ramcharitmanas/arcs/ayodhya-kand/stories/ramayana-kevat-the-boatman/#page-6",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/ramayana-kevat-the-boatman/7{/}?",
+      "destination": "/collections/ramayana/books/ramcharitmanas/arcs/ayodhya-kand/stories/ramayana-kevat-the-boatman/#page-7",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/ramayana-kevat-the-boatman/:n(0[0-9]*|[1-9][0-9][0-9]+|[1-9][0-9]|[8-9]){/}?",
+      "destination": "/collections/ramayana/books/ramcharitmanas/arcs/ayodhya-kand/stories/ramayana-kevat-the-boatman/",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/ramayana-kevat-the-boatman{/}?",
+      "destination": "/collections/ramayana/books/ramcharitmanas/arcs/ayodhya-kand/stories/ramayana-kevat-the-boatman/",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/ramayana-kevat-the-boatman/2{/}?",
+      "destination": "/hi/collections/ramayana/books/ramcharitmanas/arcs/ayodhya-kand/stories/ramayana-kevat-the-boatman/#page-2",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/ramayana-kevat-the-boatman/3{/}?",
+      "destination": "/hi/collections/ramayana/books/ramcharitmanas/arcs/ayodhya-kand/stories/ramayana-kevat-the-boatman/#page-3",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/ramayana-kevat-the-boatman/4{/}?",
+      "destination": "/hi/collections/ramayana/books/ramcharitmanas/arcs/ayodhya-kand/stories/ramayana-kevat-the-boatman/#page-4",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/ramayana-kevat-the-boatman/5{/}?",
+      "destination": "/hi/collections/ramayana/books/ramcharitmanas/arcs/ayodhya-kand/stories/ramayana-kevat-the-boatman/#page-5",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/ramayana-kevat-the-boatman/6{/}?",
+      "destination": "/hi/collections/ramayana/books/ramcharitmanas/arcs/ayodhya-kand/stories/ramayana-kevat-the-boatman/#page-6",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/ramayana-kevat-the-boatman/7{/}?",
+      "destination": "/hi/collections/ramayana/books/ramcharitmanas/arcs/ayodhya-kand/stories/ramayana-kevat-the-boatman/#page-7",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/ramayana-kevat-the-boatman/:n(0[0-9]*|[1-9][0-9][0-9]+|[1-9][0-9]|[8-9]){/}?",
+      "destination": "/hi/collections/ramayana/books/ramcharitmanas/arcs/ayodhya-kand/stories/ramayana-kevat-the-boatman/",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/ramayana-kevat-the-boatman{/}?",
+      "destination": "/hi/collections/ramayana/books/ramcharitmanas/arcs/ayodhya-kand/stories/ramayana-kevat-the-boatman/",
+      "statusCode": 308
+    },
+    {
       "source": "/s/ramayana-shravan-kumar/2{/}?",
       "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/ayodhya-kanda/stories/ramayana-shravan-kumar/#page-2",
       "statusCode": 308
@@ -1453,6 +1533,106 @@
       "statusCode": 308
     },
     {
+      "source": "/s/ramayana-kumbhakarna-wakes/2{/}?",
+      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/yuddha-kanda/stories/ramayana-kumbhakarna-wakes/#page-2",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/ramayana-kumbhakarna-wakes/3{/}?",
+      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/yuddha-kanda/stories/ramayana-kumbhakarna-wakes/#page-3",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/ramayana-kumbhakarna-wakes/4{/}?",
+      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/yuddha-kanda/stories/ramayana-kumbhakarna-wakes/#page-4",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/ramayana-kumbhakarna-wakes/5{/}?",
+      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/yuddha-kanda/stories/ramayana-kumbhakarna-wakes/#page-5",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/ramayana-kumbhakarna-wakes/6{/}?",
+      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/yuddha-kanda/stories/ramayana-kumbhakarna-wakes/#page-6",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/ramayana-kumbhakarna-wakes/7{/}?",
+      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/yuddha-kanda/stories/ramayana-kumbhakarna-wakes/#page-7",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/ramayana-kumbhakarna-wakes/8{/}?",
+      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/yuddha-kanda/stories/ramayana-kumbhakarna-wakes/#page-8",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/ramayana-kumbhakarna-wakes/9{/}?",
+      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/yuddha-kanda/stories/ramayana-kumbhakarna-wakes/#page-9",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/ramayana-kumbhakarna-wakes/:n(0[0-9]*|[1-9][0-9][0-9]+|[1-9][0-9]){/}?",
+      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/yuddha-kanda/stories/ramayana-kumbhakarna-wakes/",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/ramayana-kumbhakarna-wakes{/}?",
+      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/yuddha-kanda/stories/ramayana-kumbhakarna-wakes/",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/ramayana-kumbhakarna-wakes/2{/}?",
+      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/yuddha-kanda/stories/ramayana-kumbhakarna-wakes/#page-2",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/ramayana-kumbhakarna-wakes/3{/}?",
+      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/yuddha-kanda/stories/ramayana-kumbhakarna-wakes/#page-3",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/ramayana-kumbhakarna-wakes/4{/}?",
+      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/yuddha-kanda/stories/ramayana-kumbhakarna-wakes/#page-4",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/ramayana-kumbhakarna-wakes/5{/}?",
+      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/yuddha-kanda/stories/ramayana-kumbhakarna-wakes/#page-5",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/ramayana-kumbhakarna-wakes/6{/}?",
+      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/yuddha-kanda/stories/ramayana-kumbhakarna-wakes/#page-6",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/ramayana-kumbhakarna-wakes/7{/}?",
+      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/yuddha-kanda/stories/ramayana-kumbhakarna-wakes/#page-7",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/ramayana-kumbhakarna-wakes/8{/}?",
+      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/yuddha-kanda/stories/ramayana-kumbhakarna-wakes/#page-8",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/ramayana-kumbhakarna-wakes/9{/}?",
+      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/yuddha-kanda/stories/ramayana-kumbhakarna-wakes/#page-9",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/ramayana-kumbhakarna-wakes/:n(0[0-9]*|[1-9][0-9][0-9]+|[1-9][0-9]){/}?",
+      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/yuddha-kanda/stories/ramayana-kumbhakarna-wakes/",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/ramayana-kumbhakarna-wakes{/}?",
+      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/yuddha-kanda/stories/ramayana-kumbhakarna-wakes/",
+      "statusCode": 308
+    },
+    {
       "source": "/s/ramayana-hanuman-and-the-herbs/2{/}?",
       "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/yuddha-kanda/stories/ramayana-hanuman-and-the-herbs/#page-2",
       "statusCode": 308
@@ -1590,6 +1770,116 @@
     {
       "source": "/hi/s/ramayana-ravana{/}?",
       "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/yuddha-kanda/stories/ramayana-ravana/",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/ramayana-lava-kusha-and-sitas-return/2{/}?",
+      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/uttara-kanda/stories/ramayana-lava-kusha-and-sitas-return/#page-2",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/ramayana-lava-kusha-and-sitas-return/3{/}?",
+      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/uttara-kanda/stories/ramayana-lava-kusha-and-sitas-return/#page-3",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/ramayana-lava-kusha-and-sitas-return/4{/}?",
+      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/uttara-kanda/stories/ramayana-lava-kusha-and-sitas-return/#page-4",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/ramayana-lava-kusha-and-sitas-return/5{/}?",
+      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/uttara-kanda/stories/ramayana-lava-kusha-and-sitas-return/#page-5",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/ramayana-lava-kusha-and-sitas-return/6{/}?",
+      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/uttara-kanda/stories/ramayana-lava-kusha-and-sitas-return/#page-6",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/ramayana-lava-kusha-and-sitas-return/7{/}?",
+      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/uttara-kanda/stories/ramayana-lava-kusha-and-sitas-return/#page-7",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/ramayana-lava-kusha-and-sitas-return/8{/}?",
+      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/uttara-kanda/stories/ramayana-lava-kusha-and-sitas-return/#page-8",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/ramayana-lava-kusha-and-sitas-return/9{/}?",
+      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/uttara-kanda/stories/ramayana-lava-kusha-and-sitas-return/#page-9",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/ramayana-lava-kusha-and-sitas-return/10{/}?",
+      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/uttara-kanda/stories/ramayana-lava-kusha-and-sitas-return/#page-10",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/ramayana-lava-kusha-and-sitas-return/:n(0[0-9]*|[1-9][0-9][0-9]+|[2-9][0-9]|1[1-9]){/}?",
+      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/uttara-kanda/stories/ramayana-lava-kusha-and-sitas-return/",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/ramayana-lava-kusha-and-sitas-return{/}?",
+      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/uttara-kanda/stories/ramayana-lava-kusha-and-sitas-return/",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/ramayana-lava-kusha-and-sitas-return/2{/}?",
+      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/uttara-kanda/stories/ramayana-lava-kusha-and-sitas-return/#page-2",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/ramayana-lava-kusha-and-sitas-return/3{/}?",
+      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/uttara-kanda/stories/ramayana-lava-kusha-and-sitas-return/#page-3",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/ramayana-lava-kusha-and-sitas-return/4{/}?",
+      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/uttara-kanda/stories/ramayana-lava-kusha-and-sitas-return/#page-4",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/ramayana-lava-kusha-and-sitas-return/5{/}?",
+      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/uttara-kanda/stories/ramayana-lava-kusha-and-sitas-return/#page-5",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/ramayana-lava-kusha-and-sitas-return/6{/}?",
+      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/uttara-kanda/stories/ramayana-lava-kusha-and-sitas-return/#page-6",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/ramayana-lava-kusha-and-sitas-return/7{/}?",
+      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/uttara-kanda/stories/ramayana-lava-kusha-and-sitas-return/#page-7",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/ramayana-lava-kusha-and-sitas-return/8{/}?",
+      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/uttara-kanda/stories/ramayana-lava-kusha-and-sitas-return/#page-8",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/ramayana-lava-kusha-and-sitas-return/9{/}?",
+      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/uttara-kanda/stories/ramayana-lava-kusha-and-sitas-return/#page-9",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/ramayana-lava-kusha-and-sitas-return/10{/}?",
+      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/uttara-kanda/stories/ramayana-lava-kusha-and-sitas-return/#page-10",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/ramayana-lava-kusha-and-sitas-return/:n(0[0-9]*|[1-9][0-9][0-9]+|[2-9][0-9]|1[1-9]){/}?",
+      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/uttara-kanda/stories/ramayana-lava-kusha-and-sitas-return/",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/ramayana-lava-kusha-and-sitas-return{/}?",
+      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/uttara-kanda/stories/ramayana-lava-kusha-and-sitas-return/",
       "statusCode": 308
     },
     {
@@ -2023,6 +2313,176 @@
       "statusCode": 308
     },
     {
+      "source": "/s/vishnu-matsya-and-the-flood/2{/}?",
+      "destination": "/collections/krishna/books/bhagavata-purana/arcs/skandha-8/stories/vishnu-matsya-and-the-flood/#page-2",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/vishnu-matsya-and-the-flood/3{/}?",
+      "destination": "/collections/krishna/books/bhagavata-purana/arcs/skandha-8/stories/vishnu-matsya-and-the-flood/#page-3",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/vishnu-matsya-and-the-flood/4{/}?",
+      "destination": "/collections/krishna/books/bhagavata-purana/arcs/skandha-8/stories/vishnu-matsya-and-the-flood/#page-4",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/vishnu-matsya-and-the-flood/5{/}?",
+      "destination": "/collections/krishna/books/bhagavata-purana/arcs/skandha-8/stories/vishnu-matsya-and-the-flood/#page-5",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/vishnu-matsya-and-the-flood/6{/}?",
+      "destination": "/collections/krishna/books/bhagavata-purana/arcs/skandha-8/stories/vishnu-matsya-and-the-flood/#page-6",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/vishnu-matsya-and-the-flood/7{/}?",
+      "destination": "/collections/krishna/books/bhagavata-purana/arcs/skandha-8/stories/vishnu-matsya-and-the-flood/#page-7",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/vishnu-matsya-and-the-flood/8{/}?",
+      "destination": "/collections/krishna/books/bhagavata-purana/arcs/skandha-8/stories/vishnu-matsya-and-the-flood/#page-8",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/vishnu-matsya-and-the-flood/:n(0[0-9]*|[1-9][0-9][0-9]+|[1-9][0-9]|[9-9]){/}?",
+      "destination": "/collections/krishna/books/bhagavata-purana/arcs/skandha-8/stories/vishnu-matsya-and-the-flood/",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/vishnu-matsya-and-the-flood{/}?",
+      "destination": "/collections/krishna/books/bhagavata-purana/arcs/skandha-8/stories/vishnu-matsya-and-the-flood/",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/vishnu-matsya-and-the-flood/2{/}?",
+      "destination": "/hi/collections/krishna/books/bhagavata-purana/arcs/skandha-8/stories/vishnu-matsya-and-the-flood/#page-2",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/vishnu-matsya-and-the-flood/3{/}?",
+      "destination": "/hi/collections/krishna/books/bhagavata-purana/arcs/skandha-8/stories/vishnu-matsya-and-the-flood/#page-3",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/vishnu-matsya-and-the-flood/4{/}?",
+      "destination": "/hi/collections/krishna/books/bhagavata-purana/arcs/skandha-8/stories/vishnu-matsya-and-the-flood/#page-4",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/vishnu-matsya-and-the-flood/5{/}?",
+      "destination": "/hi/collections/krishna/books/bhagavata-purana/arcs/skandha-8/stories/vishnu-matsya-and-the-flood/#page-5",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/vishnu-matsya-and-the-flood/6{/}?",
+      "destination": "/hi/collections/krishna/books/bhagavata-purana/arcs/skandha-8/stories/vishnu-matsya-and-the-flood/#page-6",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/vishnu-matsya-and-the-flood/7{/}?",
+      "destination": "/hi/collections/krishna/books/bhagavata-purana/arcs/skandha-8/stories/vishnu-matsya-and-the-flood/#page-7",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/vishnu-matsya-and-the-flood/8{/}?",
+      "destination": "/hi/collections/krishna/books/bhagavata-purana/arcs/skandha-8/stories/vishnu-matsya-and-the-flood/#page-8",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/vishnu-matsya-and-the-flood/:n(0[0-9]*|[1-9][0-9][0-9]+|[1-9][0-9]|[9-9]){/}?",
+      "destination": "/hi/collections/krishna/books/bhagavata-purana/arcs/skandha-8/stories/vishnu-matsya-and-the-flood/",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/vishnu-matsya-and-the-flood{/}?",
+      "destination": "/hi/collections/krishna/books/bhagavata-purana/arcs/skandha-8/stories/vishnu-matsya-and-the-flood/",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/vishnu-birth-of-ekadashi/2{/}?",
+      "destination": "/collections/krishna/books/padma-purana/arcs/uttara-khanda/stories/vishnu-birth-of-ekadashi/#page-2",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/vishnu-birth-of-ekadashi/3{/}?",
+      "destination": "/collections/krishna/books/padma-purana/arcs/uttara-khanda/stories/vishnu-birth-of-ekadashi/#page-3",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/vishnu-birth-of-ekadashi/4{/}?",
+      "destination": "/collections/krishna/books/padma-purana/arcs/uttara-khanda/stories/vishnu-birth-of-ekadashi/#page-4",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/vishnu-birth-of-ekadashi/5{/}?",
+      "destination": "/collections/krishna/books/padma-purana/arcs/uttara-khanda/stories/vishnu-birth-of-ekadashi/#page-5",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/vishnu-birth-of-ekadashi/6{/}?",
+      "destination": "/collections/krishna/books/padma-purana/arcs/uttara-khanda/stories/vishnu-birth-of-ekadashi/#page-6",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/vishnu-birth-of-ekadashi/7{/}?",
+      "destination": "/collections/krishna/books/padma-purana/arcs/uttara-khanda/stories/vishnu-birth-of-ekadashi/#page-7",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/vishnu-birth-of-ekadashi/:n(0[0-9]*|[1-9][0-9][0-9]+|[1-9][0-9]|[8-9]){/}?",
+      "destination": "/collections/krishna/books/padma-purana/arcs/uttara-khanda/stories/vishnu-birth-of-ekadashi/",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/vishnu-birth-of-ekadashi{/}?",
+      "destination": "/collections/krishna/books/padma-purana/arcs/uttara-khanda/stories/vishnu-birth-of-ekadashi/",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/vishnu-birth-of-ekadashi/2{/}?",
+      "destination": "/hi/collections/krishna/books/padma-purana/arcs/uttara-khanda/stories/vishnu-birth-of-ekadashi/#page-2",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/vishnu-birth-of-ekadashi/3{/}?",
+      "destination": "/hi/collections/krishna/books/padma-purana/arcs/uttara-khanda/stories/vishnu-birth-of-ekadashi/#page-3",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/vishnu-birth-of-ekadashi/4{/}?",
+      "destination": "/hi/collections/krishna/books/padma-purana/arcs/uttara-khanda/stories/vishnu-birth-of-ekadashi/#page-4",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/vishnu-birth-of-ekadashi/5{/}?",
+      "destination": "/hi/collections/krishna/books/padma-purana/arcs/uttara-khanda/stories/vishnu-birth-of-ekadashi/#page-5",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/vishnu-birth-of-ekadashi/6{/}?",
+      "destination": "/hi/collections/krishna/books/padma-purana/arcs/uttara-khanda/stories/vishnu-birth-of-ekadashi/#page-6",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/vishnu-birth-of-ekadashi/7{/}?",
+      "destination": "/hi/collections/krishna/books/padma-purana/arcs/uttara-khanda/stories/vishnu-birth-of-ekadashi/#page-7",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/vishnu-birth-of-ekadashi/:n(0[0-9]*|[1-9][0-9][0-9]+|[1-9][0-9]|[8-9]){/}?",
+      "destination": "/hi/collections/krishna/books/padma-purana/arcs/uttara-khanda/stories/vishnu-birth-of-ekadashi/",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/vishnu-birth-of-ekadashi{/}?",
+      "destination": "/hi/collections/krishna/books/padma-purana/arcs/uttara-khanda/stories/vishnu-birth-of-ekadashi/",
+      "statusCode": 308
+    },
+    {
       "source": "/s/satyanarayan-katha/:n(0[0-9]*|[1-9][0-9][0-9]+|[1-9][0-9]){/}?",
       "destination": "/collections/krishna/books/skanda-purana/arcs/reva-khanda/stories/satyanarayan-katha/",
       "statusCode": 308
@@ -2140,6 +2600,106 @@
     {
       "source": "/hi/s/shiva-parvati-tapas{/}?",
       "destination": "/hi/collections/shiva/books/shiva-purana/arcs/rudra-samhita/stories/shiva-parvati-tapas/",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/shiva-kannappa-gives-his-eyes/2{/}?",
+      "destination": "/collections/shiva/books/periya-puranam/arcs/kannappa-nayanar-puranam/stories/shiva-kannappa-gives-his-eyes/#page-2",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/shiva-kannappa-gives-his-eyes/3{/}?",
+      "destination": "/collections/shiva/books/periya-puranam/arcs/kannappa-nayanar-puranam/stories/shiva-kannappa-gives-his-eyes/#page-3",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/shiva-kannappa-gives-his-eyes/4{/}?",
+      "destination": "/collections/shiva/books/periya-puranam/arcs/kannappa-nayanar-puranam/stories/shiva-kannappa-gives-his-eyes/#page-4",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/shiva-kannappa-gives-his-eyes/5{/}?",
+      "destination": "/collections/shiva/books/periya-puranam/arcs/kannappa-nayanar-puranam/stories/shiva-kannappa-gives-his-eyes/#page-5",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/shiva-kannappa-gives-his-eyes/6{/}?",
+      "destination": "/collections/shiva/books/periya-puranam/arcs/kannappa-nayanar-puranam/stories/shiva-kannappa-gives-his-eyes/#page-6",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/shiva-kannappa-gives-his-eyes/7{/}?",
+      "destination": "/collections/shiva/books/periya-puranam/arcs/kannappa-nayanar-puranam/stories/shiva-kannappa-gives-his-eyes/#page-7",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/shiva-kannappa-gives-his-eyes/8{/}?",
+      "destination": "/collections/shiva/books/periya-puranam/arcs/kannappa-nayanar-puranam/stories/shiva-kannappa-gives-his-eyes/#page-8",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/shiva-kannappa-gives-his-eyes/9{/}?",
+      "destination": "/collections/shiva/books/periya-puranam/arcs/kannappa-nayanar-puranam/stories/shiva-kannappa-gives-his-eyes/#page-9",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/shiva-kannappa-gives-his-eyes/:n(0[0-9]*|[1-9][0-9][0-9]+|[1-9][0-9]){/}?",
+      "destination": "/collections/shiva/books/periya-puranam/arcs/kannappa-nayanar-puranam/stories/shiva-kannappa-gives-his-eyes/",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/shiva-kannappa-gives-his-eyes{/}?",
+      "destination": "/collections/shiva/books/periya-puranam/arcs/kannappa-nayanar-puranam/stories/shiva-kannappa-gives-his-eyes/",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/shiva-kannappa-gives-his-eyes/2{/}?",
+      "destination": "/hi/collections/shiva/books/periya-puranam/arcs/kannappa-nayanar-puranam/stories/shiva-kannappa-gives-his-eyes/#page-2",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/shiva-kannappa-gives-his-eyes/3{/}?",
+      "destination": "/hi/collections/shiva/books/periya-puranam/arcs/kannappa-nayanar-puranam/stories/shiva-kannappa-gives-his-eyes/#page-3",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/shiva-kannappa-gives-his-eyes/4{/}?",
+      "destination": "/hi/collections/shiva/books/periya-puranam/arcs/kannappa-nayanar-puranam/stories/shiva-kannappa-gives-his-eyes/#page-4",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/shiva-kannappa-gives-his-eyes/5{/}?",
+      "destination": "/hi/collections/shiva/books/periya-puranam/arcs/kannappa-nayanar-puranam/stories/shiva-kannappa-gives-his-eyes/#page-5",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/shiva-kannappa-gives-his-eyes/6{/}?",
+      "destination": "/hi/collections/shiva/books/periya-puranam/arcs/kannappa-nayanar-puranam/stories/shiva-kannappa-gives-his-eyes/#page-6",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/shiva-kannappa-gives-his-eyes/7{/}?",
+      "destination": "/hi/collections/shiva/books/periya-puranam/arcs/kannappa-nayanar-puranam/stories/shiva-kannappa-gives-his-eyes/#page-7",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/shiva-kannappa-gives-his-eyes/8{/}?",
+      "destination": "/hi/collections/shiva/books/periya-puranam/arcs/kannappa-nayanar-puranam/stories/shiva-kannappa-gives-his-eyes/#page-8",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/shiva-kannappa-gives-his-eyes/9{/}?",
+      "destination": "/hi/collections/shiva/books/periya-puranam/arcs/kannappa-nayanar-puranam/stories/shiva-kannappa-gives-his-eyes/#page-9",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/shiva-kannappa-gives-his-eyes/:n(0[0-9]*|[1-9][0-9][0-9]+|[1-9][0-9]){/}?",
+      "destination": "/hi/collections/shiva/books/periya-puranam/arcs/kannappa-nayanar-puranam/stories/shiva-kannappa-gives-his-eyes/",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/shiva-kannappa-gives-his-eyes{/}?",
+      "destination": "/hi/collections/shiva/books/periya-puranam/arcs/kannappa-nayanar-puranam/stories/shiva-kannappa-gives-his-eyes/",
       "statusCode": 308
     },
     {
@@ -2283,6 +2843,116 @@
       "statusCode": 308
     },
     {
+      "source": "/s/mahabharata-bhima-hidimba-and-baka/2{/}?",
+      "destination": "/collections/mahabharata/books/vyasa-mahabharata/arcs/adi-parva/stories/mahabharata-bhima-hidimba-and-baka/#page-2",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/mahabharata-bhima-hidimba-and-baka/3{/}?",
+      "destination": "/collections/mahabharata/books/vyasa-mahabharata/arcs/adi-parva/stories/mahabharata-bhima-hidimba-and-baka/#page-3",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/mahabharata-bhima-hidimba-and-baka/4{/}?",
+      "destination": "/collections/mahabharata/books/vyasa-mahabharata/arcs/adi-parva/stories/mahabharata-bhima-hidimba-and-baka/#page-4",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/mahabharata-bhima-hidimba-and-baka/5{/}?",
+      "destination": "/collections/mahabharata/books/vyasa-mahabharata/arcs/adi-parva/stories/mahabharata-bhima-hidimba-and-baka/#page-5",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/mahabharata-bhima-hidimba-and-baka/6{/}?",
+      "destination": "/collections/mahabharata/books/vyasa-mahabharata/arcs/adi-parva/stories/mahabharata-bhima-hidimba-and-baka/#page-6",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/mahabharata-bhima-hidimba-and-baka/7{/}?",
+      "destination": "/collections/mahabharata/books/vyasa-mahabharata/arcs/adi-parva/stories/mahabharata-bhima-hidimba-and-baka/#page-7",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/mahabharata-bhima-hidimba-and-baka/8{/}?",
+      "destination": "/collections/mahabharata/books/vyasa-mahabharata/arcs/adi-parva/stories/mahabharata-bhima-hidimba-and-baka/#page-8",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/mahabharata-bhima-hidimba-and-baka/9{/}?",
+      "destination": "/collections/mahabharata/books/vyasa-mahabharata/arcs/adi-parva/stories/mahabharata-bhima-hidimba-and-baka/#page-9",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/mahabharata-bhima-hidimba-and-baka/10{/}?",
+      "destination": "/collections/mahabharata/books/vyasa-mahabharata/arcs/adi-parva/stories/mahabharata-bhima-hidimba-and-baka/#page-10",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/mahabharata-bhima-hidimba-and-baka/:n(0[0-9]*|[1-9][0-9][0-9]+|[2-9][0-9]|1[1-9]){/}?",
+      "destination": "/collections/mahabharata/books/vyasa-mahabharata/arcs/adi-parva/stories/mahabharata-bhima-hidimba-and-baka/",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/mahabharata-bhima-hidimba-and-baka{/}?",
+      "destination": "/collections/mahabharata/books/vyasa-mahabharata/arcs/adi-parva/stories/mahabharata-bhima-hidimba-and-baka/",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/mahabharata-bhima-hidimba-and-baka/2{/}?",
+      "destination": "/hi/collections/mahabharata/books/vyasa-mahabharata/arcs/adi-parva/stories/mahabharata-bhima-hidimba-and-baka/#page-2",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/mahabharata-bhima-hidimba-and-baka/3{/}?",
+      "destination": "/hi/collections/mahabharata/books/vyasa-mahabharata/arcs/adi-parva/stories/mahabharata-bhima-hidimba-and-baka/#page-3",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/mahabharata-bhima-hidimba-and-baka/4{/}?",
+      "destination": "/hi/collections/mahabharata/books/vyasa-mahabharata/arcs/adi-parva/stories/mahabharata-bhima-hidimba-and-baka/#page-4",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/mahabharata-bhima-hidimba-and-baka/5{/}?",
+      "destination": "/hi/collections/mahabharata/books/vyasa-mahabharata/arcs/adi-parva/stories/mahabharata-bhima-hidimba-and-baka/#page-5",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/mahabharata-bhima-hidimba-and-baka/6{/}?",
+      "destination": "/hi/collections/mahabharata/books/vyasa-mahabharata/arcs/adi-parva/stories/mahabharata-bhima-hidimba-and-baka/#page-6",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/mahabharata-bhima-hidimba-and-baka/7{/}?",
+      "destination": "/hi/collections/mahabharata/books/vyasa-mahabharata/arcs/adi-parva/stories/mahabharata-bhima-hidimba-and-baka/#page-7",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/mahabharata-bhima-hidimba-and-baka/8{/}?",
+      "destination": "/hi/collections/mahabharata/books/vyasa-mahabharata/arcs/adi-parva/stories/mahabharata-bhima-hidimba-and-baka/#page-8",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/mahabharata-bhima-hidimba-and-baka/9{/}?",
+      "destination": "/hi/collections/mahabharata/books/vyasa-mahabharata/arcs/adi-parva/stories/mahabharata-bhima-hidimba-and-baka/#page-9",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/mahabharata-bhima-hidimba-and-baka/10{/}?",
+      "destination": "/hi/collections/mahabharata/books/vyasa-mahabharata/arcs/adi-parva/stories/mahabharata-bhima-hidimba-and-baka/#page-10",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/mahabharata-bhima-hidimba-and-baka/:n(0[0-9]*|[1-9][0-9][0-9]+|[2-9][0-9]|1[1-9]){/}?",
+      "destination": "/hi/collections/mahabharata/books/vyasa-mahabharata/arcs/adi-parva/stories/mahabharata-bhima-hidimba-and-baka/",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/mahabharata-bhima-hidimba-and-baka{/}?",
+      "destination": "/hi/collections/mahabharata/books/vyasa-mahabharata/arcs/adi-parva/stories/mahabharata-bhima-hidimba-and-baka/",
+      "statusCode": 308
+    },
+    {
       "source": "/s/mahabharata-the-archers-eye/:n(0[0-9]*|[1-9][0-9][0-9]+|[1-9][0-9]){/}?",
       "destination": "/collections/mahabharata/books/vyasa-mahabharata/arcs/adi-parva/stories/mahabharata-the-archers-eye/",
       "statusCode": 308
@@ -2320,6 +2990,96 @@
     {
       "source": "/hi/s/mahabharata-the-dice-hall{/}?",
       "destination": "/hi/collections/mahabharata/books/vyasa-mahabharata/arcs/sabha-parva/stories/mahabharata-the-dice-hall/",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/mahabharata-bhima-meets-hanuman/2{/}?",
+      "destination": "/collections/mahabharata/books/vyasa-mahabharata/arcs/vana-parva/stories/mahabharata-bhima-meets-hanuman/#page-2",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/mahabharata-bhima-meets-hanuman/3{/}?",
+      "destination": "/collections/mahabharata/books/vyasa-mahabharata/arcs/vana-parva/stories/mahabharata-bhima-meets-hanuman/#page-3",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/mahabharata-bhima-meets-hanuman/4{/}?",
+      "destination": "/collections/mahabharata/books/vyasa-mahabharata/arcs/vana-parva/stories/mahabharata-bhima-meets-hanuman/#page-4",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/mahabharata-bhima-meets-hanuman/5{/}?",
+      "destination": "/collections/mahabharata/books/vyasa-mahabharata/arcs/vana-parva/stories/mahabharata-bhima-meets-hanuman/#page-5",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/mahabharata-bhima-meets-hanuman/6{/}?",
+      "destination": "/collections/mahabharata/books/vyasa-mahabharata/arcs/vana-parva/stories/mahabharata-bhima-meets-hanuman/#page-6",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/mahabharata-bhima-meets-hanuman/7{/}?",
+      "destination": "/collections/mahabharata/books/vyasa-mahabharata/arcs/vana-parva/stories/mahabharata-bhima-meets-hanuman/#page-7",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/mahabharata-bhima-meets-hanuman/8{/}?",
+      "destination": "/collections/mahabharata/books/vyasa-mahabharata/arcs/vana-parva/stories/mahabharata-bhima-meets-hanuman/#page-8",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/mahabharata-bhima-meets-hanuman/:n(0[0-9]*|[1-9][0-9][0-9]+|[1-9][0-9]|[9-9]){/}?",
+      "destination": "/collections/mahabharata/books/vyasa-mahabharata/arcs/vana-parva/stories/mahabharata-bhima-meets-hanuman/",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/mahabharata-bhima-meets-hanuman{/}?",
+      "destination": "/collections/mahabharata/books/vyasa-mahabharata/arcs/vana-parva/stories/mahabharata-bhima-meets-hanuman/",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/mahabharata-bhima-meets-hanuman/2{/}?",
+      "destination": "/hi/collections/mahabharata/books/vyasa-mahabharata/arcs/vana-parva/stories/mahabharata-bhima-meets-hanuman/#page-2",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/mahabharata-bhima-meets-hanuman/3{/}?",
+      "destination": "/hi/collections/mahabharata/books/vyasa-mahabharata/arcs/vana-parva/stories/mahabharata-bhima-meets-hanuman/#page-3",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/mahabharata-bhima-meets-hanuman/4{/}?",
+      "destination": "/hi/collections/mahabharata/books/vyasa-mahabharata/arcs/vana-parva/stories/mahabharata-bhima-meets-hanuman/#page-4",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/mahabharata-bhima-meets-hanuman/5{/}?",
+      "destination": "/hi/collections/mahabharata/books/vyasa-mahabharata/arcs/vana-parva/stories/mahabharata-bhima-meets-hanuman/#page-5",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/mahabharata-bhima-meets-hanuman/6{/}?",
+      "destination": "/hi/collections/mahabharata/books/vyasa-mahabharata/arcs/vana-parva/stories/mahabharata-bhima-meets-hanuman/#page-6",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/mahabharata-bhima-meets-hanuman/7{/}?",
+      "destination": "/hi/collections/mahabharata/books/vyasa-mahabharata/arcs/vana-parva/stories/mahabharata-bhima-meets-hanuman/#page-7",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/mahabharata-bhima-meets-hanuman/8{/}?",
+      "destination": "/hi/collections/mahabharata/books/vyasa-mahabharata/arcs/vana-parva/stories/mahabharata-bhima-meets-hanuman/#page-8",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/mahabharata-bhima-meets-hanuman/:n(0[0-9]*|[1-9][0-9][0-9]+|[1-9][0-9]|[9-9]){/}?",
+      "destination": "/hi/collections/mahabharata/books/vyasa-mahabharata/arcs/vana-parva/stories/mahabharata-bhima-meets-hanuman/",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/mahabharata-bhima-meets-hanuman{/}?",
+      "destination": "/hi/collections/mahabharata/books/vyasa-mahabharata/arcs/vana-parva/stories/mahabharata-bhima-meets-hanuman/",
       "statusCode": 308
     },
     {
@@ -2880,6 +3640,96 @@
     {
       "source": "/hi/s/shvetaketu-and-the-salt{/}?",
       "destination": "/hi/collections/sages/books/chandogya-upanishad/arcs/chandogya-6/stories/shvetaketu-and-the-salt/",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/gargi-maitreyi-and-yajnavalkya/2{/}?",
+      "destination": "/collections/sages/books/brihadaranyaka-upanishad/arcs/brihadaranyaka-3/stories/gargi-maitreyi-and-yajnavalkya/#page-2",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/gargi-maitreyi-and-yajnavalkya/3{/}?",
+      "destination": "/collections/sages/books/brihadaranyaka-upanishad/arcs/brihadaranyaka-3/stories/gargi-maitreyi-and-yajnavalkya/#page-3",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/gargi-maitreyi-and-yajnavalkya/4{/}?",
+      "destination": "/collections/sages/books/brihadaranyaka-upanishad/arcs/brihadaranyaka-3/stories/gargi-maitreyi-and-yajnavalkya/#page-4",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/gargi-maitreyi-and-yajnavalkya/5{/}?",
+      "destination": "/collections/sages/books/brihadaranyaka-upanishad/arcs/brihadaranyaka-3/stories/gargi-maitreyi-and-yajnavalkya/#page-5",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/gargi-maitreyi-and-yajnavalkya/6{/}?",
+      "destination": "/collections/sages/books/brihadaranyaka-upanishad/arcs/brihadaranyaka-3/stories/gargi-maitreyi-and-yajnavalkya/#page-6",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/gargi-maitreyi-and-yajnavalkya/7{/}?",
+      "destination": "/collections/sages/books/brihadaranyaka-upanishad/arcs/brihadaranyaka-3/stories/gargi-maitreyi-and-yajnavalkya/#page-7",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/gargi-maitreyi-and-yajnavalkya/8{/}?",
+      "destination": "/collections/sages/books/brihadaranyaka-upanishad/arcs/brihadaranyaka-3/stories/gargi-maitreyi-and-yajnavalkya/#page-8",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/gargi-maitreyi-and-yajnavalkya/:n(0[0-9]*|[1-9][0-9][0-9]+|[1-9][0-9]|[9-9]){/}?",
+      "destination": "/collections/sages/books/brihadaranyaka-upanishad/arcs/brihadaranyaka-3/stories/gargi-maitreyi-and-yajnavalkya/",
+      "statusCode": 308
+    },
+    {
+      "source": "/s/gargi-maitreyi-and-yajnavalkya{/}?",
+      "destination": "/collections/sages/books/brihadaranyaka-upanishad/arcs/brihadaranyaka-3/stories/gargi-maitreyi-and-yajnavalkya/",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/gargi-maitreyi-and-yajnavalkya/2{/}?",
+      "destination": "/hi/collections/sages/books/brihadaranyaka-upanishad/arcs/brihadaranyaka-3/stories/gargi-maitreyi-and-yajnavalkya/#page-2",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/gargi-maitreyi-and-yajnavalkya/3{/}?",
+      "destination": "/hi/collections/sages/books/brihadaranyaka-upanishad/arcs/brihadaranyaka-3/stories/gargi-maitreyi-and-yajnavalkya/#page-3",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/gargi-maitreyi-and-yajnavalkya/4{/}?",
+      "destination": "/hi/collections/sages/books/brihadaranyaka-upanishad/arcs/brihadaranyaka-3/stories/gargi-maitreyi-and-yajnavalkya/#page-4",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/gargi-maitreyi-and-yajnavalkya/5{/}?",
+      "destination": "/hi/collections/sages/books/brihadaranyaka-upanishad/arcs/brihadaranyaka-3/stories/gargi-maitreyi-and-yajnavalkya/#page-5",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/gargi-maitreyi-and-yajnavalkya/6{/}?",
+      "destination": "/hi/collections/sages/books/brihadaranyaka-upanishad/arcs/brihadaranyaka-3/stories/gargi-maitreyi-and-yajnavalkya/#page-6",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/gargi-maitreyi-and-yajnavalkya/7{/}?",
+      "destination": "/hi/collections/sages/books/brihadaranyaka-upanishad/arcs/brihadaranyaka-3/stories/gargi-maitreyi-and-yajnavalkya/#page-7",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/gargi-maitreyi-and-yajnavalkya/8{/}?",
+      "destination": "/hi/collections/sages/books/brihadaranyaka-upanishad/arcs/brihadaranyaka-3/stories/gargi-maitreyi-and-yajnavalkya/#page-8",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/gargi-maitreyi-and-yajnavalkya/:n(0[0-9]*|[1-9][0-9][0-9]+|[1-9][0-9]|[9-9]){/}?",
+      "destination": "/hi/collections/sages/books/brihadaranyaka-upanishad/arcs/brihadaranyaka-3/stories/gargi-maitreyi-and-yajnavalkya/",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/s/gargi-maitreyi-and-yajnavalkya{/}?",
+      "destination": "/hi/collections/sages/books/brihadaranyaka-upanishad/arcs/brihadaranyaka-3/stories/gargi-maitreyi-and-yajnavalkya/",
       "statusCode": 308
     },
     {
