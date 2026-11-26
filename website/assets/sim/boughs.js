@@ -13,13 +13,7 @@ const clamp = (v, a, b) => (v < a ? a : v > b ? b : v);
 // kind: bough (hangs from a crown's edge), root (a thin prop root, hangs), reed (stands on the shore). n: bodies. len: metres. Every one is drawn
 // as one or more strips (inst): a reed bundle wears three, so the cluster reads as a stand of stalks that move together but not in lock step.
 export const CHAINS = [
-  { id: 'L0', side: -1, kind: 'bough', t: 0.10, n: 7, len: 0.64, w: 1.0, inst: [{ cell: 'boughA', ws: 1.6, haze: 0.3 }, { cell: 'boughB', ws: 1.3, dx: 11, dy: 1, haze: 0.36, alpha: 0.85 }] },
-  { id: 'L1', side: -1, kind: 'bough', t: 0.42, n: 7, len: 0.6, w: 1.15, inst: [{ cell: 'boughB', ws: 1.6, haze: 0.3 }] },
-  { id: 'L2', side: -1, kind: 'root', t: 0.80, n: 7, len: 0.7, w: 0.8, inst: [{ cell: 'rootA', ws: 1.6, haze: 0.3 }, { cell: 'rootB', ws: 1.1, dx: -9, dy: 0, haze: 0.36, alpha: 0.8 }] },
   { id: 'L3', side: -1, kind: 'reed', t: 0.26, n: 5, len: 0.62, w: 1.0, inst: [{ cell: 'reedA', ws: 1.6, haze: 0.26 }, { cell: 'reedB', ws: 0.8, dx: 11, dy: 1, haze: 0.3, alpha: 0.9 }, { cell: 'reedA', ws: 0.7, dx: -12, dy: 0, haze: 0.3, alpha: 0.8, mirror: 1 }] },
-  { id: 'R0', side: 1, kind: 'bough', t: 0.10, n: 7, len: 0.64, w: 1.1, inst: [{ cell: 'boughB', ws: 1.6, haze: 0.3 }, { cell: 'boughA', ws: 1.25, dx: -11, dy: 1, haze: 0.36, alpha: 0.85 }] },
-  { id: 'R1', side: 1, kind: 'bough', t: 0.42, n: 7, len: 0.66, w: 0.9, inst: [{ cell: 'boughA', ws: 1.6, haze: 0.3 }] },
-  { id: 'R2', side: 1, kind: 'root', t: 0.82, n: 7, len: 0.7, w: 0.85, inst: [{ cell: 'rootB', ws: 1.6, haze: 0.3 }, { cell: 'rootA', ws: 1.1, dx: 9, dy: 0, haze: 0.36, alpha: 0.8 }] },
   { id: 'R3', side: 1, kind: 'reed', t: 0.28, n: 5, len: 0.66, w: 1.0, inst: [{ cell: 'reedB', ws: 1.6, haze: 0.26 }, { cell: 'reedA', ws: 0.8, dx: -11, dy: 1, haze: 0.3, alpha: 0.9 }, { cell: 'reedB', ws: 0.7, dx: 12, dy: 0, haze: 0.3, alpha: 0.8, mirror: 1 }] },
 ];
 export const bodiesOf = (chains = CHAINS) => chains.reduce((s, c) => s + c.n, 0);
