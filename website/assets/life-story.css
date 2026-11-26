@@ -1,0 +1,15 @@
+/* Spiritual [life] story (assets/life-story.js and life-story-sway.js): the few rules these packages need. This file is only fetched when a package mounts,
+   so reduced motion, Light mode and Save-Data never load it. Nothing here touches a story's words. */
+/* the stage's two layers are a hair larger than the screen, so the few pixels they settle by or drift by can never show what is behind them */
+.fm-stage.ls-on .fm-ly { scale: 1.006; }
+@media (max-width: 699.98px) { .fm-stage.ls-on .fm-ly { scale: 1.016; } }
+/* the sway canvas: inside the scene's camera layer, over the painting, under everything else; it fades up once a frame is on it */
+.fm-cam canvas.ls-sway { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; pointer-events: none; opacity: 0; transition: opacity .5s linear; }
+/* debris (life-story-debris.js): fixed, above the pictures, never taking a pointer; the bodies are small boxes of paint-coloured light */
+.ls-debris { position: fixed; inset: 0; z-index: 2; pointer-events: none; overflow: hidden; contain: layout paint style; }
+.ls-debris > i { position: absolute; left: 0; top: 0; display: block; opacity: 0; will-change: transform, opacity; backface-visibility: visible; }
+.ls-debris > i.leaf { border-radius: 0 78% 0 78%; }
+.ls-debris > i.ash { border-radius: 40% 60% 55% 45%; background: #b7ab9b; }
+.ls-debris > i.dust { border-radius: 50%; background: radial-gradient(circle, rgb(255 244 222 / .9), rgb(255 244 222 / 0) 70%); }
+.ls-debris > i.ember { border-radius: 50%; background: radial-gradient(circle, #fff3c4 0, #ffb347 38%, rgb(255 120 40 / 0) 72%); }
+@media print { .ls-debris, .ls-sway { display: none !important; } }

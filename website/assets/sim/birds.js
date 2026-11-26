@@ -95,14 +95,19 @@ const mk = () => ({ on: 0, fl: 0, x: 0, y: 0, ox: 0, oy: 0, vx: 0, vy: 0, z: .5,
 const B = Array.from({ length: MAXB }, mk);
 const F = Array.from({ length: FL }, () => ({ on: 0, dir: 1, x: 0, y: 0, vx: 0, lane: 0, A: 0, per: 40, ph: 0, t: 0, z: .5, speed: 30, age: 0, yw: 0, n: 0, fresh: 0 }));
 const order = new Array(MAXB).fill(0);
+const LB = G.birdsLife = { v: 1, max: MAXB, off: new Float32Array(MAXB * 4), pan: new Float32Array(MAXB), fade: new Float32Array(MAXB).fill(1), disabled: false, rectsVer: 0, live: 0,
+read(out) { let n = 0; for (let i = 0; i < MAXB; i++) { const b = B[i]; if (!b.on) continue; const o = n * 8; out[o] = i; out[o + 1] = b.x; out[o + 2] = b.y; out[o + 3] = b.vx; out[o + 4] = b.vy; out[o + 5] = b.span; out[o + 6] = b.z; out[o + 7] = b.fl; n++; } return n; },
+toHost(cx, cy, o) { const r = env && env.rect(); if (!r) return false; o[0] = cx - r.left; o[1] = cy - r.top; return true; },
+host() { return env && env.rect(); }, size() { return [W, H]; }, rects: () => rects, horizon: () => horizon, topLim: () => topLim, ks: () => ks };
+let kOn = 1;
 const readRects = () => {
 rectsAt = performance.now(); dirtyRects = false; if (!hostEl || !env) return;
 const hr = env.rect(); if (!hr) return; const out = [];
-for (const el of hostEl.querySelectorAll('.cx-welcome-k, .cx-wm-letters, .cx-wm-sub, .cx-open-line, .cx-open-sub')) {
+for (const el of hostEl.querySelectorAll('.cx-welcome-k, .cx-wm-letters, .cx-wm-sub, .cx-open-line, .cx-open-sub, .cx-open-card :is(a, button, p), .cx-open-foot :is(a, button)')) {
 const b = el.getBoundingClientRect(); if (b.width < 30 || b.height < 8) continue;
 out.push([b.left - hr.left, b.top - hr.top, b.right - hr.left, b.bottom - hr.top]);
 }
-rects = out;
+rects = out; LB.rectsVer++;
 };
 const layout = () => {
 const L = G.lake; horizon = L && L.ready ? (L.cover[1] + L.wl * L.cover[3]) : H * 0.5;
@@ -145,7 +150,8 @@ const zi = clamp(zz + rr(-.07, .07), 0, 1), sp = mix(4.6, 11.5, zi) * ks;
 let sx, sy;
 if (loose) { sx = rr(-2.6, 1.2) * sp * 2 * dir; sy = rr(-1.5, 1.5) * sp * 1.4; }
 else { const row = Math.ceil(j / 2), side = j % 2 ? 1 : -1; sx = -dir * (row * sp * 1.45 + rr(-.4, .4) * sp) + (j === 1 ? 0 : 0); sy = side * row * sp * .95 * (j === 1 ? 0 : 1) + rr(-.35, .35) * sp; if (j === 1) { sx = 0; sy = 0; } }
-Object.assign(b, { on: 1, fl: fi + 1, z: zi, span: sp, f: mix(3.2, 2.1, zi) + rr(-.3, .3), ph: rr(0, TAU), amp: 1, gl: 0, gT: rr(1, 4), bank: 0, seed: rnd(), sx, sy, vx: 0, vy: 0 });
+{ const bi = B.indexOf(b); LB.off.fill(0, bi * 4, bi * 4 + 4); LB.pan[bi] = 0; LB.fade[bi] = 1; }
+Object.assign(b, { face: 0, ft: 0, on: 1, fl: fi + 1, z: zi, span: sp, f: mix(3.2, 2.1, zi) + rr(-.3, .3), ph: rr(0, TAU), amp: 1, gl: 0, gT: rr(1, 4), bank: 0, seed: rnd(), sx, sy, vx: 0, vy: 0 });
 b.x = f.x + sx; b.y = f.y + sy; b.ox = b.x; b.oy = b.y; b.tilt = 0; b.hd = 0; b.hdp = 0;
 b.vx = dir * f.speed * mix(.8, 1.1, zi); b.vy = 0;
 }
@@ -200,16 +206,17 @@ b.hd += (clamp(hd, -.42, .42) - b.hd) * Math.min(1, dt * 3.5);
 const turn = (b.hd - b.hdp) / dt; b.hdp = b.hd;
 const bt = clamp(turn * 7 * (f.dir > 0 ? 1 : -1) + .07 * Math.sin(t * .45 + b.seed * 30), -.55, .55);
 b.bank += (bt - b.bank) * Math.min(1, dt * 2.2);
-b.gT -= dt;
+{ const tvx = b.vx + LB.off[B.indexOf(b) * 4 + 2]; if (!b.face) b.face = f.dir; if (Math.abs(tvx) > 28 && (tvx > 0 ? 1 : -1) !== b.face) { b.ft += dt; if (b.ft > .22) { b.face = tvx > 0 ? 1 : -1; b.ft = 0; } } else b.ft = 0; }   // [life] a pushed bird turns about only after a quarter second of flying the other way
+b.gT -= dt; const alarm = LB.pan[B.indexOf(b)] || 0; if (alarm > 0.12) { b.gl = 0; if (b.gT < 0.6) b.gT = 0.6; }
 if (b.gT <= 0) { if (b.gl) { b.gl = 0; b.gT = rr(1.8, 4.6); } else { b.gl = 1; b.gT = rr(.8, 2.1); } }
 b.amp += ((b.gl ? 0 : 1) - b.amp) * (1 - Math.exp(-dt * 3.2));
-b.ph += TAU * b.f * dt * (.35 + .65 * b.amp);
+b.ph += TAU * b.f * dt * (.35 + .65 * b.amp) * (1 + alarm * .75);
 }
 glideT -= dt;
 if (glideT <= 0) { glideT = rr(5, 11); const k = rnd() < .5 ? 1 : 0; if (k) for (const b of B) if (b.on && !b.gl && rnd() < .7) { b.gT = rr(.05, 1.1); } }
 };
 const schedule = (dt) => {
-if (!introDone) return;
+if (!introDone || LB.disabled) return;
 const ti = t - introAt;
 if (!firstDone) {
 if (ti < 0.4) return; firstDone = true;
@@ -238,6 +245,7 @@ resume() { dirtyRects = true; if (hostEl && !tRects) tRects = setInterval(() => 
 refresh() { dirtyRects = true; laid = 0; },
 update(dt) {
 if (!on) return; t += dt;
+kOn += ((LB.disabled ? 0 : 1) - kOn) * Math.min(1, dt * 3); if (LB.disabled && kOn < .02) { let any = 0; for (const b of B) any += b.on; if (any) clearAll(); }
 if (!introDone) { if (!R.classList.contains('cx-js') || R.classList.contains('cx-seen') || R.classList.contains('cx-fest-end')) { introDone = 1; introAt = t; } else return; }
 if (dirtyRects && performance.now() - rectsAt > 1200) { readRects(); laid = 0; }
 if (!laid) layout();
@@ -248,19 +256,22 @@ stepBirds(dt);
 draw(gl, e) {
 if (!on || !prog || !prog.ok || !introDone) return;
 let n = 0; for (let i = 0; i < MAXB; i++) if (B[i].on) order[n++] = i;
-if (!n) { hide(true); return; }
+if (!n) { hide(!LB.disabled); return; }   // ([life] dropped by the governor: the plain CSS flock shows instead)
 for (let i = 1; i < n; i++) { const v = order[i]; let j = i - 1; while (j >= 0 && B[order[j]].z > B[v].z) { order[j + 1] = order[j]; j--; } order[j + 1] = v; }   // far first
 const k = e.intensity;
 for (let q = 0; q < n; q++) {
-const b = B[order[q]], f = F[b.fl - 1], o = q * STRIDE, far = 1 - b.z;
-const edge = sstep(-30, 110, Math.min(b.x, W - b.x));
-let kf = 1; for (let i = 0; i < rects.length; i++) { const r = rects[i]; const dx = Math.max(r[0] - b.x, 0, b.x - r[2]), dy = Math.max(r[1] - b.y, 0, b.y - r[3]); const dd = Math.hypot(dx, dy); if (dd < 34) kf = Math.min(kf, .16 + .84 * sstep(0, 34, dd)); }
+const bi = order[q], b = B[bi], f = F[b.fl - 1], o = q * STRIDE, far = 1 - b.z, oi = bi * 4;
+const ox = LB.off[oi], oy = LB.off[oi + 1], ovx = LB.off[oi + 2], ovy = LB.off[oi + 3], px = b.x + ox, py = b.y + oy;   // [life] where it is drawn: its place in the formation and how far it has been pushed
+const edge = sstep(-30, 110, Math.min(px, W - px));
+let kf = 1; for (let i = 0; i < rects.length; i++) { const r = rects[i]; const dx = Math.max(r[0] - px, 0, px - r[2]), dy = Math.max(r[1] - py, 0, py - r[3]); const dd = Math.hypot(dx, dy); if (dd < 34) kf = Math.min(kf, dd < 5 ? 0 : .16 + .84 * sstep(5, 34, dd)); }   // (never on the words: inside a line or a button it is not drawn at all)
 const born = f.fresh ? sstep(0, 2.6, f.age) : 1;
-const al = mix(.78, .52, far) * edge * kf * born * k;
+const al = mix(.78, .52, far) * edge * kf * born * k * kOn * LB.fade[bi];
+const push = clamp(Math.hypot(ovx, ovy) / 80, 0, 1), face = b.face || f.dir;
+const hdT = clamp(Math.atan2(-(b.vy + ovy), Math.max(12, Math.abs(b.vx + ovx))) * .9, -.7, .7), tilt = b.hd + (hdT - b.hd) * push;
 const bob = -b.amp * b.span * .07 * Math.sin(b.ph);
-I[o] = b.x; I[o + 1] = b.y + bob; I[o + 2] = b.span; I[o + 3] = b.hd;
-I[o + 4] = b.ph; I[o + 5] = b.amp; I[o + 6] = b.bank; I[o + 7] = al;
-I[o + 8] = far; I[o + 9] = f.dir; I[o + 10] = b.seed; I[o + 11] = 0;
+I[o] = px; I[o + 1] = py + bob; I[o + 2] = b.span; I[o + 3] = tilt;
+I[o + 4] = b.ph; I[o + 5] = b.amp; I[o + 6] = clamp(b.bank + clamp(ovy / 220, -.4, .4) * face * push, -.7, .7); I[o + 7] = al;
+I[o + 8] = far; I[o + 9] = face; I[o + 10] = b.seed; I[o + 11] = 0;
 }
 const L = G.lake, tex = L && L.tex && L.tex();
 gl.useProgram(prog.p); gl.uniform2f(prog.loc('uRes'), W, H);

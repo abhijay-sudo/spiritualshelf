@@ -1,0 +1,11 @@
+/* Spiritual [life] boughs, lite: the painted cut-outs of the far shore for Balanced, phones and weak devices (assets/life-boughs.js). The layer sits under the text (the opening's card
+   is z-index 4, this is 3), takes no pointer events and cannot be selected. Each cut-out sways on its own slow CSS animation; a gust rings one spring down through Web Animations. */
+.lb-lite { position: absolute; inset: 0; z-index: 3; pointer-events: none; overflow: hidden; user-select: none; -webkit-user-select: none; contain: layout paint style; }
+.lb-s { position: absolute; transform-origin: 50% 0; animation: lb-sway var(--lb-t, 6s) ease-in-out var(--lb-d, 0s) infinite alternate; filter: saturate(0.7) brightness(1.04); will-change: transform; }
+.lb-s.is-reed { transform-origin: 50% 100%; }
+.lb-s > b { display: block; background: var(--lb-atlas) no-repeat; transform-origin: inherit; }
+@keyframes lb-sway { from { transform: rotate(calc(var(--lb-a, 1.4deg) * -1)); } to { transform: rotate(var(--lb-a, 1.4deg)); } }
+.lb-lite.is-off .lb-s { animation-play-state: paused; }
+:is(:root[data-motion="reduce"], :root[data-light]) .lb-lite { display: none; }
+@media (prefers-reduced-motion: reduce) { .lb-lite { display: none; } }
+@media print { .lb-lite { display: none; } }

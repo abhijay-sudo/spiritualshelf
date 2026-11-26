@@ -1,0 +1,5 @@
+/* Spiritual [life] life-people: the tethered field's only styling. The pictures are untouched; this changes a cursor and nothing else.
+   The sky's canvas draws everything (assets/stars.js); the field moves people in it (assets/life-people.js). */
+.st-sky[data-people-field] .st-stage.is-over { cursor: grab; }
+.st-sky[data-people-field] .st-stage.is-over.is-drag { cursor: grabbing; }
+@media (prefers-reduced-motion: reduce) { .st-sky[data-people-field] .st-stage.is-over { cursor: pointer; } }

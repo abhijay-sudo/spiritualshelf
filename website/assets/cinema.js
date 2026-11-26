@@ -133,7 +133,7 @@
     size(); go();
     let sizeT = 0; addEventListener('resize', () => { clearTimeout(sizeT); sizeT = setTimeout(() => { size(); go(); }, 150); });
     root.classList.add('cx-open-on');
-    if ('IntersectionObserver' in window) new IntersectionObserver((es) => { seen = es[es.length - 1].isIntersecting; root.classList.toggle('cx-open-on', seen); last = 0; go(); }).observe(openEl);
+    if ('IntersectionObserver' in window) new IntersectionObserver((es) => { const en = es[es.length - 1]; seen = en.isIntersecting && en.intersectionRatio > 0; root.classList.toggle('cx-open-on', seen); last = 0; go(); }, { threshold: [0, .001] }).observe(openEl);   // (an opening scrolled exactly off the top still "intersects" at ratio 0: without a second threshold nothing reports it, and the dust kept drawing under the select)
     document.addEventListener('visibilitychange', () => { last = 0; go(); });
     // the motion switch (and the device's own setting) can be turned back on: the canvas is shown again, so wake the loop
     const wake = () => { last = 0; size(); go(); };
@@ -152,8 +152,9 @@
     const step = (d) => { const v = inGrp(); return v[(Math.max(0, v.indexOf(cur)) + d + v.length) % v.length]; };
     // When the roster changes under a mouse that is lying still, the browser reports it as "entering" whatever is now
     // beneath it. That is not a choice: only a pointer that has really moved since its last report picks anything.
-    let lastX = -1, lastY = -1; const moved = (e) => e.clientX !== lastX || e.clientY !== lastY;
-    addEventListener('pointermove', (e) => { lastX = e.clientX; lastY = e.clientY; }, { passive: true });
+    let lastX = -1, lastY = -1, lastT = 0, speed = 0; const moved = (e) => e.clientX !== lastX || e.clientY !== lastY;
+    // [life-select] how fast the hand is going (px/s, smoothed): a hand sweeping across the wall chooses nobody on the way, one that slows or rests does
+    addEventListener('pointermove', (e) => { const t = e.timeStamp; if (lastT && lastX >= 0 && t > lastT) { const v = Math.hypot(e.clientX - lastX, e.clientY - lastY) / (t - lastT) * 1000; speed += (Math.min(v, 6000) - speed) * .5; } lastX = e.clientX; lastY = e.clientY; lastT = t; }, { passive: true });
     const T = (k) => $(`[data-sel-${k}]`, sel);
     const out = { n: T('n'), coll: T('coll'), title: T('title'), sum: T('sum'), min: T('min'), scenes: T('scenes'), go: T('go'), hero: T('hero'), name: T('name'), who: T('who'), chips: T('chips'), goT: $('[data-sel-go-t]', sel), story: T('story'), storyT: $('[data-sel-story-t]', sel), storyN: $('[data-sel-story-n]', sel) };
     const whoLabel = out.who ? out.who.textContent.replace(out.name ? out.name.textContent : '', '').trim() : '';
@@ -174,6 +175,7 @@
       const l = document.createElement('link'); l.rel = 'stylesheet'; l.href = sel.dataset.haCss; document.head.append(l);
       const sc = document.createElement('script'); sc.src = sel.dataset.haJs; sc.onload = () => { if (window.SpritualHanuman) window.SpritualHanuman.select(sel, /(^|\/)characters\/hanuman\/?$/.test(tiles[cur].getAttribute('href') || '')); }; document.head.append(sc);
     };
+    let flipR = 0; const flipKey = () => (sel.classList.contains('is-left') ? 'L' : '') + (sel.classList.contains('is-scene') ? 'S' : '') + (sel.classList.contains('is-calm') ? 'C' : '');
     const pick = (i, byUser) => {
       i = (i + n) % n; if (byUser) halt();
       if (i === cur) return;
@@ -198,7 +200,10 @@
       // a character with a cut-out portrait steps in front of their world; one painted inside a scene is found by the
       // camera instead: the world itself pushes in on them, and the words move to the other side
       const scene = d.mode === 'scene'; const wasCut = !sel.classList.contains('is-scene');
-      sel.classList.toggle('is-scene', scene); sel.classList.toggle('is-left', d.side === 'left'); sel.classList.toggle('is-calm', scene && d.calm === '1');
+      const sidesWas = flipKey(); sel.classList.toggle('is-scene', scene); sel.classList.toggle('is-left', d.side === 'left'); sel.classList.toggle('is-calm', scene && d.calm === '1');
+      // [life-select] the words changing sides is a layout shift the browser counts (about 0.33 each, 2.4 over a sweep, measured). For the frame in which it happens the
+      // stage is held at opacity 0 (cinema.css, .ls-flip); its own fade-in starts from nothing anyway. Not under reduced motion or Light mode: the swap is then instant.
+      if (sidesWas !== flipKey() && !reduced()) { sel.classList.add('ls-flip'); cancelAnimationFrame(flipR); flipR = requestAnimationFrame(() => { flipR = requestAnimationFrame(() => { sel.classList.remove('ls-flip'); }); }); }
       if (!scene && d.hero) {
         // the last figure stays where it stood and fades while the next fades in over it (cinema.css, .is-ghost): a cross-fade, not a cut
         if (wasCut && fig && !reduced() && !root.classList.contains('ep-lite')) { const g = fig.cloneNode(true); g.removeAttribute('data-sel-fig'); g.querySelector('img')?.removeAttribute('data-sel-hero'); g.classList.add('is-ghost'); fig.before(g); const bye = () => g.remove(); g.addEventListener('animationend', bye, { once: true }); setTimeout(bye, 700); }
@@ -250,8 +255,13 @@
     const lookUp = () => { const r = sel.getBoundingClientRect(); const st = $('.cx-sel-stage', sel).getBoundingClientRect(); if (st.top < 0 && st.bottom < innerHeight * .6 || r.top < -innerHeight * .15) scrollTo({ top: scrollY + r.top, behavior: reduced() ? 'auto' : 'smooth' }); };
     let downCur = 0;   // what was in hand when the finger came down (the tap's own focus changes it before the click arrives)
     sel.addEventListener('pointerdown', (e) => { lastPointer = e.pointerType || 'mouse'; downCur = cur; }, true);
+    let intT = 0, intR = 0;
+    const intend = (i, wait) => { clearTimeout(intT); cancelAnimationFrame(intR); intT = intR = 0; if (i < 0) return; const go = () => { intT = 0; intR = requestAnimationFrame(() => { intR = 0; pick(i, true); }); }; if (wait) intT = setTimeout(go, wait); else go(); };
     tiles.forEach((t, i) => {
-      t.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse' && moved(e)) pick(i, true); });
+      // [life-select] a hand on the wall chooses once per frame, in the frame's own callback (not in the event), and a fast one waits 70 ms on a tile first:
+      // each choice rebuilds the stage, so a sweep over eight tiles no longer rebuilds it eight times
+      t.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse' && moved(e)) intend(i, speed > 650 && !reduced() ? 70 : 0); });
+      t.addEventListener('pointerleave', () => intend(-1, 0));
       t.addEventListener('focus', () => pick(i, true));
       t.addEventListener('click', (e) => {
         // by touch, the first tap looks and the second begins; a mouse or the keyboard is already looking
@@ -329,10 +339,15 @@
     out.go.addEventListener('click', (e) => begin(e, out.go.href));
     out.story?.addEventListener('click', (e) => begin(e, out.story.href));
     // depth: the world, the lead and their name sit at different distances, and drift apart as the pointer moves
+    // [life-select] --px/--py are written on the layers that read them (the painting, the figure; motion-select.js leans them on springs instead and this stands down while it does), never on the section: a custom
+    // property written on the section is inherited by all of its 100+ roster tiles, and the browser restyled every one of them on every frame of
+    // a sweep (about 3 s of style work over eight tiles at 4x CPU). The section's box is read once per scroll or resize, not in each frame.
     if (matchMedia('(hover: hover) and (pointer: fine)').matches) {
-      let pr = 0;
-      sel.addEventListener('pointermove', (e) => { if (pr || reduced()) return; pr = requestAnimationFrame(() => { pr = 0; const r = sel.getBoundingClientRect(); sel.style.setProperty('--px', (((e.clientX - r.left) / r.width) - .5).toFixed(3)); sel.style.setProperty('--py', (((e.clientY - r.top) / r.height) - .5).toFixed(3)); }); });
-      sel.addEventListener('pointerleave', () => { sel.style.setProperty('--px', 0); sel.style.setProperty('--py', 0); });
+      let pr = 0, rx = 0, ry = 0, rw = 1, rh = 1, stale = true, ex = 0, ey = 0; const lean = [$('.cx-sel-bg', sel), $('.cx-sel-hero', sel), $('.cx-sel-name', sel)].filter(Boolean);
+      const put = (x, y) => { if (sel.classList.contains('ms-par')) return; for (const el of lean) { el.style.setProperty('--px', x); el.style.setProperty('--py', y); } };
+      addEventListener('scroll', () => { stale = true; }, { passive: true }); addEventListener('resize', () => { stale = true; }, { passive: true });
+      sel.addEventListener('pointermove', (e) => { ex = e.clientX; ey = e.clientY; if (pr || reduced()) return; pr = requestAnimationFrame(() => { pr = 0; if (stale) { const r = sel.getBoundingClientRect(); rx = r.left; ry = r.top; rw = r.width || 1; rh = r.height || 1; stale = false; } put((((ex - rx) / rw) - .5).toFixed(3), (((ey - ry) / rh) - .5).toFixed(3)); }); });
+      sel.addEventListener('pointerleave', () => { put(0, 0); });
     }
     // the lead stands between the heading and the roster, whatever the screen and the reader's text size
     const roster = $('.cx-sel-roster', sel);
@@ -598,6 +613,19 @@
 
   kick();
   addEventListener('load', kick);
+})();
+
+/* [life-select] A row (.grid, .cx-posters, .cx-rail) whose card is under the pointer or holds the focus is marked .is-hand, so the rest of the row can step
+   back (cinema.css). This replaced a :has() rule, which made every DOM change on the page cost the browser a re-check of all of those rows. */
+(() => {
+  if (!matchMedia('(hover: hover)').matches) return;
+  const ROW = '.grid, .cx-posters, .cx-rail'; let hov = new Set(), foc = new Set(), on = new Set();
+  const rowsOf = (el) => { const s = new Set(); for (let n = el; n && n.parentElement; n = n.parentElement) if (n.parentElement.matches && n.parentElement.matches(ROW)) s.add(n.parentElement); return s; };
+  const sync = () => { const want = new Set([...hov, ...foc]); for (const r of on) if (!want.has(r)) r.classList.remove('is-hand'); for (const r of want) if (!on.has(r)) r.classList.add('is-hand'); on = want; };
+  document.addEventListener('pointerover', (e) => { if (e.pointerType === 'touch') return; const n = rowsOf(e.target); if (n.size === hov.size && [...n].every((r) => hov.has(r))) return; hov = n; sync(); }, { passive: true });
+  document.documentElement.addEventListener('pointerleave', () => { if (hov.size) { hov = new Set(); sync(); } }, { passive: true });
+  document.addEventListener('focusin', (e) => { foc = rowsOf(e.target); sync(); });
+  document.addEventListener('focusout', () => { foc = new Set(); sync(); });
 })();
 
 /* A row that scrolls sideways ends in a soft fade while more lies beyond its edge, so the next item never shows as words cut

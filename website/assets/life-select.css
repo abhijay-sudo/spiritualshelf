@@ -1,0 +1,7 @@
+/* Spiritual [life] life-select (assets/life-select.js). Loaded with the package, after motion-select.css, only where the package mounts
+   (never for reduced motion, Light mode or Save-Data).
+   1. when the governor has dropped the tilt (html[data-ls-drop~="tilt"]) the tiles are left to CSS: the one in hand rises and grows to 1.07 on a
+      spring curve (assets/life-ease.css), with no script on the pointer. No tilt, no ripple, no rim light following the hand. */
+:root[data-ls-drop~="tilt"] .cx-select .cx-sel-grid .cx-sel-tile { transition-timing-function: var(--life-ease-spring, cubic-bezier(.22, .8, .2, 1)), var(--life-ease-spring, cubic-bezier(.22, .8, .2, 1)), ease; transition-duration: var(--life-dur-spring, .5s), var(--life-dur-spring, .5s), .32s; }
+:root[data-ls-drop~="tilt"] .cx-select .cx-sel-grid .cx-sel-tile:hover:not(.is-on) { translate: 0 -3px; scale: 1.04; }
+:root[data-ls-drop~="tilt"] .ms-fx { display: none; }

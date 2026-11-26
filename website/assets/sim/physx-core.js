@@ -239,7 +239,7 @@ T(() => P.destroy(tmpV)); T(() => P.destroy(tmpV2)); T(() => P.destroy(tmpT)); T
 T(() => physics.release()); T(() => P.destroy(tol)); T(() => foundation.release()); T(() => P.destroy(errCb)); T(() => P.destroy(allocator));
 byPtr.clear();
 };
-return { info, frame, verify, bench, dispose, KIND, ENVW, cfg };
+return { info, frame, verify, bench, dispose, KIND, ENVW, cfg, engine: { P, physics, tol, dispatcher, E } };
 }
 root.SpiritualPhysX = { create, decode, KIND, ENVW };
 })();

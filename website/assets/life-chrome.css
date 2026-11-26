@@ -1,0 +1,47 @@
+/* Spiritual [life chrome]: the frame around every page, on spring curves. Loaded by assets/life-chrome.js only where the life layer runs (not with reduced motion, Light mode,
+   Save-Data, effects Off or paused), phones included: it is CSS and Web Animations, no WebGL and no PhysX. It moves transform (translate, scale) and opacity only.
+   The curves are assets/life-ease.css (generated from assets/life-spring.js). Nothing here changes a size, a position in the flow, the tab order or a focus ring's look. */
+@media (prefers-reduced-motion: no-preference) {
+
+  /* ---------- Press and release: a press settles in at once, the release springs back and rests (the same on touch, pen, mouse and keys) ---------- */
+  :root { --lc-d: var(--life-dur-spring, 595ms); --lc-e: var(--life-ease-spring, cubic-bezier(.2, 1.4, .4, 1)); }
+  :root :where(.cx-btn, .ed-btn, .btn, .save, .chip span, .ed-menu-btn, .ed-icon, .cx-round, .dial-fab, .cx-sound, .ed-lang, .ed-saved, .ed-nav-btn, .link-btn, .chip-link) {
+    transition: scale var(--lc-d) var(--lc-e), translate var(--lc-d) var(--lc-e), background-color .32s ease, border-color .32s ease, color .32s ease, box-shadow .32s ease, opacity .32s ease; }
+  :root :where(.cx-btn, .ed-btn, .btn, .save, .chip span, .ed-menu-btn, .ed-icon, .cx-round, .dial-fab, .cx-sound, .ed-lang, .ed-saved, .ed-nav-btn, .link-btn, .chip-link):active { --lc-d: 90ms; --lc-e: cubic-bezier(.2, .8, .2, 1); scale: .955; }
+  :root .chip:active span { scale: .955; }
+  /* the keyboard's own press: the focused control rises a hair on its spring (the ring is unchanged: same outline, same colour) */
+  :root :where(.cx-btn, .ed-btn, .btn, .save, .ed-menu-btn, .ed-icon, .cx-round, .dial-fab, .ed-nav-btn):focus-visible { scale: 1.03; }
+  :root .chip input:focus-visible + span { scale: 1.04; }
+
+  /* ---------- The header: when the page has moved it settles smaller (the glass is 10 per cent shorter, the row 3.5 per cent smaller), on a spring. Nothing in the flow changes. ---------- */
+  :root .ed-head::before, :root .ed-head::after { transform-origin: 50% 0; transition: opacity .32s cubic-bezier(.45, .05, .25, 1), scale var(--life-dur-spring, 595ms) var(--life-ease-spring, ease); }
+  :root .ed-head.is-solid:not(.is-open)::before, :root .ed-head.is-solid:not(.is-open)::after { scale: 1 .9; }
+  :root .ed-head.is-solid:not(.is-open) { border-bottom-color: transparent; }   /* the bar's own rule moves with its glass, so no gap shows between them */
+  :root .ed-head.is-solid:not(.is-open)::after { box-shadow: inset 0 -1px 0 var(--cx-line, rgb(90 55 25 / .16)); }
+  :root .ed-head-row { transform-origin: 50% 0; transition: scale var(--life-dur-spring, 595ms) var(--life-ease-spring, ease), translate var(--life-dur-spring, 595ms) var(--life-ease-spring, ease); }
+  :root .ed-head.is-solid:not(.is-open) .ed-head-row { scale: .965; translate: 0 -2px; }
+
+  /* ---------- How far down the page you are: a hairline at the very top, drawn by the scroll itself (no script runs while you scroll) ---------- */
+  .life-progress { display: none; }
+  @supports (animation-timeline: scroll()) {
+    .life-progress { display: block; position: fixed; z-index: 60; left: 0; right: 0; top: 0; height: 2px; pointer-events: none; transform-origin: 0 50%; scale: 0 1; opacity: 0;
+      background: linear-gradient(90deg, rgb(243 170 80 / .0), rgb(243 170 80 / .9) 35%, rgb(255 214 150 / .95));
+      animation: life-prog linear both, life-prog-fade linear both; animation-timeline: scroll(root block), scroll(root block); animation-range: normal, 0 160px; }
+    .life-progress[hidden] { display: none; }
+    @keyframes life-prog { to { scale: 1 1; } }
+    @keyframes life-prog-fade { to { opacity: 1; } }
+  }
+
+  /* ---------- A finger's touch: a soft ring spreads from the touch point (Web Animations, transform and opacity), then is gone ---------- */
+  .life-ripple { position: fixed; left: 0; top: 0; width: 88px; height: 88px; margin: -44px 0 0 -44px; border-radius: 50%; pointer-events: none; z-index: 70; opacity: 0;
+    background: radial-gradient(circle closest-side, rgb(243 170 80 / .42), rgb(243 170 80 / .2) 55%, rgb(243 170 80 / 0)); will-change: transform, opacity; }
+
+  /* ---------- Arrival, restrained: the footer settles once as it comes into view (the scroll draws it; nothing is hidden for long, nothing runs by script).
+     The home's footer and the plain pages' blocks already arrive by assets/motion-home.css and assets/motion-browse.css: this does not double them. ---------- */
+  @media screen {
+    @supports (animation-timeline: view()) {
+      :root:not(.mh-js) .cx-credits-in { animation: life-settle var(--life-ease-settle, ease-out) both; animation-timeline: view(); animation-range: entry 0% entry 70%; }
+      @keyframes life-settle { from { opacity: .55; translate: 0 14px; } }
+    }
+  }
+}

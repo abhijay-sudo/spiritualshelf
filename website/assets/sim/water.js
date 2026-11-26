@@ -3,6 +3,8 @@ const G = window.SpiritualGPU; if (!G) return;
 const d = document, R = d.documentElement, clamp = (v, a, b) => Math.min(b, Math.max(a, v)), sstep = (a, b, v) => { const t = clamp((v - a) / (b - a), 0, 1); return t * t * (3 - 2 * t); };
 const C2X = 0.40, ANIS = 0.32, DAMP = 0.006, SPONGE = 6, GAIN_PTR = 0.62;
 const L = G.lake = { ready: false, fade: 0, nx: 0, ny: 0, H: null, lights: new Float32Array(14 * 4), nl: 0, cover: [0, 0, 1, 1], box: [0, 0.5, 1, 1], W: 0, H_: 0, wl: 0.5, sun: [0.5, 0.45], tint: [1, 0.74, 0.46], zone: [0, 0, 1, 1], asp: 16 / 9, sx: 1, sy: 1, x0: 0, y0: 0, tier: 'rich', hero: null, ambient: true, coupling: true, gl4: new Float32Array(8), tapHook: null };
+L.wind = 0; L.motion = 1; L.ripples = 1; L.dampK = 1; L.onPetal = null;
+let wt = 0;   // the waves' own clock: it runs faster in a gust
 let cfg = null, el = null, env = null, tierName = 'rich', W = 0, Hh = 0, scale = 1, nx = 0, ny = 0;
 let A = null, B = null, Cn = null, MK = null, MKb = null, DM = null, CX = null, CY = null;
 let progs = null, tex = null, texH = null, texM = null, texKey = '', texState = 0, tw = 0, th = 0, gen = 0, gpu = 0;
@@ -10,7 +12,7 @@ let t = 0, t0 = -1, quiet = true, dirty = false, bucket = 1.2, nextDrop = 1.2, s
 const ptr = { x: 0, y: 0, px: 0, py: 0, on: false, v: 0, pend: false, t: 0 };
 const rnd = () => { seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0; return seed / 4294967296; };
 const introOver = () => !R.classList.contains('cx-js') || R.classList.contains('cx-seen') || R.classList.contains('cx-fest-end');
-const parse = (e) => { let c = null; try { c = JSON.parse(e.dataset.fxWater || 'null'); } catch (x) {} c = c || {}; return { mask: c.mask || [[0, 0.512], [1, 0.512], [1, 1], [0, 1]], wl: c.waterline || 0.5, light: c.light || [0.497, 0.455], color: c.color || [1, 0.74, 0.46], zone: c.diyaZone || [0.06, 0.6, 0.94, 0.95], portrait: c.portrait || {} }; };
+const parse = (e) => { let c = null; try { c = JSON.parse(e.dataset.fxWater || 'null'); } catch (x) {} c = c || {}; return { mask: c.mask || [[0, 0.512], [1, 0.512], [1, 1], [0, 1]], wl: c.waterline || 0.5, light: c.light || [0.497, 0.455], color: c.color || [1, 0.74, 0.46], zone: c.rippleZone || [0.06, 0.6, 0.94, 0.95], portrait: c.portrait || {} }; };
 const candidates = (img, portrait) => {
 const src = portrait ? (img.parentNode.querySelector('source[srcset]') || {}).srcset : img.srcset; const out = [];
 for (const part of String(src || '').split(',')) { const m = part.trim().match(/^(\S+)\s+(\d+)w$/); if (m) out.push({ u: m[1], w: +m[2] }); }
@@ -47,7 +49,7 @@ if (img && texState !== 2) L.asp = /portrait/.test(img.currentSrc || img.src) ? 
 const asp = L.asp;
 const por = asp < 1, o = por ? cfg.portrait : {};
 const dw = W / Hh > asp ? W : Hh * asp, dh = dw / asp, l = (W - dw) * pct(op[0]), tp = (Hh - dh) * pct(op[1] || op[0]);
-L.cover = [l, tp, dw, dh]; L.W = W; L.H_ = Hh; L.scale = scale; L.wl = cfg.wl; L.sun = o.light || cfg.light; L.tint = cfg.color; L.zone = o.diyaZone || cfg.zone; L.hero = img;
+L.cover = [l, tp, dw, dh]; L.W = W; L.H_ = Hh; L.scale = scale; L.wl = cfg.wl; L.sun = o.light || cfg.light; L.tint = cfg.color; L.zone = o.rippleZone || cfg.zone; L.hero = img;
 let u0 = 1, v0 = 1, u1 = 0, v1 = 0; for (const [u, v] of cfg.mask) { u0 = Math.min(u0, u); u1 = Math.max(u1, u); v0 = Math.min(v0, v); v1 = Math.max(v1, v); }
 L.box = [u0, v0, u1, v1];
 /* Ultra: a finer grid, up to 384 across, so the wake and a petal's ring keep their shape */ const U = env && env.U && env.U.f.grid ? env.U : null, bw = (u1 - u0) * dw, bh = (v1 - v0) * dh, budget = Math.min(U ? 1.7e5 * Math.pow(U.f.grid / 384, 2) : tierName === 'rich' ? 36000 : 14000, bw * bh / 9);
@@ -88,11 +90,11 @@ L.toLocal = (cx, cy, o) => { o[0] = cx - (left0 - window.scrollX); o[1] = cy - (
 L.tex = () => (texState === 2 ? tex : null);
 L.depth = (py) => clamp(((py - L.cover[1]) / L.cover[3] - L.wl) / (1 - L.wl), 0, 1);
 const stepSim = () => {
-const a = A, p = B, n = Cn; let pk = 0;
+const a = A, p = B, n = Cn, dk = L.dampK; let pk = 0;
 for (let j = 1; j < ny - 1; j++) {
 const cx = CX[j], cy = CY[j], row = j * nx;
 for (let i = 1; i < nx - 1; i++) {
-const k = row + i, h = a[k], pv = p[k], v = 2 * h - pv + cx * (a[k - 1] + a[k + 1] - 2 * h) + cy * (a[k - nx] + a[k + nx] - 2 * h) - DM[k] * (h - pv);
+const k = row + i, h = a[k], pv = p[k], v = 2 * h - pv + cx * (a[k - 1] + a[k + 1] - 2 * h) + cy * (a[k - nx] + a[k + nx] - 2 * h) - DM[k] * dk * (h - pv);
 const w = v > 1 ? 1 : v < -1 ? -1 : v; n[k] = MK[k] ? w : 0; const m = w < 0 ? -w : w; if (m > pk) pk = m;
 }
 }
@@ -113,10 +115,10 @@ gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, tex); gl.uniform1i(
 gl.activeTexture(gl.TEXTURE1); gl.bindTexture(gl.TEXTURE_2D, texH); gl.uniform1i(P.loc('uH'), 1);
 gl.activeTexture(gl.TEXTURE2); gl.bindTexture(gl.TEXTURE_2D, texM); gl.uniform1i(P.loc('uM'), 2);
 gl.uniform4fv(P.loc('uGl'), L.gl4);
-progLoc(P, gl, { uCover: L.cover, uBox: L.box, uBuf: [bw, bh], uTexel: [1 / nx, 1 / ny], uSun: L.sun, uScale: sc, uT: t, uFade: fade, uWL: L.wl, uAsp: L.asp, uK: 11, uChop: 0.045, uTint: L.tint });
+progLoc(P, gl, { uCover: L.cover, uBox: L.box, uBuf: [bw, bh], uTexel: [1 / nx, 1 / ny], uSun: L.sun, uScale: sc, uT: wt, uFade: fade, uWL: L.wl, uAsp: L.asp, uK: 11, uChop: 0.045 * (1 + 0.8 * L.wind), uWind: L.wind, uTint: L.tint });
 if (P.ult) {   // Ultra's own: its strength (eased by ultra.js), its three switches and where the floating petals are (for the light under them)
 const U = env.U, f = U && U.f; gl.uniform1f(P.loc('uU'), U ? U.shade : 0); gl.uniform3f(P.loc('uUk'), f && f.fine ? 1 : 0, f && f.caustics ? 1 : 0, f && f.glitter ? 1 : 0);
-waveTable(t); gl.uniform4fv(P.loc('uWa'), WA); gl.uniform2fv(P.loc('uWb'), WB);
+waveTable(wt); gl.uniform4fv(P.loc('uWa'), WA); gl.uniform2fv(P.loc('uWb'), WB);
 ca.fill(0); if (U && f.caustics && G.rigid && G.rigid.spots) { const n = G.rigid.spots(sp); for (let i = 0; i < Math.min(4, n); i++) { ca[i * 4] = (sp[i * 2] - L.cover[0]) / L.cover[2]; ca[i * 4 + 1] = (sp[i * 2 + 1] - L.cover[1]) / L.cover[3]; ca[i * 4 + 2] = 0.05; ca[i * 4 + 3] = 1; } }
 gl.uniform4fv(P.loc('uCa'), ca);
 }
@@ -168,12 +170,12 @@ const img = el.querySelector('img.ed-still'); if (img) { if (img.complete) loadT
 leave() { release(); },
 update(dt, inp) {
 if (!A || !seen) return;
-t += dt;
+t += dt; if (L.motion) wt += dt * (1 + 1.2 * L.wind);
 const fade = L.fade = t0 < 0 ? 0 : sstep(0, 1, (t - t0) / 1.2);
 bucket = Math.min(1.6, bucket + dt * 1.2);
 if (ptr.pend) {
 ptr.pend = false; const dx = ptr.x - ptr.px, dy = ptr.y - ptr.py, dist = Math.hypot(dx, dy);
-if (ptr.on && dist > 0.5 && L.inWater(ptr.x, ptr.y)) {
+if (L.ripples && ptr.on && dist > 0.5 && L.inWater(ptr.x, ptr.y)) {
 const amp = 0.05 * GAIN_PTR * Math.min(ptr.v, 1200) / 1200, sg = clamp(2.2 * (nx / 192), 2.4, 4.5), n = Math.min(12, Math.ceil(dist / (sg * L.sx * 1.2)));
 for (let k = 1; k <= n; k++) L.disturb(ptr.px + dx * k / n, ptr.py + dy * k / n, amp / Math.sqrt(n), sg * L.sx);
 }
@@ -184,8 +186,8 @@ nextDrop = t + 7 + rnd() * 9;
 if (G.lake.hero) { const z = L.zone, u = z[0] + rnd() * (z[2] - z[0]), v = clamp(z[1] + rnd() * (z[3] - z[1]), L.box[1] + 0.06, 0.98); L.disturb(L.cover[0] + u * L.cover[2], L.cover[1] + v * L.cover[3], 0.022 + rnd() * 0.03, 5 + rnd() * 5); }
 }
 const sv = inp ? inp.scrollVel : 0;
-if (Math.abs(sv) > 120) { const sw = clamp(sv / 1500, -1, 1) * 0.009, j0 = SPONGE + 3; for (let j = j0; j < j0 + 2; j++) for (let i = 1; i < nx - 1; i++) { const k = j * nx + i; if (MK[k]) A[k] = clamp(A[k] + sw * Math.sin(i / nx * 21 - t * 4.4) * (j === j0 ? 1 : 0.6), -1, 1); } quiet = false; }
-if (!quiet) {
+if (L.ripples && Math.abs(sv) > 120) { const sw = clamp(sv / 1500, -1, 1) * 0.009, j0 = SPONGE + 3; for (let j = j0; j < j0 + 2; j++) for (let i = 1; i < nx - 1; i++) { const k = j * nx + i; if (MK[k]) A[k] = clamp(A[k] + sw * Math.sin(i / nx * 21 - t * 4.4) * (j === j0 ? 1 : 0.6), -1, 1); } quiet = false; }
+if (!quiet && L.motion) {
 const subs = tierName === 'rich' ? 2 : 1; let pk = 0; for (let s = 0; s < subs; s++) pk = stepSim();
 dirty = true; if (pk < 2e-5) { quiet = true; A.fill(0); B.fill(0); Cn.fill(0); }
 }
@@ -230,7 +232,6 @@ if (L.inWater(c[0], c[1])) L.disturb(c[0], c[1], 0.09, 3 * L.sx * Math.max(1, nx
 const debugApi = {
 energy: () => { if (!A) return 0; let s = 0; for (let k = 0; k < A.length; k++) s += A[k] * A[k]; return s; },
 maxHeight: () => { if (!A) return 0; let m = 0; for (let k = 0; k < A.length; k++) { const v = Math.abs(A[k]); if (v > m) m = v; } return m; },
-diyaCount: () => (G.diya ? G.diya.count() : 0), bodies: () => (G.diya ? G.diya.bodies() : []),
 grid: () => ({ nx, ny, tex: texState, texKey, mode: texState === 2 ? tierName : 'overlay', fade: +L.fade.toFixed(2), cover: L.cover.map((v) => Math.round(v)), box: L.box }),
 splat: (u, v, amp, sg) => L.disturb(L.cover[0] + u * L.cover[2], L.cover[1] + v * L.cover[3], amp, (sg || 6) * L.sx), ambient: (v) => { L.ambient = !!v; }, coupling: (v) => { L.coupling = !!v; }, state: () => ({ seen, quiet, away, listening }),
 };

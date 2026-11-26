@@ -6,6 +6,8 @@
 // 3. the home character select: the figure on the stage grows into that person's page
 (() => {
   const d = document, root = d.documentElement;
+  // [life chrome] effects Off, or paused in this tab: the page push (assets/life-vt.css) keeps to today's plain fade; read here because the push is chosen at the first paint
+  try { if (localStorage.getItem('spritual:fx') === 'off') root.setAttribute('data-life-vt', 'off'); if (sessionStorage.getItem('spritual:fxpause') === '1') { root.setAttribute('data-life-vt', 'off'); root.setAttribute('data-fx-paused', ''); } } catch (x) {}
   const calm = () => root.dataset.motion === 'reduce' || matchMedia('(prefers-reduced-motion: reduce)').matches;
   const STORY = '.cx-poster-pic img, .cx-now-screen img, .card-art img, .ed-card-pic img, .cx-next-pic img';
   const FRAME = '.card-art, .cx-poster-pic, .ed-card-pic, .cx-next-pic, .cx-now-screen';

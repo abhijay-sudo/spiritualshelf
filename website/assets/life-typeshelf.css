@@ -1,0 +1,8 @@
+/* Spiritual [life] typeshelf: the layer the landing petals are drawn in (assets/life-typeshelf.js). It sits UNDER the text (the opening's card is z-index 4, this is 3, after the two ambient canvases), so a petal can
+   never cover a letter; it takes no pointer events and cannot be selected, so reading, clicking and selecting work exactly as without it. */
+.lt-layer { position: absolute; inset: 0; z-index: 3; pointer-events: none; overflow: hidden; user-select: none; -webkit-user-select: none; contain: layout paint style; }
+.lt-p { position: absolute; left: 0; top: 0; width: 24px; height: 16.8px; margin: -8.4px 0 0 -12px; background: var(--lt-atlas) no-repeat; background-size: 187.2px 144px; background-position: 0 -124.8px; opacity: 0; pointer-events: none; filter: brightness(1.25) saturate(1.2); will-change: transform, opacity; }
+.lt-p[data-c="1"] { background-position: -24px -124.8px; } .lt-p[data-c="2"] { background-position: -48px -124.8px; } .lt-p[data-c="3"] { background-position: -72px -124.8px; }
+:is(:root[data-motion="reduce"], :root[data-light]) .lt-layer { display: none; }
+@media (prefers-reduced-motion: reduce) { .lt-layer { display: none; } }
+@media print { .lt-layer { display: none; } }

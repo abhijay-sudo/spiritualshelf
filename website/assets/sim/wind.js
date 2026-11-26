@@ -120,6 +120,7 @@ const gust = clamp(inp.scrollVel / 1500, -1, 1) * 120;   // 1 m/s of scroll gust
 const on = inp.on, R = 90, R2 = R * R;
 for (let i = 0; i < N; i++) {
 const o = i * 6; let x = P[o], y = P[o + 1], vx = P[o + 2], vy = P[o + 3]; const life = P[o + 4] - dt, s = P[o + 5], petal = kindOf(s), dr = .6 + .8 * (s * 53.7 % 1);   // nearer ones (larger dr) are bigger, brighter and quicker
+if (petal && life < 1.6 && P[o + 4] >= 1.6 && !scene && G.lake && G.lake.onPetal) G.lake.onPetal(x, y, Math.hypot(vx, vy));   // [life] a petal that settles on the lake as it fades touches it
 if (life <= 0 || x < -40 || x > w + 40 || y < -40 || y > h + 40) { spawn(i, false); continue; }
 sample(x, y, v);
 let wx = (v[0] * (petal ? 2.2 : 1) + gust * (petal ? 1.2 : 1)) * dr, wy = v[1] * dr;

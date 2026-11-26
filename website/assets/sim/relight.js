@@ -129,14 +129,14 @@ lightV[0] += (k * (tx - light[0]) - c * lightV[0]) * dt; lightV[1] += (k * (ty -
 },
 draw(gl, e) {
 const prog = tierName === 'rich' ? P : pr; if (!prog || !prog.ok || !texP || !texD || kf <= 0.003 || !haveRect || rect[2] < 8) return;
-const lamp = 1 + 0.07 * (Math.sin(e.t * 1.7) + 0.6 * Math.sin(e.t * 2.3 + 1.1)) / 1.6;   // a flame's own unsteadiness, under 2.5 Hz
+const flick = 1 + 0.07 * (Math.sin(e.t * 1.7) + 0.6 * Math.sin(e.t * 2.3 + 1.1)) / 1.6;   // a flame's own unsteadiness, under 2.5 Hz
 gl.disable(gl.SCISSOR_TEST); gl.enable(gl.BLEND); gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
 gl.useProgram(prog.p);
 gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, texP); gl.uniform1i(prog.loc('uTex'), 0);
 gl.activeTexture(gl.TEXTURE1); gl.bindTexture(gl.TEXTURE_2D, texD); gl.uniform1i(prog.loc('uDep'), 1);
 gl.uniform4f(prog.loc('uRect'), rect[0], rect[1], rect[2], rect[3]); gl.uniform4f(prog.loc('uClip'), clip[0], clip[1], clip[2], clip[3]);
 gl.uniform2f(prog.loc('uBuf'), e.bw, e.bh); gl.uniform2f(prog.loc('uLight'), light[0], light[1]); gl.uniform2f(prog.loc('uTexel'), 1 / 256, 1 / 144); gl.uniform3f(prog.loc('uCol'), col[0], col[1], col[2]);
-gl.uniform1f(prog.loc('uScale'), scale); gl.uniform1f(prog.loc('uK'), 0.25 * kf * lamp * e.intensity); gl.uniform1f(prog.loc('uAsp'), rect[2] / Math.max(1, rect[3]));
+gl.uniform1f(prog.loc('uScale'), scale); gl.uniform1f(prog.loc('uK'), 0.25 * kf * flick * e.intensity); gl.uniform1f(prog.loc('uAsp'), rect[2] / Math.max(1, rect[3]));
 e.tri(); gl.activeTexture(gl.TEXTURE0);
 },
 stats() { return { key: curKey, want, kf: +kf.toFixed(2), rect: rect.map(Math.round), light: light.map((v) => +v.toFixed(3)), loading, tex: tex.w + 'x' + tex.h, upMs: G.relight.upMs }; },

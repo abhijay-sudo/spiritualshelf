@@ -5,7 +5,10 @@
    (so a page with no script still shows everything) or under a class that motion-browse.js adds (.mb-wait).
    Off under prefers-reduced-motion and under the site's own setting (html[data-motion="reduce"]). */
 
-@keyframes mb-rise { from { opacity: 0; translate: 0 var(--mb-d, 16px); } }
+@keyframes mb-rise { from { opacity: 0; translate: 0 var(--mb-d, 16px); scale: var(--mb-s, 1); } }
+/* [life] the arrival lands on a spring (a copy of --life-ease-spring in life-ease.css, so it is there before the life layer is): it overshoots a little and settles */
+:root { --mb-ease: linear(0, 0.0086 1.5%, 0.0323 3%, 0.0685 4.5%, 0.1147 6%, 0.1685 7.5%, 0.2487 9.5%, 0.5092 15.5%, 0.633 18.5%, 0.7441 21.5%, 0.8247 24%, 0.8934 26.5%, 0.9288 28%, 0.96 29.5%, 1.0028 32%, 1.0405 35%, 1.0617 37.5%, 1.0751 40%, 1.0819 42.5%, 1.0833 45.5%, 1.0743 50.5%, 1.0232 65.5%, 1.0036 74%, 0.9938 84.5%, 0.9951); }
+.grid > .card, .mx-kand-grid > li { --mb-d: 24px; --mb-s: .965; }
 @keyframes mb-swap { from { opacity: .42; translate: 0 6px; } }
 @keyframes mb-chip { from { scale: .955; } }
 /* the results change hands: the old set dims, the grid re-forms while it is all but dark (site.css takes a hidden card out of
@@ -27,7 +30,7 @@
   /* 1. Before the script: the first screen of a grid or list is drawn already on its way in (no flash, and no script needed).
         The script then hands the same animation to the things that really are on screen (same name, same delay: it carries on). */
   :root:not(.mb-js):not([data-motion="reduce"]) :is(.grid > .card, .fest-list > li, .cx-terms > .cx-term, .cx-qs > li, .mx-kand-grid > li):nth-child(-n+12),
-  :root:not([data-motion="reduce"]) .mb-in { animation: mb-rise var(--dur-3) var(--ease-settle) calc(var(--mb-t, 160ms) + var(--mb-i, 0) * var(--stagger)) backwards; }
+  :root:not([data-motion="reduce"]) .mb-in { animation: mb-rise var(--dur-3) var(--mb-ease, var(--ease-settle)) calc(var(--mb-t, 160ms) + var(--mb-i, 0) * var(--stagger)) backwards; }
   /* 2. Below the first screen: waiting (the script adds this), then the same rise once, when a sixth of the thing is in view */
   :root.mb-js:not([data-motion="reduce"]) .mb-wait { opacity: 0; translate: 0 var(--mb-d, 16px); }
   .mb-text { --mb-d: 10px; }

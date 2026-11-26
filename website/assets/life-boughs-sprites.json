@@ -1,0 +1,76 @@
+{
+ "_": "Provenance of assets/life-boughs-sprites.webp. Made by scripts/boughs-sprites.mjs, deterministically. Colours are sampled from the site's own home painting (source); shapes are drawn procedurally by that script. No third-party art, no generative image model, no network.",
+ "source": "assets/film/act1-poster-1920.webp",
+ "atlas": {
+  "w": 312,
+  "h": 240
+ },
+ "cells": {
+  "boughA": {
+   "x": 0,
+   "y": 0,
+   "w": 72,
+   "h": 200
+  },
+  "boughB": {
+   "x": 72,
+   "y": 0,
+   "w": 72,
+   "h": 200
+  },
+  "rootA": {
+   "x": 144,
+   "y": 0,
+   "w": 36,
+   "h": 200
+  },
+  "rootB": {
+   "x": 180,
+   "y": 0,
+   "w": 36,
+   "h": 200
+  },
+  "reedA": {
+   "x": 216,
+   "y": 0,
+   "w": 48,
+   "h": 160
+  },
+  "reedB": {
+   "x": 264,
+   "y": 0,
+   "w": 48,
+   "h": 160
+  },
+  "petalMarigold": {
+   "x": 0,
+   "y": 208,
+   "w": 40,
+   "h": 28
+  },
+  "petalRose": {
+   "x": 40,
+   "y": 208,
+   "w": 40,
+   "h": 28
+  },
+  "petalLotus": {
+   "x": 80,
+   "y": 208,
+   "w": 40,
+   "h": 28
+  },
+  "petalCream": {
+   "x": 120,
+   "y": 208,
+   "w": 40,
+   "h": 28
+  }
+ },
+ "palette": {
+  "foliage": 470,
+  "stem": 260,
+  "reed": 200,
+  "cloud": 600
+ }
+}

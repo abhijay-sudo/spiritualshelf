@@ -1,0 +1,16 @@
+/* Spiritual [life] water and birds, the cheap variants (Balanced, phones, no WebGL2). Loaded with assets/life-birds.js and assets/life-water.js, never for reduced motion, Light mode or Save-Data. */
+/* the painted water, with a few slow bands of light drifted across it by the compositor (transform only); the shore is set from script (--lw-top) */
+.lw-shine { position: absolute; left: 0; right: 0; top: var(--lw-top, 52%); bottom: 0; pointer-events: none; overflow: hidden; contain: layout paint style;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 16%, #000 78%, transparent 100%); mask-image: linear-gradient(to bottom, transparent 0, #000 16%, #000 78%, transparent 100%); }
+.lw-shine i { position: absolute; left: 27%; width: 46%; border-radius: 50%; will-change: transform;
+  background: radial-gradient(closest-side, rgb(255 226 170 / .40), rgb(255 226 170 / .13) 55%, rgb(255 226 170 / 0)); }
+.lw-shine i:nth-child(1) { top: 5%;  height: 2.2%; left: 20%; width: 34%; opacity: .55; }
+.lw-shine i:nth-child(2) { top: 17%; height: 3%;   left: 38%; width: 40%; opacity: .75; }
+.lw-shine i:nth-child(3) { top: 34%; height: 4%;   left: 14%; width: 52%; opacity: .6; }
+.lw-shine i:nth-child(4) { top: 55%; height: 5.5%; left: 30%; width: 60%; opacity: .5; }
+.lw-shine i:nth-child(5) { top: 76%; height: 7%;   left: 8%;  width: 70%; opacity: .38; }
+/* a startled flock flaps quicker (the CSS birds; the GPU birds do their own) */
+.cx-sky-flock[data-alarm] .cx-bird b { animation-duration: .24s !important; }
+@media (prefers-reduced-motion: reduce) { .lw-shine { display: none; } }
+:root[data-motion="reduce"] .lw-shine, :root[data-light] .lw-shine { display: none; }
+@media print { .lw-shine { display: none; } }

@@ -12,7 +12,11 @@ const s = (hc >= 8 ? 2 : hc > 4 ? 1 : 0) + (dm == null ? 1 : dm >= 8 ? 2 : dm > 
 return s >= 3 ? 'rich' : s >= 1 ? 'balanced' : 'off'; };
 G.get = rd;
 G.supported = () => !still() && cap !== false;   // (no probe here: the sheet may ask at any time, the probe waits for idle)
-G.pref = () => { const p = rd(); return p === 'off' || still() || probe() === false || (!p && G.auto() === 'off') ? '' : p || 'auto'; };
+const PK = 'spritual:fxpause', pz = () => r.hasAttribute('data-fx-paused');
+try { if (sessionStorage.getItem(PK) === '1') r.setAttribute('data-fx-paused', ''); } catch (e) {}
+const vt = () => { if (rd() === 'off' || pz()) r.setAttribute('data-life-vt', 'off'); else r.removeAttribute('data-life-vt'); };
+G.paused = pz;
+G.pref = () => { const p = rd(); return p === 'off' || pz() || still() || probe() === false || (!p && G.auto() === 'off') ? '' : p || 'auto'; };
 const coarse = () => matchMedia('(pointer: coarse)').matches;
 const ultraCan = () => !still() && cap !== false && !coarse();   // (the Ultra choice is on offer on any desktop that can run the layer; Auto is stricter)
 G.ultraCan = ultraCan;
@@ -39,7 +43,12 @@ if (navigator.onLine === false) { try { caches.match(us[0]).then((h) => (h ? fet
 };
 G.set = (m) => {
 try { if (m === 'ultra' || m === 'rich' || m === 'balanced' || m === 'off') localStorage.setItem(K, m); else localStorage.removeItem(K); } catch (e) {}
-G.ultraHold = false; if (m !== 'ultra') G.ultraAuto = false; ui(); go(true); ultra(); for (const f of L) { try { f(rd()); } catch (e) {} }
+G.ultraHold = false; if (m !== 'ultra') G.ultraAuto = false; vt(); ui(); go(true); ultra(); for (const f of L) { try { f(rd()); } catch (e) {} }
+};
+G.pause = (on) => {
+try { if (on) sessionStorage.setItem(PK, '1'); else sessionStorage.removeItem(PK); } catch (e) {}
+if (on) r.setAttribute('data-fx-paused', ''); else r.removeAttribute('data-fx-paused');
+vt(); ui(); go(!on); ultra(); for (const f of L) { try { f(rd()); } catch (e) {} }
 };
 const dbgPx = /[?&]fxdebug=1/.test(location.search) && /[?&]fxphysx=1/.test(location.search);
 const home = !!(me && me.dataset.ugfx);
@@ -70,9 +79,12 @@ G.ultraPhysics = () => { G.ultraAuto = true; ultra(); };
 G.onchange = (f) => { if (typeof f === 'function') L.push(f); };
 d.addEventListener('change', (e) => { const t = e.target; if (t && t.name === 'fx' && t.form && t.form.hasAttribute('data-comfort')) { e.stopPropagation(); G.set(t.value); } }, true);
 const again = () => { ui(); go(); ultra(); };
+{ const pn = d.querySelector('[data-life-panel]'), dl = pn && pn.closest('dialog');
+const lp = () => { if (!pn || pn.dataset.loaded || !me || !me.dataset.panel) return; pn.dataset.loaded = '1'; pn.dataset.orient = me.dataset.orient || ''; const s = d.createElement('script'); s.src = me.dataset.panel; s.async = true; d.head.appendChild(s); };
+if (dl) { if (dl.open) lp(); new MutationObserver(() => { if (dl.open) lp(); }).observe(dl, { attributes: true, attributeFilter: ['open'] }); } }
 try { if (navigator.getBattery) navigator.getBattery().then((b) => { const f = () => { const v = !b.charging && b.level < 0.2; if (v !== !!G.saver) { G.saver = v; again(); } }; G.saver = !b.charging && b.level < 0.2; b.addEventListener('chargingchange', f); b.addEventListener('levelchange', f); again(); }).catch(() => {}); } catch (e) {}
 const idle = (f) => { if (window.requestIdleCallback) requestIdleCallback(f, { timeout: 4000 }); else setTimeout(f, 1500); };
-const boot = () => { raf = requestAnimationFrame(() => requestAnimationFrame(() => idle(() => { probe(); again(); }))); };
+const boot = () => { raf = requestAnimationFrame(() => requestAnimationFrame(() => idle(() => { if (!still()) probe(); again(); }))); };
 let was = still(); const recheck = () => { const n = still(); if (n !== was) { was = n; again(); } };
 new MutationObserver(recheck).observe(r, { attributes: true, attributeFilter: ['data-motion', 'data-light', 'class'] });
 try { const c = navigator.connection; if (c && c.addEventListener) c.addEventListener('change', recheck); } catch (e) {}

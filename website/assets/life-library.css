@@ -1,0 +1,53 @@
+/* Spiritual [life] life-library.css: what life-library.js switches on (every rule is keyed to an attribute the script sets on <html> only after it has
+   mounted, so a page that never mounts it, reduced motion included, is exactly the page it was). Transform-only: translate, scale, rotate, opacity. */
+
+/* ---- hero depth: the painting is a little larger than its frame and leans (translate is written by the script), and it trails the scroll ---- */
+:root[data-life-lib-depth] .is-cx-head .ed-page-media img,
+:root[data-life-lib-depth] .is-cx-head .ed-page-media video { inset: -4.5%; width: 109%; height: 109%; max-width: none; max-height: none; will-change: translate; }   /* (larger, not scaled: the site's own slow push-in owns scale) */
+:root[data-life-lib-depth] .is-cx-head .ed-page-head-in { will-change: translate; }
+@supports (animation-timeline: scroll()) {
+  :root[data-life-lib-depth] .is-cx-head .ed-page-media { animation: ll-lag linear both; animation-timeline: scroll(root); animation-range: 0px 80vh; }
+}
+@keyframes ll-lag { to { translate: 0 11vh; } }
+/* the motes canvas sits between the painting's shade and the title */
+.ll-motes { position: absolute; inset: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; opacity: .9; }
+
+/* ---- cards and posters: the spring writes --ll-* on the one that is lifted; the rule below is the only place they become a transform ---- */
+.grid > .card.ll-on, .mx-kand.ll-on {
+  transform: perspective(1000px) translate3d(0, var(--ll-ty, 0px), 0) rotateX(var(--ll-rx, 0deg)) rotateY(var(--ll-ry, 0deg)) scale(var(--ll-s, 1)) !important;
+  will-change: transform; z-index: 4;
+}
+.grid > .card.ll-on, .mx-kand.ll-on { transition: translate .5s var(--cx-ease, ease), box-shadow .5s var(--cx-ease, ease), scale var(--dur-1, 160ms) var(--ease-settle, ease-out) !important; }
+/* cinema.js already leans these (a CSS transition and a soft light, `.tilt`): with this package mounted the spring above takes the lean over (a passing pointer lifts
+   and tilts nothing), and the soft light follows the spring and the lift instead of the raw pointer */
+:root[data-life-lib] .grid > .card.tilt:not(.ll-on), :root[data-life-lib] .mx-kand.tilt:not(.ll-on) { transform: none !important; }
+:root[data-life-lib] .grid > .card.tilt.is-lean > .sheen, :root[data-life-lib] .mx-kand.tilt.is-lean > .sheen { opacity: 0; }
+:root[data-life-lib] .grid > .card.ll-on > .sheen, :root[data-life-lib] .mx-kand.ll-on > .sheen { opacity: var(--ll-a, 0); transition: none;
+  background: radial-gradient(60% 50% at var(--ll-gx, 50%) var(--ll-gy, 40%), rgb(255 236 200 / .55), rgb(255 236 200 / .12) 45%, transparent 70%); }
+/* (the picture inside the brush-edged frame moves, never the frame: it is scaled up by the lift so its edges never show) */
+.mx-kand.ll-on .cx-poster-pic img { transition: none; scale: calc(1 + var(--ll-a, 0) * .07); translate: calc(var(--ll-u, 0) * var(--ll-a, 0) * -10px) calc(var(--ll-v, 0) * var(--ll-a, 0) * -7px); }
+.mx-kand.ll-on .cx-poster-txt { translate: calc(var(--ll-u, 0) * 5px) calc(var(--ll-v, 0) * 4px); }
+/* the one shadow that follows the pointer (the cards themselves carry none) */
+.ll-shadow { position: absolute; left: 0; top: 0; width: 0; height: 0; pointer-events: none; opacity: 0; border-radius: 3px; will-change: transform, opacity;
+  box-shadow: 0 30px 46px -18px rgb(0 0 0 / .7), 0 0 70px -12px rgb(255 182 96 / .26); }
+.ll-ghost { box-shadow: none; }
+
+/* ---- filtering: the layout is final the instant the site changes it, so there is nothing to wait for (the page used to hold a hidden card in place
+   for 350 ms and re-form behind a dim); the script then slides what stayed, grows what arrived and shows what left ---- */
+:root[data-life-lib-flip] .grid > .card { transition: box-shadow .35s var(--ease, ease), border-color .3s, scale var(--dur-1, 160ms) var(--ease-settle, ease-out) !important; }
+:root[data-life-lib-flip] .grid > .card[hidden] { display: none !important; }
+:root[data-life-lib-flip] [data-grid] { overflow-anchor: none; }
+
+/* a chosen mood chip settles with a spring (the first design popped past its size) */
+@keyframes ll-chip { from { scale: .88; } }
+:root[data-life-lib-chip]:not([data-motion="reduce"]) .chip input:checked + span { animation: ll-chip var(--life-dur-bounce, 700ms) var(--life-ease-bounce, cubic-bezier(.3, 1.6, .5, 1)); }
+
+/* ---- a row thrown with a mouse ---- */
+.ll-throw { scroll-snap-type: none !important; scroll-behavior: auto !important; }
+.ll-drag { cursor: grabbing; user-select: none; -webkit-user-select: none; }
+.ll-drag a, .ll-drag img { -webkit-user-drag: none; pointer-events: none; }
+
+@media (prefers-reduced-motion: reduce) { .ll-motes, .ll-shadow, .ll-ghost { display: none !important; } }
+@media print { .ll-motes, .ll-shadow, .ll-ghost { display: none !important; } }
+/* the governor's last step on these pages: the arrivals come together instead of one after another */
+:root[data-life-lib-calm] { --stagger: 0ms; }

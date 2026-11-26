@@ -33,7 +33,7 @@ const n = { id: d.id, el, i, realm: realms.find((r) => r.id === el.closest('.st-
 sc: +d.sc || 0, name: el.querySelector('.st-p-n').textContent, other: d.o, en: d.en, href: a.getAttribute('href'), title: el.querySelector('.st-p-k')?.textContent || '', line: el.querySelector('.st-p-l').textContent,
 ties: [...el.querySelectorAll('.st-ties > li')].map((li) => ({ k: li.dataset.k, ph: li.dataset.ph, fl: li.dataset.fl || '', ev: li.dataset.ev || '' })), withs: [...el.querySelectorAll('.st-with a')].map((x) => ({ k: x.dataset.k, n: +x.dataset.n })),
 x: 0, y: 0, px: 0, py: 0, pr: 0, vis: false, ph: (i * 2.399) % TAU, sp: 0.36 + ((i * 7) % 11) * 0.02, near: null, kin: null, lab: null,
-in: 0, dr: 0, bt: 0, sm: null, under: 1, pulseAt: 0, wd: -1, dim: 1, hot: 0, glow: 0, pulse: -1e9, la: 0, bu: 0, lci: 0, spr: null, halo: null, rgb: null, rank: 0 };
+in: 0, dr: 0, bt: 0, sm: null, under: 1, pulseAt: 0, wd: -1, dim: 1, hot: 0, glow: 0, pulse: -1e9, la: 0, bu: 0, lci: 0, spr: null, halo: null, rgb: null, rank: 0, tx: 0, ty: 0 };
 nodes.push(n); byId[n.id] = n;
 }
 if (!nodes.length) return off();
@@ -57,6 +57,7 @@ const m = byId[t.k]; if (!m || m.i < n.i || edgeAt[key(n, m)]) continue;
 const e = { a: n, b: m, bow: (n.i + m.i) % 2 ? 1 : -1, named: false, n: t.n, flow: 0, ev: '', ph: '', g: edges.length % 4, hot: 0, prog: 1, t0: 0, len: 1, ax: 0, ay: 0, bx: 0, by: 0, mx: 0, my: 0, vis: false };
 edges.push(e); withE.push(e); edgeAt[key(n, m)] = e;
 }
+for (const e of edges) { e.bk = 1; e.sn = 0; }   // [life-people] how bowed a thread is (1 at rest) and how stretched (0 at rest): written only by a field laid over the sky
 edges.forEach((e, i) => { const ra = e.a.realm.i * 0.35 + e.a.rank * 0.45; const rb = e.b.realm.i * 0.35 + e.b.rank * 0.45; e.fb = rb < ra; e.t0 = 1.9 + Math.min(ra, rb) * 0.6 + (e.named ? 0 : 0.6) + (i % 17) * 0.03; });
 for (const n of nodes) { n.near = new Set([...n.ties.map((t) => t.k), ...n.withs.map((t) => t.k)]); n.kin = new Set(n.ties.map((t) => t.k)); n.edges = []; n.namedE = []; }
 for (const e of edges) { e.a.edges.push(e); e.b.edges.push(e); if (e.named) { e.a.namedE.push(e); e.b.namedE.push(e); } }
@@ -246,6 +247,7 @@ return p;
 let sel = null; let hover = null; let kbd = false; let fr = null; let pressed = ''; let fs = 0; const pts = new Map();
 const wander = { run: false, user: false, cur: null, nxt: null, e: null, rev: false, mode: 'off', t0: 0, hold: 8000, recent: [], visits: {}, hops: 0, fnode: null, guide: null, started: false };
 const focusOf = () => sel || hover || (wander.run ? wander.fnode : null);
+const fx = { step: null, busy: null, down: null, claim: null, up: null, over: null };
 const sx = (x) => (x - cam.x) * cam.k + W / 2; const sy = (y) => (y - cam.y) * cam.k + H / 2;
 const hit = (ax, ay, aw, ah, bx, by, bw, bh) => ax < bx + bw && bx < ax + aw && ay < by + bh && by < ay + ah;
 const bez = (e, t) => { const u = 1 - t; const ax = e.a.x; const ay = e.a.y; const bx = e.b.x; const by = e.b.y; const mx = (ax + bx) / 2 - (by - ay) * 0.1 * e.bow; const my = (ay + by) / 2 + (bx - ax) * 0.1 * e.bow; return { x: u * u * ax + 2 * u * t * mx + t * t * bx, y: u * u * ay + 2 * u * t * my + t * t * by }; };
@@ -267,13 +269,13 @@ bigTick++; ctx.setTransform(d, 0, 0, d, 0, 0); ctx.clearRect(0, 0, W, H); ctx.im
 const intro = still || introDone ? 1 : clamp01(introT / 6.2); const neb = still || introDone ? 1 : clamp01((introT - 0.9) / 3.2); const ia = still || introDone ? 1 : clamp01((introT - 1.6) / 1.2); const capA = cap.classList.contains('is-in') && capR ? 1 : 0; capF += (capA - capF) * (still ? 1 : Math.min(1, dt * 3));
 for (const n of nodes) {
 const fl = still ? 0 : 3 / k * 0.85; const dx = Math.sin(t * n.sp + n.ph) * fl; const dy = Math.cos(t * n.sp * 0.8 + n.ph * 1.7) * fl;
-n.px = sx(n.x + dx); n.py = sy(n.y + dy); n.pr = n.r * k; n.dr = Math.max(n.pr, FLOOR[n.tier]); n.vis = n.px > -n.dr * 3 - 40 && n.px < W + n.dr * 3 + 40 && n.py > -n.dr * 3 - 40 && n.py < H + n.dr * 3 + 40;
+n.px = sx(n.x + dx + n.tx); n.py = sy(n.y + dy + n.ty); n.pr = n.r * k; n.dr = Math.max(n.pr, FLOOR[n.tier]); n.vis = n.px > -n.dr * 3 - 40 && n.px < W + n.dr * 3 + 40 && n.py > -n.dr * 3 - 40 && n.py < H + n.dr * 3 + 40;
 n.under = capF > 0.01 && capR && n.px > capR[0] - n.dr && n.px < capR[0] + capR[2] + n.dr && n.py > capR[1] - n.dr && n.py < capR[1] + capR[3] + n.dr ? 1 - 0.7 * capF : 1;
 if (narrow && sel && n !== sel && n.py - n.dr * 0.7 < topH) n.under *= 0.2;   // a phone's card: nobody half under the chips
 n.in = still || introDone ? 1 : clamp01((introT - n.bt) / 0.75);
 }
 for (const e of edges) {
-const a = e.a; const b = e.b; e.ax = a.px; e.ay = a.py; e.bx = b.px; e.by = b.py; e.mx = (e.ax + e.bx) / 2 - (e.by - e.ay) * 0.1 * e.bow; e.my = (e.ay + e.by) / 2 + (e.bx - e.ax) * 0.1 * e.bow;
+const a = e.a; const b = e.b; e.ax = a.px; e.ay = a.py; e.bx = b.px; e.by = b.py; e.mx = (e.ax + e.bx) / 2 - (e.by - e.ay) * 0.1 * e.bow * e.bk; e.my = (e.ay + e.by) / 2 + (e.bx - e.ax) * 0.1 * e.bow * e.bk;
 e.vis = Math.min(e.ax, e.bx, e.mx) < W + 40 && Math.max(e.ax, e.bx, e.mx) > -40 && Math.min(e.ay, e.by, e.my) < H + 40 && Math.max(e.ay, e.by, e.my) > -40;
 e.hot = Math.max(a.hot, b.hot); e.prog = still || introDone ? 1 : ease01(introT, e);
 }
@@ -325,6 +327,7 @@ if (e.hot < 0.02 || !e.vis) continue; const tour = wander.run && wander.e && f =
 if (e.named) { ctx.lineWidth = lw * 6 * tw; ctx.strokeStyle = `rgba(${GOLD},${(0.16 * h).toFixed(3)})`; ctx.beginPath(); qpath(e, 1); ctx.stroke(); ctx.lineWidth = lw * 1.8 * tw; ctx.strokeStyle = `rgba(255,228,176,${(0.92 * h).toFixed(3)})`; ctx.stroke(); }
 else { ctx.lineWidth = lw * 1.1; ctx.strokeStyle = `rgba(232,226,255,${(0.34 * h * (e.n > 1 ? 1 : 0.7)).toFixed(3)})`; ctx.beginPath(); qpath(e, 1); ctx.stroke(); }
 }
+if (fx.over && !still) fx.over(ctx, qpath, lw);   // [life-people] stretched threads, in a hairline of their own
 if (!still) { drawComets(now, dt, f); if (wander.guide && wander.guide.e) drawComet(wander.guide, 1.9); }
 for (const n of nodes) {
 if (!n.vis || n.in <= 0.01) continue; const a = n.in * n.dim * n.under * (0.45 + 0.55 * n.realm.a); const pr = n.dr; const br = still ? 0 : Math.sin(t * 0.8 + n.ph);
@@ -468,9 +471,10 @@ for (const n of nodes) { const lit = !f || n === f || f.near.has(n.id); const tg
 for (const r of realms) { const tg = !fr || r === fr ? 1 : 0.16; r.a += (tg - r.a) * (still ? 1 : Math.min(1, dt * 4)); if (Math.abs(r.a - tg) < 0.004) r.a = tg; }
 if (!still && !coarse) { ptr.x += (ptr.tx - ptr.x) * Math.min(1, dt * 2.2); ptr.y += (ptr.ty - ptr.y) * Math.min(1, dt * 2.2); } else { ptr.x = ptr.y = 0; }
 if (!still && introDone) { if (!nextWave) nextWave = now + 12000; else if (now > nextWave) { wave(now); nextWave = now + 26000 + rndr() * 18000; } wavePulse(now); }
+if (fx.step) fx.step(now, dt, still);
 wTick(now, still);
 };
-const moving = () => flight || morphBusy() || vel.x * vel.x + vel.y * vel.y > 4 || Math.abs(to.x - cam.x) * cam.k > 0.15 || Math.abs(to.y - cam.y) * cam.k > 0.15 || Math.abs(to.k - cam.k) > 0.0004;
+const moving = () => flight || (fx.busy && fx.busy()) || morphBusy() || vel.x * vel.x + vel.y * vel.y > 4 || Math.abs(to.x - cam.x) * cam.k > 0.15 || Math.abs(to.y - cam.y) * cam.k > 0.15 || Math.abs(to.k - cam.k) > 0.0004;
 const frame = (now) => {
 raf = 0; if (!shown) return;
 const q = QP[Q]; const gap = now - last;
@@ -601,7 +605,7 @@ if (by === 'card' || by === 'find') card.querySelector('.st-card-open')?.focus({
 }
 wake();
 };
-const at = (cx, cy, slop) => { const r = stage.getBoundingClientRect(); const x = (cx - r.left - W / 2) / cam.k + cam.x; const y = (cy - r.top - H / 2) / cam.k + cam.y; let best = null; let bd = 1e9; for (const n of nodes) { if (n.in < 0.5) continue; const d = Math.hypot(n.x - x, n.y - y); if (d < Math.max(n.r, n.dr / cam.k) + slop / cam.k && d < bd) { bd = d; best = n; } } return best; };
+const at = (cx, cy, slop) => { const r = stage.getBoundingClientRect(); const x = (cx - r.left - W / 2) / cam.k + cam.x; const y = (cy - r.top - H / 2) / cam.k + cam.y; let best = null; let bd = 1e9; for (const n of nodes) { if (n.in < 0.5) continue; const d = Math.hypot(n.x + n.tx - x, n.y + n.ty - y); if (d < Math.max(n.r, n.dr / cam.k) + slop / cam.k && d < bd) { bd = d; best = n; } } return best; };
 const zoomAt = (px, py, mul, t = 0.18) => { stopFlight(); free(); atHome = false; const k = clamp(to.k * mul, kMin, K_MAX); const wx = (px - W / 2) / to.k + to.x; const wy = (py - H / 2) / to.k + to.y; Object.assign(to, clampCam({ x: wx - (px - W / 2) / k, y: wy - (py - H / 2) / k, k })); ease = t; wake(); };
 const capHide = () => { cap.classList.remove('is-in'); wake(); };
 const capShow = (n, hop) => {
@@ -696,6 +700,7 @@ let drag = null; let pinch = 0; let tapAt = 0; let tapX = 0; let tapY = 0;
 on(stage, 'pointerdown', (e) => {
 if (e.button) return; kbd = false; userInput(); stopFlight(); pts.set(e.pointerId, { x: e.clientX, y: e.clientY }); try { stage.setPointerCapture(e.pointerId); } catch (err) {}
 vel.x = vel.y = 0; drag = { x: e.clientX, y: e.clientY, moved: false, t: performance.now(), touch: e.pointerType !== 'mouse' };
+if (fx.down && pts.size === 1) fx.down(e, drag);
 if (pts.size === 2) { const [a, b] = [...pts.values()]; pinch = Math.hypot(a.x - b.x, a.y - b.y); drag.moved = true; }
 });
 on(stage, 'pointermove', (e) => {
@@ -705,6 +710,7 @@ const dx = e.clientX - p.x; const dy = e.clientY - p.y; p.x = e.clientX; p.y = e
 if (pts.size === 2) { const [a, b] = [...pts.values()]; const d = Math.hypot(a.x - b.x, a.y - b.y); const r = stage.getBoundingClientRect(); if (pinch) { zoomAt((a.x + b.x) / 2 - r.left, (a.y + b.y) / 2 - r.top, d / pinch, 0); to.x -= dx / 2 / to.k; to.y -= dy / 2 / to.k; clampCam(to); Object.assign(cam, to); } pinch = d; sky.classList.add('is-used'); wake(); return; }
 if (!drag) return;
 if (!drag.moved && Math.hypot(e.clientX - drag.x, e.clientY - drag.y) < (drag.touch ? 8 : 4)) return;
+if (fx.claim && fx.claim(e, drag)) { if (!drag.moved) { drag.moved = true; stage.classList.add('is-drag'); sky.classList.add('is-used'); free(); atHome = false; if (hover) { hover = null; if (!sel) showCard(null); } } wake(); return; }   // [life-people] a person is held: the field moves them, the sky does not pan
 if (!drag.moved) { drag.moved = true; stage.classList.add('is-drag'); sky.classList.add('is-used'); free(); atHome = false; if (hover) { hover = null; if (!sel) showCard(null); } }
 to.x -= dx / cam.k; to.y -= dy / cam.k; clampCam(to); cam.x = to.x; cam.y = to.y; ease = 0;
 const now = performance.now(); const dt = Math.max(8, now - drag.t) / 1000; drag.t = now; vel.x = vel.x * 0.6 + dx / dt * 0.25; vel.y = vel.y * 0.6 + dy / dt * 0.25; wake();
@@ -713,6 +719,7 @@ const up = (e) => {
 if (!pts.has(e.pointerId)) return; pts.delete(e.pointerId); pinch = 0; stage.classList.remove('is-drag');
 if (pts.size) { drag = { moved: true, t: performance.now() }; vel.x = vel.y = 0; return; }
 const d = drag; drag = null; if (!d) return;
+if (fx.up && fx.up(e, d)) { ease = 0.22; wake(); return; }   // [life-people] a held person was let go
 if (!d.moved && e.type === 'pointerup') {
 vel.x = vel.y = 0; const n = at(e.clientX, e.clientY, d.touch ? 12 : 4); const now = performance.now();
 if (!n && d.touch && now - tapAt < 330 && Math.hypot(e.clientX - tapX, e.clientY - tapY) < 36) { tapAt = 0; goRest(); }
@@ -823,6 +830,11 @@ on(window, 'pageshow', (e) => { if (e.persisted) { shown = !document.hidden; las
 try { new MutationObserver(() => wake()).observe(root, { attributes: true, attributeFilter: ['data-motion'] }); } catch (e) {}
 for (const n of nodes) { n.kinL = [...n.kin].map((k) => byId[k]).filter(Boolean); n.nearL = [...n.near].filter((k) => !n.kin.has(k)).map((k) => byId[k]).filter(Boolean); n.want = 0; }
 for (const b of sky.querySelectorAll('[data-st-go]')) b.setAttribute('aria-pressed', String(b.dataset.stGo === 'all')); pressed = 'all';
+{ const api = { nodes, edges, byId, cam, wake, coarse, stage, canvas: cv, hook: (h) => Object.assign(fx, h),
+unhook: () => { for (const k of Object.keys(fx)) fx[k] = null; for (const n of nodes) { n.tx = 0; n.ty = 0; } for (const e of edges) { e.bk = 1; e.sn = 0; } wake(); },
+still: calm, focus: focusOf, hover: () => hover, sel: () => sel, wandering: () => wander.run, gesture: () => drag, pick, at, size: () => [W, H], dpr: () => dpr, zoom: () => cam.k,
+toWorld: (cx, cy) => { const r = stage.getBoundingClientRect(); return [(cx - r.left - W / 2) / cam.k + cam.x, (cy - r.top - H / 2) / cam.k + cam.y]; } };
+sky.spritualSky = api; try { sky.dispatchEvent(new CustomEvent('spritual:sky', { detail: api })); } catch (err) {} }   // [life-people] the seam: handed over once
 sky.stProbe = () => ({ arr: arrangeInfo, restRealm: restRealm && restRealm.id, restK: rest.k, W, H, k: cam.k, home: home.k, wander: wander.run && wander.mode, fnode: wander.fnode && wander.fnode.id, nodes: nodes.map((n) => ({ id: n.id, tier: n.tier, x: n.px, y: n.py, d: n.dr * 2, vis: n.vis, in: n.in })) });
 size(false); wLabel();
 { let pid = null; let rid = null; try { const u = new URL(location.href); pid = u.searchParams.get('p'); rid = u.searchParams.get('r'); } catch (e) {}

@@ -19,7 +19,8 @@
 @media (hover: hover) { .cx-select .cx-sel-tile:hover .cx-sel-tile-bg img { filter: brightness(1) saturate(1.08); } }
 
 /* ---------- 2. springs own the tiles while the hand is on the wall ---------- */
-:root.ms-on .cx-select.ms-live .cx-sel-grid > li:not([hidden]) > .cx-sel-tile { will-change: transform; }
+/* [life-select] will-change is held by the tiles in motion only (script: .ms-hot), not by all hundred of them while the hand is on the wall */
+.cx-select .cx-sel-grid .cx-sel-tile.ms-hot { will-change: transform; }
 :root.ms-on .cx-select.ms-live .cx-sel-grid .cx-sel-tile.is-on { translate: none; scale: none; }
 
 /* ---------- 3. rim light and sheen ---------- */

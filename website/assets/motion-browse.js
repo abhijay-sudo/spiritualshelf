@@ -57,6 +57,7 @@
     new MutationObserver((rs) => {
       if (!rs.some((m) => m.target.parentNode === grid && (m.oldValue !== null) !== m.target.hasAttribute('hidden'))) return;
       showAll();
+      if (root.dataset.lifeLibFlip) return;   // [life] life-library moves the cards itself (FLIP): no dim and re-form
       const n = performance.now(); if (n - t < 840 || still()) return; t = n;
       // where a hidden card leaves the layout late (display in its transition), dim first and re-form in the dark; else just come up
       const c = grid.querySelector('.card'), late = !!c && getComputedStyle(c).transitionProperty.indexOf('display') > -1;

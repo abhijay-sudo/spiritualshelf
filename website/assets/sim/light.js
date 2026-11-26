@@ -50,7 +50,7 @@ else if (rU) freeU();
 if (!make(gl)) return;
 const tex = L.tex && L.tex(), f = L.fade;
 gl.disable(gl.SCISSOR_TEST);
-L.drawBright(rA); if (G.diya) G.diya.drawFlames(rA);
+L.drawBright(rA);
 gl.disable(gl.BLEND);
 pass(gl, pb, rB, rA, 1.4 / rA.w, 0); pass(gl, pb, rA, rB, 0, 1.4 / rA.h);
 pass(gl, pb, rC, rA, 1.8 / rA.w, 0); pass(gl, pb, rD, rC, 0, 1.4 / rC.h);

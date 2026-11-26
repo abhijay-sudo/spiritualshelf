@@ -1,0 +1,12 @@
+/* life-rail: the rails' physics layer (life-rail.js). Loaded only where the life layer runs (never for reduced motion, Light mode or Save-Data). It moves
+   rotate, translate and one cursor; it changes no layout. While the script is throwing or catching a rail the browser's own snap is switched off (so the two
+   never pull at once) and comes back, at a card, the moment it lets go. */
+[data-lr] { scroll-snap-type: none !important; scroll-behavior: auto !important; }
+:where([data-lr-ready]) { cursor: grab; }
+[data-lr-grab], [data-lr-grab] * { cursor: grabbing !important; user-select: none; -webkit-user-select: none; }
+[data-lr-ready] :is(a, img) { -webkit-user-drag: none; }
+/* each card hangs from above its top edge and swings by --lr degrees (the script writes it, and removes it at rest); the page's own speed lets it trail by --lr-y px */
+.path-stop > a, .cx-strip > li > .cx-still, .cx-rail > li > a { transform-origin: 50% -1.1rem; rotate: calc(var(--lr, 0) * 1deg); translate: 0 calc(var(--lr-y, 0) * 1px); }
+:is(.path-stop, .cx-strip > li, .cx-rail > li):not([style*="--lr"]) > :is(a, .cx-still) { rotate: none; translate: none; }
+[data-lr-lean] :is(.path-stop > a, .cx-strip > li > .cx-still, .cx-rail > li > a) { will-change: rotate, translate; }
+@media (prefers-reduced-motion: reduce) { [data-lr] { scroll-snap-type: revert !important; } .path-stop > a, .cx-strip > li > .cx-still, .cx-rail > li > a { rotate: none !important; translate: none !important; } }

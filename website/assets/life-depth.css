@@ -1,0 +1,20 @@
+/* Depth (life-depth.js): the home opening's painting in three layers, the far bank sliding against the lake and the sky. The layers are made by
+   the script (they are the painting's own pixels, cut at build time: scripts/depth-cut.mjs) and exist only while this stylesheet and script run:
+   with reduced motion, Light mode or Save-Data neither is fetched and the opening is the one complete painting (and its film). Transforms only. */
+.cx-depth { position: absolute; z-index: -2; left: var(--dp-x, 0px); top: var(--dp-y, 0px); width: var(--dp-w, 100%); height: var(--dp-h, 100%); pointer-events: none; opacity: 0; transition: opacity 700ms ease; }
+.cx-depth.is-on { opacity: 1; }
+.cx-depth.is-off { display: none; }
+/* the clip is a plain rectangle: from the top of the band to the shore (the water below is never covered), as wide as the strips; no mask, no render surface */
+.dp-clip { position: absolute; left: var(--dp-pl, -1.68%); width: var(--dp-pw, 103.36%); top: var(--dp-t, 38.89%); height: var(--dp-ch, 11.76%); overflow: hidden; contain: paint; }
+.dp { position: absolute; left: 0; width: 100%; top: 0; height: var(--dp-sh, 122%); transform-origin: 50% var(--dp-o, 85%); pointer-events: none; user-select: none; }
+.dp > img, .dp-in > img { display: block; position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; pointer-events: none; user-select: none; -webkit-user-drag: none; }
+.dp-in { position: absolute; inset: 0; transform-origin: 50% var(--dp-o, 85%); }
+.dp--hills, .dp--trees { will-change: transform; }
+/* the crowns' idle sway: a slow lean about the shore (the tops move, the roots stay), on the compositor; the gust lean is the script's, on the outer layer */
+.dp--trees .dp-in { will-change: transform; animation: dp-sway 11s ease-in-out infinite alternate; }
+.dp--hills .dp-in { will-change: transform; animation: dp-sway-far 17s ease-in-out -4s infinite alternate; }
+@keyframes dp-sway { from { transform: skewX(-.45deg); } to { transform: skewX(.6deg); } }
+@keyframes dp-sway-far { from { transform: skewX(-.16deg); } to { transform: skewX(.2deg); } }
+:root:is([data-motion="reduce"], [data-light], .ep-lite) .cx-depth, :root[data-motion="light"] .cx-depth { display: none !important; }
+@media (prefers-reduced-motion: reduce) { .cx-depth { display: none !important; } }
+@media print, (forced-colors: active) { .cx-depth { display: none !important; } }

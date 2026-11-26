@@ -1,0 +1,11 @@
+/* Spiritual [life] life-reader.css: the reading progress and the margins of a story page. Keyed to attributes life-reader.js sets after it mounts. */
+/* the thin bar at the top is driven by a spring instead of the scroll timeline (so it leans past and settles, and also moves where scroll timelines are missing) */
+:root[data-life-read] .progress { animation: none !important; transform: scaleX(0); will-change: transform; }
+.ll-prog-head { position: fixed; z-index: 22; left: 0; top: env(safe-area-inset-top, 0px); width: 26px; height: 10px; margin: -4px 0 0 -13px; border-radius: 50%; pointer-events: none; opacity: 0; will-change: translate, opacity, scale;
+  background: radial-gradient(closest-side, rgb(255 246 222 / .95), rgb(243 196 126 / .55) 45%, rgb(243 196 126 / 0)); }
+/* a margin of the page: a few seeds of light blown about (outside every line of text, the canvas takes no input) */
+.ll-margin { position: fixed; top: 0; bottom: 0; z-index: 4; pointer-events: none; height: 100%; opacity: .95; }
+.ll-margin--l { left: 0; }
+.ll-margin--r { right: 0; }
+@media (prefers-reduced-motion: reduce) { .ll-prog-head, .ll-margin { display: none !important; } }
+@media print { .ll-prog-head, .ll-margin { display: none !important; } }

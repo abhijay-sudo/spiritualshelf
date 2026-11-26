@@ -1219,7 +1219,9 @@ html[lang="hi"] .cast-row-l { font-family: "Mukta", var(--cx-ui); font-size: .98
 /* the one under the pointer holds the light; the rest of the row falls back */
 @media (hover: hover) {
   :is(.grid, .cx-posters, .cx-rail) > * { transition: opacity .5s var(--cx-ease), filter .5s var(--cx-ease); }
-  :is(.grid, .cx-posters, .cx-rail):has(> :is(:hover, :focus-within)) > :not(:hover, :focus-within) { opacity: .55; filter: saturate(.7); }
+  /* [life-select] was :has(> :is(:hover, :focus-within)): that selector made the browser re-check every row on EVERY change to the page's elements (a measured 10 ms
+     per added or removed element on the home page, 4x of it at 4x CPU). cinema.js now sets .is-hand on a row while one of its cards is hovered or focused. */
+  :is(.grid, .cx-posters, .cx-rail).is-hand > :not(:hover, :focus-within) { opacity: .55; filter: saturate(.7); }
 }
 /* lean: cinema.js follows the pointer and writes --rx/--ry (tilt) and --gx/--gy (where the light falls) */
 .tilt { transform: perspective(1100px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) !important; transition: transform .7s var(--cx-ease), translate .5s var(--cx-ease), box-shadow .5s var(--cx-ease); transform-style: preserve-3d; will-change: transform; }
@@ -2337,6 +2339,9 @@ html[lang="hi"] .cx-consent-btn { font-family: "Mukta", var(--cx-ui); }
 @keyframes ty-hold { from { opacity: 0; } }
 @keyframes ty-in { from { opacity: 0; } }
 
+/* [life-select] cinema.js holds the stage (and Hanuman's flare and halo, which sit left or right with the words) at opacity 0 for the two frames in which a swap moves the
+   words to the other side: the move is then not counted as a layout shift. Opacity, not visibility, so a focused button inside keeps the focus. */
+.cx-select.ls-flip :is(.cx-sel-stage, .ha-sel-rig) { opacity: 0 !important; transition: none !important; }
 /* a card cut by the edge of a sideways row (cinema.js, .is-peek) shows its picture and no words: nothing is ever half a word */
 .is-peek :is(.cx-poster-txt, .cx-still-n, .cx-still-t, .cx-cast-name, .cx-cast-alt) { opacity: 0; }
 :is(.cx-posters, .cx-strip, .cx-cast-row) > li :is(.cx-poster-txt, .cx-still-n, .cx-still-t, .cx-cast-name, .cx-cast-alt) { transition: opacity .25s; }

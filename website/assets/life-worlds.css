@@ -1,0 +1,24 @@
+/* life-worlds: depth and momentum for the places pages (life-worlds.js). Loaded only where the life layer runs (never for reduced motion, Light mode or
+   Save-Data). It moves transform, opacity, scale and translate only and changes no layout. The mist is two layers of soft gradient (no image, no filter, no
+   blend mode): a far bank low on the horizon and a nearer, heavier one below it. They sit above the paintings and under the page's shading and words (the
+   view's own ::after, z-index 1 and later in order, darkens them where the words are). */
+.wl-mist { position: absolute; inset: 0; z-index: 1; pointer-events: none; overflow: hidden; contain: layout paint; animation: wlm-in 2.4s ease-out both; }
+.wl-mist-in { position: absolute; left: 0; top: -14%; bottom: -14%; width: 200%; opacity: var(--wlm-o, .55); background-repeat: repeat-x; background-size: 50% 100%; will-change: transform; }
+/* (a tile is one screen wide and repeats once, so the drift from 0 to -50% joins itself; every blob lies wholly inside its tile) */
+.wl-mist--near .wl-mist-in { top: -24%; bottom: -24%; }
+.wl-mist--far .wl-mist-in { background-image:
+  radial-gradient(ellipse 30% 3.2% at 28% 57%, rgb(var(--wlm, 255 236 208) / .5), transparent 72%),
+  radial-gradient(ellipse 30% 2.8% at 74% 61%, rgb(var(--wlm, 255 236 208) / .42), transparent 72%),
+  radial-gradient(ellipse 20% 2.2% at 50% 51%, rgb(var(--wlm, 255 236 208) / .3), transparent 72%); }
+.wl-mist--near .wl-mist-in { background-image:
+  radial-gradient(ellipse 31% 6.5% at 31% 71%, rgb(var(--wlm, 255 236 208) / .34), transparent 72%),
+  radial-gradient(ellipse 27% 5.5% at 76% 66%, rgb(var(--wlm, 255 236 208) / .3), transparent 72%),
+  radial-gradient(ellipse 20% 4.2% at 53% 82%, rgb(var(--wlm, 255 236 208) / .26), transparent 72%); }
+@keyframes wlm-in { from { opacity: 0; } }
+/* momentum: the paintings lean in a hair with the scroll's speed and shift against the pointer (the baseline 1.012 keeps their edges beyond the view), the words trail */
+.wl-misty .wl-pic { scale: calc(var(--wl-push, 1) * 1.012); translate: calc(var(--wl-px, 0) * -5px) calc(var(--wl-py, 0) * -3px); transform-origin: 50% 58%; }
+.wl-misty .wl-text { translate: 0 calc(var(--wl-lag, 0) * 1px); }
+/* the Atlas: the mist lies BEHIND the map sheet and the road (full width of the page, clipped to the stage), so it shows in the margins and between, and never over a pin or a word */
+.at-stage.wl-misty { position: relative; isolation: isolate; }
+.at-stage.wl-misty > .wl-mist { z-index: -1; left: calc(50% - 50vw); right: calc(50% - 50vw); }
+@media (prefers-reduced-motion: reduce) { .wl-mist { display: none; } .wl-misty .wl-pic, .wl-misty .wl-text { scale: none; translate: none; } }

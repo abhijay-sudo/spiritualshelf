@@ -9,6 +9,12 @@
 //   - a few gold motes drift off the hand, carried by how fast it moves (more on Ultra, none when effects are off)
 // Keyboard focus gets the same light, held still. Touch: only a press. Reduced motion, Light mode and print: nothing.
 // One requestAnimationFrame loop, running only while something is still moving and the select is on screen.
+// [life-select] No pointer handler reads the page's geometry any more: a handler only keeps where the pointer is; the loop, at the start of
+// its frame and before it writes anything, takes the section's and the tiles' boxes (from life-select's cache when that package is running,
+// else one read) and only then moves things. will-change is held by the tiles in motion only, not by the whole wall. When the budget governor
+// drops an effect, html[data-ls-drop] lists it (tilt, lean, dolly, in that order): without tilt the tiles are left to CSS (the chosen one
+// rises and scales 1.07 on a spring curve, no script), without lean the painting and the figure go back to CSS, without dolly a new
+// character arrives without the push-in.
 (() => {
   const d = document, root = d.documentElement;
   const sel = d.querySelector('main.cx-home .cx-select[data-select]');
@@ -21,6 +27,8 @@
   const fxLevel = () => { const f = root.dataset.fx; return root.classList.contains('ep-lite') || f === 'off' ? 0 : f === 'ultra' ? 3 : f === 'balanced' ? 1 : 2; };
   const clamp = (v, a, b) => (v < a ? a : v > b ? b : v);
   const now = () => performance.now();
+  const dropped = (k) => { const v = root.dataset.lsDrop; return !!v && (' ' + v + ' ').includes(' ' + k + ' '); };
+  const LSX = () => window.LifeSelect || null;
 
   /* ---------- touch: a press, nothing else ---------- */
   grid.addEventListener('pointerdown', (e) => {
@@ -39,13 +47,17 @@
   const still = (o, key, t, eps) => Math.abs(o[key] - t) < eps && Math.abs(o['v' + key]) < eps * 4;
 
   const tiles = [...grid.querySelectorAll('.cx-sel-tile')];
-  const S = tiles.map((el) => ({ el, x: 0, vx: 0, y: 0, vy: 0, rx: 0, vrx: 0, ry: 0, vry: 0, s: 1, vs: 0, cx: 0, cy: 0, w: 0, h: 0, on: false, vis: false, done: false, wx: 0, wy: 0, wrx: 0, wry: 0, ws: 1 }));
+  const S = tiles.map((el) => ({ el, x: 0, vx: 0, y: 0, vy: 0, rx: 0, vrx: 0, ry: 0, vry: 0, s: 1, vs: 0, cx: 0, cy: 0, w: 0, h: 0, on: false, hot: false, vis: false, done: false, wx: 0, wy: 0, wrx: 0, wry: 0, ws: 1 }));
   const index = new Map(tiles.map((t, i) => [t, i]));
   let base = '';                                   // the tile's own transform (its slant), kept after ours
   let pitchX = 120, pitchY = 80, gridL = 0, gridT = 0, selL = 0, selT = 0, selW = 0, selH = 0, dirty = true, stale = true;
   // where the wall and the section sit on screen: read once after a scroll or a change, never on every move (a read after
   // the springs have written would make the browser restyle the page in the middle of the hand's own events)
-  const place = () => { const g = grid.getBoundingClientRect(), r = sel.getBoundingClientRect(); gridL = g.left; gridT = g.top; selL = r.left; selT = r.top; selW = r.width; selH = r.height; stale = false; };
+  const place = () => {
+    const c = LSX(), cr = c && c.rects && c.rects();   // life-select's cached boxes (kept in page coordinates, shifted by the live scroll): no layout read
+    if (cr) { gridL = cr.grid.left; gridT = cr.grid.top; selL = cr.sel.left; selT = cr.sel.top; selW = cr.sel.width; selH = cr.sel.height; stale = false; return; }
+    const g = grid.getBoundingClientRect(), r = sel.getBoundingClientRect(); gridL = g.left; gridT = g.top; selL = r.left; selT = r.top; selW = r.width; selH = r.height; stale = false;
+  };
   const measure = () => {
     place(); const g = { left: gridL, top: gridT }; dirty = false;
     let first = null, second = null, below = null;
@@ -65,7 +77,7 @@
   addEventListener('scroll', () => { stale = true; }, { passive: true });
 
   /* ---------- pointer state ---------- */
-  let px = 0, py = 0, inGrid = false, hand = -1, lastHand = -1, live = false, msOn = false;
+  let px = 0, py = 0, rawX = 0, rawY = 0, inGrid = false, hand = -1, lastHand = -1, live = false, msOn = false, kick = -1;   // rawX/rawY: the pointer in the window; px/py, sx/sy are taken from them in the frame, after the boxes are read
   let sx = 0, sy = 0, inSel = false, pvx = 0, pvy = 0, lastMove = 0, lastT = 0, lastX = 0, lastY = 0;
   const waves = [];                                // pending bumps: { i, at, ix, iy }
   const kickWave = (h) => {
@@ -78,6 +90,13 @@
       waves.push({ i: j, at: t0 + u * 52, ix: (dx / len) * 150 * a, iy: (dy / len) * 110 * a, is: -.55 * a });
     }
   };
+
+  // will-change is held by the tiles that are about to move (the one in hand and the ring around it) and let go when each has settled
+  const heat = (h) => {
+    const o = S[h];
+    for (const q of S) { if (!q.vis || q.hot) continue; const dx = (q.cx - o.cx) / pitchX, dy = (q.cy - o.cy) / pitchY; if (Math.hypot(dx, dy) < 2.9) { q.hot = true; q.el.classList.add('ms-hot'); } }
+  };
+  const cool = (o) => { if (o.hot) { o.hot = false; o.el.classList.remove('ms-hot'); } };
 
   /* ---------- the light on the tile in hand: two layers, so the one left behind can fade ---------- */
   const mkFx = () => {
@@ -113,6 +132,7 @@
     if (i < 0 || i === lastPicked) return;
     const from = lastPicked; lastPicked = i;
     if (!parOn) return;
+    if (dropped('dolly')) return;
     P.z = Math.max(P.z, .028); P.vz = 0;
     const dir = from >= 0 && S[from].vis && S[i].vis ? Math.sign(S[i].cx - S[from].cx) : 0;
     P.hx += dir * 22; P.vhx = 0; wake();
@@ -181,7 +201,9 @@
   const frame = (t) => {
     raf = 0; if (!onScreen || d.hidden || calm()) { reset(); return; }
     const dt = prevT ? Math.min(.05, (t - prevT) / 1000) : 1 / 60; prevT = t;
-    if (dirty) measure();
+    if (dirty) measure(); else if (stale) place();     // the frame's one read, before any write
+    px = rawX - gridL; py = rawY - gridT; sx = rawX - selL; sy = rawY - selT;
+    if (kick >= 0) { const k = kick; kick = -1; if (S[k] && S[k].vis) { kickWave(k); heat(k); } }
     // the hand's speed fades once it stops reporting
     if (now() - lastMove > 60) { const f = Math.exp(-dt * 9); pvx *= f; pvy *= f; }
     let busy = false;
@@ -201,14 +223,14 @@
           if (u < 2.9) { const f = Math.exp(-(u * u) / 2.4), len = u || 1; tx = (dx / len) * 7 * f; ty = (dy / len) * 5 * f; tr_y = (dx / len) * 5 * f; trx = -(dy / len) * 4 * f; ts = 1 - .035 * f; }
         }
       }
-      if (!o.on && tx === 0 && ty === 0 && ts === 1 && trx === 0 && tr_y === 0) continue;
+      if (!o.on && tx === 0 && ty === 0 && ts === 1 && trx === 0 && tr_y === 0) { cool(o); continue; }
       for (let s = 0; s < n; s++) {
         step(o, 'x', tx, K.p, C.p, sdt); step(o, 'y', ty, K.p, C.p, sdt);
         step(o, 'rx', trx, K.r, C.r, sdt); step(o, 'ry', tr_y, K.r, C.r, sdt); step(o, 's', ts, K.s, C.s, sdt);
       }
       const settled = still(o, 'x', tx, .02) && still(o, 'y', ty, .02) && still(o, 'rx', trx, .02) && still(o, 'ry', tr_y, .02) && still(o, 's', ts, .0005);
-      if (settled && tx === 0 && ty === 0 && trx === 0 && tr_y === 0 && ts === 1) { o.x = o.y = o.rx = o.ry = o.vx = o.vy = o.vrx = o.vry = o.vs = 0; o.s = 1; o.on = false; o.done = false; o.wx = o.wy = o.wrx = o.wry = 0; o.ws = 1; o.el.style.transform = ''; continue; }
-      o.on = true; if (!settled) busy = true; else if (o.done) continue;
+      if (settled && tx === 0 && ty === 0 && trx === 0 && tr_y === 0 && ts === 1) { o.x = o.y = o.rx = o.ry = o.vx = o.vy = o.vrx = o.vry = o.vs = 0; o.s = 1; o.on = false; o.done = false; o.wx = o.wy = o.wrx = o.wry = 0; o.ws = 1; o.el.style.transform = ''; cool(o); continue; }
+      o.on = true; if (!o.hot) { o.hot = true; o.el.classList.add('ms-hot'); } if (!settled) busy = true; else if (o.done) continue;
       o.done = settled;
       // a change too small to see is not written (each write restyles the tile)
       if (!settled && Math.abs(o.x - o.wx) < .04 && Math.abs(o.y - o.wy) < .04 && Math.abs(o.rx - o.wrx) < .04 && Math.abs(o.ry - o.wry) < .04 && Math.abs(o.s - o.ws) < .0006) continue;
@@ -239,30 +261,29 @@
   };
   const reset = () => {
     cancelAnimationFrame(raf); raf = 0; waves.length = 0; motes.length = 0;
-    for (const o of S) { if (o.on || o.el.style.transform) { o.el.style.transform = ''; } o.x = o.y = o.rx = o.ry = o.vx = o.vy = o.vrx = o.vry = o.vs = 0; o.s = 1; o.on = false; }
+    for (const o of S) { if (o.on || o.el.style.transform) { o.el.style.transform = ''; } cool(o); o.x = o.y = o.rx = o.ry = o.vx = o.vy = o.vrx = o.vry = o.vs = 0; o.s = 1; o.on = false; }
     if (cv && drawn) { cx2.setTransform(1, 0, 0, 1, 0, 0); cx2.clearRect(0, 0, cv.width, cv.height); drawn = false; }
     glowA = 0; unlight(); parStop(); live = false; msOn = false; sel.classList.remove('ms-live'); root.classList.remove('ms-on');
   };
 
   /* ---------- events ---------- */
   const track = (e) => {
-    if (stale) place(); const x = e.clientX - selL, y = e.clientY - selT, t = e.timeStamp || now();
+    const t = e.timeStamp || now(); rawX = e.clientX; rawY = e.clientY;
     if (lastT && t > lastT) { const k = Math.min(1, (t - lastT) / 40); pvx += ((e.clientX - lastX) / ((t - lastT) / 1000) - pvx) * k; pvy += ((e.clientY - lastY) / ((t - lastT) / 1000) - pvy) * k; }
     pvx = clamp(pvx, -4000, 4000); pvy = clamp(pvy, -4000, 4000);
-    lastT = t; lastX = e.clientX; lastY = e.clientY; lastMove = now(); sx = x; sy = y;
+    lastT = t; lastX = e.clientX; lastY = e.clientY; lastMove = now();
   };
   sel.addEventListener('pointermove', (e) => {
     if (e.pointerType !== 'mouse' || !fine()) return;
-    if (!msOn) { msOn = true; root.classList.add('ms-on'); } inSel = true; track(e); parStart(); ensureCanvas(); wake();
+    if (!msOn) { msOn = true; root.classList.add('ms-on'); } inSel = true; track(e); if (!dropped('lean')) parStart(); ensureCanvas(); wake();
   }, { passive: true });
   sel.addEventListener('pointerleave', (e) => { if (e.pointerType !== 'mouse') return; inSel = false; lastT = 0; wake(); });
   grid.addEventListener('pointermove', (e) => {
-    if (e.pointerType !== 'mouse' || !fine()) return;
-    if (dirty) measure(); else if (stale) place();
-    px = e.clientX - gridL; py = e.clientY - gridT;
+    if (e.pointerType !== 'mouse' || !fine() || dropped('tilt')) return;
+    rawX = e.clientX; rawY = e.clientY;      // (no layout read here: the frame takes the boxes)
     inGrid = true; if (!live) { live = true; sel.classList.add('ms-live'); }
     const t = e.target.closest && e.target.closest('.cx-sel-tile'); const i = t ? index.get(t) : undefined;
-    if (i !== undefined && i !== hand) { hand = i; if (i !== lastHand) { lastHand = i; kickWave(i); } light(t, false); }
+    if (i !== undefined && i !== hand) { hand = i; if (i !== lastHand) { lastHand = i; kick = i; } light(t, false); }
     else if (i === undefined && hand >= 0) { hand = -1; }
     wake();
   }, { passive: true });
@@ -283,6 +304,11 @@
   const rest = () => { if (calm()) reset(); };
   new MutationObserver(rest).observe(root, { attributes: true, attributeFilter: ['data-motion', 'data-light'] });
   try { mqR.addEventListener('change', rest); mqF.addEventListener('change', () => { if (!mqF.matches) reset(); }); } catch {}
+  // the budget governor (life-select.js) lists what it has dropped in html[data-ls-drop]: apply it at once, and again when it is restored
+  new MutationObserver(() => {
+    if (dropped('tilt')) { waves.length = 0; kick = -1; inGrid = false; hand = -1; lastHand = -1; unlight(); live = false; sel.classList.remove('ms-live'); wake(); }
+    if (dropped('lean')) parStop();
+  }).observe(root, { attributes: true, attributeFilter: ['data-ls-drop'] });
   let lvSeen = fxLevel();
   new MutationObserver(() => { const lv = fxLevel(); if (lv === lvSeen) return; lvSeen = lv; if (!lv && cv) { motes.length = 0; if (drawn) { cx2.setTransform(1, 0, 0, 1, 0, 0); cx2.clearRect(0, 0, cv.width, cv.height); drawn = false; } } else if (cv) sizeCanvas(); }).observe(root, { attributes: true, attributeFilter: ['data-fx', 'class'] });
 })();
