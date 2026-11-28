@@ -1,0 +1,107 @@
+/* [arrival] A first visit: what a stranger needs in reach from the first screen. Loaded on every page, after the sheets it adjusts.
+   1. the menu's tools (Search, Reading comfort, Sound), which a phone's header has no room for
+   2. the header's search control on a wide screen
+   3. the hero's second, quieter action: straight to the first story
+   4. the library on a phone: the search field in the first screen
+   5. the character wall: each name as large as its tile allows
+   6. the reading strip in a story: a full finger's width for each round chip
+   Nothing here moves: the only animation is the menu's own rise, under the same motion switches as the rows beside it. */
+
+/* ---------- 1. the menu: tools under its top bar ---------- */
+/* (a column, so one more child needs no new row template: the links take the spare height, the foot stays at the foot) */
+.ed-menu .ed-menu-in { display: flex; flex-direction: column; }
+.ed-menu .ed-menu-in > nav { flex: 1 0 auto; }
+.ed-menu-tools { display: flex; flex-wrap: wrap; gap: .5rem; }
+.ed-menu-find, .ed-menu-tool {
+  display: inline-flex; align-items: center; gap: .65rem; box-sizing: border-box; min-height: 48px; min-width: 0; padding: .45rem .9rem .45rem .8rem;
+  border: 1px solid color-mix(in oklab, currentColor 26%, transparent); border-radius: 4px; background: color-mix(in oklab, currentColor 5%, transparent);
+  color: inherit; font: 500 1rem/1.25 var(--cx-ui, var(--ed-sans)); letter-spacing: 0; text-align: left; text-decoration: none; cursor: pointer;
+  touch-action: manipulation; -webkit-user-select: none; user-select: none; -webkit-tap-highlight-color: transparent;
+}
+html[lang="hi"] :is(.ed-menu-find, .ed-menu-tool) { font-family: "Mukta", var(--cx-ui, var(--ed-sans)); font-size: 1.05rem; line-height: 1.35; }
+.ed-menu-find { flex: 1 0 100%; }
+.ed-menu-tool { flex: 1 1 auto; }
+:is(.ed-menu-find, .ed-menu-tool) .ic { flex: none; width: 1.25rem; height: 1.25rem; }
+.ed-menu-tool .ic .ic-fill { fill: currentColor; }
+.ed-menu-tool-t { display: grid; gap: .1rem; min-width: 0; }
+.ed-menu-tool small { font-size: .82rem; font-weight: 400; opacity: .82; }
+html[lang="hi"] .ed-menu-tool small { font-size: .88rem; }
+.ed-menu-tool[aria-pressed="true"] { border-color: var(--cx-gold, #e8b45a); background: color-mix(in oklab, var(--cx-gold, #e8b45a) 20%, transparent); }
+:is(.ed-menu-find, .ed-menu-tool):active { background: color-mix(in oklab, currentColor 12%, transparent); }
+@media (hover: hover) and (pointer: fine) { :is(.ed-menu-find, .ed-menu-tool):hover { border-color: color-mix(in oklab, currentColor 60%, transparent); } }
+:is(.ed-menu-find, .ed-menu-tool):focus-visible { outline: 2px solid var(--cx-gold, #e8b45a); outline-offset: 2px; }
+/* a phone: three rows, the same in both languages and whatever the sound's label says; wider: one row */
+@media (max-width: 599px) { .ed-menu-tool { flex: 1 0 100%; } }
+@media (min-width: 760px) and (min-height: 521px) { .ed-menu-find { flex: 1 1 18rem; } .ed-menu-tools { max-width: 60rem; } }
+/* they arrive with the rows under them, and stand still wherever the rows do */
+@media (max-width: 759px), (orientation: landscape) and (max-height: 520px) { :root:not([data-motion="reduce"]) .ed-menu[open] .ed-menu-tools { animation: cx-rise-in .45s var(--ease-settle, ease) both; } }
+@media (prefers-reduced-motion: reduce) { .ed-menu[open] .ed-menu-tools { animation: none !important; } }
+@media (forced-colors: active) { .ed-menu-find, .ed-menu-tool { border: 1px solid ButtonText; } .ed-menu-tool[aria-pressed="true"] { border-width: 3px; } }
+
+/* ---------- 2. the header: search, where its icons show ---------- */
+.ed-head a.ed-find { color: inherit; text-decoration: none; }
+/* just past the width where the bar's links come in (editorial.css: 80em English, 67.5em Hindi) the links and tools have only a few px to spare:
+   one more icon there ran "Quiet moment" / "शांत पल" under the dial (measured: 29 px at 1280 English, 24 px at 1080 Hindi). Search stays in the Menu
+   and on the library; the header's glass comes in once there is room for it. */
+@media (min-width: 80em) and (max-width: 83.99em) { html:not([lang="hi"]) .ed-head a.ed-find { display: none; } }
+@media (min-width: 67.5em) and (max-width: 69.99em) { html[lang="hi"] .ed-head a.ed-find { display: none; } }
+/* the same with larger text (Reading comfort), where the English links come in later and wider (measured: 75 px of overlap at 1344 with size l, 26 at 1600 with xl) */
+@media (max-width: 92.99em) { html:not([lang="hi"])[data-size="l"] .ed-head a.ed-find { display: none; } }
+@media (max-width: 102.99em) { html:not([lang="hi"])[data-size="xl"] .ed-head a.ed-find { display: none; } }
+
+/* ---------- 3. the hero: the second action ---------- */
+.cx-open-left .cx-first { min-height: 48px; padding: 0 1.15rem 0 1rem; gap: .6rem; font-size: 1rem; touch-action: manipulation; }
+.cx-open-left .cx-first .ic { width: 1.15rem; height: 1.15rem; flex: none; }
+.cx-open-left .cx-first small { font-size: .85rem; font-weight: 400; color: rgb(255 240 220 / .88); padding-left: .6rem; border-left: 1px solid rgb(255 240 220 / .35); }
+/* [int-a] when the minutes wrap under the label (a narrow phone) the rule before them goes; the same width is kept, split both sides, so the line cannot flip back (polish.js marks .sep-first) */
+.cx-open-left .cx-first small.sep-first { border-left-color: transparent; padding-inline: .3rem; }
+html[lang="hi"] .cx-open-left .cx-first { font-family: "Mukta", var(--cx-ui); font-size: 1.05rem; }
+.cx-open-left .cx-first:focus-visible { outline: 2px solid var(--cx-cream); outline-offset: 3px; }
+/* (one line wherever it fits; with very large text the minutes go under the words instead of widening the row past the screen and the
+   primary button with it: measured 552 px wide on a 390 px phone at 200% text when the whole button was nowrap) */
+@media (max-width: 599px) { .cx-open-left .cx-first { flex: 1 1 100%; min-width: 0; max-width: 100%; flex-wrap: wrap; row-gap: .15rem; padding-block: .35rem; text-align: center; } .cx-open-left .cx-first small { white-space: nowrap; } }
+/* a phone on its side: one row, so the minutes give way before anything wraps */
+@media (orientation: landscape) and (max-height: 520px) { .cx-open-left .cx-first, html[lang="hi"] .cx-open-left .cx-first { min-height: 44px; padding-inline: .9rem; font-size: .92rem; } }
+@media (orientation: landscape) and (max-height: 520px) and (max-width: 879px) { .cx-open-left .cx-first small { display: none; } }
+/* a reader with a place kept has "Continue reading" in the same foot: that card is their way in */
+.cx-open-foot:has(.cx-continue:not([hidden])) .cx-first { display: none; }
+
+/* ---------- 4. the library on a phone: the painting is a band, and the search field is in the first screen ---------- */
+#q { scroll-margin-top: calc(var(--ed-head-h, 64px) + 5rem); }
+@media (max-width: 759px), (orientation: landscape) and (max-height: 520px) {
+  .is-cx-head .ed-library .ed-page-head { min-height: 0; }
+  .is-cx-head .ed-library .ed-page-head-in { gap: .7rem; padding-top: calc(var(--ed-head-h) + 1.9rem); padding-bottom: 1.9rem; }
+  .ed-library .ed-lib { padding-top: 1.1rem; }
+  /* arriving at the field (library/#q) the page stays at its top: the field is already in the first screen, and a jump would leave the heading cut by the header */
+  #q { scroll-margin-top: 68svh; }
+}
+/* an upright phone: the painting starts under the header and fades in from the dark, so Hanuman flies clear of the site name instead of
+   behind it, and the words sit below the flight */
+@media (max-width: 759px) and (orientation: portrait) {
+  .is-cx-head .ed-library .ed-page-media { top: 3.4rem; -webkit-mask-image: linear-gradient(transparent, #000 2.6rem); mask-image: linear-gradient(transparent, #000 2.6rem); }
+  .is-cx-head .ed-library .ed-page-head-in { padding-top: calc(var(--ed-head-h) + 4.6rem); padding-bottom: 1.3rem; }
+}
+/* on its side the figure is already clear of the site name; the band is wide and low, so the painting is shown from its top edge or the
+   header takes the head of the flight */
+@media (max-width: 759px) and (orientation: landscape), (orientation: landscape) and (max-height: 520px) {
+  .is-cx-head .ed-library .ed-page-media .ed-media > img { object-position: 40% 0%; }
+}
+/* the smallest phones: the figure is drawn smaller there, so the words need less room above them (the search field stays in the first screen) */
+@media (max-width: 359px) and (orientation: portrait) {
+  .is-cx-head .ed-library .ed-page-head-in { padding-top: calc(var(--ed-head-h) + 3.4rem); padding-bottom: 1rem; }
+}
+
+/* ---------- 5. the character wall: each name as large as its tile allows ---------- */
+/* roster.css sized a name from its letter count (every letter taken as .58em wide, and the spaces counted too), so many names that fit at full
+   size were set smaller: on a 360 px phone 21 English names were under 12 px, down to 9.5. --nw is the measured width of the name's widest word
+   (src/build.mjs, tileNameW): the name is set at the largest size that word fits the tile, up to the same ceiling as before, and a name of two
+   words breaks at its space. Only a single word too long for its tile even edge to edge is still set smaller, and only as far as it needs. */
+.cx-select .cx-sel-grid .cx-sel-tile-n[style*="--nw"] { left: 2px; right: 2px; font-size: clamp(9.5px, calc((100cqi - 7px) / var(--nw)), 12.5px); }
+html[lang="hi"] .cx-select .cx-sel-grid .cx-sel-tile-n[style*="--nw"] { font-size: clamp(11px, calc((100cqi - 7px) / var(--nw)), 14px); }
+@media (min-width: 2200px) { html:not([lang="hi"]) .cx-select .cx-sel-grid .cx-sel-tile-n[style*="--nw"] { font-size: clamp(9.5px, calc((100cqi - 7px) / var(--nw)), calc(12.5px * var(--cx-k, 1))); } }
+
+/* ---------- 6. the reading strip in a story: a full finger's width for each round chip ---------- */
+/* the sound, share and page chips are drawn 40 px wide and took a touch only on those 40 px. The drawn chip stays as it is; its touch area is 44 px
+   (the chips stand 54 px apart, so no two areas meet). The scene beads already have their own wider strip (film.css) and are not changed. */
+.fm-live .fm-rail button:not(.fm-lang) { position: relative; }
+.fm-live .fm-rail button:not(.fm-lang)::after { content: ""; position: absolute; inset: -2px; border-radius: 50%; }

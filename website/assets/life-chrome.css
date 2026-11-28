@@ -9,9 +9,12 @@
     transition: scale var(--lc-d) var(--lc-e), translate var(--lc-d) var(--lc-e), background-color .32s ease, border-color .32s ease, color .32s ease, box-shadow .32s ease, opacity .32s ease; }
   :root :where(.cx-btn, .ed-btn, .btn, .save, .chip span, .ed-menu-btn, .ed-icon, .cx-round, .dial-fab, .cx-sound, .ed-lang, .ed-saved, .ed-nav-btn, .link-btn, .chip-link):active { --lc-d: 90ms; --lc-e: cubic-bezier(.2, .8, .2, 1); scale: .955; }
   :root .chip:active span { scale: .955; }
-  /* the keyboard's own press: the focused control rises a hair on its spring (the ring is unchanged: same outline, same colour) */
-  :root :where(.cx-btn, .ed-btn, .btn, .save, .ed-menu-btn, .ed-icon, .cx-round, .dial-fab, .ed-nav-btn):focus-visible { scale: 1.03; }
-  :root .chip input:focus-visible + span { scale: 1.04; }
+  /* [alive] under a finger these draw their own press (the settle above, the ring below, assets/life-chrome.js), so the browser's grey tap flash is not laid over it, and a tap
+     is answered without the double-tap wait. Only here, where that press is really drawn: with reduced motion, Light mode, Save-Data or effects Off this file is never
+     loaded and the browser's own flash stays as the only answer to a tap. (The same list as PRESS in life-chrome.js.) */
+  :root :where(.cx-btn, .ed-btn, .btn, .save, .chip, .ed-menu-btn, .ed-icon, .cx-round, .dial-fab, .cx-sound, .ed-lang, .ed-saved, .ed-nav-btn, .link-btn, .chip-link, .card, .cx-poster, .cx-sel-tile) { -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+  /* [alive] (a control reached with the keyboard used to rise 3 per cent on the 595 ms spring, and a chip 4: motion on every Tab. It is gone; the focus ring is
+     what it was, same outline, same colour, and it is the answer to the keyboard.) */
 
   /* ---------- The header: when the page has moved it settles smaller (the glass is 10 per cent shorter, the row 3.5 per cent smaller), on a spring. Nothing in the flow changes. ---------- */
   :root .ed-head::before, :root .ed-head::after { transform-origin: 50% 0; transition: opacity .32s cubic-bezier(.45, .05, .25, 1), scale var(--life-dur-spring, 595ms) var(--life-ease-spring, ease); }

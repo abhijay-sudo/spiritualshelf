@@ -1,0 +1,136 @@
+/* Spiritual [return]: the surfaces a returning reader finds (assets/return.js). Quiet rows, paintings and words; no counters.
+   Anything that arrives after the first paint has its room kept from the start (boot.js sets html.rt-back, .rt-news, .rt-read), so nothing moves.
+   Motion is transform and opacity only, and none under reduced motion. Hover styles are for a pointer that can hover; every control has a
+   pressed state and a visible focus ring. */
+
+/* ---------- small words: "New", "Read" ---------- */
+.rt-chip { flex: none; display: inline-flex; align-items: center; padding: .12rem .5rem; border-radius: 999px; font: 600 .72rem/1.35 var(--cx-ui, var(--font-ui, system-ui, sans-serif)); letter-spacing: .03em; white-space: nowrap; }
+.rt-chip[hidden] { display: none; }
+html[lang="hi"] .rt-chip { font-family: "Mukta", var(--cx-ui, system-ui, sans-serif); font-size: .82rem; letter-spacing: 0; }
+.rt-chip--new { background: #f3c47e; color: #23150a; }
+.rt-chip--read { background: rgb(14 8 4 / .5); color: #f3e6cf; box-shadow: inset 0 0 0 1px rgb(233 201 140 / .45); }
+.rt-chip--card { position: absolute; top: .7rem; left: .7rem; z-index: 2; box-shadow: 0 2px 10px rgb(0 0 0 / .4); pointer-events: none; }
+.card-art:has(.pl-mark) .rt-chip--card { top: 3.1rem; }
+
+/* ---------- the home opening: today's story, and what is new, above the Continue card ---------- */
+.cx-today { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; align-items: center; align-content: center; column-gap: .55rem; row-gap: .1rem; box-sizing: border-box; min-height: var(--rt-h, 52px); min-width: 0; padding: 0 .85rem; color: var(--cx-cream, #fff6e8); background: rgb(34 18 8 / .5); border: 1px solid rgb(255 236 210 / .16); border-radius: 4px; font: 400 .98rem/1.25 var(--cx-ui, system-ui, sans-serif); text-decoration: none; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+.cx-today[hidden] { display: none; }
+.cx-today-k { grid-column: 1; grid-row: 1; font-size: .8rem; font-weight: 500; line-height: 1.2; color: var(--cx-gold, #f3c47e); }
+.cx-today b { grid-column: 1; grid-row: 2; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 600; }
+.cx-today .rt-chip { grid-column: 2; grid-row: 1 / span 2; }
+.cx-today::after { content: "→"; grid-column: 3; grid-row: 1 / span 2; color: var(--cx-gold, #f3c47e); }
+.cx-today--new { min-height: 44px; } .cx-today--new b { grid-row: 1 / span 2; font-weight: 500; }
+html[lang="hi"] .cx-today { font-family: "Mukta", var(--cx-ui, system-ui, sans-serif); font-size: 1.04rem; line-height: 1.3; }
+html[lang="hi"] .cx-today-k { font-size: .88rem; }
+.cx-today:focus-visible { outline: 2px solid var(--cx-gold, #f3c47e); outline-offset: 3px; }
+.cx-today:active { background: rgb(34 18 8 / .72); }
+@media (hover: hover) and (pointer: fine) { .cx-today:hover { background: rgb(34 18 8 / .66); border-color: rgb(255 236 210 / .32); } .cx-today:hover b { text-decoration: underline; text-underline-offset: 3px; } }
+@media (prefers-reduced-motion: no-preference) { :root:not([data-motion="reduce"]) .cx-today:not([hidden]) { animation: rt-fade .6s .2s ease-out both; } }
+@keyframes rt-fade { from { opacity: 0; } to { opacity: 1; } }
+/* the room: one row for today's story (kicker over title, 52 px), a second (44 px) when the shelf has grown; with a Continue card to come, above its room (joyhh.css --cont-h) */
+:root { --rt-h: 52px; } html[lang="hi"] { --rt-h: 56px; }
+:root.rt-back .cx-open-side { min-height: calc(var(--rt-h) + var(--rt-b, 0px)); align-content: end; }
+:root.rt-back.cx-has-last .cx-open-side { min-height: calc(var(--cont-h, 108px) + .5rem + var(--rt-h) + var(--rt-b, 0px)); }
+:root.rt-news { --rt-b: calc(44px + .5rem); }
+/* a short screen has room for one row: what is new is still said on the cards and at the top of the library */
+@media (max-height: 699px) { :root.rt-news { --rt-b: 0px; } .cx-today--new { display: none; } }
+
+/* ---------- "Now showing": the first story read, today's beside it ---------- */
+.cx-now-btns { display: flex; flex-wrap: wrap; align-items: center; gap: 0 .75rem; }
+.cx-now-today[hidden] { display: none; }
+.cx-now-today { max-width: 100%; }
+.cx-now-today small { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 15rem; font-size: .9em; font-weight: 400; opacity: .92; }
+.cx-now-today small::before { content: "·\00a0"; }
+
+/* ---------- the daily page: a shorter title card, with the day ---------- */
+.is-cx-head .ed-page-head.ed-page-head--today { min-height: clamp(19rem, 46svh, 30rem); }
+.daily-date { margin: .7rem 0 0; font: 500 1rem/1.4 var(--cx-ui, system-ui, sans-serif); letter-spacing: .02em; color: var(--cx-gold, #f3c47e); text-shadow: 0 1px 10px rgb(40 16 0 / .7); }
+.daily-date[hidden] { display: none; }
+/* [int-a] return.js always fills it with today's date, a moment after the page is drawn: where scripts run its (still empty) line is held from
+   the first paint, so the page is not pushed down (Lighthouse measured a 0.075 layout shift on /daily/). Without scripts it takes no room. */
+.daily-date { min-height: 1.4em; }
+@media (scripting: none) { .daily-date:empty { display: none; } }
+html[lang="hi"] .daily-date { font-family: "Mukta", var(--cx-ui, system-ui, sans-serif); font-size: 1.08rem; letter-spacing: 0; }
+
+/* ---------- a shelf of paintings: the stories read (Your reading), what is new (library) ---------- */
+.rt-shelf { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.2rem .9rem; }
+@media (min-width: 720px) { .rt-shelf { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.5rem 1.2rem; } }
+@media (min-width: 1100px) { .rt-shelf { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+.rt-shelf > li[hidden] { display: none; }
+.rt-tile { display: grid; gap: .5rem; align-content: start; min-height: 44px; color: inherit; text-decoration: none; border-radius: 12px; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+.rt-tile-pic { display: block; aspect-ratio: 16 / 9; overflow: hidden; border-radius: 10px; background: radial-gradient(circle at 50% 40%, #2b2013, #150f09); box-shadow: 0 10px 24px -14px rgb(0 0 0 / .6), inset 0 0 0 1px rgb(255 238 210 / .12); transition: transform 320ms cubic-bezier(.22, .8, .2, 1); }
+.rt-tile-pic img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.rt-tile-t { font: 500 1.02rem/1.3 var(--cx-title, Georgia, serif); text-wrap: balance; }
+html[lang="hi"] .rt-tile-t { font-size: 1.08rem; line-height: 1.5; }
+.rt-tile:focus-visible { outline: 2px solid var(--cx-marigold, #e9ab33); outline-offset: 4px; }
+.rt-tile:active .rt-tile-pic { transform: scale(.985); transition-duration: 160ms; }
+@media (hover: hover) and (pointer: fine) { .rt-tile:hover .rt-tile-pic { transform: translateY(-3px); } .rt-tile:hover .rt-tile-t { text-decoration: underline; text-underline-offset: 3px; text-decoration-color: var(--cx-marigold, #e9ab33); } }
+@media (prefers-reduced-motion: reduce) { .rt-tile-pic { transition: none; } }
+:root[data-motion="reduce"] .rt-tile-pic { transition: none; }
+.rt-more { margin: 1.2rem 0 0; }
+.rt-more .btn { min-height: 44px; }
+.rt-more:has(> [hidden]) { display: none; }
+/* Your reading: the place first (its box is not drawn when there is none), then the shelf; the days stand after them */
+.myr-top:has(> [data-continue-block][hidden]) { display: none; }
+.myr-top > [data-continue-block] { padding: 0; border: 0; background: none; max-width: 36rem; }   /* (the card is its own box: no box around a box) */
+.myr-top > [data-continue-block] .continue { justify-self: stretch; }
+.myr-top:not(:has(> [data-continue-block][hidden])) ~ .myr-days { margin-top: 1rem; }
+/* with stories on the shelf, "nothing saved yet" is one quiet line, not a picture and a button */
+.myr-has-done [data-saved-empty]:not([hidden]) { display: block; padding: .9rem 1.1rem; }
+.myr-has-done [data-saved-empty] > :not(p) { display: none; }
+/* the library: what is new since the reader's last visit, listed before everything */
+.lib-new { border-radius: 0; margin: 0 0 clamp(1.5rem, 1rem + 2vw, 2.5rem); padding-bottom: clamp(1.5rem, 1rem + 2vw, 2.5rem); border-bottom: 1px solid var(--cx-line, rgb(127 110 90 / .3)); scroll-margin-top: calc(var(--ed-head-h, 64px) + 1rem); }
+.lib-new[hidden] { display: none; }
+.lib-new:focus { outline: none; }
+.lib-new-h { margin: 0 0 1rem; font: 500 clamp(1.4rem, 1.1rem + 1.2vw, 1.9rem)/1.2 var(--cx-title, Georgia, serif); color: var(--accent, inherit); }
+html[lang="hi"] .lib-new-h { line-height: 1.45; }
+
+/* ---------- a story's end: the first door is painted ---------- */
+.cb-door--pic { grid-template-columns: auto minmax(0, 1fr) auto; }
+.cb-dp { grid-column: 1; grid-row: 1 / span 5; align-self: center; width: clamp(5.25rem, 26vw, 8.5rem); aspect-ratio: 16 / 9; overflow: hidden; border-radius: 8px; background: #1a0f08; box-shadow: 0 0 0 1px rgb(233 201 140 / .28), 0 8px 20px -10px rgb(0 0 0 / .7); }
+.cb-dp[hidden] { display: none; }
+.cb-dp img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.cb-door--pic :is(.cb-dk, .cb-dn, .cb-ds, .cb-dm, .cb-dsum) { grid-column: 2; }
+.cb-door--pic .cb-da { grid-column: 3; grid-row: 1 / span 5; }
+.cb-dm, .cb-dsum { margin-top: .15rem; font: 400 .84rem/1.4 var(--cx-ui, inherit); color: var(--cx-ink-2, #5c4838); }
+html[lang="hi"] :is(.cb-dm, .cb-dsum) { font-size: .94rem; }
+.cb-dsum { display: none; }
+.cb :is(.cb-ds, .cb-dm, .cb-dsum)[hidden] { display: none; }
+/* (stepped on to another story: only its name stands beside the painting, centred on it) */
+.cb-door[data-rt-swapped] .cb-dp { grid-row: 1 / span 2; } .cb-door[data-rt-swapped] .cb-da { grid-row: 1 / span 2; } .cb-door[data-rt-swapped] .cb-dk { align-self: end; } .cb-door[data-rt-swapped] .cb-dn { align-self: start; }
+.fm .cb-dm, .fm .cb-dsum { color: #e6d6bb; text-shadow: 0 1px 2px rgb(0 0 0 / .85); }
+/* on a wide screen there is room for the story's one-line summary as well */
+@media (min-width: 700px) { .cb-dsum { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; line-clamp: 3; overflow: hidden; max-width: 30rem; } }
+@media (max-width: 699px) { .fm .cb-door--pic { column-gap: .8rem; } }
+
+/* ---------- a finished story's opening: "You have read this story. Next: ..." (the same quiet line as "Pick up at scene N", joyb.css .pk) ---------- */
+html.rt-read:not(.rt-read-in) .kp--hero { margin-top: calc(.95rem + .55rem + 44px); }
+.rt-pk a { max-width: 100%; }
+.rt-pk a b { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 500; }
+.rt-pk a b::after { content: "\00a0→"; }
+.rt-pk-t { padding: 0 .35rem; }
+@media (max-width: 759px) {
+  html.rt-read:not(.rt-read-in) .kp--hero { margin-top: calc(.8rem + .55rem + 74px); }
+  .rt-pk { flex-direction: column; flex-wrap: nowrap; justify-content: center; gap: 0; min-height: 74px; width: 100%; }
+}
+
+/* ---------- a person's path: the stops read, and the next one ---------- */
+.rt-cap { position: absolute; left: .55rem; bottom: .55rem; z-index: 1; display: inline-flex; align-items: center; gap: .35rem; padding: .2rem .6rem; border-radius: 999px; font: 600 .76rem/1.35 var(--cx-ui, system-ui, sans-serif); letter-spacing: .02em; background: rgb(14 8 4 / .8); color: #f3e6cf; box-shadow: 0 0 0 1px rgb(233 201 140 / .28); }
+html[lang="hi"] .rt-cap { font-family: "Mukta", var(--cx-ui, system-ui, sans-serif); font-size: .86rem; letter-spacing: 0; }
+.path-stop.is-read .rt-cap::before { content: ""; width: .5rem; height: .28rem; margin-top: -.15rem; border-left: 2px solid currentColor; border-bottom: 2px solid currentColor; transform: rotate(-45deg); }
+.path-stop.is-next .rt-cap { background: var(--ep-a, #f3c47e); color: #1c120a; box-shadow: 0 2px 10px rgb(0 0 0 / .45); }
+.path-stop.is-next::after { box-shadow: 0 0 0 4px color-mix(in srgb, var(--ep-a, #f3c47e) 34%, transparent), 0 0 18px color-mix(in srgb, var(--ep-a, #f3c47e) 80%, transparent); }
+
+/* ---------- the menu: "Add to home screen", a quiet row ---------- */
+.ed-menu-inst { display: grid; gap: .5rem; justify-items: start; }
+.ed-menu-inst[hidden], .ed-menu-inst-how[hidden] { display: none; }
+.ed-menu-inst-b { display: inline-flex; align-items: center; gap: .6rem; min-height: 44px; padding: 0 1rem 0 .75rem; border: 1px solid color-mix(in srgb, currentColor 30%, transparent); border-radius: 999px; background: none; color: inherit; font: 500 1rem/1.2 var(--cx-ui, system-ui, sans-serif); cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent; user-select: none; -webkit-user-select: none; }
+html[lang="hi"] .ed-menu-inst-b { font-family: "Mukta", var(--cx-ui, system-ui, sans-serif); font-size: 1.06rem; }
+.ed-menu-inst-b svg { flex: none; width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.ed-menu-inst-b:focus-visible { outline: 2px solid var(--cx-gold, #e9c98c); outline-offset: 3px; }
+.ed-menu-inst-b:active { opacity: .7; }
+@media (hover: hover) and (pointer: fine) { .ed-menu-inst-b:hover { border-color: currentColor; } }
+.ed-menu-inst-how { margin: 0; max-width: 32rem; font: 400 .98rem/1.5 var(--cx-ui, system-ui, sans-serif); }
+html[lang="hi"] .ed-menu-inst-how { font-family: "Mukta", var(--cx-ui, system-ui, sans-serif); font-size: 1.04rem; line-height: 1.65; }
+
+@media print { .cx-today, .rt-chip, .ed-menu-inst, .lib-new { display: none !important; } }

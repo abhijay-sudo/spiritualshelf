@@ -88,8 +88,8 @@ html[lang="hi"] .fm .shot-card .scene-no, .fm[lang="hi"] .shot-card .scene-no { 
 .fm .story-intro.fm-t { display: block; }
 .fm .story-intro .story-fig { display: none; }
 .fm .story-intro .story-sum { margin: 0; color: var(--fm-ink); font-size: clamp(1.14rem, 1.05rem + .6vw, 1.5rem); line-height: 1.5; }
-.fm .fm-about { display: inline-flex; align-items: center; gap: .5rem; min-height: 44px; margin: .5rem 0 0 -2px; padding: 0 2px; background: none; border: 0; color: var(--fm-gold); font: 400 .8rem/1 var(--cx-ui, inherit); letter-spacing: .14em; text-transform: uppercase; cursor: pointer; text-shadow: 0 1px 2px rgb(0 0 0 / .9); }
-html[lang="hi"] .fm .fm-about { letter-spacing: .02em; font-size: .95rem; text-transform: none; }
+.fm .fm-about { display: inline-flex; align-items: center; gap: .5rem; min-height: 44px; margin: .5rem 0 0 -2px; padding: 0 2px; background: none; border: 0; color: var(--fm-gold); font: 400 1rem/1 var(--cx-ui, inherit); letter-spacing: .1em; text-transform: uppercase; cursor: pointer; text-shadow: 0 1px 2px rgb(0 0 0 / .9); }
+html[lang="hi"] .fm .fm-about { letter-spacing: .02em; font-size: 1.08rem; text-transform: none; }
 .fm .fm-about::after { content: ""; width: .45em; height: .45em; border: solid currentColor; border-width: 0 1px 1px 0; rotate: 45deg; translate: 0 -.15em; transition: rotate .3s, translate .3s; }
 .fm .story-head.is-open .fm-about::after { rotate: 225deg; translate: 0 .12em; }
 /* opened, the heading is a slip of the reading page laid over the film, with everything as it is on paper */
@@ -100,7 +100,7 @@ html[lang="hi"] .fm .fm-about { letter-spacing: .02em; font-size: .95rem; text-t
 .fm .story-head.is-open .fm-only { display: inline-flex; }
 
 .fm .cx-the-end { margin: 0; padding: 0; color: var(--fm-ink); text-align: center; max-width: none; }
-/* "The end": the last painting holds for a full screen under the lit lamp before the afterword comes up */
+/* "The end": the last painting holds for a full screen under its mark before the afterword comes up */
 .fm .fm-end.fm-beat { --fm-pin: 112svh; }
 .fm .fm-end.fm-beat::after { content: ""; display: block; height: 10svh; width: auto; margin: 0; background: none; }
 .fm .fm-end .fm-t { max-width: none; padding: 0 var(--fm-x) !important; text-align: center; }
@@ -135,7 +135,7 @@ html[lang="hi"] .fm .fm-about { letter-spacing: .02em; font-size: .95rem; text-t
 .fm-live .story-end ::placeholder { color: #a8927d; }
 .fm-live .story-end .done-line { order: -2; margin: 0 0 1.2rem; text-align: center; color: var(--fm-gold); }
 
-/* ---------- The strip at the edge: the lamp (sound), a tick for each scene, and the way back to paper ---------- */
+/* ---------- The strip at the edge: the sound button, a tick for each scene, and the way back to paper ---------- */
 /* It shows while the page moves or is touched and leaves the painting clear when the page rests (film.js, .is-in); it is
    always there for the keyboard, and shows itself when anything in it has the focus. */
 .fm-live .fm-rail { display: flex; flex-direction: column; align-items: center; gap: 6px; position: fixed; z-index: 5; right: max(0px, env(safe-area-inset-right, 0px)); top: var(--fm-rt, 40%); translate: 0 -50%; opacity: 0; pointer-events: none; transition: opacity .7s ease; }
@@ -153,7 +153,7 @@ html[lang="hi"] .fm .fm-about { letter-spacing: .02em; font-size: .95rem; text-t
 .fm-rail a i::after { content: ""; position: absolute; inset: 0; border-radius: 50%; background: radial-gradient(circle at 36% 30%, #fff6da 0, var(--fm-gold) 52%, #b3823a 100%); opacity: var(--f, 0); }
 .fm-rail a[aria-current] i { scale: 2.2; box-shadow: 0 0 0 .5px #f3dca8, 0 0 4.5px 1px rgb(255 200 110 / .5); }
 .fm-rail a[aria-current] i::after { opacity: 1; }
-.fm-rail a:hover i, .fm-rail a:focus-visible i { scale: 2.2; }
+.fm-rail a:focus-visible i { scale: 2.2; } @media (hover: hover) and (pointer: fine) { .fm-rail a:hover i { scale: 2.2; } }
 .fm-rail a:focus-visible { outline-offset: -4px; border-radius: 8px; }
 .fm-live .fm-rail.is-drag { opacity: 1; pointer-events: auto; }
 .fm-peek { position: absolute; right: 40px; top: var(--py, 50%); translate: 10px -50%; display: flex; flex-direction: row-reverse; align-items: center; gap: .75rem; width: max-content; max-width: min(76vw, 27rem); opacity: 0; visibility: hidden; pointer-events: none; transition: opacity .22s ease, translate .4s cubic-bezier(.2, .7, .2, 1), visibility 0s .22s; }
@@ -191,54 +191,44 @@ html[lang="hi"] .fm-rail .fm-lang, .fm-rail .fm-lang[lang="hi"] { font-family: "
 [aria-pressed="false"] > .fm-spk .wv { display: none; }
 [aria-pressed="false"] > .fm-spk .xx { display: block; }
 .fm-ic { fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
-/* the lamp: a clay diya. Unlit it is an outline; lit, the flame stands and breathes. Lit means sound, snuffed means silence. */
-.fm-diya { overflow: visible; }
-.fm-diya .bw { fill: rgb(246 236 218 / .12); stroke: currentColor; stroke-width: 1.5; stroke-linejoin: round; }
-.fm-diya .fl { fill: #ffd98a; opacity: 0; transform-box: fill-box; transform-origin: 50% 100%; scale: .4; transition: opacity .5s, scale .7s cubic-bezier(.2, .9, .3, 1.2); filter: drop-shadow(0 0 5px rgb(255 190 90 / .9)); }
-.fm-diya .wk { stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; }
-[aria-pressed="true"] > .fm-diya .fl, .fm-diya.lit .fl { opacity: 1; scale: 1; }
-[aria-pressed="true"] > .fm-diya .bw, .fm-diya.lit .bw { fill: rgb(233 201 140 / .3); }
-@media (prefers-reduced-motion: no-preference) { [aria-pressed="true"] > .fm-diya .fl, .fm-diya.lit .fl { animation: fm-flame 3.2s ease-in-out infinite; } }
-@keyframes fm-flame { 0%, 100% { transform: scaleY(1) skewX(0); } 35% { transform: scaleY(1.07) skewX(-2deg); } 70% { transform: scaleY(.95) skewX(2deg); } }
-
-/* the painted lamp (the door, and over "The end"): clay and oil in the dark; lit, the flame stands, its halo comes up and
-   breathes once, and the clay takes the light */
+/* [lamps] the mark over "The end" (film.js ENDMARK): the site's ornament, a gold hairline either side of a dot. Unlit it is faint;
+   lit, the two rules draw out from the dot. No lamp is drawn (the owner's rule). */
 .fm-lampx { overflow: visible; }
-.fm-lampx .lh { opacity: 0; transform-box: fill-box; transform-origin: 50% 50%; transition: opacity .9s ease; }
-.fm-lampx .lf { opacity: 0; transform-box: fill-box; transform-origin: 50% 100%; scale: .3; transition: opacity .45s ease, scale .8s cubic-bezier(.2, .9, .3, 1.15); }
-.fm-lampx :is(.lb, .lo, .ls) { filter: brightness(.62) saturate(.8); transition: filter 1s ease; }
-.fm-lampx.lit .lh { opacity: 1; }
-.fm-lampx.lit .lf { opacity: 1; scale: 1; }
-.fm-lampx.lit :is(.lb, .lo, .ls) { filter: none; }
-@media (prefers-reduced-motion: no-preference) {
-  .fm-lampx.lit .lh { animation: fm-halo 1.3s ease-in-out .15s 1 both; }
-  .fm-lampx.lit .lf { animation: fm-flame 3.2s ease-in-out .8s infinite; }
-}
-@keyframes fm-halo { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.03); } }
-:root[data-motion="reduce"] .fm-lampx :is(.lh, .lf) { animation: none !important; }
+.fm-lampx .lr { fill: none; stroke: #e9c98c; stroke-width: 1.6; stroke-linecap: round; opacity: .25; transform-box: fill-box; scale: .3 1; transition: opacity .9s ease, scale 1.1s cubic-bezier(.22, .8, .2, 1); }
+.fm-lampx .lr-l { transform-origin: 100% 50%; } .fm-lampx .lr-r { transform-origin: 0 50%; }
+.fm-lampx .ld { fill: #f3c47e; opacity: .4; transition: opacity .6s ease; }
+.fm-lampx.lit .lr { opacity: .9; scale: 1 1; }
+.fm-lampx.lit .ld { opacity: 1; }
+:root[data-motion="reduce"] .fm-lampx :is(.lr, .ld) { transition: none !important; }
+@media (prefers-reduced-motion: reduce) { .fm-lampx :is(.lr, .ld) { transition: none !important; } }
 
-/* ---------- The door: one lamp, one choice ---------- */
+/* ---------- The door: the title, one choice (with sound, or in silence) ---------- */
 .fm-door { position: fixed; inset: 0; width: 100%; height: 100%; max-width: none; max-height: none; margin: 0; padding: 0; border: 0; background: none; color: #f6ecda; overflow: hidden; }
 .fm-door::backdrop { background: none; }
-/* (the veil's opening is drawn by film.js, a frame at a time, through --r: the radius of the clear circle around the flame) */
-.fm-door-veil { position: absolute; inset: 0; background: radial-gradient(circle at 50% var(--fy, 46%), rgb(11 7 6 / 0) 0, rgb(11 7 6 / 0) calc(var(--r, 0) * 1vmax - 20vmax), rgb(11 7 6 / .8) calc(var(--r, 0) * 1vmax - 7vmax), #0b0706 calc(var(--r, 0) * 1vmax)); opacity: 0; transition: opacity .5s ease; }
+/* [alive] the dark is two layers the compositor moves, and neither is repainted while the door opens (film.js): a sheet of the film's night, which fades away as the
+   opening starts, over a soft-edged hole in the same night, painted once and grown by a transform from the rule under the title until its edge has left the screen.
+   (It was one full-screen gradient whose radius a script rewrote every frame.) The hole stands 150vmax square so that it covers any screen before it grows. */
+.fm-door-veil { position: absolute; inset: 0; background: #0b0706; opacity: 0; transition: opacity .5s ease; }
 .fm-door.is-in .fm-door-veil { opacity: 1; }
+.fm-door-iris { position: absolute; left: 50%; top: 46%; width: 150vmax; height: 150vmax; margin: -75vmax 0 0 -75vmax; pointer-events: none; visibility: hidden; will-change: transform;
+  background: radial-gradient(circle closest-side, rgb(11 7 6 / 0) 0, rgb(11 7 6 / 0) 5.6%, rgb(11 7 6 / .8) 8.3%, #0b0706 9.6%); }
+.fm-door.is-opening .fm-door-iris { visibility: visible; }
 .fm-door-in { position: relative; box-sizing: border-box; height: 100%; display: grid; align-content: center; justify-items: center; gap: 1.1rem; padding: 2rem 24px calc(2rem + env(safe-area-inset-bottom, 0px)); text-align: center; opacity: 0; transition: opacity .5s ease .15s; }
 .fm-door.is-in .fm-door-in { opacity: 1; }
-.fm-door.is-opening .fm-door-in > :not(.fm-lampx, .fm-door-t, .fm-door-k) { opacity: 0; transition: opacity .35s; }
-.fm-door.is-opening .fm-door-in > :is(.fm-door-t, .fm-door-k) { opacity: 0; transition: opacity .6s ease .7s; }
-.fm-door.is-opening:not(.is-lit) .fm-door-in > :is(.fm-door-t, .fm-door-k) { transition-delay: .1s; }
-.fm-door.is-opening .fm-lampx { opacity: 0; transition: opacity .8s ease 1.7s; }
-.fm-door.is-opening:not(.is-lit) .fm-lampx { transition-delay: .5s; }
+.fm-door.is-opening .fm-door-btns { opacity: 0; transition: opacity .2s ease; }
+.fm-door.is-opening .fm-door-in > :is(.fm-door-t, .fm-door-k, .fm-door-rule) { opacity: 0; transition: opacity .4s ease; }
+.fm-door.is-opening.is-lit .fm-door-in > :is(.fm-door-t, .fm-door-k, .fm-door-rule) { transition-delay: .3s; }
 .fm-door-k { margin: 0; font: 400 .74rem/1.3 var(--cx-ui, inherit); letter-spacing: .26em; text-transform: uppercase; color: #e9c98c; }
 html[lang="hi"] .fm-door-k { letter-spacing: .06em; font-size: .92rem; }
 .fm-door-t { margin: 0; max-width: 18ch; font: 500 clamp(1.9rem, 1.4rem + 3vw, 3.4rem)/1.12 var(--cx-title, Eczar, Georgia, serif); text-wrap: balance; }
-.fm-door .fm-lampx { width: 148px; height: 148px; margin: .2rem 0 .4rem; }
-.fm-door-t { transition: color 1.2s ease; }
+html[lang="hi"] .fm-door-t { line-height: 1.3; }
+/* the gold rule the site sets under a scene's number, here under the title: where the dark opens from */
+.fm-door-rule { display: block; width: 44px; height: 1px; margin: .5rem 0 .9rem; background: #e9c98c; opacity: .8; }
+.fm-door-t { transition: color .6s ease; }
 .fm-door.is-lit .fm-door-t { color: #ffe7bd; }
 .fm-door-btns { display: grid; gap: .7rem; justify-items: center; }
 .fm-door button { min-height: 48px; padding: .7rem 1.5rem; border-radius: 999px; font: 500 1rem/1.2 var(--cx-ui, inherit); cursor: pointer; }
-html[lang="hi"] .fm-door button { font-size: 1.08rem; }
+html[lang="hi"] .fm-door button { font-size: 1.08rem; line-height: 1.4; }
 .fm-door [data-c="sound"] { background: #f1dcb2; color: #1d0f06; border: 1px solid #f1dcb2; }
 .fm-door [data-c="silent"] { background: none; color: #f6ecda; border: 1px solid rgb(246 236 218 / .45); }
 .fm-door :focus-visible { outline: 2px solid #e9c98c; outline-offset: 3px; }
@@ -258,7 +248,6 @@ html[lang="hi"] .fm-door button { font-size: 1.08rem; }
   .fm-live .fm-rail { right: 14px; top: 50%; }
   .fm { --fm-fs: clamp(1.3rem, .9rem + .75vw, 1.7rem); }
   .fm .scene-text p.fm-t { line-height: 1.5; }
-  .fm-door .fm-lampx { width: 190px; height: 190px; }
   .fm .fm-end-lamp { width: 128px; height: 128px; }
   .fm .shot-card .scene-no { font-size: .84rem; }
   .fm .shot-card h2 { font-size: clamp(2.8rem, 1.6rem + 2.6vw, 4.4rem); }
@@ -316,13 +305,14 @@ html[lang="hi"] .fm #gloss .gloss-row i { letter-spacing: 0; text-transform: non
 .fm-deep:not(.fm-live) [data-reader] .scenes { visibility: hidden; }
 .fm-deep.fm-live [data-reader] .scenes { animation: fm-deep-in var(--d3, 640ms) var(--ease-settle, cubic-bezier(.22, .8, .2, 1)) both; }
 /* [perf] ...and while it waits, the scene's own smallest cut (boot.js sets --fm-ph), soft and dark, so the page is never black; it lifts away as the painting arrives */
-.fm-deep::before { content: ""; position: fixed; inset: -6%; z-index: 3; pointer-events: none; background: linear-gradient(rgb(11 7 6 / .35), rgb(11 7 6 / .6)), var(--fm-ph, none) center / cover no-repeat; filter: blur(16px); animation: fm-ph-in var(--d3, 640ms) var(--ease-settle, cubic-bezier(.22, .8, .2, 1)) both; }
-.fm-deep.fm-live::before { animation: fm-ph-out var(--d3, 640ms) var(--ease-settle, cubic-bezier(.22, .8, .2, 1)) forwards; }
-@keyframes fm-ph-in { from { opacity: 0; } to { opacity: 1; } }
-@keyframes fm-ph-out { from { opacity: 1; visibility: visible; } to { opacity: 0; visibility: hidden; } }
-:root[data-motion="reduce"] .fm-deep::before { animation: none; }
+/* [alive] it comes and goes by a transition, not two keyframe animations: when the painting is up before the stand-in has finished coming in (a warm cache, a language
+   switch) it now fades away from where it had got to. It used to jump to full strength first and veil a painting that was already there. */
+.fm-deep::before { content: ""; position: fixed; inset: -6%; z-index: 3; pointer-events: none; background: linear-gradient(rgb(11 7 6 / .35), rgb(11 7 6 / .6)), var(--fm-ph, none) center / cover no-repeat; filter: blur(16px); opacity: 1; transition: opacity var(--d3, 640ms) var(--ease-settle, cubic-bezier(.22, .8, .2, 1)); }
+@starting-style { .fm-deep::before { opacity: 0; } }
+.fm-deep.fm-live::before { opacity: 0; visibility: hidden; transition: opacity var(--d3, 640ms) var(--ease-settle, cubic-bezier(.22, .8, .2, 1)), visibility 0s var(--d3, 640ms); }
+:root[data-motion="reduce"] .fm-deep::before { transition: none; }
 :root[data-motion="reduce"] .fm-deep.fm-live::before { display: none; }
-@media (prefers-reduced-motion: reduce) { .fm-deep::before { animation: none; } .fm-deep.fm-live::before { display: none; } }
+@media (prefers-reduced-motion: reduce) { .fm-deep::before { transition: none; } .fm-deep.fm-live::before { display: none; } }
 @keyframes fm-deep-in { from { opacity: 0; } to { opacity: 1; } }
 :root[data-motion="reduce"] .fm-deep.fm-live [data-reader] .scenes { animation: none; }
 @media (prefers-reduced-motion: reduce) { .fm-deep.fm-live [data-reader] .scenes { animation: none; } }

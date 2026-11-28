@@ -1,0 +1,31 @@
+/* [found] The pages of a book, a kanda or parva, and a festival (src/found-build.mjs). They are made of what the collection pages are
+   made of (the painted head, the story cards); this sheet only sets the rows those pages add: the breadcrumb under the head, a
+   section's heading with its count, the dates of a festival, and the rows of links. Nothing here moves. */
+/* The head is a story's own painting, and its people stand where the centred title of a collection page would lie across their faces.
+   So here the painting is shown clear, and the label, the name and the lead stand under it on the page's own ground. */
+.fnd .ed-page-head { --fnd-pic: clamp(17rem, 54svh, 38rem); display: flex; flex-direction: column-reverse; align-items: stretch; min-height: 0; background: var(--cx-paper); color: var(--cx-ink); }
+@media (min-width: 900px) { .fnd .ed-page-head { --fnd-pic: clamp(20rem, 60svh, 42rem); } }
+.fnd .ed-page-head .ed-page-media { position: relative; inset: auto; z-index: 0; flex: none; height: var(--fnd-pic); }
+.fnd .ed-page-head::after { inset: 0 0 auto; height: var(--fnd-pic); z-index: 1; pointer-events: none; background: linear-gradient(to bottom, rgb(30 14 4 / .4), transparent 26%); }
+.fnd .ed-page-head .ed-page-head-in { z-index: 2; box-sizing: border-box; width: 100%; max-width: none; gap: .7rem; padding: clamp(1.5rem, 4vw, 2.25rem) var(--cx-gut-r, 16px) 0 var(--cx-gut, 16px); background: var(--cx-paper); }
+.fnd .ed-page-head .ed-page-head-in::before { display: none; }
+.fnd .ed-page-head .ed-page-head-in > * { max-width: 52rem; }
+.fnd .ed-page-head .ed-page-head-in .ed-h1 { font-size: min(clamp(2.3rem, 1.5rem + 3.2vw, 4.4rem), 12vw); color: var(--cx-ink); text-shadow: none; }
+.fnd .ed-page-head .ed-page-head-in .ed-lead { color: var(--cx-ink-2); text-shadow: none; }
+.fnd .ed-page-head .ed-page-head-in .world-hi { color: var(--cx-ink-3); text-shadow: none; }
+.fnd .fnd-crumbs { padding-block: 1.25rem .25rem; }
+.fnd .fnd-crumbs ol { font-size: .95rem; }
+.fnd .fnd-crumbs a { text-underline-offset: .2em; }
+.fnd .fnd-sec { padding-block: clamp(1.5rem, 4vw, 2.75rem) 0; }
+.fnd .fnd-head { grid-template-columns: minmax(0, 1fr) auto; align-items: baseline; justify-items: start; margin-bottom: 1.25rem; }
+.fnd .fnd-head h2 { font-size: clamp(1.5rem, 1.2rem + 1.2vw, 2.1rem); }
+.fnd .fnd-head h2 a { color: inherit; display: inline-flex; align-items: center; min-height: 44px; text-decoration-thickness: 1px; text-underline-offset: .22em; }
+.fnd .fnd-head p { justify-self: end; white-space: nowrap; }
+.fnd .fnd-more { padding-block: clamp(1.5rem, 4vw, 2.5rem) 0; }
+.fnd .fnd-more .legend { margin: 0 0 .9rem; }
+.fnd > :last-child { padding-bottom: clamp(2.5rem, 6vw, 4.5rem); }
+.fnd .fnd-dates { margin-top: 1rem; }
+.fnd .fnd-dates .legend { margin: 0 0 .5rem; }
+.fnd .fnd-dates ul { list-style: none; margin: 0 0 .75rem; padding: 0; display: grid; gap: .3rem; }
+.fnd .fnd-dates time { font-family: var(--cx-title, inherit); font-size: clamp(1.25rem, 1.05rem + .9vw, 1.7rem); }
+.fnd .fnd-dates .note { max-width: 46rem; }

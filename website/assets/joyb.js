@@ -28,8 +28,9 @@
     return pl;
   };
 
-  /* ---------- marks on the cards: a thin arc for a story part read, a small lit lamp for one finished ---------- */
-  const LAMP = '<svg viewBox="0 0 48 48" aria-hidden="true"><path class="cb-fl" d="M24 3c4.4 6.4 7 10.2 7 14.6a7 7 0 0 1-14 0C17 13.2 19.6 9.4 24 3Z"/><path class="cb-wk" d="M24 28v-4.6"/><path class="cb-bw" d="M4 27c5.2 1.6 12 2.3 20 2.3S38.8 28.6 44 27c-1.2 8.3-8.6 14-20 14S5.2 35.3 4 27Z"/></svg>';
+  /* ---------- marks on the cards: a thin arc for a story part read, the ring closed with a dot at its centre for one finished
+     (no lamp is drawn: the owner's rule; the class pl-mark--lamp is kept as the hook it always was) ---------- */
+  const DONE = '<svg viewBox="0 0 30 30" aria-hidden="true"><circle class="pl-arc pl-done" cx="15" cy="15" r="12"/><circle class="pl-dot" cx="15" cy="15" r="3.2"/></svg>';
   const mark = () => {
     const pl = places(); const here = $('[data-reader]')?.dataset.slug;
     for (const c of $$('.card[data-slug]')) {
@@ -39,7 +40,7 @@
       if (old && old.dataset.k === key) continue; old?.remove();
       const m = d.createElement('span'); m.className = 'pl-mark' + (p.d ? ' pl-mark--lamp' : ''); m.dataset.k = key; m.setAttribute('role', 'img');   // [fixS] a caption beside the ring or the lamp, so the mark is words and not a riddle
       const cap = d.createElement('span'); cap.className = 'pl-mark-t'; cap.setAttribute('aria-hidden', 'true'); cap.textContent = p.d ? S.capDone : S.capArc(p.s, p.t);
-      if (p.d) { m.setAttribute('aria-label', S.done); m.innerHTML = LAMP; }
+      if (p.d) { m.setAttribute('aria-label', S.done); m.innerHTML = DONE; }
       else { const f = Math.min(1, Math.max(.04, p.s / p.t)), r = 12, L = 2 * Math.PI * r; m.setAttribute('aria-label', S.arc(p.s, p.t)); m.innerHTML = `<svg viewBox="0 0 30 30" aria-hidden="true"><circle class="pl-arc-bg" cx="15" cy="15" r="${r}"/><circle class="pl-arc" cx="15" cy="15" r="${r}" stroke-dasharray="${(L * f).toFixed(1)} ${L.toFixed(1)}" transform="rotate(-90 15 15)"/></svg>`; }
       m.append(cap); art.append(m);
     }
@@ -91,7 +92,7 @@
       const kept = () => get('kept', []).some(idOf);
       const paint = (say) => { const k = kept(); btn.setAttribute('aria-pressed', String(k)); const was = lbl.textContent; lbl.textContent = k ? cb.dataset.kept : lbl.dataset.label; note.classList.toggle('is-on', k && !!say); note.textContent = k && say ? cb.dataset.note : ''; if (!k) note.classList.remove('is-on'); return was; };
       lbl.dataset.label = lbl.textContent; btn.hidden = false;
-      // (storage may be unavailable: then the lamp says nothing is kept rather than pretending)
+      // (storage may be unavailable: then the button says nothing is kept rather than pretending)
       let ok = true; try { localStorage.setItem('spritual:probe', '1'); localStorage.removeItem('spritual:probe'); } catch { ok = false; }
       if (!ok) btn.hidden = true; else paint(false);
       btn.addEventListener('click', () => {

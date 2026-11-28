@@ -51,7 +51,7 @@ const op = d.querySelector('section.cx-film-open'); if (op) add(op, op.querySele
 for (const sc of d.querySelectorAll('section.scene[data-depth]')) { const im = sc.querySelector('figure.shot img'); add(sc, im); }
 return srcMap.size;
 };
-const bmp = (u, w) => fetch(u, { credentials: 'same-origin' }).then((r) => (r.ok ? r.blob() : Promise.reject(0))).then((b) => createImageBitmap(b, w ? { resizeWidth: w, resizeQuality: 'medium', premultiplyAlpha: 'none', colorSpaceConversion: 'none', imageOrientation: 'none' } : { premultiplyAlpha: 'none', colorSpaceConversion: 'none', imageOrientation: 'none' }).catch(() => createImageBitmap(b)));
+const bmp = (u, w) => fetch(u, { credentials: 'same-origin' }).then((r) => (r.ok ? r.blob() : Promise.reject(0))).then((b) => createImageBitmap(b, w ? { resizeWidth: w, resizeQuality: 'medium', premultiplyAlpha: 'none', colorSpaceConversion: 'none' } : { premultiplyAlpha: 'none', colorSpaceConversion: 'none' }).catch(() => createImageBitmap(b)));
 const upload = (gl, b, fmtI, fmtF, type, wrapLinear) => {
 const tx = env.tex(); gl.bindTexture(gl.TEXTURE_2D, tx); gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1); gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
 gl.texImage2D(gl.TEXTURE_2D, 0, fmtI, fmtF, type, b);

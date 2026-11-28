@@ -1,0 +1,174 @@
+/* Spiritual [learn]: who's who on tap, "Before you begin", the story's place in its cycle, ties on the name chips, the word hint,
+   and the recall card (src/learn-build.mjs, assets/learn.js). Colours come from the page's own tokens, so the reading page, the
+   film's dark afterword and the Night Lamp all dress these the same way as their neighbours. Nothing here moves unless the
+   reader's device allows motion. */
+
+/* ---------- a person's name in the text: quieter than a glossary word (dotted, not solid) ---------- */
+.term--who { text-decoration-style: dotted; text-decoration-thickness: 1.5px; text-decoration-color: color-mix(in oklab, currentColor 42%, transparent); text-underline-offset: .28em; }
+.fm .term--who { text-decoration-color: rgb(246 234 216 / .62); }
+/* the card a tapped name opens (inside the paragraph, in the film's card by the word, or in the sheet) */
+.lrn-who-t, .lrn-who-l, .lrn-who-r { display: block; }
+.lrn-who-t { font-size: .88em; opacity: .82; margin-bottom: .2rem; }
+.lrn-who-r { margin-top: .4rem; font-size: .92em; opacity: .9; }
+.lrn-who-r i { display: block; font-style: normal; font-size: .78em; letter-spacing: .08em; text-transform: uppercase; opacity: .72; }
+html[lang="hi"] .lrn-who-r i { letter-spacing: 0; text-transform: none; font-size: .86em; }
+.lrn-who-a { display: inline-flex; align-items: center; gap: .45em; min-height: 44px; margin-top: .15rem; color: inherit; font-weight: 600; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .24em; text-decoration-color: color-mix(in oklab, currentColor 45%, transparent); cursor: pointer; }
+.lrn-who-a::after { content: ""; flex: none; width: .42em; height: .42em; border-top: 1.5px solid currentColor; border-right: 1.5px solid currentColor; rotate: 45deg; }
+.lrn-who-a:hover { text-decoration-color: currentColor; }
+.lrn-who-a:focus-visible { outline: 2px solid var(--accent-gold, #c9a25a); outline-offset: 2px; border-radius: 3px; }
+.fm #gloss .lrn-who-a, .fm .ty-gloss .lrn-who-a { color: var(--fm-gold, #e9c98c); }
+.fm .lrn-who-a:focus-visible { outline-color: var(--fm-gold, #e9c98c); }
+/* (the Hindi reading face, Tiro Devanagari Hindi, ships at 400 only; the link takes the interface face, which has a true 600) */
+html[lang="hi"] .lrn-who-a { font-family: "Mukta", var(--cx-ui, inherit); }
+.lens-card .lrn-who-l { margin-top: .35rem; }
+
+/* ---------- the story's place in the hero's facts row ("Story 7 of 19") ---------- */
+/* [int-a] With the place fact added, the English row ("Story 7 of 19 | 5 min | 7 scenes | English and हिन्दी") wrapped to two lines on a
+   phone either way up, lifting the label and title about 29px onto the painting's faces. There the languages item steps aside (the
+   header's EN/हिन्दी switch says the same) so the row is one line and the hero is no taller than before. Hindi fits down to 360px. */
+@media (max-width: 899px) { html[lang="en"] .cx-film-card > .cx-facts:has(> .lrn-fact) > .cx-facts-lang { display: none; } }
+@media (max-width: 359px) { .cx-film-card > .cx-facts:has(> .lrn-fact) > .cx-facts-lang { display: none; } }
+
+/* ---------- before you begin: the story's place, the people, the places (inside .story-intro) ---------- */
+.lrn-begin { grid-column: 1 / -1; display: grid; gap: 1rem; min-width: 0; font-family: var(--cx-ui, inherit); font-style: normal; color: var(--cx-ink, var(--ink)); }
+html[lang="hi"] .lrn-begin { font-family: "Mukta", var(--cx-ui, inherit); }
+.lrn-k, .lrn-pos-t { display: block; margin: 0 0 .5rem; font: 500 .78rem/1.3 var(--cx-ui, inherit); letter-spacing: .14em; text-transform: uppercase; color: var(--cx-ink-3, var(--muted)); }
+html[lang="hi"] :is(.lrn-k, .lrn-pos-t) { font: 600 .95rem/1.35 "Mukta", var(--cx-ui, inherit); letter-spacing: 0; text-transform: none; }
+.lrn-pos { margin: 0; }
+.lrn-pos-t { margin: 0; color: var(--cx-saffron, var(--cx-ink-3, var(--muted))); }
+.lrn-prev { display: block; font-size: .98rem; line-height: 1.4; }
+.lrn-prev .lrn-k { display: inline; margin: 0 .45em 0 0; }
+.lrn-prev a { display: inline-flex; align-items: center; min-height: 44px; color: inherit; font-weight: 600; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .24em; text-decoration-color: var(--cx-line-2, currentColor); }
+.lrn-prev a:hover { text-decoration-color: currentColor; }
+.lrn-prev a:focus-visible { outline: 2px solid var(--cx-btn, #a54d0d); outline-offset: 2px; border-radius: 3px; }
+.lrn-prev-s { display: block; margin-top: -.15rem; font-size: .92rem; color: var(--cx-ink-2, var(--muted)); }
+.lrn-begin-in { display: grid; gap: 1rem 2rem; min-width: 0; }
+.lrn-begin ul { list-style: none; margin: 0; padding: 0; }
+.lrn-meet ul { display: grid; grid-template-columns: minmax(0, 1fr); gap: .7rem 1rem; }
+.lrn-meet li { display: grid; grid-template-columns: 2.75rem minmax(0, 1fr); grid-template-rows: auto auto; column-gap: .65rem; align-content: center; min-width: 0; }
+.lrn-face { grid-row: 1 / 3; align-self: center; width: 2.75rem; height: 2.75rem; border-radius: 50%; overflow: hidden; background: radial-gradient(circle at 50% 35%, rgb(240 164 86 / .3), rgb(60 34 16 / .5)); box-shadow: 0 0 0 1px var(--cx-line-2, rgb(0 0 0 / .2)); }
+/* (Eczar ships at 500 only: a heavier weight would be a smeared synthetic bold. The Hindi is Mukta, which has a true 600.) */
+.lrn-n { align-self: end; font: 500 1rem/1.25 var(--cx-title, inherit); }
+html[lang="hi"] .lrn-n { font-family: inherit; font-weight: 600; line-height: 1.4; }
+.lrn-n:last-child { grid-row: 1 / 3; align-self: center; }
+.lrn-t { align-self: start; font-size: .82rem; line-height: 1.3; color: var(--cx-ink-2, var(--muted)); }
+html[lang="hi"] .lrn-t { font-size: .9rem; line-height: 1.4; }
+.lrn-meet li.lrn-more { display: block; align-self: center; font-size: .85rem; color: var(--cx-ink-2, var(--muted)); }
+.lrn-where li + li { margin-top: .35rem; }
+.lrn-pl { display: block; font: 500 1rem/1.3 var(--cx-title, inherit); }
+html[lang="hi"] .lrn-pl { font-family: inherit; font-weight: 600; }
+.lrn-pl-m { display: block; font-size: .85rem; line-height: 1.4; color: var(--cx-ink-2, var(--muted)); }
+html[lang="hi"] .lrn-pl-m { font-size: .92rem; line-height: 1.5; }
+@media (min-width: 700px) { .lrn-meet ul { grid-template-columns: repeat(2, minmax(0, 1fr)); } .lrn-begin-in:has(.lrn-meet):has(.lrn-where) { grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr); } }
+.fm .story-head.is-open .lrn-begin { margin-top: 1.1rem; }
+/* in the film these stand with the story's first words over the opening painting: light on dark, and the earlier story's summary waits with the rest of the heading */
+.fm .story-head:not(.is-open) .lrn-begin { margin-top: 1rem; gap: .8rem; color: var(--fm-ink, #f6ead8); }
+.fm .story-head:not(.is-open) :is(.lrn-k, .lrn-pos-t) { color: var(--fm-gold, #e9c98c); }
+.fm .story-head:not(.is-open) :is(.lrn-t, .lrn-pl-m, .lrn-meet li.lrn-more) { color: rgb(246 234 216 / .86); }
+.fm .story-head:not(.is-open) .lrn-prev-s { display: none; }
+.fm .story-head:not(.is-open) .lrn-prev a { text-decoration-color: rgb(233 201 140 / .7); }
+.fm .story-head:not(.is-open) .lrn-prev a:focus-visible { outline-color: var(--fm-gold, #e9c98c); }
+.fm .story-head:not(.is-open) .lrn-face { box-shadow: 0 0 0 1px rgb(233 201 140 / .55), 0 2px 10px rgb(0 0 0 / .5); }
+.fm .story-head:not(.is-open) .lrn-begin-in { gap: .7rem 2rem; }
+.fm .story-head:not(.is-open) .lrn-meet ul { gap: .55rem 1rem; }
+/* a phone's film holds these words in the lower part of the screen, so they are set small there: faces with names in a
+   flowing row (titles and the map's note wait in the opened heading and on the reading page); a short phone keeps the people only */
+@media (max-width: 699.98px) {
+  .fm .story-head:not(.is-open) .lrn-begin { gap: .55rem; margin-top: .8rem; }
+  .fm .story-head:not(.is-open) :is(.lrn-k, .lrn-pos-t) { margin-bottom: .3rem; }
+  .fm .story-head:not(.is-open) .lrn-pos-t { margin-bottom: 0; }
+  .fm .story-head:not(.is-open) .lrn-prev a { margin-block: -.5rem; }
+  .fm .story-head:not(.is-open) .lrn-begin-in { gap: .55rem; }
+  .fm .story-head:not(.is-open) .lrn-meet ul { display: flex; flex-wrap: wrap; gap: .4rem .95rem; }
+  .fm .story-head:not(.is-open) .lrn-meet li { display: inline-flex; align-items: center; gap: .45rem; }
+  .fm .story-head:not(.is-open) .lrn-face { width: 1.9rem; height: 1.9rem; }
+  .fm .story-head:not(.is-open) :is(.lrn-t, .lrn-pl-m) { display: none; }
+  .fm .story-head:not(.is-open) .lrn-where { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 .7rem; }
+  .fm .story-head:not(.is-open) .lrn-where .lrn-k { margin: 0; }
+  .fm .story-head:not(.is-open) .lrn-where ul { display: flex; flex-wrap: wrap; gap: 0 .9rem; }
+  .fm .story-head:not(.is-open) .lrn-where li + li { margin: 0; }
+  .fm .story-head:not(.is-open) .lrn-pl { font-size: .98rem; }
+}
+/* The film holds a beat's words only while they are no taller than a little over half the screen (assets/film.js, .fm-long). On a short
+   screen, or at a large text size, assets/learn.js lets go of these one step at a time until the story's first words are held again:
+   1 the places, 2 the story before, 3 all but two people, 4 the people, 5 everything. The opened heading and the reading page keep all of it. */
+.fm .story-head:not(.is-open) .lrn-begin[data-fit] .lrn-where,
+.fm .story-head:not(.is-open) .lrn-begin:is([data-fit="2"], [data-fit="3"], [data-fit="4"]) .lrn-prev,
+.fm .story-head:not(.is-open) .lrn-begin:is([data-fit="3"], [data-fit="4"]) .lrn-meet li:nth-child(n+3),
+.fm .story-head:not(.is-open) .lrn-begin[data-fit="4"] .lrn-meet,
+.fm .story-head:not(.is-open) .lrn-begin[data-fit="5"] { display: none; }
+@media print { .lrn-face { display: none; } .lrn-meet li { grid-template-columns: minmax(0, 1fr); } }
+
+/* ---------- how people are tied, on the name chips ---------- */
+.people .lrn-tie { margin-left: .5rem; font-weight: 400; color: var(--cx-ink-3, var(--muted)); }
+.cast-chip-n .lrn-tie { display: block; margin-top: .12rem; font: 400 .84rem/1.3 var(--cx-ui, inherit); color: var(--cx-ink-3, var(--muted)); }
+html[lang="hi"] .cast-chip-n .lrn-tie { font-family: "Mukta", var(--cx-ui, inherit); font-size: .92rem; line-height: 1.4; }
+
+/* ---------- the reading edition in the comfort sheet ---------- */
+.lrn-read .seg { display: flex; width: 100%; max-width: 26rem; }
+.lrn-read .seg :is(button, .seg-link) { flex: 1 1 0; min-width: 0; min-height: 44px; }
+.lrn-read .note { margin: .5rem 0 0; }
+/* the choice is named in the full strength of the sheet's ink, at the note's own weight (no synthetic bold in either script) */
+.lrn-read .note b { font-weight: inherit; opacity: 1; color: var(--ink); }
+.lrn-read .lrn-rn { display: none; }
+@media (max-width: 699px) { .lrn-read .lrn-rw { display: none; } .lrn-read .lrn-rn { display: inline; } }
+
+/* ---------- the word hint: once, under the first lit words that carry an underlined word (film only) ---------- */
+.lrn-hint { position: fixed; z-index: 6; margin: 0; padding: 0; max-width: calc(100vw - 32px); font: 400 .9rem/1.35 var(--cx-ui, inherit); color: rgb(246 234 216 / .94); text-shadow: 0 1px 2px rgb(0 0 0 / .9), 0 0 14px rgb(0 0 0 / .6); opacity: 0; visibility: hidden; pointer-events: none; transition: opacity .5s ease, visibility 0s linear .5s; }
+html[lang="hi"] .lrn-hint { font-family: "Mukta", var(--cx-ui, inherit); font-size: .98rem; }
+.lrn-hint::before { content: ""; display: inline-block; width: 1.2em; margin-right: .55em; vertical-align: .28em; border-bottom: 1px solid var(--fm-gold, #e9c98c); }
+.lrn-hint.is-on { opacity: 1; visibility: visible; transition: opacity .5s ease .5s, visibility 0s; }
+@media (prefers-reduced-motion: reduce) { .lrn-hint, .lrn-hint.is-on { transition: none; } }
+:root[data-motion="reduce"] :is(.lrn-hint, .lrn-hint.is-on) { transition: none; }
+@media print { .lrn-hint { display: none; } }
+
+/* ---------- two or three things from this story ---------- */
+.lrn-recall { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.lrn-recall > summary { display: flex; align-items: center; justify-content: space-between; gap: 1rem; min-height: 56px; padding: .35rem 0; cursor: pointer; list-style: none; font: 500 1.3rem/1.3 var(--cx-title, var(--font-display, inherit)); color: var(--ink); }
+html[lang="hi"] .lrn-recall > summary { line-height: 1.5; }
+.lrn-recall > summary::-webkit-details-marker, :is(.lrn-ans, .lrn-faq) > summary::-webkit-details-marker { display: none; }
+.lrn-recall > summary::after, :is(.lrn-ans, .lrn-faq) > summary::after { content: ""; flex: none; width: .5rem; height: .5rem; margin-right: .25rem; border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; rotate: 45deg; translate: 0 -.12rem; transition: rotate .2s ease; }
+.lrn-recall[open] > summary::after, :is(.lrn-ans, .lrn-faq)[open] > summary::after { rotate: 225deg; translate: 0 .1rem; }
+.lrn-recall summary:focus-visible, .lrn-card:focus-visible, .lrn-opt:focus-visible, .lrn-recall a:focus-visible { outline: 2px solid var(--accent-gold, #c9a25a); outline-offset: 2px; border-radius: 4px; }
+.lrn-recall-in { display: grid; gap: 1.75rem; padding: .25rem 0 1.75rem; }
+.lrn-recall-in > .note { margin: 0; }
+.lrn-q { display: grid; gap: .75rem; min-width: 0; }
+.lrn-q h3 { margin: 0; font: 500 1.2rem/1.3 var(--cx-title, var(--font-display, inherit)); color: var(--ink); letter-spacing: 0; }
+html[lang="hi"] .lrn-q h3 { line-height: 1.5; }
+.lrn-q .note { margin: 0; }
+:root:not(.lrn-js) .lrn-do { display: none; }
+.lrn-cards, .lrn-opts, .lrn-ol { list-style: none; margin: 0; padding: 0; display: grid; gap: .6rem; }
+.lrn-card { display: grid; grid-template-columns: min(5.25rem, 24%) minmax(0, 1fr) 2rem; align-items: center; gap: .9rem; width: 100%; min-height: 60px; padding: .4rem .7rem .4rem .4rem; border: 1.5px solid var(--line); border-radius: 10px; background: var(--surface); color: var(--ink); font: inherit; text-align: left; cursor: pointer; transition: border-color .2s, background-color .2s; }
+.lrn-card:disabled, .lrn-opt:disabled { cursor: default; opacity: 1; color: var(--ink); }
+.lrn-card:hover:not(:disabled), .lrn-card[aria-pressed="true"] { border-color: var(--accent-gold, #c9a25a); }
+.lrn-thumb { display: block; aspect-ratio: 16 / 10; border-radius: 6px; overflow: hidden; background: var(--bg-deep, #241e1a); }
+.lrn-thumb img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.lrn-card-t { font-weight: 600; line-height: 1.3; overflow-wrap: anywhere; }
+html[lang="hi"] .lrn-card-t { line-height: 1.5; }
+.lrn-no { display: grid; place-items: center; width: 2rem; height: 2rem; border-radius: 50%; border: 1.5px dashed var(--line); font: 600 1rem/1 var(--cx-ui, inherit); font-variant-numeric: lining-nums; color: var(--ink); }
+.lrn-card[aria-pressed="true"] .lrn-no { border-style: solid; border-color: var(--accent-gold, #c9a25a); background: color-mix(in oklab, var(--accent-gold, #c9a25a) 22%, transparent); }
+:root:not(.lrn-js) .lrn-no { display: none; }
+.lrn-say { margin: 0; min-height: 1.5em; font-weight: 600; color: var(--ink); }
+.lrn-say:empty { display: none; }
+:is(.lrn-ans, .lrn-faq) > summary { display: inline-flex; align-items: center; gap: .6rem; min-height: 44px; cursor: pointer; list-style: none; font-weight: 600; color: var(--ink-secondary, var(--muted)); }
+.lrn-faq { border-top: 1px solid var(--line); }
+.lrn-faq > summary { display: flex; justify-content: space-between; padding: .5rem 0; color: var(--ink); font: 500 1.08rem/1.4 var(--cx-title, inherit); }
+html[lang="hi"] .lrn-faq > summary { line-height: 1.6; }
+.lrn-faq p { margin: .25rem 0 .5rem; color: var(--ink-secondary, var(--muted)); line-height: 1.65; }
+html[lang="hi"] .lrn-faq p { line-height: 1.85; }
+.lrn-ol { margin-top: .35rem; counter-reset: lrn; gap: 0; }
+.lrn-ol li { counter-increment: lrn; display: grid; grid-template-columns: 1.6rem minmax(0, 1fr); align-items: baseline; }
+.lrn-ol li::before { content: counter(lrn) "."; font-weight: 600; color: var(--ink-secondary, var(--muted)); font-variant-numeric: lining-nums; }
+.lrn-recall a { display: inline-flex; align-items: center; min-height: 44px; color: var(--ink); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .22em; text-decoration-color: var(--accent-gold, currentColor); }
+.lrn-line { margin: 0; padding: .15rem 0 .15rem 1rem; border-left: 2px solid var(--accent-gold, #c9a25a); }
+.lrn-line p { margin: 0; font: italic 400 1.2rem/1.5 var(--cx-text, inherit); color: var(--ink); }
+html[lang="hi"] .lrn-line p { font-style: normal; font-family: "Tiro Devanagari Hindi", var(--cx-text, inherit); line-height: 1.8; }
+.lrn-opt { width: 100%; justify-content: flex-start; min-height: 48px; padding-block: .5rem; text-align: left; white-space: normal; line-height: 1.3; }
+.lrn-opt[aria-pressed="true"], .lrn-opt.is-it { border-color: var(--accent-gold, #c9a25a); }
+.lrn-opt.is-it { background: color-mix(in oklab, var(--accent-gold, #c9a25a) 16%, var(--surface)); }
+.lrn-from { margin: .25rem 0 0; }
+.lrn-ans .lrn-line { margin-top: .5rem; }
+@media (min-width: 700px) { .lrn-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); } .lrn-opts { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (prefers-reduced-motion: reduce) { .lrn-recall > summary::after, :is(.lrn-ans, .lrn-faq) > summary::after, .lrn-card, .lrn-opt { transition: none; } }
+:root[data-motion="reduce"] :is(.lrn-recall > summary, .lrn-ans > summary, .lrn-faq > summary)::after, :root[data-motion="reduce"] :is(.lrn-card, .lrn-opt) { transition: none; }
+@media print { .lrn-recall { display: none; } }

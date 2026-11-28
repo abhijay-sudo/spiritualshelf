@@ -9,8 +9,13 @@
 /* ---------- the glyph beside a scene's title ---------- */
 .scene-no { position: relative; }
 /* the glyph hangs just after "Scene 4 of 10", out of the flow: it never moves the title */
-.sh-glyph { position: absolute; left: calc(100% + 1rem); top: 50%; translate: 0 -50%; z-index: 2; display: grid; place-items: center; width: 44px; height: 44px; margin: 0; padding: 0; border: 1px solid rgb(233 201 140 / .5); border-radius: 50%; background: rgb(14 8 4 / .42); color: #f6ecda; font-size: 1rem; letter-spacing: 0; text-transform: none; cursor: pointer; -webkit-tap-highlight-color: transparent; pointer-events: auto; transition: transform var(--dur-2) var(--ease-settle), background-color var(--dur-2) var(--ease-settle), border-color var(--dur-2) var(--ease-settle), opacity var(--dur-2) var(--ease-settle); }
+/* [send] a pill with the word beside the sign ("Send"), so it says what it is on first sight */
+.sh-glyph { position: absolute; left: calc(100% + 1rem); top: 50%; translate: 0 -50%; z-index: 2; display: inline-flex; align-items: center; gap: .42rem; box-sizing: border-box; min-width: 44px; height: 44px; margin: 0; padding: 0 .95rem 0 .75rem; border: 1px solid rgb(233 201 140 / .5); border-radius: 999px; background: rgb(14 8 4 / .42); color: #f6ecda; font: 500 .95rem/1 var(--cx-ui, inherit); letter-spacing: .01em; text-transform: none; white-space: nowrap; text-shadow: none; -webkit-text-fill-color: currentColor; cursor: pointer; -webkit-tap-highlight-color: transparent; pointer-events: auto; transition: transform var(--dur-2) var(--ease-settle), background-color var(--dur-2) var(--ease-settle), border-color var(--dur-2) var(--ease-settle), opacity var(--dur-2) var(--ease-settle); }
 .sh-glyph[hidden] { display: none; }
+html[lang="hi"] .sh-glyph { font: 600 1rem/1 "Mukta", var(--cx-ui, sans-serif); letter-spacing: 0; }
+.sh-glyph-w { display: block; }
+.sh-glyph--ic { width: 44px; padding: 0; justify-content: center; } .sh-glyph--ic .sh-glyph-w { display: none; }   /* [int-a] no room for the label (share.js fit) */
+.sh-glyph svg { flex: none; width: 20px; height: 20px; }
 .sh-glyph svg, .sh-rail svg { width: 22px; height: 22px; display: block; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
 @media (hover: hover) { .sh-glyph:hover { transform: translateY(-2px); background: rgb(14 8 4 / .62); border-color: rgb(233 201 140 / .9); } }
 .sh-glyph:active { transform: scale(.93); transition-duration: var(--dur-1); }
@@ -73,6 +78,8 @@ html[lang="hi"] .shr-go { font-family: "Mukta", var(--cx-ui, sans-serif); font-s
 .shr-alt { flex: 1 1 0; min-height: 44px; margin: 0; padding: 0 1rem; border: 1px solid rgb(233 201 140 / .45); border-radius: 3px; background: transparent; color: #f1e4cc; font: 500 .95rem/1 var(--cx-ui, serif); cursor: pointer; white-space: nowrap; transition: background-color var(--dur-2) var(--ease-settle), border-color var(--dur-2) var(--ease-settle), transform var(--dur-1) var(--ease-settle); }
 html[lang="hi"] .shr-alt { font-family: "Mukta", var(--cx-ui, sans-serif); font-weight: 600; }
 .shr-alt[hidden] { display: none; }
+a.shr-alt { display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box; text-decoration: none; }
+.shr a:focus-visible { outline: 3px solid rgb(233 201 140 / .95); outline-offset: 3px; }
 @media (hover: hover) { .shr-alt:hover { background: rgb(233 201 140 / .1); border-color: rgb(233 201 140 / .8); } }
 .shr-alt:active { transform: scale(.97); }
 .shr-alt:disabled { opacity: .5; }

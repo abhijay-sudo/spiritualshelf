@@ -54,6 +54,10 @@
   // room for it is held from the first paint (joyb.css html.pk-can), so the line fades in without moving Keep or the buttons
   try { if (me && me.hasAttribute('data-read')) { var pkS = location.pathname.replace(/\/+$/, '').split('/').pop(), pkP = (JSON.parse(localStorage.getItem('spritual:places') || 'null') || {})[pkS];
     if (pkP && !pkP.d && pkP.s >= 2 && pkP.s <= pkP.t && !/^#page-/.test(location.hash)) d.classList.add('pk-can'); } } catch (e) {}
+  // [return] a finished story's opening gets one quiet line pointing onward (assets/return.js); its room is held from the first paint the same way (return.css html.rt-read)
+  try { if (me && me.hasAttribute('data-read')) { var rdS = location.pathname.replace(/\/+$/, '').split('/').pop(), rdP = (JSON.parse(localStorage.getItem('spritual:places') || 'null') || {})[rdS]; if (rdP && rdP.d && !/^#page-/.test(location.hash)) d.classList.add('rt-read'); } } catch (e) {}
+  // [return] the browser's own offer to install is held and never shown by itself: the menu's "Add to home screen" row (assets/return.js) uses it when the reader asks
+  try { addEventListener('beforeinstallprompt', function (e) { e.preventDefault(); window.SpritualInstall = e; d.classList.add('can-install'); }); addEventListener('appinstalled', function () { window.SpritualInstall = null; d.classList.remove('can-install'); }); } catch (e) {}
   d.classList.add('lst-js');   // [lane F] script is running: the Listen buttons may show
   // [K2] Paintings arrive whole. A hero painting marked data-arrive waits invisible (html.arr) over its tiny inline placeholder and
   // fades in the moment the browser has the whole file, instead of being drawn top to bottom over a bare dark page on a slow line.
@@ -209,6 +213,12 @@
       else { localStorage.setItem('spritual:titlesAt' + tk, String(Date.now())); sessionStorage.setItem('spritual:titles' + tk, '1'); }
       // [joyHH] a returning reader's "Continue reading" card arrives after the first paint (site.js); its room is kept from the start so the opening does not move when it does
       try { var lastRead = JSON.parse(localStorage.getItem('spritual:last') || 'null'); if (lastRead && lastRead.slug) d.classList.add('cx-has-last'); } catch (e2) {}
+      // [return] a reader who has been here on an earlier visit, or has a place in a story, finds today's story on the opening (assets/return.js): room for that line, and for
+      // "new since your last visit" when the shelf has grown (data-n: how many stories this build has), is kept from the first paint so nothing moves when they arrive
+      try { var rv = JSON.parse(localStorage.getItem('spritual:visit') || 'null'), rpl = localStorage.getItem('spritual:places'), rnew = !!(rv && rv.at) && (Date.now() - rv.at > 216e5 || Date.now() < rv.at);
+        if ((rv && (rv.prev || rnew)) || (rpl && rpl.length > 2) || d.classList.contains('cx-has-last')) { d.classList.add('rt-back'); var rb = rv && (rnew ? rv.seen : rv.base); if (rb && rb.length && +me.dataset.n > rb.length) d.classList.add('rt-news'); } } catch (e2) {}
+      // [return] opened from the home screen with a place kept: the reader is here to read on, so the finished opening, not the title sequence
+      try { if (lastRead && lastRead.slug && (matchMedia('(display-mode: standalone)').matches || navigator.standalone === true)) d.classList.add('cx-seen'); } catch (e2) {}
       localStorage.setItem('spritual:seen', '1');
     }
     else if (localStorage.getItem('spritual:seen')) d.classList.add('cx-seen'); else localStorage.setItem('spritual:seen', '1');

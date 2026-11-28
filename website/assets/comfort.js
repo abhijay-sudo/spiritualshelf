@@ -14,7 +14,7 @@
     const ws = w.querySelector('[data-ws]'), wl = w.querySelector('[data-wl]');
     const hero = reader.querySelector('.cx-film-open'), endSec = reader.querySelector('.story-end');
     const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
-    let lastS = '', lastL = '', on = false, raf = 0, tail = 0;
+    let lastS = '', lastL = '', on = false, raf = 0, tail = 0, lastAt = -1, settleT = 0;
     // One figure everywhere: the story's own minutes (the hero, the page rail) are the total; the whisper shares them out by the words still ahead
     const mins = +w.dataset.mins || 0, totalW = W.reduce((a, b) => a + b, 0) || 1;
     const leftWords = (k, frac) => { let n = W[k - 1] * (1 - frac); for (let j = k; j < N; j++) n += W[j]; return n; };
@@ -32,6 +32,9 @@
           for (let i = 0; i < N; i++) { const r = scenes[i].getBoundingClientRect(); if (r.top <= mid) { k = i + 1; frac = clamp((mid - r.top) / Math.max(1, r.height), 0, 1); } }
         }
       }
+      // [send] the film eases to its place after the last scroll event (a shared scene link lands with one jump): look again until it has settled,
+      // so the whisper never rests on the scene before
+      if (f && f.at !== lastAt) { lastAt = f.at; clearTimeout(settleT); settleT = setTimeout(kick, 240); }
       if (show !== on) { on = show; w.classList.toggle('is-on', on); }
       if (!show) return;
       const m = mins ? mins * leftWords(k, frac) / totalW : leftWords(k, frac) / 170;

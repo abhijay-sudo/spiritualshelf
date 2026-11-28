@@ -47,7 +47,7 @@ html[lang="hi"] .kp-note { font-family: "Mukta", var(--cx-ui, sans-serif); line-
 /* The hero control never changes its size or its place: one fixed frame, centred. "Remove" lives inside the frame's right end,
    revealed in place once the story is kept, so the buttons above it and the words below it do not move by a pixel. */
 .kp--hero .kp-row { position: relative; display: block; width: 100%; }
-.kp--hero .kp-btn { width: 100%; justify-content: center; padding-inline: .8rem; transition: transform var(--dur-2) var(--ease-settle), background-color var(--dur-2) var(--ease-settle), border-color var(--dur-2) var(--ease-settle), padding-right var(--dur-2) var(--ease-settle); }
+.kp--hero .kp-btn { width: 100%; justify-content: center; padding-inline: .8rem; transition: transform var(--dur-2) var(--ease-settle), background-color var(--dur-2) var(--ease-settle), border-color var(--dur-2) var(--ease-settle); }   /* [alive] (its padding is no longer tweened: the label takes its kept place at once, as its alignment already did) */
 .kp--hero[data-state="kept"] .kp-btn { padding-right: 5.6rem; justify-content: flex-start; }
 .kp--hero .kp-rm:not([hidden]) { position: absolute; right: 0; top: 0; height: 44px; display: grid; place-items: center; width: 5rem; min-height: 0; padding: 0; border-left: 1px solid rgb(233 201 140 / .4); border-radius: 0 2px 2px 0; text-decoration: none; font-size: .92rem; opacity: 1; animation: kp-rm-in var(--dur-2) var(--ease-settle) both; text-shadow: 0 1px 6px rgb(0 0 0 / .5); }
 .kp--hero .kp-rm:focus-visible { outline-offset: -3px; }

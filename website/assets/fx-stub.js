@@ -25,6 +25,7 @@ const f = d.querySelector('[data-comfort]'); if (!f) return;
 const ok = G.supported(), p = rd(), fs = f.querySelector('input[name="fx"]'); if (fs) { const fl = fs.closest('fieldset'); fl.setAttribute('aria-disabled', ok ? 'false' : 'true'); fl.setAttribute('aria-describedby', 'fx-note'); }
 const shown = p === 'ultra' && !f.querySelector('input[name="fx"][value="ultra"]') ? 'rich' : p;
 for (const i of f.querySelectorAll('input[name="fx"]')) { i.checked = i.value === shown; i.disabled = !ok; const c = i.closest('.chip'); c && c.classList.toggle('is-wait', !ok); }
+{ const rs = f.querySelector('input[name="fx"][value="rich"] + span'), nt = f.querySelector('.fx-note'); if (rs && nt && nt.dataset.richPhone && coarse() && Math.min(screen.width, screen.height) < 700 && rs.textContent !== nt.dataset.richPhone) rs.textContent = nt.dataset.richPhone; }
 const un = f.querySelector('input[name="fx"][value="ultra"]'); if (un) { un.disabled = !ok || !ultraCan(); const c = un.closest('.chip'); c && c.classList.toggle('is-wait', un.disabled); }
 const n = f.querySelector('.fx-note'); if (n) { let s = ok ? n.dataset.yes : n.dataset.no;
 if (ok && !ultraCan() && n.dataset.ultraNo) s = s + ' ' + n.dataset.ultraNo;

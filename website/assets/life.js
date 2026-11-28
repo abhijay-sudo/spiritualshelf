@@ -12,7 +12,8 @@ const still = () => { const c = navigator.connection; return R.dataset.motion ==
 const gate = () => {
 const G = window.SpiritualGPU, p = pref(), st = still(), phone = matchMedia('(pointer: coarse)').matches || (innerWidth < 700 && 'ontouchstart' in window);
 const low = !!battery && !battery.charging && battery.level < 0.2, saveData = !!(navigator.connection && navigator.connection.saveData);
-const gpu = !st && !phone && !low && p !== 'off' && p !== 'balanced' && !!G && !!G.pref && !!G.pref() && (p === 'rich' || p === 'ultra' || (G.auto && G.auto() === 'rich'));
+const stepped = () => { try { return /^[01]$/.test(sessionStorage.getItem('spritual:fxc') || ''); } catch (e) { return false; } };
+const gpu = !st && (!phone || (p === 'rich' && !stepped())) && !low && p !== 'off' && p !== 'balanced' && !!G && !!G.pref && !!G.pref() && (p === 'rich' || p === 'ultra' || (G.auto && G.auto() === 'rich'));
 const ultra = gpu && !!M && !!M.physx && typeof Worker !== 'undefined' && typeof WebAssembly !== 'undefined' && ((p === 'ultra' && !!G.ultraCan && G.ultraCan()) || !!(G.run && G.run.rank === 3));
 const tier = st || p === 'off' ? 'off' : ultra ? 'ultra' : gpu ? 'rich' : 'lite';
 return { tier, caps: { still: st, phone, saveData, light: !!R.dataset.light || R.classList.contains('ep-lite'), lowBattery: low, hover: matchMedia('(hover: hover)').matches, css: tier !== 'off', waapi: tier !== 'off', webgl: gpu, physx: ultra, pref: p || 'auto' } };
@@ -66,7 +67,7 @@ const ladder = () => {   // follow the lake's own ladder: when it STEPS DOWN (it
 const rank = { off: 0, balanced: 1, rich: 2, ultra: 3 }; let was = rank[R.dataset.fx] || 0;
 const mo = new MutationObserver(() => {
 if (!S.svc) return; const now_ = rank[R.dataset.fx] || 0, px = R.dataset.fxPhysx;
-if (now_ < was) { if (now_ === 0) S.svc.budget.dropClass('webgl', 'lake ladder: off'); else S.svc.budget.dropClass('physx', 'lake ladder: ' + R.dataset.fx); }
+if (now_ < was) { if (now_ === 0 || (S.caps && S.caps.phone)) S.svc.budget.dropClass('webgl', 'lake ladder: ' + (R.dataset.fx || 'off')); else S.svc.budget.dropClass('physx', 'lake ladder: ' + R.dataset.fx); }   // ([alive] on a phone any step down takes the GPU packages with it)
 if (px === 'failed') S.svc.budget.dropClass('physx', 'lake physics failed');
 was = now_;
 });

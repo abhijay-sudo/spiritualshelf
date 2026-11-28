@@ -21,11 +21,15 @@
 
 @media (prefers-reduced-motion: no-preference) {
   /* ---- the opening: kicker, title (its words are inked in by type.js), the rule draws, then source line, facts, buttons rise ---- */
-  :root:not([data-motion="reduce"]):not([data-motion="light"]):not([data-light]) .cx-film-k { animation: ms-rise 640ms var(--ease-settle, cubic-bezier(.16, 1, .3, 1)) 260ms both; }
-  :root:not([data-motion="reduce"]):not([data-motion="light"]):not([data-light]) .cx-film-title.ms-rule::after { animation: ms-draw 900ms var(--ease-settle, cubic-bezier(.16, 1, .3, 1)) 950ms both; }
-  :root:not([data-motion="reduce"]):not([data-motion="light"]):not([data-light]) .cx-film-name { animation: ms-rise 700ms var(--ease-settle, cubic-bezier(.16, 1, .3, 1)) 1040ms both; }
-  :root:not([data-motion="reduce"]):not([data-motion="light"]):not([data-light]) .cx-film-card > .cx-facts { animation: ms-rise 700ms var(--ease-settle, cubic-bezier(.16, 1, .3, 1)) 1110ms both; }
-  :root:not([data-motion="reduce"]):not([data-motion="light"]):not([data-light]) .cx-film-btns { animation: ms-rise 700ms var(--ease-settle, cubic-bezier(.16, 1, .3, 1)) 1180ms both; }
+  /* [alive] one gesture, not a queue: the buttons rise WITH the title's first word and are whole by 550 ms (they started at 1180 ms and ended at 1880 ms, the last
+     thing to arrive although "Begin the story" is what the page is for); the kicker with them; the source line and the facts a step behind; the rule draws as the
+     title's last word is written. A reader who has been here before (.cx-seen) has the buttons and the facts from the first paint. */
+  :root:not([data-motion="reduce"]):not([data-motion="light"]):not([data-light]) .cx-film-k { animation: ms-rise 400ms var(--ease-settle, cubic-bezier(.16, 1, .3, 1)) 150ms both; }
+  :root:not([data-motion="reduce"]):not([data-motion="light"]):not([data-light]) .cx-film-title.ms-rule::after { animation: ms-draw 700ms var(--ease-settle, cubic-bezier(.16, 1, .3, 1)) 600ms both; }
+  :root:not([data-motion="reduce"]):not([data-motion="light"]):not([data-light]) .cx-film-name { animation: ms-rise 500ms var(--ease-settle, cubic-bezier(.16, 1, .3, 1)) 200ms both; }
+  :root:not([data-motion="reduce"]):not([data-motion="light"]):not([data-light]) .cx-film-card > .cx-facts { animation: ms-rise 500ms var(--ease-settle, cubic-bezier(.16, 1, .3, 1)) 240ms both; }
+  :root:not([data-motion="reduce"]):not([data-motion="light"]):not([data-light]) .cx-film-btns { animation: ms-rise 400ms var(--ease-settle, cubic-bezier(.16, 1, .3, 1)) 150ms both; }
+  :root.cx-seen:not([data-motion="reduce"]):not([data-motion="light"]):not([data-light]) :is(.cx-film-card > .cx-facts, .cx-film-btns) { animation: none; }
 
   /* ---- each painting arrives: a slow depth push on its own layer (film.js moves the camera inside it and is not touched),
           and one warm band of light crosses it, once. Replays by itself whenever film.js brings a layer on. ---- */

@@ -7,9 +7,8 @@ const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 const still = () => root.dataset.motion === 'reduce' || matchMedia('(prefers-reduced-motion: reduce)').matches;
 const low = () => still() || !!root.dataset.light;
 const SPK = '<svg viewBox="0 0 24 24" aria-hidden="true" class="fm-ic fm-spk"><path class="sp" d="M4 9.5v5h3.5l5 4v-13l-5 4H4Z"/><path class="wv" d="M16 9.5a3.5 3.5 0 0 1 0 5M18.5 7a7 7 0 0 1 0 10"/><path class="xx" d="M16.2 9.7l4.6 4.6M20.8 9.7l-4.6 4.6"/></svg>';
-const DIYA = (cls = '') => `<svg class="fm-diya ${cls}" viewBox="0 0 48 48" aria-hidden="true"><path class="fl" d="M24 4c4.2 6.2 6.6 9.8 6.6 13.9a6.6 6.6 0 0 1-13.2 0C17.4 13.8 19.8 10.2 24 4Z"/><path class="wk" d="M24 28v-4.5"/><path class="bw" d="M4 27c5.2 1.6 12 2.3 20 2.3S38.8 28.6 44 27c-1.2 8.3-8.6 14-20 14S5.2 35.3 4 27Z"/></svg>`;
 const langChip = () => { const a = d.querySelector('a.ed-lang[data-lang-switch]'); if (!a) return ''; const o = [...a.querySelectorAll('.ed-lang-opt')]; if (!o.length) return ''; const hv = $('.visually-hidden', a), lbl = (hv?.textContent || '').replace(/^[\s—–-]+/, ''); return `<button type="button" class="fm-lang" data-fm-lang lang="${esc((hv && hv.getAttribute('lang')) || a.getAttribute('lang') || '')}" aria-label="${esc(lbl)}" title="${esc(lbl)}">${o.map((x) => `<span class="fm-lang-o${x.classList.contains('ed-lang-cur') ? ' is-cur' : ''}" lang="${esc(x.lang)}" aria-hidden="true">${esc($('.l-s', x)?.textContent || x.textContent)}</span>`).join('')}</button>`; };
-const LAMP = (id, cls = '') => `<svg class="fm-lampx ${cls}" viewBox="0 0 120 120" aria-hidden="true"><defs><radialGradient id="${id}h" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#ffd27a" stop-opacity=".55"/><stop offset=".35" stop-color="#ff9a3c" stop-opacity=".2"/><stop offset="1" stop-color="#ff8a2a" stop-opacity="0"/></radialGradient><linearGradient id="${id}c" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b9713f"/><stop offset=".5" stop-color="#8a4a26"/><stop offset="1" stop-color="#4a2412"/></linearGradient><linearGradient id="${id}f" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#ff8a1f"/><stop offset=".55" stop-color="#ffc24a"/><stop offset="1" stop-color="#fff0b8"/></linearGradient><radialGradient id="${id}o" cx="50%" cy="40%" r="60%"><stop offset="0" stop-color="#3a1c0c"/><stop offset="1" stop-color="#1c0d06"/></radialGradient></defs><circle class="lh" cx="60" cy="46" r="58" fill="url(#${id}h)"/><path class="lb" d="M14 74c10 3 26 4.6 46 4.6S96 77 106 74c-3 17-20 29-46 29S17 91 14 74Z" fill="url(#${id}c)"/><ellipse class="lo" cx="60" cy="74.5" rx="45.5" ry="6.4" fill="url(#${id}o)" stroke="#c98652" stroke-width="1.6"/><path class="ls" d="M24 84c8 9 21 13.5 36 13.5" fill="none" stroke="#e0a674" stroke-opacity=".35" stroke-width="1.6" stroke-linecap="round"/><path class="lw" d="M60 75v-8" stroke="#2a160b" stroke-width="2.4" stroke-linecap="round"/><g class="lf"><path d="M60 22c8.4 12.6 13.4 20 13.4 28.6a13.4 13.4 0 0 1-26.8 0C46.6 42 51.6 34.6 60 22Z" fill="url(#${id}f)"/><path d="M60 41c3.6 5.6 5.6 8.8 5.6 12.4a5.6 5.6 0 0 1-11.2 0C54.4 49.8 56.4 46.6 60 41Z" fill="#fff6d6" fill-opacity=".85"/></g></svg>`;
+const ENDMARK = (cls = '') => `<svg class="fm-lampx ${cls}" viewBox="0 0 120 120" aria-hidden="true"><path class="lr lr-l" d="M14 100H50"/><path class="lr lr-r" d="M70 100H106"/><circle class="ld" cx="60" cy="100" r="3.4"/></svg>`;
 const PAGE = '<svg viewBox="0 0 24 24" aria-hidden="true" class="fm-ic"><path d="M6.5 3.5h8l3.5 3.5v13.5h-11.5Z"/><path d="M9.5 11h5.5M9.5 14.5h5.5"/></svg>';
 const cssHref = $('script[data-film]')?.dataset.film;
 const css = () => {
@@ -19,22 +18,26 @@ return !l || l.sheet ? Promise.resolve() : new Promise((r) => { l.addEventListen
 };
 window.SpritualDoor = ({ title, kicker, F, onChoice }) => css().then(() => new Promise((res) => {
 const dlg = d.createElement('dialog'); dlg.className = 'fm-door'; dlg.lang = root.lang; dlg.setAttribute('aria-label', F.fDoor);
-dlg.innerHTML = `<div class="fm-door-veil" aria-hidden="true"></div><div class="fm-door-in"><p class="fm-door-k">${esc(kicker)}</p><h2 class="fm-door-t">${esc(title)}</h2>${LAMP('fmd')}<div class="fm-door-btns"><button type="button" data-c="sound" autofocus>${esc(F.fLamp)}</button><button type="button" data-c="silent">${esc(F.fSilent)}</button></div></div>`;
+dlg.innerHTML = `<div class="fm-door-iris" aria-hidden="true"></div><div class="fm-door-veil" aria-hidden="true"></div><div class="fm-door-in"><p class="fm-door-k">${esc(kicker)}</p><h2 class="fm-door-t">${esc(title)}</h2><i class="fm-door-rule" aria-hidden="true"></i><div class="fm-door-btns"><button type="button" data-c="sound" autofocus>${esc(F.fSound)}</button><button type="button" data-c="silent">${esc(F.fSilent)}</button></div></div>`;
 d.body.append(dlg); dlg.showModal();
 requestAnimationFrame(() => requestAnimationFrame(() => dlg.classList.add('is-in')));
-let gone = false;
-const done = (c) => { if (gone) return; gone = true; dlg.close(); dlg.remove(); res(c); };
-dlg.addEventListener('cancel', (e) => { e.preventDefault(); done(null); });
+let gone = false, chosen = null, anims = [];
+const done = (c) => { if (gone) return; gone = true; d.removeEventListener('keydown', skip, true); for (const a of anims) { try { a.cancel(); } catch (x) {} } dlg.close(); dlg.remove(); res(c); };
+const skip = (e) => { if (chosen && !e.repeat) { e.preventDefault(); done(chosen); } };
+dlg.addEventListener('cancel', (e) => { e.preventDefault(); done(chosen); });
 dlg.addEventListener('click', (e) => {
-const b = e.target.closest('[data-c]'); if (!b || dlg.classList.contains('is-opening')) return;
-const c = b.dataset.c, lamp = $('.fm-lampx', dlg), r = lamp.getBoundingClientRect();
-onChoice?.(c);
-if (c === 'sound') { lamp.classList.add('lit'); dlg.classList.add('is-lit'); }
-const veil = $('.fm-door-veil', dlg); veil.style.setProperty('--fy', ((r.top + r.height * .36) / innerHeight * 100).toFixed(1) + '%');
-if (still()) return done(c);
-dlg.classList.add('is-opening');
-const t0 = performance.now() + (c === 'sound' ? 900 : 350), step = (now) => { const t = clamp((now - t0) / 1700), e = t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; veil.style.setProperty('--r', (e * 175).toFixed(2)); if (t < 1 && !gone) requestAnimationFrame(step); else done(c); };
-requestAnimationFrame(step);
+if (chosen) return done(chosen);   // a second tap, anywhere: the opening ends at once
+const b = e.target.closest('[data-c]'); if (!b) return;
+const c = b.dataset.c, veil = $('.fm-door-veil', dlg), iris = $('.fm-door-iris', dlg), r = $('.fm-door-rule', dlg).getBoundingClientRect();
+onChoice?.(c); chosen = c;
+if (still() || !iris.animate) return done(c);
+iris.style.top = ((r.top + r.height / 2) / innerHeight * 100).toFixed(1) + '%';
+if (c === 'sound') dlg.classList.add('is-lit');
+dlg.classList.add('is-opening'); d.addEventListener('keydown', skip, true);
+const wait0 = c === 'sound' ? 250 : 0, dur = c === 'sound' ? 1400 : 900;
+anims = [veil.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 260, delay: wait0, easing: 'ease-out', fill: 'both' }),
+iris.animate([{ transform: 'scale(1)' }, { transform: 'scale(18)' }], { duration: dur, delay: wait0, easing: 'cubic-bezier(.65, 0, .35, 1)', fill: 'both' })];
+anims[1].finished.then(() => done(c), () => {});
 });
 }));
 window.SpritualFilm = (ctx) => {
@@ -77,7 +80,7 @@ $$('.scene-text > .pair', s).forEach((p) => { if (p.firstElementChild) add(p, p.
 tints[i + 1] = s.dataset.tint || '18 10 7';
 });
 tints[0] = hero.dataset.tint || tints[1];
-if (endP) { const sp = d.createElement('span'); sp.innerHTML = LAMP('fme', 'fm-end-lamp'); while (endP.firstChild && endP.firstChild !== sp) sp.append(endP.firstChild); endP.append(sp); endP.classList.add('fm-end'); endLamp = $('.fm-lampx', sp); add(endP, sp, 'end', N); }
+if (endP) { const sp = d.createElement('span'); sp.innerHTML = ENDMARK('fm-end-lamp'); while (endP.firstChild && endP.firstChild !== sp) sp.append(endP.firstChild); endP.append(sp); endP.classList.add('fm-end'); endLamp = $('.fm-lampx', sp); add(endP, sp, 'end', N); }
 if (closeEl && $('.cb-in', closeEl)) add(closeEl, $('.cb-in', closeEl), 'close', N);
 endSec?.style.setProperty('--t', tints[N]); document.documentElement.style.setProperty('--fm-end', 'rgb(' + tints[N] + ')');   // [fixL G34] the footer's rise starts from the afterword's own tint
 const on = ctx.sound.on(), beads = $$('[data-bead]', reader), lbl = on ? UI.soundDrone : UI.soundOffLong;
@@ -230,13 +233,17 @@ const im = $('.shot > img', scenes[k - 1]); const set = (im?.getAttribute('srcse
 const full = set[0] && set[0][0]; if (!full || l.img.getAttribute('src') === full) return;
 setTimeout(() => { if (l.k !== k || !active || l.deep) return; const pic = new Image(); pic.src = full; (pic.decode ? pic.decode() : Promise.resolve()).then(() => { if (l.k === k && active && !l.deep && l.img.getAttribute('src') !== full) l.img.src = full; }).catch(() => {}); }, 1400);
 };
+let cutN = 0;
 const cutTo = (k) => {
-if (busy || loading) { pending = k; return; }
-if (layers[top].k === k) return;
+const again = first && loading && layers[top ^ 1].k !== k;
+if (!again && (busy || loading)) { pending = k; return; }
+if (!again && layers[top].k === k) return;
+const my = ++cutN; pending = null;
 const inc = layers[top ^ 1], out = layers[top], src = srcOf(k), was = first, dis = Math.round(tempoOf(k)[0] * lampX(1.6, 1));   // [comfort] dissolve length
 loading = true; inc.k = k; if (inc.img.getAttribute('src') !== src) inc.img.src = src;
 const ready = [inc.img.decode ? inc.img.decode().catch(() => {}) : 0, was && !k ? Promise.all(heroImg.getAnimations().map((a) => a.finished)).catch(() => {}) : 0];
 Promise.race([Promise.all(ready), wait(4000)]).then(() => {
+if (my !== cutN) return;   // [alive] a later first cut took this one's place
 loading = false; if (!active) return;
 pose(inc, poseOf(k), false); if (dzT) deepen(inc); inc.el.style.zIndex = 2; out.el.style.zIndex = 1; inc.el.style.setProperty('--dis', dis + 'ms'); inc.el.classList.toggle('fade', !was); inc.el.classList.add('on'); top ^= 1;
 const done = () => { out.el.classList.remove('on', 'fade'); out.k = -1; flat(out); busy = false; if (pending != null) { const p = pending; pending = null; cutTo(p); } };
@@ -306,7 +313,7 @@ const remeasure = () => { if (!active) return; measure(); kick(); };
 const onResize = () => { clearTimeout(rt); rt = setTimeout(() => { if (!sync() || (innerWidth === lastW && Math.abs(innerHeight - lastH) < 2 && Math.abs(stage.clientHeight - VH) < 2 && Math.abs(wrap.offsetHeight - wrapH) < 3)) return; lastW = innerWidth; remeasure(); }, 160); };
 const sceneNow = () => (cur >= 1 ? Math.floor(cur) : 0);
 const enable = () => {
-if (active) return; const k = built ? ctx.current?.() : 0, deep = scrollY > innerHeight * .6;
+if (active) return; const k = built ? ctx.current?.() : 0, deep = scrollY > innerHeight * .6, fresh = !built;
 active = true; root.classList.add('fm'); if (!built) build();
 themes.forEach((m) => { m.content = '#0b0706'; });
 css().then(() => {
@@ -314,6 +321,7 @@ if (!active) return;
 dzT = tier(); measure(); lastW = innerWidth; cur = -1; first = true; top = 0; busy = loading = false; pending = null; onBeat = gone = null; litKey = ''; lastY = cardF = heroP = -1;
 if (k && deep) scenes[k - 1].scrollIntoView({ block: 'start', behavior: 'instant' });
 free(location.hash.slice(1));
+if (fresh) window.SpritualJump?.();   // [alive] an arrival at #page-N (a shared scene, Continue reading): the page is put on that scene now that the film's own resting places are measured (site.js; not once the reader has moved the page), so the first frame below opens on that scene's painting
 window.SpritualTypePlace?.();   // [type] a language switch puts the page on the reader's paragraph before the film's first frame (assets/type.js)
 draw(performance.now());
 if (!ro && window.ResizeObserver) { ro = new ResizeObserver(onResize); ro.observe(wrap); }

@@ -155,7 +155,8 @@ const head = d.createElement('span'); head.className = 'ty-g-t'; const b = d.cre
 if (def.deva && def.deva !== def.term) { const s = d.createElement('span'); s.lang = 'hi'; s.className = 'ty-g-deva'; s.textContent = def.deva; head.append(' ', s); }
 if (def.translit) { const s = d.createElement('i'); s.textContent = def.translit; head.append(' ', s); }
 c.append(head);
-for (const x of [part('ty-g-l', def.literal, UI.lensLiteral), part('ty-g-d', def.def), part('ty-g-c', def.context, def.ctxLabel), part('ty-g-s', def.source?.label, UI.lensSource)]) if (x) c.append(x);
+if (def.who && window.SpritualWho) c.append(window.SpritualWho.card(def));   // [learn] a person's card: their line, their ties in this story, the way to their page
+else for (const x of [part('ty-g-l', def.literal, UI.lensLiteral), part('ty-g-d', def.def), part('ty-g-c', def.context, def.ctxLabel), part('ty-g-s', def.source?.label, UI.lensSource)]) if (x) c.append(x);
 const hit = lineEnd(btn, host);
 if (!hit) host.append(el); else if (hit.at >= 0) { const tail = hit.at ? hit.node.splitText(hit.at) : hit.node; tail.parentNode.insertBefore(el, tail); } else hit.node.parentNode.insertBefore(el, hit.node);
 $$('.term[aria-expanded="true"]').forEach((t) => t.setAttribute('aria-expanded', 'false'));
@@ -215,7 +216,7 @@ e.preventDefault(); root.classList.add('ty-leave'); setTimeout(() => { location.
 }));
 let st = null; try { st = JSON.parse(sessionStorage.getItem(KEY) || 'null'); sessionStorage.removeItem(KEY); } catch {}
 const late = () => performance.now() > 1150;
-const fade = (was, cls) => { if (!root.classList.contains(was)) return; root.classList.remove(was); if (!still() && !late()) { root.classList.add(cls); setTimeout(() => root.classList.remove(cls), 520); } };
+const fade = (was, cls) => { if (!root.classList.contains(was)) return; root.classList.remove(was); if (!still() && !late() && !(cls === 'ty-in' && /^lang/.test(root.dataset.vt || ''))) { root.classList.add(cls); setTimeout(() => root.classList.remove(cls), 520); } };
 const paint = () => fade('ty-arr', 'ty-in');
 const release = () => { paint(); fade('ty-arw', 'ty-inw'); };
 const sc = st && st.slug === slug && Date.now() - st.t < 20000 && new RegExp('#page-' + st.n + '$').test(location.hash) ? scenes[st.n - 1] : null;

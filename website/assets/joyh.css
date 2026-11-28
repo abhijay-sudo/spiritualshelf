@@ -33,7 +33,7 @@ html[lang="hi"] .cx-select .cx-sel-btns .cx-btn { line-height: 1.5; padding-bloc
 @keyframes cx-skip-life { 0% { opacity: 1; pointer-events: auto; } 93% { opacity: 1; pointer-events: auto; } 100% { opacity: 0; visibility: hidden; pointer-events: none; } }
 :root.cx-js:not(.cx-seen) .cx-home .cx-intro-skip:not([hidden]) { top: calc(env(safe-area-inset-top, 0px) + .6rem); min-width: 44px; }
 /* the navigation is not there yet: it neither shows nor takes the tap or the keyboard until the sequence has ended */
-:root.cx-js:not(.cx-seen) body:has(.cx-home) .ed-head { pointer-events: none; }
+:root.cx-js:not(.cx-seen):not(.cx-fest-end) body:has(.cx-home .cx-intro-skip:not([hidden])) .ed-head { pointer-events: none; }   /* [arrival] only while the Skip pill is there: this rule had no release, so a visitor who watched the whole sequence was left with a header that never answered */
 
 /* a first frame that is not a void: a warm breath of light where the first lamp will be, inside the night itself (so it leaves with it) */
 :root.cx-js:not(.cx-seen):not(.cx-fest-end) .cx-night::before { content: ""; position: absolute; left: 0; right: 0; top: calc(var(--seam, 50%) - 22svh); height: 44svh; background: radial-gradient(ellipse 60% 50% at 50% 50%, rgb(255 150 60 / .13), rgb(255 150 60 / 0) 70%); opacity: 0; animation: cx-appear calc(var(--tk) * .7s) ease-out 0s forwards; }

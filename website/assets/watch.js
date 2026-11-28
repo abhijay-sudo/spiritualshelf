@@ -9,7 +9,7 @@ const IC = {
 prev: svg('<path class="ic-fill" d="M17.5 6.2v11.6a.8.8 0 0 1-1.2.7L8 12.7a.8.8 0 0 1 0-1.4l8.3-5.8a.8.8 0 0 1 1.2.7Z"/><path d="M6.5 6v12"/>'),
 next: svg('<path class="ic-fill" d="M6.5 6.2v11.6a.8.8 0 0 0 1.2.7l8.3-5.8a.8.8 0 0 0 0-1.4L7.7 5.5a.8.8 0 0 0-1.2.7Z"/><path d="M17.5 6v12"/>'),
 x: svg('<path d="M6 6l12 12M18 6 6 18"/>'),
-snd: '<svg class="ic wt-diya" viewBox="0 0 48 48" aria-hidden="true"><path class="fl" d="M24 4c4.2 6.2 6.6 9.8 6.6 13.9a6.6 6.6 0 0 1-13.2 0C17.4 13.8 19.8 10.2 24 4Z"/><path d="M24 28v-4.5"/><path class="bw" d="M4 27c5.2 1.6 12 2.3 20 2.3S38.8 28.6 44 27c-1.2 8.3-8.6 14-20 14S5.2 35.3 4 27Z"/></svg>',
+snd: svg('<path class="ic-fill wt-sp" d="M4 9.5v5h3.5l5 4v-13l-5 4H4Z"/><path class="wt-wv" d="M16 9.5a3.5 3.5 0 0 1 0 5M18.5 7a7 7 0 0 1 0 10"/><path class="wt-xx" d="M16.2 9.7l4.6 4.6M20.8 9.7l-4.6 4.6"/>').replace('class="ic"', 'class="ic wt-diya"'),
 cc: svg('<rect x="3" y="5.5" width="18" height="13" rx="2.5"/><path d="M10.5 10.2a2.3 2.3 0 1 0 0 3.6M17 10.2a2.3 2.3 0 1 0 0 3.6"/>'),
 };
 const SIZES = '(min-aspect-ratio: 21/9) 177.78vh, (min-aspect-ratio: 16/9) 100vw, 177.78vh';

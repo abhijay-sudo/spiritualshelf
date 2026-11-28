@@ -1,0 +1,116 @@
+/* Spiritual [send]: "Send this" (the one control that hands a page's own words to the phone's share sheet, with a WhatsApp text
+   link and Copy link where there is none), the arrival strip of a story page, and a scene painting's own colours while its file
+   is on the way. Markup: src/send-build.mjs; behaviour: assets/send.js. Nothing here moves except one fade of the strip. */
+
+/* ---------- the control ---------- */
+.snd { display: inline-flex; flex-wrap: wrap; align-items: center; gap: .5rem .6rem; max-width: 100%; min-width: 0; }
+.snd.is-open { display: flex; flex: 1 1 100%; width: 100%; }
+.snd-b { -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+.snd-b .ic { width: 1.1em; height: 1.1em; flex: none; display: block; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+/* a quiet text button (the Closing Beat, a verse, the footer): the page's own ink, a pill only when touched or focused */
+.snd-b--quiet { display: inline-flex; align-items: center; gap: .55rem; box-sizing: border-box; min-height: 44px; min-width: 44px; margin: 0; padding: 0 .9rem 0 .7rem; border: 1px solid transparent; border-radius: 999px; background: none; color: inherit; font: 500 .95rem/1.25 var(--cx-ui, inherit); letter-spacing: .02em; text-align: left; cursor: pointer; }
+html[lang="hi"] .snd-b--quiet { font-family: "Mukta", var(--cx-ui, sans-serif); font-size: 1.02rem; letter-spacing: 0; }
+@media (hover: hover) { .snd-b--quiet:hover { border-color: color-mix(in oklab, currentColor 45%, transparent); } }
+.snd-b--quiet:active { border-color: color-mix(in oklab, currentColor 60%, transparent); }
+.snd-b:focus-visible, .snd-a:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
+/* the two plain ways, on their own line under the button */
+.snd-more { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; flex: 1 1 100%; min-width: 0; }
+.snd-more[hidden] { display: none; }
+.snd-a { display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box; min-height: 44px; margin: 0; padding: 0 1.05rem; border: 1px solid color-mix(in oklab, currentColor 50%, transparent); border-radius: 999px; background: transparent; color: inherit; font: 500 .95rem/1.25 var(--cx-ui, inherit); letter-spacing: 0; text-transform: none; text-decoration: none; white-space: nowrap; cursor: pointer; }
+html[lang="hi"] .snd-a { font-family: "Mukta", var(--cx-ui, sans-serif); font-size: 1rem; }
+@media (hover: hover) { .snd-a:hover { border-color: currentColor; text-decoration: none; } }
+.snd-say { flex: 1 1 100%; margin: 0; font: 400 .88rem/1.4 var(--cx-ui, inherit); overflow-wrap: anywhere; }
+.snd-say:empty { display: none; }
+@media (max-width: 359px) { .snd-a { padding: 0 .8rem; } }
+
+/* where it sits */
+/* the Closing Beat: one more quiet line under "Keep this", in the beat's own colours */
+.cb-send { margin: -1.2rem 0 0; display: grid; justify-items: center; }
+.cb .snd { justify-content: center; }
+.cb .snd-b--quiet { color: var(--cx-saffron, #a54d0d); }
+.fm .cb-send { justify-items: start; margin-top: -1rem; }
+/* (its words begin under "Keep this": the sign takes the same room as the keep button's own) */
+.fm .cb .snd-b--quiet { padding-left: .5rem; gap: .6rem; }
+.fm .cb .snd-b--quiet .ic { width: 34px; height: 21px; }
+.cb .snd.is-open { margin-bottom: .7rem; }
+.fm .cb .snd { justify-content: flex-start; color: #f6ecda; }
+.fm .cb .snd-b--quiet { color: var(--fm-gold, #e9c98c); margin-left: -.5rem; text-shadow: 0 1px 2px rgb(0 0 0 / .9); }
+.fm .cb .snd-a { background: rgb(13 8 5 / .5); }
+.fm-live .cb-send { --cb-d: 1500ms; }
+@media (max-height: 780px) { .fm .cb-send { margin-top: -.5rem; } .cb .snd.is-open { margin-bottom: .4rem; } }
+/* under "Share this story" the block's own Copy link stands just below: the fallback row offers WhatsApp alone, so the reader never sees two */
+.story-share .snd-more [data-send-copy] { display: none; }
+/* beside the site's own square buttons the two plain ways are square too */
+:is(.story-share, .cx-film-btns, .ed-page-head) .snd-a { border-radius: 2px; }
+/* a hymn's or a kand's opening card, a page head: beside the page's own first button */
+.cx-film-btns .snd, .ed-page-head .snd { justify-content: center; color: var(--cx-cream, #fff6e8); }
+.ed-page-head .snd { margin-top: .4rem; }
+:is(.cx-film-btns, .ed-page-head) :is(.snd.is-open, .snd-more) { justify-content: center; }
+/* (there is a painting behind these: the two plain ways stand on the same ground as the button, never as bare words on the picture) */
+:is(.cx-film-btns, .ed-page-head) .snd-a { background: rgb(30 15 5 / .5); border-color: rgb(255 240 220 / .55); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+/* the People page: under "Back to the constellation", below the head's painting (on the painting it lay over a face on a phone) */
+.cast-send { margin: 0 0 clamp(1.25rem, 3.5svh, 2rem); color: #ece0cf; }
+.cast-send .snd-b--quiet { border-color: rgb(243 196 126 / .3); background: rgb(17 12 26 / .6); }
+@media (scripting: enabled) { :root:not(.ep-lite) .st-back:has(+ .cast-send) { margin-bottom: .55rem; } }
+/* a person's page: with the page's own actions */
+.cast-acts .snd-b--quiet { color: var(--cx-ink, inherit); border-color: color-mix(in oklab, currentColor 28%, transparent); }
+/* a verse: a small control at the foot of the verse's own card */
+.snd--verse { display: flex; justify-content: flex-end; margin: .6rem auto -.4rem; max-width: 44rem; color: var(--cx-gold, #c9a25a); }
+.snd--verse .snd-b--quiet { font-size: .9rem; padding: 0 .8rem 0 .65rem; }
+.snd--verse.is-open { justify-content: flex-end; }
+.snd--verse .snd-more { justify-content: flex-end; }
+.snd--verse .snd-say { text-align: right; }
+/* an episode of a kand: the same small control, under the episode's own summary, in the middle like the summary */
+.snd--part, .snd--part.is-open, .snd--part .snd-more { justify-content: center; }
+.snd--part { margin: .5rem auto 0; padding-inline: var(--cx-gut, 1rem); box-sizing: border-box; }
+.snd--part .snd-say { text-align: center; }
+/* the footer: one quiet line */
+.snd--foot { justify-content: center; color: rgb(233 217 195 / .92); }
+.snd--foot .snd-more, .snd--foot.is-open { justify-content: center; }
+.snd--foot .snd-say { text-align: center; }
+
+/* ---------- the arrival strip: who the reader is with, and the way to the beginning ---------- */
+.arv { position: fixed; z-index: 7; box-sizing: border-box; display: grid; grid-template-columns: minmax(0, 1fr) 44px; column-gap: .2rem; align-items: start;
+  top: calc(env(safe-area-inset-top, 0px) + 60px); left: calc(env(safe-area-inset-left, 0px) + 14px); width: max-content; max-width: min(23rem, calc(100vw - 28px)); margin: 0; padding: .6rem .3rem .25rem .95rem;
+  border-radius: 16px; border: 1px solid rgb(233 201 140 / .3); background: rgb(13 8 5 / .8); color: #f6ecda; box-shadow: 0 6px 24px rgb(0 0 0 / .4);
+  -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); translate: 0 var(--arv-dy, 0px); }
+.arv[hidden] { display: none; }
+/* the header, when it is showing, is not covered (the same rule the Aa chip keeps) */
+:root:not(.is-head-hidden) .arv { --arv-dy: 58px; }
+.arv-k { grid-column: 1; margin: 0 0 .15rem; font: 500 11px/1.3 var(--cx-ui, inherit); letter-spacing: .1em; text-transform: uppercase; color: #f3dca8; font-variant-numeric: tabular-nums; }
+html[lang="hi"] .arv-k { font: 500 14px/1.4 "Mukta", var(--cx-ui, sans-serif); letter-spacing: .02em; text-transform: none; }
+/* in the film the scene whisper just above already says "Scene N of T" */
+.fm-live .arv-k { display: none; }
+.arv-t { grid-column: 1; margin: 0; font: 500 1.08rem/1.3 var(--cx-title, Georgia, serif); color: #fff3dc; text-wrap: balance; overflow-wrap: anywhere; }
+html[lang="hi"] .arv-t { line-height: 1.5; }
+.arv-go { grid-column: 1; display: inline-flex; align-items: center; gap: .45rem; width: fit-content; min-height: 44px; color: #f3dca8; font: 500 .95rem/1.25 var(--cx-ui, inherit); text-decoration: underline; text-decoration-color: rgb(233 201 140 / .55); text-underline-offset: .22em; }
+html[lang="hi"] .arv-go { font-family: "Mukta", var(--cx-ui, sans-serif); font-size: 1.02rem; }
+.arv-go .ic { width: 1em; height: 1em; flex: none; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.arv-x { grid-column: 2; grid-row: 1 / span 3; display: grid; place-items: center; width: 44px; height: 44px; margin: -.35rem 0 0; padding: 0; border: 0; border-radius: 50%; background: transparent; color: #f6ecda; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.arv-x svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; }
+@media (hover: hover) { .arv-x:hover { background: rgb(233 201 140 / .14); } .arv-go:hover { text-decoration-color: currentColor; } }
+.arv-go:focus-visible, .arv-x:focus-visible { outline: 2px solid #e9c98c; outline-offset: 2px; }
+/* on the reading page (paper) the strip takes the paper's own colours, like the whisper does */
+html:not(.fm) .arv { top: calc(env(safe-area-inset-top, 0px) + 12px); border-color: var(--line, rgb(0 0 0 / .16)); background: color-mix(in oklab, var(--paper, #fbf8f3) 96%, transparent); color: var(--ink, #2a1e15); box-shadow: 0 4px 18px rgb(0 0 0 / .16); }
+html:not(.fm) .arv-k { color: var(--cx-ink-3, #6f5a49); }
+html:not(.fm) .arv-t { color: var(--ink, #2a1e15); }
+html:not(.fm) .arv-go { color: var(--cx-saffron, #a54d0d); text-decoration-color: color-mix(in oklab, currentColor 50%, transparent); }
+html:not(.fm) .arv-x { color: var(--ink, #2a1e15); }
+html:not(.fm) :is(.arv-go, .arv-x):focus-visible { outline-color: var(--cx-saffron, #a54d0d); }
+@media (prefers-reduced-motion: no-preference) { :root:not([data-motion="reduce"]) .arv { animation: arv-in .5s ease-out both; } }
+@keyframes arv-in { from { opacity: 0; } to { opacity: 1; } }
+
+/* ---------- a scene's painting: its own colours at once ---------- */
+/* The build writes the painting's 32 px placeholder into --lq on the figure (content/lqip.json). It lies under the picture as the
+   figure's background, so a reader on a slow line (a shared scene link above all) sees the painting's light and colour while the
+   file is on its way, never an empty brown box. Not once the film has taken the figure over (.fm-beat): the film has its own stage. */
+.shot[data-media]:not(.fm-beat) { background-image: var(--lq, none); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat; }
+@media (max-width: 759px) { .shot[data-media]:not(.fm-beat) { background-position: var(--fx, 50%) var(--fy, 35%); } }
+
+/* motion that rests: the control and its two plain ways change state at once, nothing eases */
+@media (prefers-reduced-motion: reduce) { .snd-b, .snd-b .ic, .snd-a, .arv { transition: none !important; animation: none !important; } }
+:root[data-motion="reduce"] :is(.snd-b, .snd-b .ic, .snd-a, .arv) { transition: none !important; animation: none !important; }
+@media print { .snd, .arv { display: none !important; } }
+/* every control here needs the script: without one, none is shown */
+@media (scripting: none) { .snd, .cast-send, .cb-send { display: none !important; } }
+@media (forced-colors: active) { .snd-a, .snd-b--quiet, .arv { border-color: CanvasText; } }

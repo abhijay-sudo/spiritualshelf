@@ -20,10 +20,9 @@ html[lang="hi"] .cb-src { font-size: .96rem; line-height: 1.7; }
 .cb-keep::before { content: ""; position: absolute; left: .1rem; top: 50%; width: 52px; height: 52px; margin-top: -26px; border-radius: 50%; background: radial-gradient(circle, rgb(255 190 100 / .5), rgb(255 150 60 / 0) 68%); opacity: 0; transform: scale(.6); transition: opacity var(--d3) var(--ease-lamp), transform var(--d3) var(--ease-lamp); pointer-events: none; }
 .cb-keep[aria-pressed="true"]::before { opacity: 1; transform: scale(1); }
 .cb-lamp { position: relative; width: 34px; height: 34px; flex: none; overflow: visible; }
-.cb-bw { fill: #c9a36a; stroke: none; } .cb-wk { stroke: #7a5426; stroke-width: 2; fill: none; stroke-linecap: round; }
-/* unlit: the flame is only drawn, a thin line, waiting; kept: it fills and stands */
-.cb-fl { fill: rgb(255 199 102 / 0); stroke: currentColor; stroke-width: 1.5; stroke-linejoin: round; opacity: .6; transform-box: fill-box; transform-origin: 50% 100%; transform: scale(.82); transition: opacity var(--d2) var(--ease-lamp), transform var(--d3) var(--ease-lamp), fill var(--d3) var(--ease-lamp), stroke-width var(--d3); }
-.cb-keep[aria-pressed="true"] .cb-fl { opacity: 1; transform: scale(1); fill: #ffc766; stroke-width: 0; }
+/* the bookmark ribbon (the site's own Save mark): drawn as a line, waiting; kept, it fills. No lamp is drawn (the owner's rule). */
+.cb-rb { fill: currentColor; fill-opacity: 0; stroke: currentColor; stroke-width: 2.2; stroke-linejoin: round; transform-box: fill-box; transform-origin: 50% 0; transform: scale(.92); transition: fill-opacity var(--d3) var(--ease-lamp), transform var(--d3) var(--ease-lamp); }
+.cb-keep[aria-pressed="true"] .cb-rb { fill-opacity: 1; transform: scale(1); }
 .cb-note { min-height: 1.3em; margin-bottom: .4rem; font: 400 .8rem/1.3 var(--cx-ui, inherit); color: var(--cx-ink-3, #6f5a49); opacity: 0; transition: opacity var(--d3) var(--ease-settle); }
 html[lang="hi"] .cb-note { font-size: .9rem; }
 .cb-note.is-on { opacity: 1; }
@@ -101,15 +100,14 @@ html.pk-can:not(.pk-in) .kp--hero { margin-top: calc(.95rem + .55rem + 44px); }
 .pk :is(a, button):focus-visible { outline: 2px solid #e9c98c; outline-offset: 2px; border-radius: 6px; }
 @media (hover: hover) { .pk :is(a, button):hover { color: #fff; } }
 
-/* ---------- Library cards: a thin arc for a story part read, a small lit lamp for one finished (on this device only) ---------- */
+/* ---------- Library cards: a thin arc for a story part read, the ring closed with a dot for one finished (on this device only) ---------- */
 .card-art { position: relative; }
 .pl-mark { position: absolute; top: .7rem; left: .7rem; z-index: 2; display: inline-flex; align-items: center; gap: .45rem; min-width: 30px; height: 30px; padding-inline-end: .75rem; border-radius: 15px; background: rgb(14 8 4 / .74); box-shadow: 0 0 0 1px rgb(233 201 140 / .18); pointer-events: none; opacity: 0; transform: scale(.85); animation: pl-in var(--d3) var(--ease-settle) .2s forwards; }
 .pl-mark svg { width: 30px; height: 30px; flex: none; overflow: visible; }
 .pl-mark-t { color: #f3e6cf; font: 600 .74rem/1 var(--font-ui, system-ui, sans-serif); letter-spacing: .02em; white-space: nowrap; }
 html[lang="hi"] .pl-mark-t { font-size: .8rem; letter-spacing: 0; }
 .pl-arc-bg { fill: none; stroke: rgb(233 201 140 / .22); stroke-width: 2; } .pl-arc { fill: none; stroke: #f3c47e; stroke-width: 2.4; stroke-linecap: round; }
-.pl-mark .cb-bw { fill: #c9a36a; } .pl-mark .cb-wk { stroke: #3b2616; } .pl-mark .cb-fl { opacity: 1; transform: none; fill: #ffc766; stroke: none; transition: none; }
-.pl-mark--lamp::after { content: ""; position: absolute; inset: -8px; border-radius: 50%; background: radial-gradient(circle, rgb(255 190 100 / .32), transparent 66%); z-index: -1; }
+.pl-dot { fill: #f3c47e; stroke: none; }
 @keyframes pl-in { to { opacity: 1; transform: none; } }
 
 /* ---------- My reading: lines kept on this device, and the way to forget where you stopped ---------- */
@@ -121,8 +119,8 @@ html[lang="hi"] .pl-mark-t { font-size: .8rem; letter-spacing: 0; }
 .pl-forget { display: grid; gap: .3rem; justify-items: start; margin-top: 1.25rem; }
 .pl-forget .note { margin: 0; max-width: 34rem; }
 
-@media (prefers-reduced-motion: reduce) { .cb-i, .pk, .pl-mark, .cb-keep, .cb-door, .cb-da, .cb-fl, .cb-note, .cb-veil { transition: none !important; animation: none !important; } .pl-mark { opacity: 1; transform: none; } }
-:root[data-motion="reduce"] :is(.cb-i, .pk, .pl-mark, .cb-keep, .cb-door, .cb-da, .cb-fl, .cb-note, .cb-veil) { transition: none !important; animation: none !important; }
+@media (prefers-reduced-motion: reduce) { .cb-i, .pk, .pl-mark, .cb-keep, .cb-door, .cb-da, .cb-rb, .cb-note, .cb-veil { transition: none !important; animation: none !important; } .pl-mark { opacity: 1; transform: none; } }
+:root[data-motion="reduce"] :is(.cb-i, .pk, .pl-mark, .cb-keep, .cb-door, .cb-da, .cb-rb, .cb-note, .cb-veil) { transition: none !important; animation: none !important; }
 :root[data-motion="reduce"] .pl-mark { opacity: 1; transform: none; }
 
 /* the last painting is held clear for a moment before the dark gathers under the closing line */

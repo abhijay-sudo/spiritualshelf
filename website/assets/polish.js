@@ -5,14 +5,14 @@
 (function () {
   'use strict';
   var d = document, root = d.documentElement;
-  var BOXES = ['.cx-film-name a', '.cx-film-card > .cx-facts', '.cast-title-in'];
+  var BOXES = ['.cx-film-name a', '.cx-film-card > .cx-facts', '.cast-title-in', '.cx-open-left .cx-first'/* [int-a] its minutes, when they wrap under the label */];
   var mark = function (box) {
     var kids = box.children, prev = null;
     for (var i = 0; i < kids.length; i++) {
-      var k = kids[i]; if (!k.offsetParent && getComputedStyle(k).position !== 'fixed') { prev = null; continue; }
-      var t = k.offsetTop, first = i > 0 && prev !== null && t > prev + 2;
+      var k = kids[i]; if (!k.offsetParent && getComputedStyle(k).position !== 'fixed') continue;   /* a hidden item (e.g. the other-script name on a phone) is skipped; the next shown item is still compared with the last shown one */
+      var t = k.offsetTop, first = i > 0 && prev !== null && t >= prev - 2;   /* prev: the bottom of the last shown item; an item that starts at or below it opens a new line (items of different sizes on one line never do) */
       if (k.classList.contains('sep-first') !== first) k.classList.toggle('sep-first', first);
-      prev = t;
+      prev = t + k.offsetHeight;
     }
   };
   var boxes = [];

@@ -384,7 +384,9 @@
       const match = allCards().filter((c) => c.dataset.values.split(' ').some((v) => values.includes(v))).map((c) => c.dataset.slug);
       if (match.length) return { slug: match[dayIndex(match.length)], need };
     }
-    return { slug: slugs[dayIndex(slugs.length)], need: null };
+    // [return] the day's story is chosen in one place (assets/return.js: the same for everyone, never one this reader finished on an earlier day); without it, the plain rotation
+    const mine = window.SpritualReturn?.today?.()?.slug;
+    return { slug: mine && slugs.includes(mine) ? mine : slugs[dayIndex(slugs.length)], need: null };
   };
   const renderToday = () => {
     const pick = todayPick(); if (!pick) return;
@@ -460,7 +462,8 @@
     const was = last && IDX[last.slug];
     if (was && !(here && here === last.slug)) {
       const total = Math.max(1, +last.total || 1); const n = Math.max(1, Math.min(total, +last.scene || 1));
-      const done = n >= total; const s = done ? IDX[was.x] : was;
+      const pd = (store.get('places', null) || {})[last.slug]; const done = pd ? !!pd.d : n >= total;   // [int-a] the same 'read' as the story and the library: a finished story reopened at its top offers the next one, a shared last scene alone does not count
+      const s = done ? IDX[window.SpritualReturn?.next?.(last.slug) || was.x] /* [return] "Up next" steps past stories already finished */ : was;
       if (s) for (const a of $$('[data-continue]')) {
         a.href = done ? s.h : s.h.split('#')[0] + '#page-' + n;
         a.querySelector('[data-continue-kicker]').textContent = done ? UI.upNext : UI.continue;
@@ -687,11 +690,12 @@
   if (gloss) {
     let defs = {}; try { defs = JSON.parse($('#glossary')?.textContent || '{}'); } catch {}
     const body = $('[data-gloss-body]', gloss); const head = $('[data-gloss-term]', gloss);
-    const rail = $('[data-lens-rail]'); const sheet = $('#lens'); const railOn = () => rail && getComputedStyle(rail).display !== 'none';
+    const rail = $('[data-lens-rail]'); const sheet = $('#lens'); const railOn = () => rail && getComputedStyle(rail).display !== 'none', railUp = railOn;
     const lit = (id) => { $$('.lens-card').forEach((c) => c.classList.toggle('is-lit', c.dataset.lensCard === id)); $$('.term').forEach((t) => t.classList.toggle('is-lit', t.dataset.term === id)); };
     const cardHtml = (d) => `<li class="lens-card"><p class="lens-term"><b></b>${d.deva && d.deva !== d.term ? ' <span class="lens-deva" lang="hi"></span>' : ''}${d.translit ? ' <i class="lens-translit"></i>' : ''}</p>${d.literal ? `<p class="lens-row"><span class="lens-k">${UI.lensLiteral}</span><span data-lit></span></p>` : ''}<p class="lens-row"><span class="lens-k">${UI.lensMeaning}</span><span data-def></span></p>${d.context ? '<p class="lens-row"><span class="lens-k" data-ctx-k></span><span data-ctx></span></p>' : ''}${d.source ? `<p class="lens-src"><span class="lens-k">${UI.lensSource}</span><cite></cite>${d.source.verify ? ` <span class="verify" title="${UI.verify}">[VERIFY]</span>` : ''}</p>` : ''}</li>`;
     const show = (btn) => {
       const id = btn.dataset.term; const d = defs[id]; if (!d) return;
+      const railOn = () => railUp() && !d.who;   // [learn] a person's card opens by the name, never in the glossary rail (the rail lists words)
       // [type] the meaning opens inside the paragraph, between the lines (assets/type.js), wherever the lens rail is not in use.
       // A word touched before that script has arrived waits for it (0.4 s at most), so a word opens one way in a visit.
       const film = root.classList.contains('fm-live') && !railOn();   // [fixR] in the film the meaning is a card by the word (never a box cut into the sentence it explains)
@@ -719,6 +723,7 @@
       // [fixR] in the film the card carries the whole entry (the literal sense and where it is told), as the lens card does; elsewhere, the short meaning
       body.textContent = d.def;
       if (film) for (const [k, v] of [[UI.lensLiteral, d.literal], [d.ctxLabel, d.context]]) if (v) { const r = document.createElement('span'); r.className = 'gloss-row'; const kk = document.createElement('i'); kk.textContent = k; r.append(kk, ' ' + v); body.append(r); }
+      if (d.who && window.SpritualWho) body.replaceChildren(window.SpritualWho.card(d));   // [learn] who they are, how they are tied here, and the way to their page
       const r = btn.getBoundingClientRect();
       // the strip at the screen's edge keeps a clear gutter: the card never runs under it (the words end 46px from the edge on a phone)
       const vw = document.documentElement.clientWidth || innerWidth, gut = film ? (vw < 700 ? 54 : 72) : 16;
@@ -736,6 +741,7 @@
         const b = $('[data-lens-body]', sheet); b.innerHTML = `<ol class="lens-list">${cardHtml(d)}</ol>`;
         b.querySelector('b').textContent = d.term; const dv = b.querySelector('.lens-deva'); if (dv) dv.textContent = d.deva; const tr = b.querySelector('.lens-translit'); if (tr) tr.textContent = d.translit;
         const li = b.querySelector('[data-lit]'); if (li) li.textContent = d.literal; b.querySelector('[data-def]').textContent = d.def; if (d.context) { b.querySelector('[data-ctx-k]').textContent = d.ctxLabel; b.querySelector('[data-ctx]').textContent = d.context; } const ci = b.querySelector('cite'); if (ci) ci.textContent = d.source.label;
+        if (d.who && window.SpritualWho) b.querySelector('[data-def]').closest('.lens-row').replaceWith(window.SpritualWho.card(d));   // [learn]
         // where the sheet is a card in the middle of the screen (tablets), it opens in the half the word is not in (site.css)
         if (btn) { const r = btn.getBoundingClientRect(); sheet.dataset.at = (r.top + r.bottom) / 2 < innerHeight / 2 ? 'low' : 'high'; }
         else delete sheet.dataset.at;
@@ -889,12 +895,12 @@
       // keep the reader's exact place: the paragraph at the top of the screen stays there across the change
       if (save || late) keepPlace(apply);
       if (save) { const p = store.get('prefs', {}); p.read = mode; store.set('prefs', p); haptic(); }
-      else if (!late) { apply(); requestAnimationFrame(() => { if (!/\bty-(arr|held)\b/.test(root.className)/* [type] a language switch has put the reader on their paragraph by now */) scrollTo(0, y); }); }
+      else if (!late) { apply(); requestAnimationFrame(() => { if (!/\bty-(arr|held)\b/.test(root.className)/* [type] a language switch has put the reader on their paragraph by now */ && !/page-\d+/.test(location.hash)/* [alive] an arrival at #page-N is placed below (jump): y was read before the browser went there, and putting it back showed the cover for a moment */) scrollTo(0, y); }); }
     };
     setRead(store.get('prefs', {}).read || UI.lang, false);
     readBtns.forEach((b) => b.addEventListener('click', () => setRead(b.dataset.read, true)));
     const nowLabel = $('[data-scene-now]'); const tocLinks = $$('#toc a'); const toast = $('[data-toast]'); const beads = $$('[data-bead]');
-    let current = 1; let maxSeen = 1; let entered = false;
+    let current = 1; let maxSeen = 1; let entered = false; const seenNow = new Set(); let before;   // the scenes the reader has really been on during this visit; the place kept before it
     const langLinks = $$('[data-lang-switch]');
     // Switching language switches the reading edition with it (a reader on the English edition who taps हिं gets the Hindi
     // story, not Hindi menus around English text); side by side stays side by side. The scene carried across is the one at
@@ -931,7 +937,10 @@
         if (!pl) { pl = {}; if (old && old.slug && old.slug !== slug) pl[old.slug] = { s: +old.scene || 1, t: +old.total || 1, d: +old.scene >= +old.total ? 1 : 0, at: old.at || 0 }; }
         // (jumping to a saved place lands a scene short of it, and that must not walk the place back each time: only the reader's own scrolling lowers it)
         const prev = pl[slug], keep = prev && !prev.d && n < prev.s && !moved ? prev.s : n;
-        pl[slug] = { s: keep, t: total, d: (prev && prev.d) || (n === total ? 1 : 0), at: Date.now() }; store.set('places', pl); placed = keep; }
+        // [int-a] 'read' (d) only once the reader has been through most of the story: the scenes seen on this visit, plus the earlier place when
+        // this visit carries on from it. Landing on the last scene from a shared link (/s/<story>/<n>/ or #page-<n>) is not reading it.
+        seenNow.add(n); if (before === undefined) before = prev || null; const from = Math.min(...seenNow), carried = before && !before.d && from <= before.s + 1 ? before.s : 0;
+        pl[slug] = { s: keep, t: total, d: (prev && prev.d) || (n === total && seenNow.size + carried > total / 2 ? 1 : 0), at: Date.now() }; store.set('places', pl); placed = keep; }
       store.set('last', { slug, scene: placed, total, at: Date.now() });
       if (n >= Math.ceil(total / 2)) markDay();
       if (n === total && !reader.dataset.done) { reader.dataset.done = '1'; document.dispatchEvent(new CustomEvent('spritual:story', { detail: { kind: 'complete', slug } })); Sound.bell(523, 0.2); const d = $('[data-done-line]'); if (d) d.textContent = UI.doneLine; const f = $('[data-story-fig] .fig, [data-story-fig] .art'); if (f) { f.classList.add('is-bowing'); f.addEventListener('animationend', () => f.classList.remove('is-bowing'), { once: true }); } }
@@ -981,6 +990,9 @@
       if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) goTo(current + (dx < 0 ? 1 : -1), dx < 0 ? 1 : -1);
     }, { passive: true });
     const startScene = Math.max(1, Math.min(total, parseInt((location.hash.match(/page-(\d+)/) || [])[1] || '1', 10)));
+    // [send] a reader who lands in the middle of a story from a link, with no place of their own kept for it on this device (so not a
+    // "Pick up at scene N" return): marked before the first place is saved, for the arrival strip (assets/send.js). Nothing is stored for it.
+    if (startScene > 1 && /page-\d+/.test(location.hash) && !(store.get('places', null) || {})[slug]) reader.dataset.arrived = startScene;
     if (store.get('prefs', {}).mode === 'leaf') { current = startScene; setMode('leaf', !/page-\d+/.test(location.hash)); } else {
       const hashed = /page-\d+/.test(location.hash);
       setCurrent(startScene, false, hashed); $$('button[data-mode]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.mode === 'scroll')));
@@ -990,6 +1002,7 @@
         const target = scenes[startScene - 1]; let mine = false;
         const jump = () => { if (!mine && !root.classList.contains('ty-held')/* [type] type.js places the reader on their paragraph */) target.scrollIntoView({ block: 'start', behavior: 'instant' }); };
         for (const ev of ['wheel', 'touchstart', 'keydown', 'pointerdown']) addEventListener(ev, () => { mine = true; }, { once: true, passive: true });
+        window.SpritualJump = jump;   // [alive] the film asks for this once more just before its first frame (film.js), so the first painting up is this scene's
         jump(); (document.fonts?.ready || Promise.resolve()).then(jump);
         if (document.readyState !== 'complete') addEventListener('load', () => setTimeout(jump, 60), { once: true });
       }
@@ -997,13 +1010,17 @@
 
     // Copy link / copy line
     const copyText = async (text, okMsg, btn) => { try { await navigator.clipboard.writeText(text); toast.textContent = okMsg; } catch { toast.textContent = text; } Sound.bell(988, 0.1); haptic(); if (btn) { btn.classList.add('is-done'); setTimeout(() => btn.classList.remove('is-done'), 1200); } setTimeout(() => { toast.textContent = ''; }, 4000); };
-    $('[data-copy]')?.addEventListener('click', (e) => copyText(location.href.split('#')[0] + '#page-' + current, UI.copied, e.currentTarget));
+    // [send] "Share this story > Copy link" copies the story's own address (its canonical one, so a copy made on a preview host still points at
+    // the live site), never the scene the reader happens to be on: after reading to the end that sent a friend straight to the last scene
+    const storyUrl = () => $('link[rel="canonical"]')?.href || location.href.split('#')[0];
+    $('[data-copy]')?.addEventListener('click', (e) => copyText(storyUrl(), UI.copied, e.currentTarget));
     $('[data-copy-line]')?.addEventListener('click', () => {
       const paras = visibleParas(scenes[current - 1]).map((x) => x.textContent.replace(/\s+/g, ' ').trim()).filter(Boolean); const p = paras.join(' ');
       // [share] the line worth copying is a whole sentence of this scene (assets/share.js: pick), not its first fragment; a line that is already a quoted speech is not quoted twice
       const SH = window.spritualShare; const best = SH && SH.pick && SH.pick(SH.sentences(paras));
       const line = best || (p.match(/[^.!?।]+[.!?।]/) || [p])[0].trim(); const quoted = /^[“"‘]/.test(line) ? line : `“${line}”`;
-      copyText(`${quoted}\n${document.title.replace(/ \| Spiritual( Shelf)?$/, '')} · Spiritual Shelf\n${location.href.split('#')[0]}#page-${current}`, UI.quoteCopied, $('[data-copy-line]'));
+      // [send] the line's own scene link (short, and it previews with that scene's painting); without share.js, the story's address at that scene
+      copyText(`${quoted}\n${document.title.replace(/ \| Spiritual( Shelf)?$/, '')} · Spiritual Shelf\n${SH && SH.link ? SH.link(current) : `${storyUrl()}#page-${current}`}`, UI.quoteCopied, $('[data-copy-line]'));
     });
 
     // Reflection

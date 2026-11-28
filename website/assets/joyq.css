@@ -116,7 +116,7 @@
 .cx-home .cx-open-line .cx-ol-a { font-size: clamp(1.5rem, 1rem + 2.1vw, 3rem); }
 @media (max-width: 759px) { .cx-home .cx-open-line .cx-ol-a { font-size: clamp(1.45rem, 1.1rem + 1.8vw, 1.9rem); } }
 /* while the sequence plays the header is still arriving and must not catch the Skip pill's taps (the pill sits in the opening's own stacking context, under it) */
-:root.cx-js:not(.cx-seen):not(.cx-fest-end) body:has(.cx-home) .ed-head { pointer-events: none; }
+:root.cx-js:not(.cx-seen):not(.cx-fest-end) body:has(.cx-home .cx-intro-skip:not([hidden])) .ed-head { pointer-events: none; }   /* [arrival] released with the pill at the hand-off (cinema.js hides it), when the header is already in view */
 
 /* the sub line: normal case, in the italic line's gold and size, with room above the factual line beneath it */
 .cx-home .cx-open-line { margin-bottom: .2rem; }

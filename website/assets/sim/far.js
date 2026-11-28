@@ -137,7 +137,7 @@ gl.bindVertexArray(null); gl.bindBuffer(gl.ARRAY_BUFFER, null); BO.n = spec.inst
 if (!BO.poseTex) { BO.poseTex = env.tex(); gl.bindTexture(gl.TEXTURE_2D, BO.poseTex); gl.texStorage2D(gl.TEXTURE_2D, 1, gl.RGBA32F, BCOLS, BROWS); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST); gl.bindTexture(gl.TEXTURE_2D, null); }
 if (!BO.atlas && !BO.loading) {
 const my = ++BO.gen; BO.loading = 1;
-fetch(spec.atlas, { credentials: 'same-origin' }).then((r) => (r.ok ? r.blob() : Promise.reject(0))).then((b) => createImageBitmap(b, { imageOrientation: 'none', premultiplyAlpha: 'premultiply', colorSpaceConversion: 'none' })).then((bm) => {
+fetch(spec.atlas, { credentials: 'same-origin' }).then((r) => (r.ok ? r.blob() : Promise.reject(0))).then((b) => createImageBitmap(b, { premultiplyAlpha: 'premultiply', colorSpaceConversion: 'none' })).then((bm) => {
 if (my !== BO.gen || !env || !env.gl) { bm.close(); return; }
 const g2 = env.gl; BO.atlas = env.tex(); g2.bindTexture(g2.TEXTURE_2D, BO.atlas);
 g2.pixelStorei(g2.UNPACK_FLIP_Y_WEBGL, false); g2.pixelStorei(g2.UNPACK_PREMULTIPLY_ALPHA_WEBGL, false);   // (the bitmap is premultiplied already, when it is made)
@@ -238,7 +238,7 @@ init(gl, e) {
 env = e; prog = e.prog(G.sh.TRI, FS); BO.prog = e.prog(BVS, BFS); BO.atlas = BO.poseTex = BO.ibuf = BO.vao = null; BO.loading = 0; BO.gen++; if (BO.spec) { const sp = BO.spec; BO.spec = null; setTimeout(() => FB.set(sp), 0); }
 mistTex = e.tex(); gl.bindTexture(gl.TEXTURE_2D, mistTex); gl.texStorage2D(gl.TEXTURE_2D, 1, gl.R8, GX, GY);
 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE); gl.bindTexture(gl.TEXTURE_2D, null);
-vtex = e.tex(); gl.bindTexture(gl.TEXTURE_2D, vtex); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE); gl.bindTexture(gl.TEXTURE_2D, null); vW = vH = 0;
+vtex = e.tex(); gl.bindTexture(gl.TEXTURE_2D, vtex); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE); gl.bindTexture(gl.TEXTURE_2D, null); vW = vH = 0; vOk = false;
 D = new Float32Array(GX * GY); D2 = new Float32Array(GX * GY); M = new Uint8Array(GX * GY); warm(); dirty = true;
 },
 resize(w, h, sc, tr) { W = w; H = h; scale = sc; tier = tr; },
@@ -265,11 +265,11 @@ draw(gl, e) {
 const L = G.lake, tex = L && L.tex && L.tex();
 if (!prog || !prog.ok || !tex || !fade || !L.ready) { F.ready = false; return; }
 if (dirty) upload(gl);
-const hv = grab(gl);
+const hv = grab(gl);   // (until the film has given a frame, its unit holds the painting: uHasV is 0, and a texture with nothing in it is never bound to be sampled)
 gl.useProgram(prog.p);
 gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, tex); gl.uniform1i(prog.loc('uTex'), 0);
 gl.activeTexture(gl.TEXTURE1); gl.bindTexture(gl.TEXTURE_2D, mistTex); gl.uniform1i(prog.loc('uMist'), 1);
-gl.activeTexture(gl.TEXTURE2); gl.bindTexture(gl.TEXTURE_2D, vtex); gl.uniform1i(prog.loc('uVid'), 2); gl.uniform1f(prog.loc('uHasV'), hv ? 1 : 0);
+gl.activeTexture(gl.TEXTURE2); gl.bindTexture(gl.TEXTURE_2D, hv ? vtex : tex); gl.uniform1i(prog.loc('uVid'), 2); gl.uniform1f(prog.loc('uHasV'), hv ? 1 : 0);
 const c0 = L.cover, f = fade * fade * (3 - 2 * fade) * e.intensity;
 gl.uniform4f(prog.loc('uCover'), c0[0], c0[1], c0[2], c0[3]);
 gl.uniform2f(prog.loc('uBuf'), e.bw, e.bh); gl.uniform2f(prog.loc('uSun'), L.sun[0], L.sun[1]);

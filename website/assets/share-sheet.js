@@ -6,7 +6,6 @@ var watch = null; try { watch = JSON.parse(d.getElementById('watch-data').textCo
 var fmt = function (s, o) { return s.replace(/\{(\w+)\}/g, function (_, k) { return o[k]; }); };
 var norm = function (s) { return String(s).replace(/[   ]/g, ' ').replace(/\s+/g, ' ').trim(); };
 var clamp = function (v, a, b) { return Math.min(b, Math.max(a, v)); };
-var local = /^(localhost|127\.|192\.168\.|10\.)/.test(location.hostname);
 function paragraphs(sec) {
 return [].slice.call(sec.querySelectorAll('.scene-text p[lang="' + lang + '"]')).map(function (p) { return norm(p.textContent); }).filter(Boolean);
 }
@@ -21,10 +20,7 @@ return { n: n, sec: sec, heading: norm(h ? h.textContent : ''), paras: paras, li
 function selection() {
 try { var s = String(getSelection()); return norm(s); } catch (e) { return ''; }
 }
-function link(n) {
-var root = local ? location.origin + '/' + (hi ? 'hi/' : '') : U.live;
-return U.key.indexOf(n) >= 0 ? root + 's/' + slug + '/' + n + '/' : root + U.path + '#page-' + n;
-}
+function link(n) { return window.spritualShare.link(n); }   // [send] defined once, in share.js
 var imgCache = {};
 function imageFor(n) {
 var sc = watch && watch.scenes && watch.scenes[n - 1]; var url = '';
@@ -115,7 +111,10 @@ c.font = '600 ' + srcSize + 'px ' + lab; if ('letterSpacing' in c) c.letterSpaci
 srcLines = wrap(c, hi ? source : source.toUpperCase(), tw - 6); if (srcLines.length <= 2) break;
 }
 srcLines = srcLines.slice(0, 3); if ('letterSpacing' in c) c.letterSpacing = '0px';
-var footH = srcLines.length * (srcSize * 1.5) + 18 + footSize * 1.4;
+var tSizes = hi ? [42, 38, 34] : [40, 36, 32], titleSize = tSizes[0], titleLines = [];
+for (var ti = 0; ti < tSizes.length; ti++) { titleSize = tSizes[ti]; c.font = '500 ' + titleSize + 'px ' + TITLE; titleLines = wrap(c, title, tw - 6); if (titleLines.length <= 2) break; }
+var titleLH = Math.round(titleSize * (hi ? 1.46 : 1.26)), titleH = titleLines.length * titleLH + 16;
+var footH = titleH + srcLines.length * (srcSize * 1.5) + 18 + footSize * 1.4;
 var minPaint = shape === 'status' ? 820 : 600, maxS = shape === 'status' ? 68 : 58, minS = shape === 'status' ? 40 : 38, room = H - safeB - footH - 64 - 70 - minPaint;
 var size = maxS, lines, lh, textH;
 for (;; size -= 2) {
@@ -123,8 +122,9 @@ c.font = wt + ' ' + size + 'px ' + fam; lines = wrap(c, show(text), tw); lh = Ma
 if ((textH <= room && !(lines.length > 1 && lines[lines.length - 1].indexOf(" ") < 0)) || size <= minS) break;
 }
 var footBottom = H - safeB, footTop = footBottom - footH, textBottom = footTop - 64, textTop = textBottom - textH, orn = textTop - 50;
-return { W: W, H: H, pad: pad, tw: tw, size: size, lines: lines, lh: lh, textH: textH, srcSize: srcSize, footSize: footSize, labLS: labLS, srcLines: srcLines, footBottom: footBottom, footTop: footTop, textTop: textTop, orn: orn, paintH: Math.round(orn + 26), fits: textH <= room };
+return { W: W, H: H, pad: pad, tw: tw, size: size, lines: lines, lh: lh, textH: textH, srcSize: srcSize, footSize: footSize, labLS: labLS, srcLines: srcLines, footBottom: footBottom, footTop: footTop, textTop: textTop, orn: orn, paintH: Math.round(orn + 26), fits: textH <= room, titleLines: titleLines, titleSize: titleSize, titleLH: titleLH, titleTop: footTop, srcTop: footTop + titleH };
 }
+var TITLE = '"Eczar", "Tiro Devanagari Hindi", Georgia, serif';
 var faceOf = function (sc) { var cs = sc && sc.p0 ? getComputedStyle(sc.p0) : null; return { fam: (cs && cs.fontFamily) || (hi ? '"Tiro Devanagari Hindi", Georgia, serif' : 'Newsreader, Georgia, serif'), wt: Math.max(400, parseInt((cs && cs.fontWeight) || 400, 10) || 400), lab: hi ? '"Mukta", "Tiro Devanagari Hindi", sans-serif' : 'Newsreader, Georgia, serif' }; };
 function paint(st) {
 var sc = st.sc, cv = st.cv, f = faceOf(sc), c = cv.getContext('2d'), tint = 'rgb(' + sc.tint.join(',') + ')';
@@ -145,8 +145,10 @@ c.fillStyle = '#e9c98c'; c.fillRect(pad, orn, 64, 2);
 c.beginPath(); c.moveTo(pad + 76, orn + 1); c.lineTo(pad + 82, orn - 5); c.lineTo(pad + 88, orn + 1); c.lineTo(pad + 82, orn + 7); c.closePath(); c.fill();
 c.fillStyle = '#fbeed2'; c.textBaseline = 'alphabetic'; c.font = wt + ' ' + size + 'px ' + fam;
 lines.forEach(function (ln, i) { c.fillText(ln, pad, textTop + i * lh + lh * .5 + size * .33); });
+c.fillStyle = '#fff3dc'; c.font = '500 ' + L.titleSize + 'px ' + TITLE;
+L.titleLines.forEach(function (ln, i) { c.fillText(ln, pad, L.titleTop + L.titleSize * (hi ? 1.08 : .96) + i * L.titleLH); });
 c.fillStyle = '#e9c98c'; c.font = '600 ' + srcSize + 'px ' + lab; if ('letterSpacing' in c) c.letterSpacing = labLS + 'px';
-srcLines.forEach(function (ln, i) { c.fillText(ln, pad, footTop + srcSize * 1.15 + i * srcSize * 1.5); });
+srcLines.forEach(function (ln, i) { c.fillText(ln, pad, L.srcTop + srcSize * 1.15 + i * srcSize * 1.5); });
 if ('letterSpacing' in c) c.letterSpacing = '0px';
 c.fillStyle = 'rgba(246,236,218,.74)'; c.font = '400 ' + footSize + 'px ' + lab;
 c.fillText(T.footer, pad, footBottom - 4);
@@ -162,11 +164,11 @@ dlg.innerHTML =
 '<div class="shr-stage"><canvas class="shr-cv" role="img" width="1080" height="1350"></canvas><p class="shr-busy" role="status"></p></div>' +
 '<div class="shr-ctl"><div class="shr-seg" role="group" aria-label="' + esc(T.shapeLabel) + '"><button type="button" data-shape="chat" aria-pressed="true">' + esc(T.chat) + '<small>' + esc(T.chatHint) + '</small></button><button type="button" data-shape="status" aria-pressed="false">' + esc(T.status) + '<small>' + esc(T.statusHint) + '</small></button></div>' +
 '<p class="shr-k" id="shr-k">' + esc(T.lineLabel) + '</p><div class="shr-lines" role="radiogroup" aria-labelledby="shr-k"></div></div>' +
-'<footer class="shr-act"><div class="shr-btns"><button type="button" class="shr-go" data-shr-go></button><button type="button" class="shr-alt" data-shr-save>' + esc(T.save) + '</button><button type="button" class="shr-alt" data-shr-copy>' + esc(T.copy) + '</button></div><p class="shr-toast" role="status" aria-live="polite"></p><p class="shr-note">' + esc(T.lead) + '</p></footer>' +
+'<footer class="shr-act"><div class="shr-btns"><button type="button" class="shr-go" data-shr-go></button><button type="button" class="shr-alt" data-shr-save>' + esc(T.save) + '</button><button type="button" class="shr-alt" data-shr-copy>' + esc(T.copy) + '</button><a class="shr-alt shr-wa" data-shr-wa target="_blank" rel="noopener noreferrer" hidden>' + esc(T.sendWa) + '</a></div><p class="shr-toast" role="status" aria-live="polite"></p><p class="shr-note">' + esc(T.lead) + '</p></footer>' +
 '</div>';
 d.body.appendChild(dlg);
 el.ctl = dlg.querySelector('.shr-ctl'); el.cv = dlg.querySelector('.shr-cv'); el.busy = dlg.querySelector('.shr-busy'); el.lines = dlg.querySelector('.shr-lines'); el.ctl.addEventListener('scroll', more, { passive: true }); addEventListener('resize', function () { if (dlg.open) more(); });
-el.btns = dlg.querySelector('.shr-btns'); el.go = dlg.querySelector('[data-shr-go]'); el.toast = dlg.querySelector('.shr-toast'); el.save = dlg.querySelector('[data-shr-save]');
+el.btns = dlg.querySelector('.shr-btns'); el.go = dlg.querySelector('[data-shr-go]'); el.toast = dlg.querySelector('.shr-toast'); el.save = dlg.querySelector('[data-shr-save]'); el.wa = dlg.querySelector('[data-shr-wa]');
 dlg.addEventListener('click', function (e) {
 if (e.target === dlg || e.target.closest('[data-shr-close]')) return close();
 var sh = e.target.closest('[data-shape]'); if (sh) return setShape(sh.dataset.shape);
@@ -211,7 +213,8 @@ render();
 function render() {
 var my = ++S.token; S.blob = null; el.go.disabled = true; el.save.disabled = true; dlg.classList.add('is-busy'); el.busy.textContent = T.preparing;
 var sc = S.sc, line = S.line;
-Promise.all([S.pic ? S.pic : imageFor(S.n).then(function (p) { S.pic = p; return p; }), fontsFor([[faceOf(sc).wt + ' 56px ' + faceOf(sc).fam, show(line)], [(hi ? '600 26px "Mukta"' : '600 26px Newsreader'), S.source + T.footer]])]).then(function () {
+el.wa.href = 'https://wa.me/?text=' + encodeURIComponent(words());   // [send] the same words as a plain message, for a browser with no share sheet for pictures
+Promise.all([S.pic ? S.pic : imageFor(S.n).then(function (p) { S.pic = p; return p; }), fontsFor([[faceOf(sc).wt + ' 56px ' + faceOf(sc).fam, show(line)], [(hi ? '600 26px "Mukta"' : '600 26px Newsreader'), S.source + T.footer], ['500 40px ' + TITLE, title]])]).then(function () {
 if (my !== S.token) return;
 try { paint({ shape: S.shape, sc: sc, line: line, pic: S.pic, source: S.source, cv: el.cv }); } catch (e) { el.busy.textContent = T.failed; dlg.classList.remove('is-busy'); return; }
 el.cv.setAttribute('aria-label', fmt(T.cardAlt, { line: show(line) }));
@@ -222,7 +225,7 @@ el.busy.textContent = ''; dlg.classList.remove('is-busy');
 if (!b) { el.busy.textContent = T.failed; return; }
 S.blob = b; S.file = null; try { S.file = new File([b], 'spiritual-' + slug + '-' + S.n + '.jpg', { type: 'image/jpeg' }); } catch (e) {}
 var sm = S.file && canShareFiles(S.file) ? 'share' : 'save'; el.go.textContent = sm === 'share' ? T.share : T.save; el.go.dataset.mode = sm; el.btns.dataset.mode = sm;
-el.save.hidden = sm === 'save'; el.go.disabled = false; el.save.disabled = false;
+el.save.hidden = sm === 'save'; el.wa.hidden = sm !== 'save'; el.go.disabled = false; el.save.disabled = false;
 }, 'image/jpeg', .92);
 });
 }
@@ -231,10 +234,11 @@ var url = link(S.n);
 if (navigator.clipboard && navigator.clipboard.writeText) return navigator.clipboard.writeText(url).then(function () { return true; }, function () { return false; });
 try { var t = d.createElement('textarea'); t.value = url; t.setAttribute('readonly', ''); t.style.cssText = 'position:fixed;opacity:0'; d.body.appendChild(t); t.select(); var ok = d.execCommand('copy'); t.remove(); return Promise.resolve(ok); } catch (e) { return Promise.resolve(false); }
 }
+function words() { var ln = show(S.line), q = /^[\u201C"\u2018]/.test(ln) ? ln : '\u201C' + ln + '\u201D'; return q + '\n' + fmt(T.sharedText, { heading: S.sc.heading, title: title }) + '\n' + link(S.n); }
 function go() {
 if (!S.blob) return;
 if (el.go.dataset.mode === 'share' && S.file) {
-var data = { files: [S.file], text: fmt(T.sharedText, { heading: S.sc.heading, title: title }) + '\n' + link(S.n) };
+var data = { files: [S.file], text: words() };
 navigator.share(data).then(function () { say(T.sent); }, function (e) { if (e && e.name !== 'AbortError') save(); });
 } else save();
 }

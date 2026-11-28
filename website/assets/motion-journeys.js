@@ -17,6 +17,7 @@
   // how much of a box is on screen (0 to 1)
   const seen = (el) => { const r = el.getBoundingClientRect(); if (r.width < 8 || r.height < 8) return 0; const w = Math.min(r.right, innerWidth) - Math.max(r.left, 0), h = Math.min(r.bottom, innerHeight) - Math.max(r.top, 0); return w <= 0 || h <= 0 ? 0 : (w * h) / (r.width * r.height); };
   const taken = () => d.querySelector('[style*="cx-hero"]');
+  const has = (img) => !!img.currentSrc && !img.currentSrc.startsWith('data:');   // [findings] a picture still on its clear stand-in has none yet
   const give = (el, vt, kind) => {
     el.style.viewTransitionName = 'cx-hero'; if (kind) root.dataset.vt = kind;
     const clear = () => { el.style.viewTransitionName = ''; if (kind && root.dataset.vt === kind) delete root.dataset.vt; };
@@ -33,13 +34,20 @@
     if (!a || e.metaKey || e.ctrlKey || e.shiftKey || a.target === '_blank') return;
     const sel = a.closest('[data-select]'); if (!sel || a.querySelector(WHO)) return;
     const fig = sel.querySelector('[data-sel-hero]');
-    const pic = fig && fig.currentSrc && seen(fig) > .6 ? fig : null;
+    const pic = fig && has(fig) && seen(fig) > .6 ? fig : null;
     if (pic) stage = { pic, path: a.pathname };
   }, true);
 
   addEventListener('pageswap', (e) => {
     const vt = e.viewTransition, act = e.activation; if (!vt || !act || calm()) return;
     let to; try { to = new URL(act.entry.url).pathname; } catch (x) { return; }
+    // [alive] 0. a language switch inside a story's film (type.js has marked the leave .ty-leave): the film's stage (fixed; the painting and its shading) goes across as
+    // its own layer, 'fm-hold', and is held over the arriving page until that page's own painting is up (pagereveal below, motion-journeys.css). Not the whole page: a
+    // browser's snapshot of a whole page comes out empty once the page has been scrolled past about 16,000 px, which the later scenes of every story are.
+    if (act.navigationType !== 'traverse' && root.classList.contains('ty-leave') && root.classList.contains('fm-live')) {
+      const st = d.querySelector('.fm-stage');
+      if (st) { st.style.viewTransitionName = 'fm-hold'; put('spritual:mj-hold', '1'); const clear = () => { st.style.viewTransitionName = ''; }; try { vt.finished.then(clear, clear); } catch (x) { clear(); } }
+    }
     if (act.navigationType === 'traverse') {
       // 2. leaving an opening by Back or Forward: it is the shared element while it is still on screen
       stage = null;
@@ -55,7 +63,11 @@
     const act = window.navigation && navigation.activation;
     const back = !!act && act.navigationType === 'traverse';
     if (act) { if (back) root.dataset.nav = 'back'; else delete root.dataset.nav; }
+    const hold = get('spritual:mj-hold');   // [alive] (read on every arrival, so it never outlives the page change it was left for)
     const vt = e.viewTransition; if (!vt) return;
+    // [alive] 4. a language switch inside a story (boot.js has marked the arrival .ty-arr): the painting the reader was looking at is held over this page until this
+    // page's own painting is up (motion-journeys.css): the film's stage by itself when the page being left sent it across ('lang-hold'), else that whole page ('lang')
+    if (!back && !calm() && root.classList.contains('ty-arr') && !root.dataset.vt) { const k = hold ? 'lang-hold' : 'lang'; root.dataset.vt = k; const done = () => { if (root.dataset.vt === k) delete root.dataset.vt; }; try { vt.finished.then(done, done); } catch (x) { done(); } return; }
     const from = get('mj-back'); if (!from || !back || calm() || taken()) return;
     let was = ''; try { was = new URL(act.from.url).pathname; } catch (x) {}
     if (was !== from) return;
@@ -68,7 +80,7 @@
       // a story card's picture is taller than its frame (the frame clips it): the frame is what the reader sees, so the frame
       // is what the opening folds into; naming the picture itself landed it over the caption and popped when the morph ended
       if (p && !who) p = p.closest(FRAME) || p;
-      if (!p && who && a.matches('.cx-sel-go')) { const s = a.closest('[data-select]'); p = s && s.querySelector('[data-sel-hero]'); if (p && !p.currentSrc) p = null; }
+      if (!p && who && a.matches('.cx-sel-go')) { const s = a.closest('[data-select]'); p = s && s.querySelector('[data-sel-hero]'); if (p && !has(p)) p = null; }
       if (p && seen(p) > (who ? .6 : .98)) pic = p;
     }
     if (!pic) return;

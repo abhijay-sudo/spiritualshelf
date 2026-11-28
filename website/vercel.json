@@ -724,12 +724,12 @@
     },
     {
       "source": "/library/mahabharata{/}?",
-      "destination": "/collections/mahabharata/",
+      "destination": "/collections/mahabharata/books/vyasa-mahabharata/",
       "statusCode": 301
     },
     {
       "source": "/library/mahabharata/adi{/}?",
-      "destination": "/collections/mahabharata/",
+      "destination": "/collections/mahabharata/books/vyasa-mahabharata/arcs/adi-parva/",
       "statusCode": 301
     },
     {
@@ -739,7 +739,7 @@
     },
     {
       "source": "/library/mahabharata/vana{/}?",
-      "destination": "/collections/mahabharata/",
+      "destination": "/collections/mahabharata/books/vyasa-mahabharata/arcs/vana-parva/",
       "statusCode": 301
     },
     {
@@ -819,12 +819,12 @@
     },
     {
       "source": "/library/ramayana{/}?",
-      "destination": "/collections/ramayana/",
+      "destination": "/collections/ramayana/books/valmiki-ramayana/",
       "statusCode": 301
     },
     {
       "source": "/library/ramayana/bala{/}?",
-      "destination": "/collections/ramayana/",
+      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/bala-kanda/",
       "statusCode": 301
     },
     {
@@ -849,7 +849,7 @@
     },
     {
       "source": "/library/ramayana/yuddha{/}?",
-      "destination": "/collections/ramayana/",
+      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/yuddha-kanda/",
       "statusCode": 301
     },
     {
@@ -859,7 +859,7 @@
     },
     {
       "source": "/library/shiva{/}?",
-      "destination": "/collections/shiva/",
+      "destination": "/collections/shiva/books/shiva-purana/",
       "statusCode": 301
     },
     {
@@ -869,7 +869,7 @@
     },
     {
       "source": "/library/shiva/rudra{/}?",
-      "destination": "/collections/shiva/",
+      "destination": "/collections/shiva/books/shiva-purana/arcs/rudra-samhita/",
       "statusCode": 301
     },
     {
@@ -939,12 +939,12 @@
     },
     {
       "source": "/hi/library/mahabharata{/}?",
-      "destination": "/hi/collections/mahabharata/",
+      "destination": "/hi/collections/mahabharata/books/vyasa-mahabharata/",
       "statusCode": 301
     },
     {
       "source": "/hi/library/mahabharata/adi{/}?",
-      "destination": "/hi/collections/mahabharata/",
+      "destination": "/hi/collections/mahabharata/books/vyasa-mahabharata/arcs/adi-parva/",
       "statusCode": 301
     },
     {
@@ -954,7 +954,7 @@
     },
     {
       "source": "/hi/library/mahabharata/vana{/}?",
-      "destination": "/hi/collections/mahabharata/",
+      "destination": "/hi/collections/mahabharata/books/vyasa-mahabharata/arcs/vana-parva/",
       "statusCode": 301
     },
     {
@@ -1034,12 +1034,12 @@
     },
     {
       "source": "/hi/library/ramayana{/}?",
-      "destination": "/hi/collections/ramayana/",
+      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/",
       "statusCode": 301
     },
     {
       "source": "/hi/library/ramayana/bala{/}?",
-      "destination": "/hi/collections/ramayana/",
+      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/bala-kanda/",
       "statusCode": 301
     },
     {
@@ -1064,7 +1064,7 @@
     },
     {
       "source": "/hi/library/ramayana/yuddha{/}?",
-      "destination": "/hi/collections/ramayana/",
+      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/yuddha-kanda/",
       "statusCode": 301
     },
     {
@@ -1074,7 +1074,7 @@
     },
     {
       "source": "/hi/library/shiva{/}?",
-      "destination": "/hi/collections/shiva/",
+      "destination": "/hi/collections/shiva/books/shiva-purana/",
       "statusCode": 301
     },
     {
@@ -1084,7 +1084,7 @@
     },
     {
       "source": "/hi/library/shiva/rudra{/}?",
-      "destination": "/hi/collections/shiva/",
+      "destination": "/hi/collections/shiva/books/shiva-purana/arcs/rudra-samhita/",
       "statusCode": 301
     },
     {
@@ -4263,12 +4263,42 @@
       "statusCode": 308
     },
     {
-      "source": "/collections/:c/books/:b{/}?",
+      "source": "/collections/shiva/books/valmiki-ramayana{/}?",
+      "destination": "/collections/ramayana/books/valmiki-ramayana/",
+      "statusCode": 308
+    },
+    {
+      "source": "/collections/ganesha/books/shiva-purana{/}?",
+      "destination": "/collections/shiva/books/shiva-purana/",
+      "statusCode": 308
+    },
+    {
+      "source": "/collections/sages/books/vyasa-mahabharata{/}?",
+      "destination": "/collections/mahabharata/books/vyasa-mahabharata/",
+      "statusCode": 308
+    },
+    {
+      "source": "/collections/shiva/books/valmiki-ramayana/arcs/bala-kanda{/}?",
+      "destination": "/collections/ramayana/books/valmiki-ramayana/arcs/bala-kanda/",
+      "statusCode": 308
+    },
+    {
+      "source": "/collections/ganesha/books/shiva-purana/arcs/rudra-samhita{/}?",
+      "destination": "/collections/shiva/books/shiva-purana/arcs/rudra-samhita/",
+      "statusCode": 308
+    },
+    {
+      "source": "/collections/sages/books/vyasa-mahabharata/arcs/vana-parva{/}?",
+      "destination": "/collections/mahabharata/books/vyasa-mahabharata/arcs/vana-parva/",
+      "statusCode": 308
+    },
+    {
+      "source": "/collections/:c((?!(?:ramayana/books/valmiki-ramayana|krishna/books/bhagavata-purana|shiva/books/shiva-purana|mahabharata/books/vyasa-mahabharata)/?$)[^/]+)/books/:b{/}?",
       "destination": "/collections/:c/",
       "statusCode": 308
     },
     {
-      "source": "/collections/:c/books/:b/arcs/:a{/}?",
+      "source": "/collections/:c((?!(?:ramayana/books/valmiki-ramayana/arcs/bala-kanda|ramayana/books/valmiki-ramayana/arcs/yuddha-kanda|krishna/books/bhagavata-purana/arcs/skandha-10|krishna/books/bhagavata-purana/arcs/skandha-8|shiva/books/shiva-purana/arcs/rudra-samhita|mahabharata/books/vyasa-mahabharata/arcs/adi-parva|mahabharata/books/vyasa-mahabharata/arcs/vana-parva)/?$)[^/]+)/books/:b/arcs/:a{/}?",
       "destination": "/collections/:c/",
       "statusCode": 308
     },
@@ -4603,12 +4633,42 @@
       "statusCode": 308
     },
     {
-      "source": "/hi/collections/:c/books/:b{/}?",
+      "source": "/hi/collections/shiva/books/valmiki-ramayana{/}?",
+      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/collections/ganesha/books/shiva-purana{/}?",
+      "destination": "/hi/collections/shiva/books/shiva-purana/",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/collections/sages/books/vyasa-mahabharata{/}?",
+      "destination": "/hi/collections/mahabharata/books/vyasa-mahabharata/",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/collections/shiva/books/valmiki-ramayana/arcs/bala-kanda{/}?",
+      "destination": "/hi/collections/ramayana/books/valmiki-ramayana/arcs/bala-kanda/",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/collections/ganesha/books/shiva-purana/arcs/rudra-samhita{/}?",
+      "destination": "/hi/collections/shiva/books/shiva-purana/arcs/rudra-samhita/",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/collections/sages/books/vyasa-mahabharata/arcs/vana-parva{/}?",
+      "destination": "/hi/collections/mahabharata/books/vyasa-mahabharata/arcs/vana-parva/",
+      "statusCode": 308
+    },
+    {
+      "source": "/hi/collections/:c((?!(?:ramayana/books/valmiki-ramayana|krishna/books/bhagavata-purana|shiva/books/shiva-purana|mahabharata/books/vyasa-mahabharata)/?$)[^/]+)/books/:b{/}?",
       "destination": "/hi/collections/:c/",
       "statusCode": 308
     },
     {
-      "source": "/hi/collections/:c/books/:b/arcs/:a{/}?",
+      "source": "/hi/collections/:c((?!(?:ramayana/books/valmiki-ramayana/arcs/bala-kanda|ramayana/books/valmiki-ramayana/arcs/yuddha-kanda|krishna/books/bhagavata-purana/arcs/skandha-10|krishna/books/bhagavata-purana/arcs/skandha-8|shiva/books/shiva-purana/arcs/rudra-samhita|mahabharata/books/vyasa-mahabharata/arcs/adi-parva|mahabharata/books/vyasa-mahabharata/arcs/vana-parva)/?$)[^/]+)/books/:b/arcs/:a{/}?",
       "destination": "/hi/collections/:c/",
       "statusCode": 308
     },

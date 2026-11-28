@@ -527,7 +527,15 @@
     };
     addEventListener('keydown', hold, true);
     const land = () => { for (const to of [$('.cx-home .cx-cue'), $('.cx-home h1')]) { if (!to) continue; if (!to.matches('a,button')) to.tabIndex = -1; try { to.focus({ preventScroll: true }); } catch (e) {} if (document.activeElement === to) break; } };
-    const done = () => { const had = skip && document.activeElement === skip; root.classList.add('cx-seen'); rest(); removeEventListener('keydown', hold, true); if (had) land(); evs.forEach((n) => removeEventListener(n, done)); };
+    // [arrival] The tap that ends the titles does nothing else. A touch's click is aimed when the finger lifts, by which time done() has shown the
+    // header and the hero's buttons under it: a tap on "Skip intro" opened the Menu beneath the pill, one where the language switch will be changed
+    // the language, one where "Play with sound" will be turned the sound on. So the one click that follows a skipping tap is swallowed (the guard
+    // leaves with that click, or half a second after the finger lifts, or after four seconds, whichever is first; keys do not arm it).
+    const eat = (e) => { e.preventDefault(); e.stopImmediatePropagation(); disarm(); };
+    const lifted = () => setTimeout(disarm, 500);
+    const UPS = ['pointerup', 'pointercancel', 'touchend', 'touchcancel'];
+    function disarm() { removeEventListener('click', eat, true); UPS.forEach((n) => removeEventListener(n, lifted, true)); }
+    const done = (e) => { const had = skip && document.activeElement === skip; if (e && (e.type === 'pointerdown' || e.type === 'touchstart') && !root.classList.contains('cx-seen')) { addEventListener('click', eat, true); UPS.forEach((n) => addEventListener(n, lifted, true)); setTimeout(disarm, 4000); } root.classList.add('cx-seen'); rest(); removeEventListener('keydown', hold, true); if (had) land(); evs.forEach((n) => removeEventListener(n, done)); };
     evs.forEach((n) => addEventListener(n, done, { passive: true }));
     // the visible "Skip intro" pill (phones) does the same, and leaves once the sequence is over
     skip?.addEventListener('click', done);

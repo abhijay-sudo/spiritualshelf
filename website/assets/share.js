@@ -65,6 +65,11 @@ var mid = (lines || []).filter(function (x) { return x.length >= 30 && x.length 
 return mid[0] || (lines || []).slice().sort(function (a, b) { return b.length - a.length; })[0] || '';
 }
 var api = function (o) { return open(o); };
+var local = /^(localhost|127\.|192\.168\.|10\.)/.test(location.hostname), hiPage = d.documentElement.lang === 'hi';
+api.link = function (n) {
+var root = local ? location.origin + '/' + (hiPage ? 'hi/' : '') : U.live;
+return U.key.indexOf(n) >= 0 ? root + 's/' + reader.dataset.slug + '/' + n + '/' : root + U.path + '#page-' + n;
+};
 api.sceneLink = function (n) { return sheet().then(function () { return window.__spritualShareSheet.link(n); }); };
 api.sentences = sentences; api.pick = pick;
 window.spritualShare = api;
@@ -92,10 +97,20 @@ b.setAttribute('aria-haspopup', 'dialog'); b.setAttribute('aria-label', U.t.glyp
 b.addEventListener('click', function () { open({ scene: current(), from: b }); });
 var c = b0.querySelector('[data-open="comfort"]'); b0.insertBefore(b, c);
 }
+function fit(g) {
+var run = function () {
+var i, w = d.documentElement.clientWidth - 8, r = [];
+for (i = 0; i < g.length; i++) g[i].classList.remove('sh-glyph--ic');
+for (i = 0; i < g.length; i++) r.push(g[i].getBoundingClientRect());
+for (i = 0; i < g.length; i++) if (r[i].width && r[i].right > w) g[i].classList.add('sh-glyph--ic');
+}, t = 0, later = function () { if (!t) t = requestAnimationFrame(function () { t = 0; run(); }); };
+run(); addEventListener('resize', later);
+if (window.ResizeObserver) { var ro = new ResizeObserver(later); for (var i = 0; i < g.length; i++) if (g[i].parentNode) ro.observe(g[i].parentNode); }
+}
 function wake() {
 styles().then(function () {
 var g = d.querySelectorAll('.sh-glyph'); for (var i = 0; i < g.length; i++) g[i].hidden = false;
-d.documentElement.classList.add('sh-on');
+d.documentElement.classList.add('sh-on'); fit(g);
 if (!rail()) {
 var mo = new MutationObserver(function () { if (rail()) mo.disconnect(); });
 mo.observe(reader, { childList: true, subtree: true });

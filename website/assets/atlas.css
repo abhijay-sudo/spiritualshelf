@@ -64,7 +64,7 @@ html[lang="hi"] .at-pin a { font: 500 .86rem/1.3 "Mukta", var(--cx-ui); letter-s
 .at-pin--t span { margin: 0 0 -13px; }
 .at .at-pin--b a { flex-direction: column; }
 .at-pin--b span { margin: -13px 0 0; }
-.at-pin a:hover i::before, .at-pin a:focus-visible i::before, .at-pin.is-on i::before, .at-pin.is-here i::before { transform: scale(1.45); box-shadow: 0 0 0 1.5px #fff3cf, 0 0 0 3px #b9811d, 0 0 14px 4px rgb(255 205 100 / .75); }
+.at-pin a:focus-visible i::before, .at-pin.is-on i::before, .at-pin.is-here i::before { transform: scale(1.45); box-shadow: 0 0 0 1.5px #fff3cf, 0 0 0 3px #b9811d, 0 0 14px 4px rgb(255 205 100 / .75); } @media (hover: hover) and (pointer: fine) { .at-pin a:hover i::before { transform: scale(1.45); box-shadow: 0 0 0 1.5px #fff3cf, 0 0 0 3px #b9811d, 0 0 14px 4px rgb(255 205 100 / .75); } }
 .at-pin a:focus-visible span { text-decoration: underline; text-underline-offset: 3px; }
 /* a name on the sheet stays in dark ink whatever its state; only the pin glows */
 .at .at-pin a:hover, .at .at-pin a:focus-visible, .at .at-pin.is-on a, .at .at-pin.is-here a { color: #2e1b0b; }

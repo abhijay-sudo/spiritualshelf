@@ -97,6 +97,7 @@ const vb = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, vb); gl.bufferData(
 gl.uniform1i(U.uImg, 0); gl.uniform1i(U.uMask, 1); gl.disable(gl.BLEND);
 const tex = (unit, filter) => { const t = gl.createTexture(); gl.activeTexture(gl.TEXTURE0 + unit); gl.bindTexture(gl.TEXTURE_2D, t); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, filter); return t; };
 const texImg = tex(0, gl.LINEAR_MIPMAP_LINEAR), texMask = tex(1, gl.LINEAR);
+const phone = !!ctx.caps.phone, depthUp = () => !!stage.querySelector('.fm-cam canvas:not([data-life-story])');
 const cache = new Map();   // stem -> mask | null (a painting with nothing worth moving)
 let cur = null, tOn = 0, gust = 0, on = true, dropped = false, since = 0, seq = 0, backing = [0, 0];
 const amp = ctx.tier === 'ultra' ? 1.7 : 1.4, period = ctx.tier === 'ultra' ? 0 : 33;   // (Rich draws at about 30 a second, Ultra at the display's rate)
@@ -109,7 +110,7 @@ const m = buildMask(x.getImageData(0, 0, cw, ch).data, cw, ch, faces);
 const worth = m.stats.free > 0.006 || m.stats.flames > 0; cache.set(key, worth ? m : null); return worth ? m : null;
 };
 const cost = [];   // (ms of each attach, for the debug overlay)
-const detach = () => { if (cv.parentNode) cv.remove(); cur = null; };
+const detach = () => { if (cv.parentNode) cv.remove(); if (phone && cur) { for (const [u, t] of [[0, texImg], [1, texMask]]) { gl.activeTexture(gl.TEXTURE0 + u); gl.bindTexture(gl.TEXTURE_2D, t); gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA8, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array(4)); } cv.width = cv.height = 2; backing = [0, 0]; } cur = null; };
 const draw = () => {
 if (!cur) return;
 gl.uniform1f(U.uT, tOn); gl.uniform1f(U.uAmp, amp); gl.uniform1f(U.uGust, gust); gl.uniform1f(U.uFlick, 1);
@@ -120,6 +121,7 @@ const t0 = performance.now();
 const img = l.img, key = stem(img.currentSrc || img.src), scene = sceneBy.get(key);
 if (!key || !scene) return;
 if (scene.dataset.depth && l.cam.querySelector('canvas:not([data-life-story])')) return;   // the depth camera draws this one
+if (phone && depthUp()) return;   // (a phone: not beside the depth camera on either layer; the watch below comes back here when its canvas has gone)
 if (!img.complete || !img.naturalWidth) { try { await img.decode(); } catch (e) { return; } }
 if (my !== seq || ctx.signal.aborted) return;
 await wait(0); if (my !== seq) return; const m = maskOf(key, img, scene); if (!m) return;   // (each heavy step is its own task, so none is a long one)
@@ -127,7 +129,8 @@ let bmp; try { const o = { premultiplyAlpha: 'none', colorSpaceConversion: 'none
 if (my !== seq || ctx.signal.aborted) { bmp.close && bmp.close(); return; }
 await wait(0); if (my !== seq || ctx.signal.aborted) { bmp.close && bmp.close(); return; }
 const cssW = l.cam.offsetWidth, cssH = l.cam.offsetHeight; if (!cssW || !cssH) { bmp.close && bmp.close(); return; }
-const k = Math.min(devicePixelRatio || 1, 1.5) * 1.1, bw = Math.min(2048, Math.round(cssW * k)), bh = Math.round(bw * cssH / cssW);
+if (phone && depthUp()) { bmp.close && bmp.close(); return; }
+const k = Math.min(devicePixelRatio || 1, 1.5) * 1.1 * (phone ? 0.5 : 1), bw = Math.min(2048, Math.round(cssW * k)), bh = Math.round(bw * cssH / cssW);
 if (backing[0] !== bw || backing[1] !== bh) { cv.width = bw; cv.height = bh; backing = [bw, bh]; }
 gl.viewport(0, 0, bw, bh);
 gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, texImg); gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false); gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, false);
@@ -146,6 +149,8 @@ Promise.all(up.el.getAnimations().filter((a) => a.effect && Number.isFinite(a.ef
 const mo = new MutationObserver(settleOn); for (const l of layers) mo.observe(l.el, { attributes: true, attributeFilter: ['class'] });
 const imo = new MutationObserver(() => { if (cur && stem(cur.l.img.currentSrc || cur.l.img.src) !== cur.key) { seq++; detach(); settleOn(); } });
 for (const l of layers) imo.observe(l.img, { attributes: true, attributeFilter: ['src', 'srcset'] });
+const dmo = phone ? new MutationObserver(() => { if (depthUp()) { if (cur) { seq++; detach(); } } else if (!cur) settleOn(); }) : null;
+if (dmo) for (const l of layers) dmo.observe(l.cam, { childList: true });
 settleOn();
 const live = () => on && !dropped && !R.classList.contains('fm-ended') && R.classList.contains('fm-live') && R.getAttribute('data-l' + 'amp') !== 'on';
 ctx.budget.register({ id: 'story-sway', label: 'shader', cost: 'webgl', priority: 4, drop() { dropped = true; cv.style.display = 'none'; }, restore() { dropped = false; cv.style.display = ''; } });
@@ -158,5 +163,5 @@ since += dt * 1000; if (period && since < period - 3) return; since = 0; draw();
 });
 const lost = (e) => { e.preventDefault(); on = false; detach(); }; cv.addEventListener('webglcontextlost', lost);
 const dbg = window.SpiritualLife && window.SpiritualLife.debug; if (dbg) dbg.sway = { cost: () => cost.slice(), current: () => cur && { key: cur.key, stats: cur.m.stats }, canvas: () => cv, cache: () => Array.from(cache.entries()).map(([k, v]) => [k, v && v.stats]) };
-return { dispose() { for (const [s, d] of stripped) s.dataset.depth = d; un(); give(); mo.disconnect(); imo.disconnect(); detach(); cv.removeEventListener('webglcontextlost', lost); try { const x = gl.getExtension('WEBGL_lose_context'); x && x.loseContext(); } catch (e) {} if (dbg) delete dbg.sway; } };
+return { dispose() { for (const [s, d] of stripped) s.dataset.depth = d; un(); give(); mo.disconnect(); imo.disconnect(); dmo && dmo.disconnect(); detach(); cv.removeEventListener('webglcontextlost', lost); try { const x = gl.getExtension('WEBGL_lose_context'); x && x.loseContext(); } catch (e) {} if (dbg) delete dbg.sway; } };
 }

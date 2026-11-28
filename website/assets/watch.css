@@ -123,12 +123,11 @@
 .wt-play { width: 56px; height: 56px; background: rgb(255 246 232 / .14); border: 1px solid rgb(255 240 220 / .38); }
 .wt-play .ic { width: 26px; height: 26px; }
 .wt-b[aria-pressed="false"] { opacity: .62; }
-/* the sound control is the lamp: lit, the film has sound and narration; snuffed, silence */
-.wt-diya { overflow: visible; }
-.wt-diya .bw { fill: rgb(246 236 218 / .14); }
-.wt-diya .fl { fill: #ffd98a; stroke: none; opacity: 0; transform-box: fill-box; transform-origin: 50% 100%; scale: .4; transition: opacity .5s, scale .7s cubic-bezier(.2, .9, .3, 1.2); filter: drop-shadow(0 0 4px rgb(255 190 90 / .9)); }
-.wt-snd[aria-pressed="true"] .wt-diya .fl { opacity: 1; scale: 1; }
-.wt-snd[aria-pressed="true"] .wt-diya .bw { fill: rgb(233 201 140 / .34); }
+/* [lamps] the sound control is a speaker: waves while the film has sound and narration, crossed while it is silent */
+.wt-diya .wt-sp { fill: currentColor; fill-opacity: .22; stroke: currentColor; }
+.wt-diya .wt-wv { display: none; }
+.wt-snd[aria-pressed="true"] .wt-diya .wt-wv { display: inline; }
+.wt-snd[aria-pressed="true"] .wt-diya .wt-xx { display: none; }
 .wt :focus-visible { outline: 2px solid #f3c47e; outline-offset: 2px; }
 .wt-flash { position: absolute; left: 50%; top: 50%; z-index: 9004; display: grid; place-items: center; width: 84px; height: 84px; margin: -42px 0 0 -42px; border-radius: 50%; background: rgb(10 5 2 / .5); color: #fff6e8; opacity: 0; pointer-events: none; }
 .wt-flash .ic { width: 34px; height: 34px; }

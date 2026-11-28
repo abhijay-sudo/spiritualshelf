@@ -28,7 +28,7 @@ return { url: pickC.u, w: pickC.w, key: (portrait ? 'p' : 'l') + pickC.w, portra
 const loadTex = (img) => {
 const w = want(img); if (!w || texState === 1 || (texState === 2 && texKey === w.key)) return;
 texState = 1; const my = ++gen;
-fetch(w.url, { credentials: 'same-origin' }).then((r) => (r.ok ? r.blob() : Promise.reject(0))).then((b) => createImageBitmap(b, { imageOrientation: 'none', premultiplyAlpha: 'none', colorSpaceConversion: 'none' })).then((bm) => {
+fetch(w.url, { credentials: 'same-origin' }).then((r) => (r.ok ? r.blob() : Promise.reject(0))).then((b) => createImageBitmap(b, { premultiplyAlpha: 'none', colorSpaceConversion: 'none' })).then((bm) => {
 if (my !== gen || !env || !env.gl) { bm.close(); return; }
 const gl = env.gl; if (tex) env.del(tex);
 tex = env.tex(); gl.bindTexture(gl.TEXTURE_2D, tex);

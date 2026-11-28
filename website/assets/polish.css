@@ -68,6 +68,9 @@ html[lang="hi"] .gl-az a { font-family: "Mukta", var(--cx-ui, inherit); font-siz
 @media (hover: hover) and (pointer: fine) { .gl-az a:hover { background: var(--cx-sand, rgb(60 40 20 / .08)); border-color: var(--cx-saffron, #c9742c); } }
 .cx-term { scroll-margin-top: 5.5rem; }
 .fest-list time .nw { white-space: nowrap; }   /* [fixL G40] */
+/* [findings] the "coming up" row's gold wash leaves the muted ink at 4.1:1 in the dark room: that row alone takes the site's next muted step
+   (film.css's --ink-muted, 5.1:1). Daylight keeps its own ink (5.5:1), print its own. */
+@media screen { :root:not([data-theme="light"]) .fest-list li.next :is(time, time .note) { color: #a59a8b; } }
 
 /* --- [fixL G42] the character select: on a wide screen the heading stands over the words' column (left), not across the middle where the
    painted face is; the rule on its left is dropped so it reads as the column's own label --- */

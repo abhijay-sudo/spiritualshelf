@@ -11,7 +11,7 @@ let rank = 0, ceil = (() => { try { const v = sessionStorage.getItem('spritual:f
 let pos = null, last = 0, acc = 0, warm = 0, ring = new Float32Array(90), ri = 0, rn = 0, fcount = 0, bad = 0, govern = true, ctxs = 0, nl = 0, saver = false, restored = 0, lostT = 0, t0 = 0, ramp = 0;
 let obs = null, scale = 1, cw = 0, ch = 0, ext = null, soft = false, fps = 0;
 let rectReads = 0, wN = 0, wSlow = 0, wMid = 0, wT = 0, slowWins = 0, goodT = 0, probe = 0, probeBuf = [], coolUntil = 0, upAt = 0, upFail = 0, ign = 0, lastPref = 'auto', paused = false, bgen = 0, dead = false, hr = null, hrDirty = true, hrT = 0, parkT = 0;
-const SS = 'spritual:fxc';
+const SS = 'spritual:fxc', COARSE = matchMedia('(pointer: coarse)').matches;
 const ssGet = () => { try { const v = sessionStorage.getItem(SS); return v === null ? null : +v; } catch (e) { return null; } };
 const ssSet = (v) => { try { if (v === null) sessionStorage.removeItem(SS); else sessionStorage.setItem(SS, String(v)); } catch (e) {} };
 const inp = { x: -1e4, y: -1e4, vx: 0, vy: 0, on: false, scrollVel: 0, down: false };
@@ -48,24 +48,32 @@ settle() { ign = 4; },
 get bw() { return cv ? cv.width : 0; }, get bh() { return cv ? cv.height : 0; },
 };
 let triV = null;
-const compile = (done) => {
+let jobs = [], busy = false, cgen = 0;
+const stopCompile = () => { cgen++; jobs = []; busy = false; if (tmr) { clearTimeout(tmr); tmr = 0; } };
+const compile = (done) => { const own = res.programs.filter((p) => !p.claimed); for (const p of own) p.claimed = true; jobs.push({ done, own }); next(); };
+const next = () => {
+if (busy || !jobs.length) return; busy = true;
+const job = jobs.shift(), my = cgen;
+batch(my, () => { busy = false; try { job.done(job.own.every((r) => r.ok)); } finally { if (my === cgen) next(); } });
+};
+const batch = (my, done) => {
 const queue = res.programs.filter((p) => !p.p); let k = 0;
 const make = (r) => {
 const sh = (type, src) => { const s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s); return s; };
 const v = sh(gl.VERTEX_SHADER, r.vs), f = sh(gl.FRAGMENT_SHADER, r.fs), p = gl.createProgram();
 gl.attachShader(p, v); gl.attachShader(p, f); gl.linkProgram(p); r.p = p; r.sh = [v, f];
 };
-const fin = () => {
-for (const r of queue) { if (!gl.getProgramParameter(r.p, gl.LINK_STATUS)) { dbg('shader failed', gl.getProgramInfoLog(r.p)); return done(false); } r.ok = true; for (const s of r.sh) { gl.detachShader(r.p, s); gl.deleteShader(s); } r.sh = null; }
-done(true);
+const fin = () => {   // (every program is finished, a failed one too: the callers behind it in this batch still get theirs)
+for (const r of queue) { if (gl.getProgramParameter(r.p, gl.LINK_STATUS)) r.ok = true; else dbg('shader failed', gl.getProgramInfoLog(r.p)); for (const s of r.sh) { gl.detachShader(r.p, s); gl.deleteShader(s); } r.sh = null; }
+done();
 };
-if (!queue.length) return done(true);
+if (!queue.length) return done();
 if (ext && ext.par) {
-const poll = () => { tmr = 0; if (!gl) return; if (queue.every((r) => gl.getProgramParameter(r.p, ext.par.COMPLETION_STATUS_KHR))) fin(); else tmr = setTimeout(poll, 8); };
-const hand = () => { tmr = 0; if (!gl) return; make(queue[k++]); tmr = setTimeout(k < queue.length ? hand : poll, k < queue.length ? 0 : 8); };
+const poll = () => { tmr = 0; if (!gl || my !== cgen) return; if (queue.every((r) => gl.getProgramParameter(r.p, ext.par.COMPLETION_STATUS_KHR))) fin(); else tmr = setTimeout(poll, 8); };
+const hand = () => { tmr = 0; if (!gl || my !== cgen) return; make(queue[k++]); tmr = setTimeout(k < queue.length ? hand : poll, k < queue.length ? 0 : 8); };
 hand();
 } else {
-const slice = () => { tmr = 0; if (!gl) return; make(queue[k++]); if (k < queue.length) tmr = window.requestIdleCallback ? (requestIdleCallback(slice, { timeout: 200 }), 0) : setTimeout(slice, 16); else fin(); };
+const slice = () => { tmr = 0; if (!gl || my !== cgen) return; make(queue[k++]); if (k < queue.length) tmr = window.requestIdleCallback ? (requestIdleCallback(slice, { timeout: 200 }), 0) : setTimeout(slice, 16); else fin(); };
 slice();
 }
 };
@@ -167,11 +175,11 @@ try { if (G.U) G.U.left('slow'); } catch (e) {}
 setTier(2); return;
 }
 dbg('step down from', NAME[rank], why); ceil = Math.min(ceil, rank - 1); if (upAt && now() - upAt < 30000) upFail++;
-if (lastPref === 'auto') ssSet(ceil);
+if (lastPref === 'auto' || COARSE) ssSet(ceil);   // [alive] a phone keeps the ceiling for a chosen tier too: it pays a slow spell once a session, not on every page (a new choice in the sheet lifts it, start())
 if (rank <= 1) { destroy('off'); return; }
 setTier(rank - 1);
 };
-const stepUp = () => { goodT = 0; upAt = now(); dbg('step up to rich'); ceil = 2; if (lastPref === 'auto') ssSet(null); setTier(2); };
+const stepUp = () => { goodT = 0; upAt = now(); dbg('step up to rich'); ceil = 2; if (lastPref === 'auto' || COARSE) ssSet(null); setTier(2); };
 const setTier = (r) => {
 meas = null; const was = rank; rank = r; R.dataset.fx = NAME[r]; if (G.U && (was === 3) !== (r === 3)) { try { G.U.tier(r === 3); } catch (e) { dbg('ultra tier', e); } } ri = rn = 0; ring.fill(0); wN = wSlow = wMid = 0; wT = 0; slowWins = 0; goodT = 0; probe = 0; warm = 4; ign = 4;
 if (cw) size(cw, ch);
@@ -284,14 +292,14 @@ try { for (const f of all) f.init(gl, env); } catch (e) { dbg('init failed', e);
 cb();
 };
 const rebuildAfterRestore = () => {
-ready = 0; freeRes(true); dead = false; ext = { par: gl.getExtension('KHR_parallel_shader_compile'), lose: gl.getExtension('WEBGL_lose_context') };
+ready = 0; stopCompile(); freeRes(true); dead = false; ext = { par: gl.getExtension('KHR_parallel_shader_compile'), lose: gl.getExtension('WEBGL_lose_context') };
 const all = new Set(); for (const h of hosts.values()) for (const f of h.fx) all.add(f);
 for (const m of MAP) for (const n of m.feats) { const f = feats.find((x) => x.name === n); if (f && !(f.wants && !f.wants({ tier: tn() }))) all.add(f); }
 try { for (const f of all) f.init(gl, env); } catch (e) { ceil = 0; destroy('off'); return; }
 compile((ok) => { if (!ok || !gl) { destroy('off'); return; } ready = 1; size(cw, ch); live = false; pick(); });
 };
 const destroy = (s) => {
-bgen++; halt(); if (tmr) { clearTimeout(tmr); tmr = 0; } if (lostT) { clearTimeout(lostT); lostT = 0; } if (parkT) { clearTimeout(parkT); parkT = 0; }
+bgen++; halt(); stopCompile(); if (lostT) { clearTimeout(lostT); lostT = 0; } if (parkT) { clearTimeout(parkT); parkT = 0; }
 try { if (ac) ac.abort(); } catch (e) {} ac = null; nl = 0;
 const g0 = gl, gone = dead; if (gone) gl = null;
 try { for (const f of feats) f.dispose && f.dispose(gl); } catch (e) {}

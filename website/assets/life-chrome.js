@@ -2,7 +2,7 @@ const PRESS = '.cx-btn, .ed-btn, .btn, .save, .chip, .ed-menu-btn, .ed-icon, .cx
 export function mount(ctx) {
 const d = document, R = d.documentElement, off = [];
 const on = (t, e, f, o) => { t.addEventListener(e, f, o); off.push(() => t.removeEventListener(e, f, o)); };
-if (CSS.supports && CSS.supports('animation-timeline: scroll()')) {
+if (!d.querySelector('[data-reader]') && CSS.supports && CSS.supports('animation-timeline: scroll()')) {
 const bar = d.createElement('div'); bar.className = 'life-progress'; bar.setAttribute('aria-hidden', 'true'); bar.hidden = true; d.body.appendChild(bar);
 const fit = () => { bar.hidden = (R.scrollHeight || 0) < innerHeight * 1.6; };
 fit(); let ro = null; try { ro = new ResizeObserver(fit); ro.observe(d.body); } catch (e) {}

@@ -41,6 +41,8 @@ const L = mk('l'), Rr = mk('r'); if (!L.g || !Rr.g) { L.c.remove(); Rr.c.remove(
 const dpr = Math.min(devicePixelRatio || 1, 1.5); let seed = 11; const rnd = () => { seed = (seed * 16807) % 2147483647; return seed / 2147483647; };
 const seeds = []; for (let i = 0; i < 14; i++) seeds.push({ side: i % 2 ? 'r' : 'l', x: rnd(), y: rnd(), z: 0.4 + rnd() * 0.6, vx: 0, vy: 0, a: rnd() * 6.28, w: (rnd() - 0.5) * 0.6, ph: rnd() * 6.28 });
 let off = null, release = null, acc = 0;
+const mote = d.createElement('canvas'); mote.width = mote.height = 32;
+{ const c = mote.getContext('2d'), gr = c.createRadialGradient(16, 16, 0, 16, 16, 16); gr.addColorStop(0, 'rgba(255,248,232,1)'); gr.addColorStop(0.3, 'rgba(255,240,214,.55)'); gr.addColorStop(1, 'rgba(255,236,206,0)'); c.fillStyle = gr; c.fillRect(0, 0, 32, 32); }
 const size = () => {
 let minL = innerWidth, maxR = 0;
 for (const t of d.querySelectorAll('.scene-no, .story-sum, .cx-film-title, .story-aka')) { const r = t.getBoundingClientRect(); if (r.width) minL = Math.min(minL, r.left); }
@@ -52,7 +54,7 @@ let again = 0;   // (the text may change size or mode: look again every few seco
 const h = ctx.budget.register({ id: 'reader-margins', cost: 'waapi', label: 'spring/ODE', priority: 1, drop() { live.margins = false; stop(); for (const m of [L, Rr]) m.g.clearRect(0, 0, m.c.width, m.c.height); }, restore() { live.margins = true; start(); } });
 const step = (dt, s) => {
 acc += dt; if (acc < 1 / 36) return; const k = acc; acc = 0; h.begin(); if ((again += k) > 3) { again = 0; layout.read(size); }
-for (const m of [L, Rr]) if (m.w >= 34) { m.g.setTransform(dpr, 0, 0, dpr, 0, 0); m.g.clearRect(0, 0, m.w, innerHeight); }
+for (const m of [L, Rr]) if (m.w >= 34) { m.g.setTransform(dpr, 0, 0, dpr, 0, 0); m.g.globalAlpha = 1; m.g.clearRect(0, 0, m.w, innerHeight); }
 const t = s.t, H = innerHeight;
 for (const p of seeds) {
 const m = p.side === 'l' ? L : Rr; if (m.w < 34) continue;
@@ -60,10 +62,8 @@ const ax = Math.sin(t * 0.33 + p.ph) * 14 + s.gust * s.gustX * 120, ay = Math.co
 p.vx += ax * k; p.vy += ay * k; const f = Math.exp(-1.4 * k); p.vx *= f; p.vy *= f; p.a += p.w * k + p.vx * 0.01 * k;
 p.x += (p.vx * k) / Math.max(m.w, 1); p.y += (p.vy * k) / H;
 if (p.x < -0.15) p.x = 1.15; else if (p.x > 1.15) p.x = -0.15; if (p.y < -0.06) p.y = 1.06; else if (p.y > 1.06) p.y = -0.06;
-const g = m.g, x = p.x * m.w, y = p.y * H, len = 5 + p.z * 5, al = 0.28 + 0.3 * p.z;
-g.strokeStyle = 'rgba(255,243,222,' + al.toFixed(3) + ')'; g.fillStyle = 'rgba(255,248,232,' + (al + 0.15).toFixed(3) + ')'; g.lineWidth = 0.7; g.beginPath();
-for (let i = 0; i < 7; i++) { const an = p.a + (i / 7) * 6.2832; g.moveTo(x, y); g.quadraticCurveTo(x + Math.cos(an + 0.5) * len * 0.6, y + Math.sin(an + 0.5) * len * 0.6, x + Math.cos(an) * len, y + Math.sin(an) * len); }
-g.stroke(); g.beginPath(); g.arc(x, y, 1.1 + p.z * 0.6, 0, 6.2832); g.fill();
+const g = m.g, x = p.x * m.w, y = p.y * H, sz = 7 + p.z * 7, al = 0.3 + 0.3 * p.z;
+g.globalAlpha = al; g.drawImage(mote, x - sz / 2, y - sz / 2, sz, sz);
 }
 h.end();
 };

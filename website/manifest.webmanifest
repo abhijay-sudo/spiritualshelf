@@ -8,7 +8,7 @@
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
-  "background_color": "#fbf8f3",
+  "background_color": "#1b140f",
   "theme_color": "#1b140f",
   "categories": [
     "books",
@@ -46,6 +46,18 @@
       "name": "Continue reading",
       "short_name": "Continue reading",
       "url": "/my-reading/",
+      "icons": [
+        {
+          "src": "/assets/icons/icon-192.png?v=94959aca",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Today’s story",
+      "short_name": "Today’s story",
+      "url": "/daily/",
       "icons": [
         {
           "src": "/assets/icons/icon-192.png?v=94959aca",
